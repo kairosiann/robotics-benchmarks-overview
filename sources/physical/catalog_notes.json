@@ -1,0 +1,16 @@
+{
+  "snapshot_date": "2026-11-11",
+  "counts": {
+    "NIST Assembly": 96,
+    "FurnitureBench": 9,
+    "RoboChallenge": 60,
+    "Adroit": 8
+  },
+  "scope_notes": {
+    "NIST Assembly": "96 entries comprise 93 score-sheet operation groups across ATB1\u20134 assembly/disassembly and three ATB5 competencies. Repeated component instances are represented by quantity. Board 5 has no numeric scoring template in the retrieved official section. ATB4 template header repeats ATB3, but is linked under ATB4 and contains harness scoring. These entries do not claim 96 standalone official benchmark tasks.",
+    "FurnitureBench": "Nine full furniture tasks from the pinned factory registry. Each embeds required part-pair connections and exact task/shared automatic checks. The original single-skill benchmark evaluates the first five skills per furniture; these are described as subtask settings rather than counted again as full tasks.",
+    "RoboChallenge": "30 Table30 and 30 Table30 V2 tasks with exact scoring from the official public task-detail JSON used by the website. Camera stream descriptions are based on the published demonstrations. Videos and task banners use unsigned public URLs.",
+    "Adroit": "Eight current registered v2 environment entries represent four physical skills with dense/sparse reward variants. Goal thresholds, observation vectors and reset definitions are pinned to the Farama source. No universal episode-level success aggregation is inferred from a per-step success flag."
+  },
+  "media_validation": "All 70 distinct image/animation URLs returned HTTP 200 in HEAD verification. Video URLs were obtained directly from official task data or project pages; no expiring signed URL parameters were retained."
+}

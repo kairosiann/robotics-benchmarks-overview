@@ -1,0 +1,1 @@
+function u(r){if(!r)return"";const t=new Date(r*1e3),a=t.getFullYear(),e=t.getMonth()+1,n=t.getDate(),o=t.getHours(),s=t.getMinutes(),c=t.getSeconds();return`${a}/${e>=10?e:"0"+e}/${n>=10?n:"0"+n} ${o>9?o:"0"+o}:${s>9?s:"0"+s}:${c>9?c:"0"+c}`}export{u as f};

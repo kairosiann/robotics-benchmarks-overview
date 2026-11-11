@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/roboChallenge_icon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>RoboChallenge</title>
+  <script type="module" crossorigin src="/assets/index-8452c6f2.js"></script>
+  <link rel="stylesheet" href="/assets/index-d36aef1b.css">
+</head>
+<script>
+  var google_manager_id = ''
+  if (window.location.hostname === 'robochallenge.cn') {
+    google_manager_id = 'G-5WR0G38XHP'
+  }
+  if (window.location.hostname === 'robochallenge.ai') {
+    google_manager_id = 'G-8DJ3E7MDBG'
+  }
+  
+  // 动态加载Google Analytics脚本
+  if (google_manager_id) {
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + google_manager_id;
+    document.head.appendChild(script);
+    
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', google_manager_id);
+  }
+</script>
+
+<body>
+  <div id="app"></div>
+  
+</body>
+<style>
+
+</style>
+
+</html>

@@ -1,0 +1,1670 @@
+{
+  "repository": "mees/calvin",
+  "branch": "main",
+  "commit": "fa03f01f19c65920e18cf37398a9ce859274af76",
+  "retrieved": "2026-11-11",
+  "tree": [
+    {
+      "path": ".flake8",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f5c4a2073237179f68920ef18501adf7c3682af6",
+      "size": 539,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/f5c4a2073237179f68920ef18501adf7c3682af6"
+    },
+    {
+      "path": ".github",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5126814a497fd6ebd4b77c2c0d66f63edf536399",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/5126814a497fd6ebd4b77c2c0d66f63edf536399"
+    },
+    {
+      "path": ".github/workflows",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5c45542fb920d6e8d3e913c53380f73bcb269e25",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/5c45542fb920d6e8d3e913c53380f73bcb269e25"
+    },
+    {
+      "path": ".github/workflows/codeql.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "749aa91f96a320734946583d79a9fe4b9b109663",
+      "size": 834,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/749aa91f96a320734946583d79a9fe4b9b109663"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a15eee3a40b4232a81e601c38d2356e10a1fb12",
+      "size": 2042,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/9a15eee3a40b4232a81e601c38d2356e10a1fb12"
+    },
+    {
+      "path": ".gitmodules",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bfca0723eafbfe95c2a291c2533b686556eb6f4b",
+      "size": 90,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/bfca0723eafbfe95c2a291c2533b686556eb6f4b"
+    },
+    {
+      "path": ".pre-commit-config.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c35dbee97889b81aaec9b2956d94d6360026f51",
+      "size": 912,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/7c35dbee97889b81aaec9b2956d94d6360026f51"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e8ce3895c1db06476e2c8b151e1ca073d96ebc96",
+      "size": 1066,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e8ce3895c1db06476e2c8b151e1ca073d96ebc96"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4f9e1c56437591ad3be1fc2f7c3f6c8abf5da29",
+      "size": 21081,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/c4f9e1c56437591ad3be1fc2f7c3f6c8abf5da29"
+    },
+    {
+      "path": "RL_with_CALVIN.ipynb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d43554a0ae24b5d5a0355f2338f885fd5a300224",
+      "size": 10952,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/d43554a0ae24b5d5a0355f2338f885fd5a300224"
+    },
+    {
+      "path": "calvin_env",
+      "mode": "160000",
+      "type": "commit",
+      "sha": "1431a46bd36bde5903fb6345e68b5ccc30def666"
+    },
+    {
+      "path": "calvin_models",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a69873e8f9f2410b8d30005bfe2b1441cae1b66d",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/a69873e8f9f2410b8d30005bfe2b1441cae1b66d"
+    },
+    {
+      "path": "calvin_models/calvin_agent",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "627dd587a2e2f6b8616b1417d049ea0b07f96457",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/627dd587a2e2f6b8616b1417d049ea0b07f96457"
+    },
+    {
+      "path": "calvin_models/calvin_agent/.gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3839e14dadf6b6e824e39e949c4ea24df7edd545",
+      "size": 44,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/3839e14dadf6b6e824e39e949c4ea24df7edd545"
+    },
+    {
+      "path": "calvin_models/calvin_agent/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b5d125802baa500c8e08a7bddd74a2151cdc5e3",
+      "size": 325,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/0b5d125802baa500c8e08a7bddd74a2151cdc5e3"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3bbec66d89f89fef9b55a64df2964b5fc2b42769",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/3bbec66d89f89fef9b55a64df2964b5fc2b42769"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets/base_dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "88117104bd37fc65bda8bf21e47b375e72a78ba0",
+      "size": 10735,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/88117104bd37fc65bda8bf21e47b375e72a78ba0"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets/calvin_data_module.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ccf774d36b61c23a9a2f8693b174febf7fd9f5f1",
+      "size": 5061,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/ccf774d36b61c23a9a2f8693b174febf7fd9f5f1"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets/disk_dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae24221d0a8a441ce4dd08e361c30d5e01b37aaa",
+      "size": 5871,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/ae24221d0a8a441ce4dd08e361c30d5e01b37aaa"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets/random.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "604a0f60a7250bba87f2fee79ebc5d16edef7df0",
+      "size": 2155,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/604a0f60a7250bba87f2fee79ebc5d16edef7df0"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets/shm_dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0d873af0d1a29654a0c003cfa57a19d1ef790b6a",
+      "size": 2686,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/0d873af0d1a29654a0c003cfa57a19d1ef790b6a"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "66d4423c48721ba820b239f9188710da44ef5e50",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/66d4423c48721ba820b239f9188710da44ef5e50"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets/utils/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets/utils/episode_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f323199f89e2fa9737fd04957772f64ba5724933",
+      "size": 9230,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/f323199f89e2fa9737fd04957772f64ba5724933"
+    },
+    {
+      "path": "calvin_models/calvin_agent/datasets/utils/shared_memory_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9bbc60937fd0edd6ce89c564ddf6adefb4a7255",
+      "size": 13520,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/c9bbc60937fd0edd6ce89c564ddf6adefb4a7255"
+    },
+    {
+      "path": "calvin_models/calvin_agent/evaluation",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "12f7429d58b0f5f40adf7d2a09848c3c51cd47a7",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/12f7429d58b0f5f40adf7d2a09848c3c51cd47a7"
+    },
+    {
+      "path": "calvin_models/calvin_agent/evaluation/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/evaluation/evaluate_policy.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1f30e4724ef821b5faf0588b7d44f556d53892f4",
+      "size": 8641,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/1f30e4724ef821b5faf0588b7d44f556d53892f4"
+    },
+    {
+      "path": "calvin_models/calvin_agent/evaluation/evaluate_policy_singlestep.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f0ccff44d5fd8bb69718098afd53962f7c7389c9",
+      "size": 4298,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/f0ccff44d5fd8bb69718098afd53962f7c7389c9"
+    },
+    {
+      "path": "calvin_models/calvin_agent/evaluation/multistep_sequences.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf66915283ab5b4dbbc5ea5eefcb954cfd87e7e2",
+      "size": 15985,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/cf66915283ab5b4dbbc5ea5eefcb954cfd87e7e2"
+    },
+    {
+      "path": "calvin_models/calvin_agent/evaluation/utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d67df7eecb4de223c192ffa803fdae6f79687694",
+      "size": 9916,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/d67df7eecb4de223c192ffa803fdae6f79687694"
+    },
+    {
+      "path": "calvin_models/calvin_agent/inference",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "30a1d8f8ba3a5c9202defe0372eb53721fb2b9fd",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/30a1d8f8ba3a5c9202defe0372eb53721fb2b9fd"
+    },
+    {
+      "path": "calvin_models/calvin_agent/inference/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/inference/rollouts_interactive.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c25b6f6260db92ae9d21cdc2eadedc81b8159477",
+      "size": 7376,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/c25b6f6260db92ae9d21cdc2eadedc81b8159477"
+    },
+    {
+      "path": "calvin_models/calvin_agent/inference/rollouts_training.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7123cd7cd0c701710c359d62d2562b5f703e4305",
+      "size": 8029,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/7123cd7cd0c701710c359d62d2562b5f703e4305"
+    },
+    {
+      "path": "calvin_models/calvin_agent/inference/test_policy_interactive.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a75461279db2e95f88c5b9da59d529cd368e4dd7",
+      "size": 7156,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/a75461279db2e95f88c5b9da59d529cd368e4dd7"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f70969d01f67c95e662e77b5786c268bba777792",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/f70969d01f67c95e662e77b5786c268bba777792"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/calvin_base_model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f6cbcb195c0b172568035d15a6c1027ce9384ce",
+      "size": 651,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/4f6cbcb195c0b172568035d15a6c1027ce9384ce"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/decoders",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "76b296165eef437df32cc4998b753f08d964045e",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/76b296165eef437df32cc4998b753f08d964045e"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/decoders/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/decoders/action_decoder.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a71eebafb830d3bcb1f1b9084bfc702b56c3bab",
+      "size": 1019,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/3a71eebafb830d3bcb1f1b9084bfc702b56c3bab"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/decoders/logistic_policy_network.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4cbabf73f2c5a53f6a0c159a7d6bea6a1c00d330",
+      "size": 9495,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/4cbabf73f2c5a53f6a0c159a7d6bea6a1c00d330"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/encoders",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b82af22d09705e62598ef559a1323b455763a65f",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/b82af22d09705e62598ef559a1323b455763a65f"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/encoders/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/encoders/goal_encoders.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "26ec88dc20a1be6f6d0a9efd8cee0e48d8b2fff8",
+      "size": 1963,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/26ec88dc20a1be6f6d0a9efd8cee0e48d8b2fff8"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/encoders/language_network.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a2470a35e88e053e394df7381a37eab74aa2e42",
+      "size": 526,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/9a2470a35e88e053e394df7381a37eab74aa2e42"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/mcil.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6de0ca97d1ff5ee145ee2e45f9e65930704333c1",
+      "size": 25370,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/6de0ca97d1ff5ee145ee2e45f9e65930704333c1"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/perceptual_encoders",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "61b7a252ef0889ecba1f779370c32e8af59ac227",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/61b7a252ef0889ecba1f779370c32e8af59ac227"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/perceptual_encoders/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/perceptual_encoders/concat_encoders.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6028b0a7a27a9f9fafac1bb4118ec9847ea00ce",
+      "size": 3998,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/c6028b0a7a27a9f9fafac1bb4118ec9847ea00ce"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/perceptual_encoders/proprio_encoder.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e679f74dd8db469460ba94fc20e0fe5fca474405",
+      "size": 549,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e679f74dd8db469460ba94fc20e0fe5fca474405"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/perceptual_encoders/tactile_encoder.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe978ec35dc60413bccbe215e6feb4587730a859",
+      "size": 1067,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/fe978ec35dc60413bccbe215e6feb4587730a859"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/perceptual_encoders/vision_network.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ff9535a03aaad879f707de06deb8ae75f5d0a7b",
+      "size": 4058,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/7ff9535a03aaad879f707de06deb8ae75f5d0a7b"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/perceptual_encoders/vision_network_gripper.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9972796bd1284c0716e009212b1ebad7fbddf700",
+      "size": 1508,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/9972796bd1284c0716e009212b1ebad7fbddf700"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/plan_encoders",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "95ac2118d8b180a9d02eec94bb37ce94db421b58",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/95ac2118d8b180a9d02eec94bb37ce94db421b58"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/plan_encoders/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/plan_encoders/plan_proposal_net.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c740bd6b188c19ecba34a80bf4853118647e3805",
+      "size": 1951,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/c740bd6b188c19ecba34a80bf4853118647e3805"
+    },
+    {
+      "path": "calvin_models/calvin_agent/models/plan_encoders/plan_recognition_net.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "27d7bdccec4b91bef06acadeab2da4bc8be125c1",
+      "size": 1654,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/27d7bdccec4b91bef06acadeab2da4bc8be125c1"
+    },
+    {
+      "path": "calvin_models/calvin_agent/rollout",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "97fc1ed75d184a3c2a986b634581243265170861",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/97fc1ed75d184a3c2a986b634581243265170861"
+    },
+    {
+      "path": "calvin_models/calvin_agent/rollout/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/rollout/rollout.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a5c3dcbcdcb1fc241b27fccb26a94f5db2aba22a",
+      "size": 18856,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/a5c3dcbcdcb1fc241b27fccb26a94f5db2aba22a"
+    },
+    {
+      "path": "calvin_models/calvin_agent/rollout/rollout_long_horizon.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "800d09516b4ce731891cf844a86821b35f2d4b29",
+      "size": 9032,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/800d09516b4ce731891cf844a86821b35f2d4b29"
+    },
+    {
+      "path": "calvin_models/calvin_agent/rollout/rollout_video.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8b461827bd34990be70e2412508317a42f71c09c",
+      "size": 10099,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/8b461827bd34990be70e2412508317a42f71c09c"
+    },
+    {
+      "path": "calvin_models/calvin_agent/training.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d2c6702c1a42388c071535a946235e8a6c092978",
+      "size": 5165,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/d2c6702c1a42388c071535a946235e8a6c092978"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bd28fe82c6309650fc85a76810a2b3ff10b51210",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/bd28fe82c6309650fc85a76810a2b3ff10b51210"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/automatic_lang_annotator_mp.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12176467d6c5db96147df67614455bfbfa677472",
+      "size": 15421,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/12176467d6c5db96147df67614455bfbfa677472"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/compute_proprioception_statistics.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3c2e458065a6894ef01eddec0e365a3e07641fe5",
+      "size": 3617,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/3c2e458065a6894ef01eddec0e365a3e07641fe5"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/create_splits.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f332c236faa05264e46666609fd08fa05f6e54ed",
+      "size": 3871,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/f332c236faa05264e46666609fd08fa05f6e54ed"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/data_visualization.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e279fe434c4c454edf077e65bc307f97398c1e50",
+      "size": 1327,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e279fe434c4c454edf077e65bc307f97398c1e50"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/dataset_task_statistics.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e27655637190f9b469def8de746147bc64d9ba36",
+      "size": 2342,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e27655637190f9b469def8de746147bc64d9ba36"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/kl_callbacks.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4293534b2c25c602c9092c4fd9abb717a9a6ceac",
+      "size": 2245,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/4293534b2c25c602c9092c4fd9abb717a9a6ceac"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/language_annotator.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc00c3b748f58738379b98d3f3c9d26fa7fc75d9",
+      "size": 3288,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/fc00c3b748f58738379b98d3f3c9d26fa7fc75d9"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/relabel_with_new_lang_model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e1de193a59a7515d7b07c3ddf521f006c0a9a66",
+      "size": 2135,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/1e1de193a59a7515d7b07c3ddf521f006c0a9a66"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/transforms.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a763e0fdbcde21073bee41cabb730683be19da2d",
+      "size": 2161,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/a763e0fdbcde21073bee41cabb730683be19da2d"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f348b72927574b78292fbe3e0d933b8c52031e4",
+      "size": 5491,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/4f348b72927574b78292fbe3e0d933b8c52031e4"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/visualizations.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c39a66dbbef070433a9ed8ac6e361a30d74d6881",
+      "size": 1428,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/c39a66dbbef070433a9ed8ac6e361a30d74d6881"
+    },
+    {
+      "path": "calvin_models/calvin_agent/utils/visualize_annotations.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "37085df75e89abc2025e06a1468b9ed98a840700",
+      "size": 4477,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/37085df75e89abc2025e06a1468b9ed98a840700"
+    },
+    {
+      "path": "calvin_models/calvin_agent/visualization",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "088e4d1153916bb1b0e5b63dd7df7e4f6ac4f838",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/088e4d1153916bb1b0e5b63dd7df7e4f6ac4f838"
+    },
+    {
+      "path": "calvin_models/calvin_agent/visualization/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/calvin_agent/visualization/tsne_plot.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b932708221f1a8b318b5b3574f24d4d3b37e52a",
+      "size": 5544,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/5b932708221f1a8b318b5b3574f24d4d3b37e52a"
+    },
+    {
+      "path": "calvin_models/calvin_agent/wrappers",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8f9038622bbd13f403fa1ef748b5da0e8de352b4",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/8f9038622bbd13f403fa1ef748b5da0e8de352b4"
+    },
+    {
+      "path": "calvin_models/calvin_agent/wrappers/calvin_env_wrapper.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38542ac9778b70c04b2cccaa9ca687929b3574fd",
+      "size": 4623,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/38542ac9778b70c04b2cccaa9ca687929b3574fd"
+    },
+    {
+      "path": "calvin_models/conf",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1cd9e50d3c8ff937669982bb7b05a62c0bc7a48a",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/1cd9e50d3c8ff937669982bb7b05a62c0bc7a48a"
+    },
+    {
+      "path": "calvin_models/conf/annotations",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "37bca7603dd4a08bb63f1fafe41f28a259377e2a",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/37bca7603dd4a08bb63f1fafe41f28a259377e2a"
+    },
+    {
+      "path": "calvin_models/conf/annotations/new_playtable.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "172d862c8482fea0e2f150fcca3145c1c83b7c7f",
+      "size": 23789,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/172d862c8482fea0e2f150fcca3145c1c83b7c7f"
+    },
+    {
+      "path": "calvin_models/conf/annotations/new_playtable_validation.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31d8285a8ebc3702026ddcc09dd666f063122a5f",
+      "size": 2168,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/31d8285a8ebc3702026ddcc09dd666f063122a5f"
+    },
+    {
+      "path": "calvin_models/conf/callbacks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a63d0d67b172a8113ebb407d3208da76b1da0423",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/a63d0d67b172a8113ebb407d3208da76b1da0423"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/checkpoint",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "55c51306a87f11174199c49688faf2c27e4593ee",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/55c51306a87f11174199c49688faf2c27e4593ee"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/checkpoint/lh_sr.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e39c661275cea91eefbdd7df4261d77cd227a09b",
+      "size": 269,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e39c661275cea91eefbdd7df4261d77cd227a09b"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/checkpoint/save_all.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e2edcb0d52a7998842ad8ab028418f815496260",
+      "size": 178,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/8e2edcb0d52a7998842ad8ab028418f815496260"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/checkpoint/task_sr.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f832c2eceae68d7e88e7ea3c291becc89868a5e",
+      "size": 263,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/9f832c2eceae68d7e88e7ea3c291becc89868a5e"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/checkpoint/val_action.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c4e02d45bbf56e0c5781b619822a7e4e48fdb1e",
+      "size": 219,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/8c4e02d45bbf56e0c5781b619822a7e4e48fdb1e"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a311f82eae1a0d52ce99e73e510d2eebd07e9493",
+      "size": 129,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/a311f82eae1a0d52ce99e73e510d2eebd07e9493"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/kl_schedule",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8a33b4aaa4dc7d11c69c8f4d4c04988370de8e3e",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/8a33b4aaa4dc7d11c69c8f4d4c04988370de8e3e"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/kl_schedule/constant.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9cf84fda3ae525eacdae08e64297b36fad43678e",
+      "size": 61,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/9cf84fda3ae525eacdae08e64297b36fad43678e"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/kl_schedule/linear.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7559c1860df8bc83f29fd05a89003b58ff4bb77",
+      "size": 118,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/a7559c1860df8bc83f29fd05a89003b58ff4bb77"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/kl_schedule/sigmoid.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "08f572ba4f359cb5b4ae960242e0a20d3cd621c7",
+      "size": 138,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/08f572ba4f359cb5b4ae960242e0a20d3cd621c7"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/rollout",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1c69a73bbeb7ac451749c1dc0829c489e4624bf3",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/1c69a73bbeb7ac451749c1dc0829c489e4624bf3"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/rollout/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "56a513d5c22bc2e655412c801d8fcf63bd5d578e",
+      "size": 782,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/56a513d5c22bc2e655412c801d8fcf63bd5d578e"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/rollout/tasks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "09f83fad0b62adfbfc822b85020063124324fd1f",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/09f83fad0b62adfbfc822b85020063124324fd1f"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/rollout/tasks/new_playtable_tasks.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0d25c6bf117aec06fce2df3f1c47bf9a19e58e5a",
+      "size": 2884,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/0d25c6bf117aec06fce2df3f1c47bf9a19e58e5a"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/rollout_lh",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0e9f864fb1afc9b0abf858e2168736f029648ed2",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/0e9f864fb1afc9b0abf858e2168736f029648ed2"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/rollout_lh/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "247b7e41749f113d5c7d4023b83c3e358a373e79",
+      "size": 523,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/247b7e41749f113d5c7d4023b83c3e358a373e79"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/tsne_plot",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "82769c8a46904995df36fb00e0b7cdf8925605f0",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/82769c8a46904995df36fb00e0b7cdf8925605f0"
+    },
+    {
+      "path": "calvin_models/conf/callbacks/tsne_plot/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8fd60173c0f44119f9f53802440b1daeca950c19",
+      "size": 130,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/8fd60173c0f44119f9f53802440b1daeca950c19"
+    },
+    {
+      "path": "calvin_models/conf/config.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1736c43e63caea4fe149edbc750bf6bce659a2a2",
+      "size": 821,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/1736c43e63caea4fe149edbc750bf6bce659a2a2"
+    },
+    {
+      "path": "calvin_models/conf/datamodule",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c7cd2c6a02b7e1ef273bb2d75499aa47e308ddd2",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/c7cd2c6a02b7e1ef273bb2d75499aa47e308ddd2"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/datasets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ada40cf724c0776f81da6907a9996ad442ce8dbd",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/ada40cf724c0776f81da6907a9996ad442ce8dbd"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/datasets/lang_dataset",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "997b49c49c68a32a9ba9e4314967b7ec428ba491",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/997b49c49c68a32a9ba9e4314967b7ec428ba491"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/datasets/lang_dataset/lang.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1da95edad20d350f372812dbb4a2afeb6fc48edf",
+      "size": 307,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/1da95edad20d350f372812dbb4a2afeb6fc48edf"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/datasets/lang_dataset/lang_shm.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eafa3ea835208dc5599c05425b345c7f3e6b6f44",
+      "size": 271,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/eafa3ea835208dc5599c05425b345c7f3e6b6f44"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/datasets/vision_dataset",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c74eb0fa79c32c8835f43c07e49a20bf06052e96",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/c74eb0fa79c32c8835f43c07e49a20bf06052e96"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/datasets/vision_dataset/vision.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9818b9d202038944dea7f572b277cd8e38f923cc",
+      "size": 340,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/9818b9d202038944dea7f572b277cd8e38f923cc"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/datasets/vision_dataset/vision_shm.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c58a6807ac560196cb8462d54aef271b3585326",
+      "size": 270,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/6c58a6807ac560196cb8462d54aef271b3585326"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/datasets/vision_lang.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aeb5df57c4c41282849694f5c367bb61606e54b0",
+      "size": 60,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/aeb5df57c4c41282849694f5c367bb61606e54b0"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/datasets/vision_lang_shm.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f3ea847308653b8543e40f7271f383596bd2711b",
+      "size": 68,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/f3ea847308653b8543e40f7271f383596bd2711b"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/datasets/vision_only.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ca2ca5ed908b3fadf52606fcb1e2829de3b2b4fc",
+      "size": 37,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/ca2ca5ed908b3fadf52606fcb1e2829de3b2b4fc"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4a9da50599faf75845449cb6bc797f43de47b6b8",
+      "size": 412,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/4a9da50599faf75845449cb6bc797f43de47b6b8"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "79aaf28a8e334b357d4f0306e1cb64d6b38bf3db",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/79aaf28a8e334b357d4f0306e1cb64d6b38bf3db"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/all_mods_abs_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f12936e03eae8e6e0ba442b2fe6b8a3e990575d5",
+      "size": 198,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/f12936e03eae8e6e0ba442b2fe6b8a3e990575d5"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/all_mods_rel_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a754d60a9214a43b86d8005a8b6a22d5a2b6f28",
+      "size": 202,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/3a754d60a9214a43b86d8005a8b6a22d5a2b6f28"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgb_static_abs_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3fecf7b37e177f6cfd1fbefac572e9271ae98dec",
+      "size": 107,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/3fecf7b37e177f6cfd1fbefac572e9271ae98dec"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgb_static_gripper_abs_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c3e185abb0c2166757af45195dc2b7963b95e06",
+      "size": 122,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/7c3e185abb0c2166757af45195dc2b7963b95e06"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgb_static_gripper_rel_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f79b29f319faca21a5f1fba91b61386d0b530e5",
+      "size": 126,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/7f79b29f319faca21a5f1fba91b61386d0b530e5"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgb_static_rel_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c3ff253651ad10f9e110cc49641a27a5c6e6f66c",
+      "size": 111,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/c3ff253651ad10f9e110cc49641a27a5c6e6f66c"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgb_static_robot_scene_abs_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "34c001f5ecd61e44e24fb0b15354a5c19bfc311a",
+      "size": 120,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/34c001f5ecd61e44e24fb0b15354a5c19bfc311a"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgb_static_tactile_abs_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aedbb96bab0436e7c9f58a5e0b6429fad0bf823d",
+      "size": 122,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/aedbb96bab0436e7c9f58a5e0b6429fad0bf823d"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgb_static_tactile_rel_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc923932f96e9fadf15891478e2d4f0c64774390",
+      "size": 126,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/bc923932f96e9fadf15891478e2d4f0c64774390"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgbd_both_abs_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f08f04b0aa9df4b2cdea4249cc5daee7fe6d0646",
+      "size": 153,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/f08f04b0aa9df4b2cdea4249cc5daee7fe6d0646"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgbd_both_rel_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "10bd70a87a90272a8446c0459aeb7c7dfcf68931",
+      "size": 157,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/10bd70a87a90272a8446c0459aeb7c7dfcf68931"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgbd_static_gripper_rel_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "574ce49d04bd9b8fb4a362e855af0129be26db12",
+      "size": 141,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/574ce49d04bd9b8fb4a362e855af0129be26db12"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/lang_rgbd_static_robot_abs_act.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc1d3408d0807097698626c27fe8f3b28a24cc16",
+      "size": 121,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/bc1d3408d0807097698626c27fe8f3b28a24cc16"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/observation_space/state_only.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c92fd0aa0bd3a6d079500e61c3f7eec243f82e60",
+      "size": 95,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/c92fd0aa0bd3a6d079500e61c3f7eec243f82e60"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/proprioception_dims",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "de11949ce7bd6f758284bec1e5f96c26cd899774",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/de11949ce7bd6f758284bec1e5f96c26cd899774"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/proprioception_dims/none.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "25f2cc3e07ace2222651de10dcd34552f6bd463e",
+      "size": 120,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/25f2cc3e07ace2222651de10dcd34552f6bd463e"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/proprioception_dims/robot_full.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72da5df2358e66c16f1467f1445714ee5940a9d4",
+      "size": 120,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/72da5df2358e66c16f1467f1445714ee5940a9d4"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/proprioception_dims/robot_no_joints.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2624b0e277f368100a8dbea35c4596815bfd3af9",
+      "size": 127,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/2624b0e277f368100a8dbea35c4596815bfd3af9"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/proprioception_dims/robot_scene.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24be1b9dafa1678f51bb79ee6cbe2edcf60c87f5",
+      "size": 120,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/24be1b9dafa1678f51bb79ee6cbe2edcf60c87f5"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/random.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e91b4c85d9c6161f8991d720a4109693dc29cfe6",
+      "size": 162,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e91b4c85d9c6161f8991d720a4109693dc29cfe6"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/transforms",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6378c9b64dd26782e2eccbff20cb72c73bab1fb0",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/6378c9b64dd26782e2eccbff20cb72c73bab1fb0"
+    },
+    {
+      "path": "calvin_models/conf/datamodule/transforms/play_basic.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50ebf1cc4ceffe5d2fa1cf38cb9f99aa3c1fbe57",
+      "size": 3446,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/50ebf1cc4ceffe5d2fa1cf38cb9f99aa3c1fbe57"
+    },
+    {
+      "path": "calvin_models/conf/inference",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e80537f81658438c86cc19e614cae844934918eb",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/e80537f81658438c86cc19e614cae844934918eb"
+    },
+    {
+      "path": "calvin_models/conf/inference/config_inference.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "193424b5d2e7f1c4bf0b790d5b3cb882f4e4820b",
+      "size": 365,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/193424b5d2e7f1c4bf0b790d5b3cb882f4e4820b"
+    },
+    {
+      "path": "calvin_models/conf/lang_ann.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "afd5b3bec33d86b82b87149ae80bccc8b0348c4b",
+      "size": 1338,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/afd5b3bec33d86b82b87149ae80bccc8b0348c4b"
+    },
+    {
+      "path": "calvin_models/conf/logger",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "12908ba50e6216539d6fa4ead9ffec9517c021a7",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/12908ba50e6216539d6fa4ead9ffec9517c021a7"
+    },
+    {
+      "path": "calvin_models/conf/logger/tb_logger.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6496a7dff9154a581ea1365517f54ab3daf0c320",
+      "size": 93,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/6496a7dff9154a581ea1365517f54ab3daf0c320"
+    },
+    {
+      "path": "calvin_models/conf/logger/wandb.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf629b8750d859b8961dc8d87ea92ca1149d6f43",
+      "size": 138,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/bf629b8750d859b8961dc8d87ea92ca1149d6f43"
+    },
+    {
+      "path": "calvin_models/conf/loss",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "eedf156b612340e66f159e072652a1bb1c67b116",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/eedf156b612340e66f159e072652a1bb1c67b116"
+    },
+    {
+      "path": "calvin_models/conf/loss/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "091273973551ad81848d366515da0cc2d2412824",
+      "size": 15,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/091273973551ad81848d366515da0cc2d2412824"
+    },
+    {
+      "path": "calvin_models/conf/model",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9afea0f0eb584a158a35ddd8f5c054c5f36149cf",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/9afea0f0eb584a158a35ddd8f5c054c5f36149cf"
+    },
+    {
+      "path": "calvin_models/conf/model/action_decoder",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "69024be89f10083581adc10a64e2e99025a8bcd4",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/69024be89f10083581adc10a64e2e99025a8bcd4"
+    },
+    {
+      "path": "calvin_models/conf/model/action_decoder/logistic.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b2201b4fbef9bbb36053d9a672aa526cc150907",
+      "size": 436,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/0b2201b4fbef9bbb36053d9a672aa526cc150907"
+    },
+    {
+      "path": "calvin_models/conf/model/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e36c1f6f82619ef7f6f7f19ce47279f2df7ecfe2",
+      "size": 302,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e36c1f6f82619ef7f6f7f19ce47279f2df7ecfe2"
+    },
+    {
+      "path": "calvin_models/conf/model/language_goal",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "44f4b23d99c617b5146ed0948cc4b7a5f67d8543",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/44f4b23d99c617b5146ed0948cc4b7a5f67d8543"
+    },
+    {
+      "path": "calvin_models/conf/model/language_goal/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "602382b37fdf38056f019e0ccbc835efa3685d10",
+      "size": 226,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/602382b37fdf38056f019e0ccbc835efa3685d10"
+    },
+    {
+      "path": "calvin_models/conf/model/language_goal/none.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/conf/model/optimizer",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e9aa9d2ce3cf39ec6541ba52899b79d6085f3b74",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/e9aa9d2ce3cf39ec6541ba52899b79d6085f3b74"
+    },
+    {
+      "path": "calvin_models/conf/model/optimizer/adam.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "71f7399e599c6d01864d071889a33afb697c114e",
+      "size": 66,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/71f7399e599c6d01864d071889a33afb697c114e"
+    },
+    {
+      "path": "calvin_models/conf/model/optimizer/adamw.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d1c8334a16a1042356997f99a0241dffe03ba05e",
+      "size": 82,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/d1c8334a16a1042356997f99a0241dffe03ba05e"
+    },
+    {
+      "path": "calvin_models/conf/model/optimizer/sgd.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a2834d8cd9d754f0d091895e389cf1b3fe959d5d",
+      "size": 81,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/a2834d8cd9d754f0d091895e389cf1b3fe959d5d"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1f5aa601bc766b1474e482ba225d04b1657a6b00",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/1f5aa601bc766b1474e482ba225d04b1657a6b00"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/RGBD_both.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d5c320c3e66f9482a60f4095208587dbe5427a04",
+      "size": 253,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/d5c320c3e66f9482a60f4095208587dbe5427a04"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "971704309f8e5c3a7b07e0c6840a1eb307035808",
+      "size": 244,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/971704309f8e5c3a7b07e0c6840a1eb307035808"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/depth_gripper",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4cf9272cd4c4a1e16fe5789273dad18b54623557",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/4cf9272cd4c4a1e16fe5789273dad18b54623557"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/depth_gripper/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "025f13098d32d808838012951e2126a8acb3c467",
+      "size": 9,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/025f13098d32d808838012951e2126a8acb3c467"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/depth_gripper/none.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/depth_static",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4cf9272cd4c4a1e16fe5789273dad18b54623557",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/4cf9272cd4c4a1e16fe5789273dad18b54623557"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/depth_static/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "025f13098d32d808838012951e2126a8acb3c467",
+      "size": 9,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/025f13098d32d808838012951e2126a8acb3c467"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/depth_static/none.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/gripper_cam.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c94c59a60c1ef2b012efa841764be2df05ad687",
+      "size": 247,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/8c94c59a60c1ef2b012efa841764be2df05ad687"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/proprio",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f8b7a7454855efcec6235ca8c828b4aa7009074b",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/f8b7a7454855efcec6235ca8c828b4aa7009074b"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/proprio/identity.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65277891b0bc403d04d3438ddfeaa478882d31cc",
+      "size": 137,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/65277891b0bc403d04d3438ddfeaa478882d31cc"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/static_RGBD.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "94c103aba9c7cc8a4030d3e6afcf4654275f0420",
+      "size": 247,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/94c103aba9c7cc8a4030d3e6afcf4654275f0420"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/static_RGB_tactile.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78f40f881d58fcc229f046db7c2acfa23fe9f4b8",
+      "size": 247,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/78f40f881d58fcc229f046db7c2acfa23fe9f4b8"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/tactile",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ee30f7e278f4fb4413353953aa11a3d00cec10db",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/ee30f7e278f4fb4413353953aa11a3d00cec10db"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/tactile/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f6e00d5bcc1ecd6448769d01ebcec400df1e9680",
+      "size": 101,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/f6e00d5bcc1ecd6448769d01ebcec400df1e9680"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/tactile/none.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/vision_gripper",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "33400a57eb376d4dd124ff014ca327d14b177103",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/33400a57eb376d4dd124ff014ca327d14b177103"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/vision_gripper/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0764670c45fb157ba3629ffd976d1d88362fd51a",
+      "size": 219,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/0764670c45fb157ba3629ffd976d1d88362fd51a"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/vision_gripper/none.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/vision_static",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2012fd39ac920acce3b1698be75d2e403ca861ae",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/2012fd39ac920acce3b1698be75d2e403ca861ae"
+    },
+    {
+      "path": "calvin_models/conf/model/perceptual_encoder/vision_static/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7ffcd721518c45b21199be0f9797faa66094de0",
+      "size": 221,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/e7ffcd721518c45b21199be0f9797faa66094de0"
+    },
+    {
+      "path": "calvin_models/conf/model/plan_proposal",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1b0945df9146f826a17b56f1ec0959839ca23f60",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/1b0945df9146f826a17b56f1ec0959839ca23f60"
+    },
+    {
+      "path": "calvin_models/conf/model/plan_proposal/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12fed77e521485eb1504abd75eb007e49f618416",
+      "size": 198,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/12fed77e521485eb1504abd75eb007e49f618416"
+    },
+    {
+      "path": "calvin_models/conf/model/plan_recognition",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "967fec2cd45da6eea8134ddc60ad878c0e65f28a",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/967fec2cd45da6eea8134ddc60ad878c0e65f28a"
+    },
+    {
+      "path": "calvin_models/conf/model/plan_recognition/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20b6a479c5bf94530dd2402de99d2840fc154286",
+      "size": 202,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/20b6a479c5bf94530dd2402de99d2840fc154286"
+    },
+    {
+      "path": "calvin_models/conf/model/sbert.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b0005fb948c25687d8a43018caf5d32e98223d7f",
+      "size": 97,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/b0005fb948c25687d8a43018caf5d32e98223d7f"
+    },
+    {
+      "path": "calvin_models/conf/model/visual_goal",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4df1afec8088d5aad91bc30dac0e06c054ee4628",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/4df1afec8088d5aad91bc30dac0e06c054ee4628"
+    },
+    {
+      "path": "calvin_models/conf/model/visual_goal/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "09e1bb9026f9973ae074d7ae831733fc31d11e6d",
+      "size": 198,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/09e1bb9026f9973ae074d7ae831733fc31d11e6d"
+    },
+    {
+      "path": "calvin_models/conf/trainer",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7d736ad820df11561b01e0aa7d281c9f67677bfd",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/7d736ad820df11561b01e0aa7d281c9f67677bfd"
+    },
+    {
+      "path": "calvin_models/conf/trainer/play_trainer.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1fedf76d6d4ccb69d5d7c00739a077dd8d1ed6ad",
+      "size": 82,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/1fedf76d6d4ccb69d5d7c00739a077dd8d1ed6ad"
+    },
+    {
+      "path": "calvin_models/conf/training",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "75560ca5a25a927e5ac292102fb6c9e85d75b5d8",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/75560ca5a25a927e5ac292102fb6c9e85d75b5d8"
+    },
+    {
+      "path": "calvin_models/conf/training/default_training.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a71ae05b5ef2c1b2d2317bd37fb037e3aef37aa",
+      "size": 11,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/3a71ae05b5ef2c1b2d2317bd37fb037e3aef37aa"
+    },
+    {
+      "path": "calvin_models/requirements.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8282805a5ff7c38000417b5a9db180f878afb0f4",
+      "size": 274,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/8282805a5ff7c38000417b5a9db180f878afb0f4"
+    },
+    {
+      "path": "calvin_models/setup.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cd7f8aaecd31e29a8c1f60d51cb69c7ff1c19912",
+      "size": 1300,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/cd7f8aaecd31e29a8c1f60d51cb69c7ff1c19912"
+    },
+    {
+      "path": "dataset",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5b03c3111a1219df4f1a368d41ca1ab6477ad2dd",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/5b03c3111a1219df4f1a368d41ca1ab6477ad2dd"
+    },
+    {
+      "path": "dataset/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b942dec9412cb7ec3125a4beae154a3fa8db7fa7",
+      "size": 5856,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/b942dec9412cb7ec3125a4beae154a3fa8db7fa7"
+    },
+    {
+      "path": "dataset/download_data.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3ece90a50c66a93a78cc819cdc561b43aa4b7a89",
+      "size": 931,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/3ece90a50c66a93a78cc819cdc561b43aa4b7a89"
+    },
+    {
+      "path": "install.sh",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "fa33622b1a01a685147b265a5159d163848d87f3",
+      "size": 235,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/fa33622b1a01a685147b265a5159d163848d87f3"
+    },
+    {
+      "path": "media",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8bb782afb108df456a46a9e3885988fa35fe6c34",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/8bb782afb108df456a46a9e3885988fa35fe6c34"
+    },
+    {
+      "path": "media/sensors.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b29e1973d579acee83b48143a93ecdf8a78b8ca9",
+      "size": 778920,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/b29e1973d579acee83b48143a93ecdf8a78b8ca9"
+    },
+    {
+      "path": "media/teaser.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a91956068d9382e94b03e305304a2695a030dca3",
+      "size": 307328,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/a91956068d9382e94b03e305304a2695a030dca3"
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b684ac326a5e56051dd375c49e40851be489f848",
+      "size": 287,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/b684ac326a5e56051dd375c49e40851be489f848"
+    },
+    {
+      "path": "requirements-dev.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a489b4ecff5106e469d05e24b5740a803c4d93f2",
+      "size": 53,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/a489b4ecff5106e469d05e24b5740a803c4d93f2"
+    },
+    {
+      "path": "scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c228c48b23eb0e0077de092c0e4f163a76aa802b",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/c228c48b23eb0e0077de092c0e4f163a76aa802b"
+    },
+    {
+      "path": "scripts/visualize_dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7682435fa09542bb1cdb19910f152769e679b51c",
+      "size": 1791,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/7682435fa09542bb1cdb19910f152769e679b51c"
+    },
+    {
+      "path": "setup_local.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7287aa5b8e555767be25efe95293eb34d1234387",
+      "size": 1141,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/7287aa5b8e555767be25efe95293eb34d1234387"
+    },
+    {
+      "path": "slurm_scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9748d1ff0a67140c545161030b03fe6f1b2ff3c6",
+      "url": "https://api.github.com/repos/mees/calvin/git/trees/9748d1ff0a67140c545161030b03fe6f1b2ff3c6"
+    },
+    {
+      "path": "slurm_scripts/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "db1f850126d5e46088316f2d280a5bf01abc3678",
+      "size": 1558,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/db1f850126d5e46088316f2d280a5bf01abc3678"
+    },
+    {
+      "path": "slurm_scripts/sbatch_eval.sh",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "db4c14f210f400d02f61ca378fd1def9e69caeac",
+      "size": 588,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/db4c14f210f400d02f61ca378fd1def9e69caeac"
+    },
+    {
+      "path": "slurm_scripts/sbatch_lfp.sh",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "7dfd1a7ee41805ebb996bde0564181e9761f0c00",
+      "size": 820,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/7dfd1a7ee41805ebb996bde0564181e9761f0c00"
+    },
+    {
+      "path": "slurm_scripts/slurm_training.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f3f2c04e089718d61d5e839b2755624c553cc55f",
+      "size": 5895,
+      "url": "https://api.github.com/repos/mees/calvin/git/blobs/f3f2c04e089718d61d5e839b2755624c553cc55f"
+    }
+  ]
+}

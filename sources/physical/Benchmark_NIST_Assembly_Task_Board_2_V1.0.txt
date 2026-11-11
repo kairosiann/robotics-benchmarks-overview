@@ -1,0 +1,216 @@
+Robotic Disassembly/Assembly NIST Task board 2 BENCHMARK
+ 
+Reference No / Version
+
+URL
+
+Authors 
+RAL-SI-2020-B-2 [Benchmarking Protocols for Evaluating Small Parts Robotic Assembly Systems]-V1.0
+
+https://www.nist.gov/el/intelligent-systems-division-73500/robotic-grasping-and-manipulation-assembly/assembly
+
+Kenneth~Kimble, Karl~Van~Wyk, Joe~Falco, Elena~Messina, Yu~Sun, Mizuho Shibata, Wataru Uemura, Yasuyoshi~Yokokohji
+Institution 
+National Institute of Standards and Technology, University of South Florida (USF), Kindai University, Ryukoku University, Kobe University
+Contact information
+Joseph.falco@nist.gov, Kenneth.kimble@nist.gov
+Adopted Protocol
+RAL-SI-2020-P [Benchmarking Protocols for Evaluating Small Parts Robotic Assembly Systems]-V1.0
+Kenneth Kimble1, Karl Van Wyk2, Joe Falco1, Elena Messina1, Yu Sun3, Mizuho Shibata4, Wataru Uemura5, Yasuyoshi Yokokohji6
+
+1National Institute of Standards and Technology (NIST), 2NVIDIA, 3University of South Florida, 4Kindai University, 5Ryukoku University, 6Kobe University 
+Scoring
+
+Disassembly
+
+Description
+Qty
+Disassemble
+Placement*
+Sub-Total
+Spring tensioner
+1
+5
+0
+
+Slide tensioner
+1
+5
+0
+
+Sprocket tensioner
+1
+5
+0
+
+Chain belt
+1
+2
+1
+
+Timing belt
+1
+2
+1
+
+Round belt
+1
+2
+1
+
+Thread M6 screws
+6
+2 ea.
+1 ea.
+
+Sprocket idlers
+2
+2 ea.
+1 ea.
+
+Timing pulleys
+2
+2 ea.
+1 ea.
+
+Round pulleys
+2
+2 ea.
+1 ea.
+
+Metal collars
+6
+2 ea.
+1 ea.
+
+Note: Max Score = 78                      Total Score
+
+
+Example of a task board partially disassembled (approximately 50% completed).
+
+
+Assembly
+
+
+Description
+Qty
+Task 1
+Task 2
+Place*
+Sub-Total
+ 
+ 
+Actuate
+Seat
+ 
+ 
+Spring tensioner
+1
+5
+5
+0
+
+Slide tensioner
+1
+5
+5
+0
+
+Sprocket tensioner
+1
+5
+5
+0
+
+ 
+ 
+Thread pulley 1
+Thread pulley 2
+ 
+
+Chain belt
+1
+14
+14
+1
+
+Timing belt
+1
+14
+14
+1
+
+Round belt
+1
+14
+14
+1
+
+ 
+ 
+Thread
+Seat
+ 
+ 
+Thread M6 screws
+6
+3 ea.
+2 ea.
+1 ea.
+
+ 
+ 
+Grasp
+Insert
+ 
+ 
+Sprocket idlers
+2
+3 ea.
+2 ea.
+1 ea.
+
+Timing pulleys
+2
+3 ea.
+2 ea.
+1 ea.
+
+Round pulleys
+2
+3 ea.
+2 ea.
+1 ea.
+
+Metal collars
+6
+3 ea.
+2 ea.
+1 ea.
+
+*The part is manipulated to the task board and at least sits on the task board.
+Note: Max Score = 225       Total Score
+
+
+Example of a fully assembled task board. Corresponds to the set-up just prior to the disassembly task or an assembly trial with 100% completion.
+
+Details of Setup
+Describe your system design including robots and end-effector technologies used, perception type and how it is used to localize board, kit and components, use of CAD.  Also describe all tools used with end-effectors.
+Results to Submit
+Submit scoresheets and a summary of results over 32 trials to include analysis of speed, completion, and reliability. Make notes in the summary of the incomplete/failed tasks and the reasons for the failure. Speed is measured as the completion time of a task board as:
+
+Ttaskboard = Tfinish − Tstart.
+
+Task board completion should be reported as the percentage of total points received for each task board for disassembly and assembly. 
+
+% Disassembled = Total Score/78 x 100
+
+% Assembled = Total Score/225 x 100
+
+For each set of 32 trials, compute the mean, standard deviation, and 95% confidence interval of the completion times, disassembly completion and assembly completion. 
+
+Reliability can also be captured as the probability of successfully completing a task or sub-task. The theoretical upper bound probability for successfully inserting a component (PS) is calculated given a confidence level (CL), the number of successes (m), and the number of independent trials (n). Given the binomial cumulative distribution function:
+
+
+
+The PS is its minimum value to some precision while still satisfying the above inequality

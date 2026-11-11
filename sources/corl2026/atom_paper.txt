@@ -1,0 +1,1692 @@
+ATOM-Bench: A Real-World Benchmark for Atomic Skills and Compositional Generalization in Manipulation Policies
+Skip to main content
+Report GitHub Issue
+×
+Title:
+Content selection saved. Describe the issue below:
+Description:
+Submit without GitHub
+Submit in GitHub
+Why HTML?
+Report Issue
+Back to Abstract
+Download PDF
+Contents
+Reading mode
+Colour theme
+Abstract
+1
+Introduction
+2
+Related Work
+3
+ATOM-Bench
+3.1
+Task Factorization and Task Groups
+3.2
+Data Collection
+3.3
+Metrics
+4
+Experiments
+4.1
+Experimental Setup
+4.2
+Atomic Skill Acquisition
+4.3
+Compositional Generalization
+4.4
+Failure Analysis
+4.5
+Atomic-transfer vs. Single-task Atomic Fine-tuning
+5
+Conclusion
+6
+Limitations
+References
+A
+Task Design
+B
+Physical Test Seed Placement
+C
+Robustness to Language and Visual Perturbations
+Visual perturbations (Perturbed-Vis).
+Language perturbations (Perturbed-Lan).
+Results.
+D
+SFT Configurations for Models in ATOM-Bench
+E
+Atom Taxonomy and Design Rationale
+E.1
+Motor Atoms
+E.2
+Instruction Atoms
+License: CC BY 4.0
+arXiv:2606.16826v1 [cs.RO] 15 Jun 2026
+ATOM-Bench: A Real-World Benchmark for Atomic Skills and Compositional Generalization in Manipulation Policies
+Zenan Wu
+1,2,∗,‡
+Bingqing Wei
+1,2,∗,‡
+Lu Liu
+1,∗
+Zheqi He
+1,†
+Xi Wang
+1
+Jiakang Liu
+1
+Zehui Li
+1,2
+Guocai Yao
+1
+Jing-Shu Zheng
+1
+Xi Yang
+1
+Yongtao Wang
+2
+1
+Beijing Academy of Artificial Intelligence
+2
+Peking University
+{liulu, zqhe}@baai.ac.cn
+Homepage:
+https://flageval-baai.github.io/AtomBenchPage/
+Abstract
+Generalist manipulation policies are increasingly presented as foundation models for robotic control, but their real-world generalization remains difficult to diagnose. A policy may succeed on demonstrated tasks while still failing to execute fine-grained atomic skills or recombine learned skills in new task structures. We introduce
+ATOM-Bench
+, a real-world benchmark for evaluating both atomic skills and compositional generalization in manipulation policies. ATOM-Bench factorizes tabletop manipulation into motor atoms and instruction atoms, and contains 30 atomic tasks and 24 held-out compositional tasks across paired single-arm and dual-arm robot tracks. We collect 3,000 human demonstrations for atomic fine-tuning and release both the demonstration data and evaluation rollout data to support reproducible real-world evaluation. Policies are fine-tuned on atomic tasks and evaluated on both atomic skill acquisition and held-out compositional tasks. We further introduce Atomic Score (AS) and Compositional Failure Share (CFS) to distinguish failures caused by weak atomic skills from failures caused by limited compositional reuse. Through 2,700 physical rollouts on five representative manipulation policies, we find that current policies can acquire simple instruction-grounding skills, but still struggle with fine-grained motor atoms, counting, and logical filtering. More importantly, strong atomic performance does not reliably transfer to held-out compositional tasks. ATOM-Bench provides a diagnostic testbed for studying whether failures arise from weak motor execution, poor instruction grounding, or limited compositional reuse.
+†
+†
+footnotetext:
+∗
+Equal contribution.
+†
+Corresponding author and project leader.
+‡
+Work done during an internship at BAAI.
+1
+Introduction
+Recent manipulation policies
+(
+Black et al., 2025
+;
+Physical Intelligence et al., 2025b
+;
+Wu et al., 2026
+;
+Cai et al., 2026
+;
+Bi et al., 2025
+;
+Ye et al., 2026
+)
+are increasingly presented as foundation models for robotic control. They have demonstrated impressive behaviors across common manipulation, long-horizon instruction following, and multi-task learning. These systems suggest an appealing possibility: a robot policy may acquire reusable physical and semantic skills, and then recombine them to solve new tasks. However, this promise remains difficult to verify on real robots. Strong demonstrations, high simulation scores, or successful task-specific fine-tuning do not necessarily show that a policy has learned composable skills rather than task templates or dataset-specific regularities.
+Existing benchmarks make this verification difficult, revealing a growing evaluation tension for manipulation foundation models. Simulation benchmarks provide scale, controllability, and fast iteration, but their large programmatically generated task distributions can be rapidly absorbed by high-capacity policies, while their physical challenges remain less demanding than real-world contact, perception, and execution. As a result, high simulation success increasingly provides limited evidence of deployable real-robot generalization. Real-world evaluation gives stronger evidence, but it is expensive, difficult to automate, and hard to scale. Recent real-robot efforts make important progress: RoboArena
+(
+Atreya et al., 2025
+)
+studies distributed pairwise policy ranking, AutoEval
+(
+Zhou et al., 2025b
+)
+reduces human involvement with learned success classifiers and reset policies, RoboChallenge
+(
+Yakefu et al., 2025
+)
+builds an online evaluation system for scalable real-robot testing, and GM-100
+(
+Wang et al., 2026
+)
+expands real-robot task diversity with 100 detail-oriented tasks. However, these benchmarks primarily evaluate policies over task suites or ranking protocols. They provide limited control over the skills a policy has seen during adaptation, making it difficult to determine whether a model has learned reusable atomic skills that can be transferred to unseen compositional tasks. ATOM-Bench targets this diagnostic gap by controlling the atomic training distribution and evaluating both atomic skill acquisition and held-out compositional generalization on real robots.
+We focus on two related questions. First, can current manipulation policies acquire reliable atomic skills, including both physical motor skills and language-conditioned instruction skills? Second, after these atomic skills are learned, can they be recombined to solve held-out compositional tasks that were never demonstrated during fine-tuning? This setting is more diagnostic than broad task-suite averages, because it lets us pinpoint
+where
+a policy fails rather than only
+that
+it fails.
+Figure 1:
+Overview of ATOM-Bench.
+Tabletop manipulation tasks are factorized into
+motor atoms
+and
+instruction atoms
+. Policies are fine-tuned on atomic tasks and evaluated on both atomic skill acquisition and held-out compositional generalization.
+To study these questions, we introduce
+ATOM-Bench
+, a real-world benchmark for atomic skills and compositional generalization in manipulation policies. As illustrated in Figure
+1
+, ATOM-Bench factorizes tabletop manipulation into
+motor atoms
+, which describe physical operations, and
+instruction atoms
+, which describe semantic or logical constraints in language. These atoms are used to build atomic tasks for adaptation and held-out compositional tasks for evaluation. Policies are fine-tuned on atomic tasks and then evaluated on both the atomic tasks themselves and held-out compositional tasks that combine multiple motor and instruction atoms. We further introduce Atomic Score (AS) and Compositional Failure Share (CFS) to separate failures caused by weak atomic skills from failures caused by compositional failures. ATOM-Bench contains two paired real-world robot tracks: a single-arm track on Franka Panda and a dual-arm track on Cobot Magic. Each dual-arm task is designed as the bimanual counterpart of a single-arm task, adding hand-role assignment, inter-arm coordination, and ordered action sequences.
+Our experiments show that atomic skills and compositional generalization remain challenging in different ways. Atomic tasks that require precise control, such as pouring, reorientation, and pushing, are difficult for current policies. Instruction atoms that require set-level reasoning, such as counting and exclusion, also remain challenging. Even when policies acquire useful atomic skills, their performance drops sharply on held-out compositional tasks. These results suggest that real-world generalization in manipulation policies remains far from solved.
+Our contributions are:
+•
+We introduce
+ATOM-Bench
+, a real-world robot benchmark with 3,000 human demonstrations across two robotic platforms.
+•
+We design a paired two-track task suite with 30 atomic tasks and 24 compositional tasks, covering single-arm object-centric manipulation and dual-arm coordinated manipulation.
+•
+We introduce AS and CFS to distinguish atomic-skill deficits from compositional failures.
+•
+We evaluate five representative manipulation policies through 2,700 physical rollouts and show that both atomic skills and compositional transfer remain challenging.
+2
+Related Work
+Simulated and compositional manipulation benchmarks.
+Simulation benchmarks provide scalable and controllable evaluation for robot learning.
+VIMA-Bench
+(
+Jiang et al., 2023
+)
+, LIBERO
+(
+Liu et al., 2023
+)
+, and VLABench
+(
+Zhang et al., 2024
+)
+study multi-task learning, language-conditioned manipulation, long-horizon execution, and knowledge-intensive reasoning in simulated environments.
+Recent benchmarks further show that strong VLA performance can hide memorization and weak compositional generalization: VLA-Arena
+(
+Zhang et al., 2025
+)
+, LIBERO-PRO
+(
+Zhou et al., 2025a
+)
+, and RoboHiMan
+(
+Chen et al., 2025
+)
+evaluate policies under compositional, visual, language, or task perturbations.
+These works motivate ATOM-Bench, but they mainly evaluate in simulation or digital-twin settings.
+ATOM-Bench instead evaluates both atomic skill execution and compositional generalization directly on physical robots.
+Real-world manipulation benchmarks.
+Real-world benchmarks evaluate policies directly on physical robots.
+RoboArena
+(
+Atreya et al., 2025
+)
+performs distributed pairwise policy comparison, AutoEval
+(
+Zhou et al., 2025b
+)
+automates success scoring and scene resets, RoboChallenge
+(
+Yakefu et al., 2025
+)
+provides large-scale online evaluation, and GM-100
+(
+Wang et al., 2026
+)
+broadens real-robot task coverage.
+SceneReplica
+(
+Khargonkar et al., 2024
+)
+and FurnitureBench
+(
+Heo et al., 2023
+)
+emphasize reproducible scenes and long-horizon assembly.
+These efforts improve scalability, automation, ranking, reproducibility, or task diversity.
+In contrast, ATOM-Bench fine-tunes policies on controlled atomic tasks and evaluates them on both atomic and held-out compositional tasks, revealing failures in atomic execution and compositional reuse.
+Generalist manipulation policies.
+Generalist manipulation policies such as the
+π
+\pi
+series
+(
+Black et al., 2025
+;
+Physical Intelligence et al., 2025b
+;
+Physical Intelligence et al., 2025a
+;
+Physical Intelligence et al., 2026
+)
+, OpenVLA
+(
+Kim et al., 2025
+)
+, LingBot-VLA
+(
+Wu et al., 2026
+)
+, GR00T
+(
+NVIDIA et al., 2025
+;
+GEAR Team, 2025
+)
+, SmolVLA
+(
+Shukor et al., 2025
+)
+, Motus
+(
+Bi et al., 2025
+)
+, and DreamZero
+(
+Ye et al., 2026
+)
+, have shown increasingly strong performance on language-conditioned robot tasks.
+However, it remains unclear whether their generalization comes from reusable physical and semantic skills or from task templates and dataset-specific regularities.
+ATOM-Bench provides a controlled real-world protocol for this question by jointly measuring atomic-task performance and held-out compositional performance under the same adaptation setting.
+3
+ATOM-Bench
+3.1
+Task Factorization and Task Groups
+ATOM-Bench uses atoms as a practical abstraction for controlled real-robot evaluation.
+We choose atoms by summarizing recurring task factors in prior manipulation benchmarks
+(
+Yu et al., 2019
+;
+Nasiriany et al., 2024
+;
+Luo et al., 2025
+;
+Wang et al., 2025
+;
+Paulius et al., 2019
+;
+Paulius et al., 2020
+;
+Srivastava et al., 2022
+;
+Zhang et al., 2024
+)
+and referring-expression grounding datasets
+(
+Kazemzadeh et al., 2014
+;
+Mao et al., 2016
+;
+Yu et al., 2016
+)
+.
+The selected atoms are common in manipulation tasks, expose different physical or semantic failure modes, can be reliably instantiated on real robots, and can be recombined into held-out compositional tasks.
+The full taxonomy and design rationale are provided in Appendix
+E
+.
+We divide these factors into two types:
+motor atoms
+and
+instruction atoms
+.
+Motor atoms specify the physical operation required by the task, including pick-and-place, reorientation, pushing, stacking, pouring, or articulated-object access.
+Instruction atoms specify how the target object or destination is described in language, including color, shape, size, source relation, goal destination, counting or exclusion.
+Instruction atoms are always evaluated through executable robot tasks, typically with pick-and-place or its bimanual counterpart as the carrier action.
+Based on these atoms, each platform contains 7 instruction-atom tasks, 8 motor-atom tasks, and 12 held-out compositional tasks.
+The single-arm and dual-arm task suites are paired: each Cobot Magic task is designed as the bimanual counterpart of a Franka Panda task, with additional hand-role assignment and inter-arm coordination.
+The
+Motor Set
+tests one physical skill at a time with minimal semantic ambiguity.
+The
+Instruction Set
+tests one language constraint at a time under a simple carrier action.
+The
+Composition Set
+contains held-out tasks that combine one or more motor atoms with multiple instruction atoms.
+3.2
+Data Collection
+Figure 2:
+Data collection platforms used in ATOM-Bench.
+Left:
+the Franka Panda with single-arm.
+Right:
+the Agilex Cobot Magic with dual-arm.
+We collect data on two robotic platforms: Franka Panda for single-arm tasks and Agilex Cobot Magic for dual-arm tasks. As shown in Figure
+2
+, the Franka Panda setup uses a 7-DoF Franka Panda arm with a Robotiq 2F-85 gripper and three Intel RealSense cameras mounted at the left, front, and wrist viewpoints. The wrist camera is attached with a 3D-printed mount following
+(
+Taunyazov et al., 2020
+)
+.
+The Agilex Cobot Magic setup is an open-source dual-arm system built upon Mobile ALOHA
+(
+Fu et al., 2024
+)
+. It supports coordinated control of two robotic arms and uses three Intel RealSense cameras mounted at the left-arm, right-arm, and front viewpoints.
+For each atomic task, we collect 100 expert demonstrations through human teleoperation. Franka Panda is controlled with a 3D SpaceMouse, while Agilex Cobot Magic is teleoperated through its master arms. During teleoperation, we record synchronized observations and robot actions at 30 Hz. In total, we collect approximately 9 hours of demonstrations on Franka Panda and 12.5 hours on Agilex Cobot Magic.
+3.3
+Metrics
+ATOM-Bench uses five metrics: Success Rate (SR), Process Success Rate (PSR), Atomic Score (AS), Compositional Failure Share (CFS), and Transfer Gap (TG).
+Each task is evaluated over 10 shared physical test seeds, and results are macro-averaged across tasks.
+Success Rate.
+Success Rate (SR) is the primary task-completion metric.
+A rollout is counted as successful only if it satisfies the task completion predicate.
+SR is the percentage of successful rollouts among all evaluation trials.
+Process Success Rate.
+Since real-robot failures are often partial, PSR captures intermediate progress.
+Each task is annotated with a small set of score points (e.g., select the correct object, reach the target); PSR is the per-rollout fraction of points achieved, averaged across rollouts.
+Atomic Score.
+For a compositional task
+X
+X
+, let
+A
+⁡
+(
+X
+)
+A(X)
+be the set of its participating motor and instruction atoms.
+We define the Atomic Score (AS) as the mean PSR of these atoms,
+AS
+⁡
+(
+X
+)
+=
+1
+|
+A
+⁡
+(
+X
+)
+|
+​
+∑
+a
+∈
+A
+⁡
+(
+X
+)
+PSR
+⁡
+(
+a
+)
+.
+\mathrm{AS}(X)=\frac{1}{|A(X)|}\sum_{a\in A(X)}\mathrm{PSR}(a).
+When an atom has multiple representative atomic tasks,
+PSR
+⁡
+(
+a
+)
+\mathrm{PSR}(a)
+is the mean PSR of those tasks.
+AS measures how well the policy performs the required atoms in isolation.
+Compositional Failure Share.
+We measure how much of the compositional failure cannot be explained by weak atomic skills using
+CFS
+⁡
+(
+X
+)
+=
+max
+⁡
+(
+0
+,
+AS
+⁡
+(
+X
+)
+−
+PSR
+⁡
+(
+X
+)
+)
+1
+−
+PSR
+⁡
+(
+X
+)
+.
+\mathrm{CFS}(X)=\frac{\max(0,\mathrm{AS}(X)-\mathrm{PSR}(X))}{1-\mathrm{PSR}(X)}.
+A low CFS means that the failure is mostly explained by weak atomic skills, while a high CFS means that the required atoms are learned in isolation but fail after composition.
+Transfer Gap.
+TG is the SR difference between single-task and multi-task atomic fine-tuning.
+Positive TG favors task specialization, while negative TG favors joint atomic training.
+4
+Experiments
+We design our experiments to evaluate generalist manipulation policies on two axes: atomic skill acquisition and compositional generalization, under a shared real-world adaptation protocol. Our experiments answer four questions:
+(1) How well do current policies acquire atomic motor and instruction skills on real robots?
+(2) How well do those acquired atomic skills compose into unseen held-out tasks?
+(3) What are the dominant failure modes of current policies?
+(4) How does atomic-transfer fine-tuning compare with single-task fine-tuning?
+4.1
+Experimental Setup
+We evaluate five manipulation policies in ATOM-Bench: Pi0.5, LingBot-VLA, GROOT N1.6, SmolVLA, and Motus. Each policy is evaluated on both robotic platforms described in Section
+3.2
+.
+We use two fine-tuning protocols.
+Atomic-transfer fine-tuning
+is the primary protocol: a single policy is jointly fine-tuned on all 15 atomic tasks and evaluated on both the atomic tasks and the held-out Composition Set.
+Single-task atomic fine-tuning
+trains an independent checkpoint on the 100 demonstrations of one atomic task and evaluates it only on that task, serving as a specialization baseline. Because this requires one training run per atomic task, we report it only for Pi0.5. We also evaluate robustness with perturbations; details are provided in Appendix
+C
+.
+For each task, policies are evaluated under 10 fixed physical test seeds with shared initial object placements. We reproduce each seed using a mask-guided placement procedure, as detailed in Appendix
+B
+. Hyperparameters and training details are listed in Appendix
+D
+.
+4.2
+Atomic Skill Acquisition
+We first evaluate whether policies can acquire atomic skills under the atomic-transfer protocol and results are summarized in Table
+1
+and Figure
+3
+.
+Table 1:
+Atomic skill acquisition under atomic-transfer fine-tuning.
+Mean SR and PSR (%) over the Motor and Instruction Sets.
+Franka Panda
+Cobot Magic
+Motor
+Instruction
+Motor
+Instruction
+Model
+SR
+PSR
+SR
+PSR
+SR
+PSR
+SR
+PSR
+Pi0.5
+46.2
+56.2
+94.3
+95.7
+45.0
+72.0
+71.4
+83.2
+Motus
+36.2
+46.2
+67.1
+78.7
+35.0
+59.3
+50.0
+67.5
+LingBot-VLA
+37.5
+46.5
+54.3
+60.5
+26.2
+42.8
+21.4
+47.1
+GROOT N1.6
+28.8
+47.1
+57.1
+69.5
+23.8
+41.0
+27.1
+52.1
+SmolVLA
+17.5
+29.8
+11.4
+31.2
+10.0
+32.2
+5.7
+29.3
+Figure 3:
+Per-atom Success Rate under atomic-transfer fine-tuning.
+Each bar is one model’s SR over all tasks instantiating that atom on both platforms.
+Overall, instruction atoms are easier than motor atoms. For example, Pi0.5 reaches 94.3% SR on Franka Panda instruction atoms and 71.4% SR on Cobot Magic instruction atoms, while its motor SR is only 46.2% and 45.0%, respectively. This is expected because most instruction atoms are evaluated through simple carrier actions such as pick-and-place, while motor atoms require the policy to execute the physical skill itself. Among motor atoms, pick-and-place is clearly the easiest, with a cross-model mean SR of
+74
+%
+74\%
+. In contrast, access (
+9
+%
+9\%
+), reorientation (
+11
+%
+11\%
+), pushing (
+16
+%
+16\%
+), and pouring (
+20
+%
+20\%
+) have much lower cross-model mean SR, showing that precise control and object pose control remain difficult.
+Instruction atoms also show different levels of difficulty. Simple visual grounding tasks, such as color, size, and source relation, achieve higher success rates, while count and exclusion are more challenging. This suggests that current policies can often use basic visual attributes to select objects, but still struggle with set-level constraints and logical filtering. Across models, Pi0.5 performs best on both platforms, and Motus is overall the second-strongest. LingBot-VLA is competitive on Franka Panda motor atoms (
+37.5
+%
+37.5\%
+SR, slightly above Motus) but trails on Cobot Magic; GROOT N1.6 shows mid-pack performance on both platforms; SmolVLA trails in every setting. Finally, PSR is often higher than SR, especially for motor tasks, indicating that many failures are partial: policies can complete early stages but fail to satisfy the final success condition.
+4.3
+Compositional Generalization
+Franka Panda
+Cobot Magic
+Model
+SR
+PSR
+AS
+CFS
+SR
+PSR
+AS
+CFS
+Pi0.5
+15.8
+30.4
+83.3
+73.7
+16.7
+42.6
+79.5
+56.8
+Motus
+10.8
+26.5
+69.3
+49.4
+7.5
+31.5
+68.5
+48.3
+LingBot-VLA
+3.3
+12.1
+60.3
+54.5
+0.0
+24.4
+47.2
+29.3
+GROOT N1.6
+3.3
+11.6
+66.3
+61.2
+1.7
+13.7
+48.2
+38.8
+SmolVLA
+0.0
+6.6
+33.3
+28.3
+0.0
+6.3
+32.5
+27.3
+Table 2:
+Atomic-to-compositional transfer. Mean SR, PSR, AS, CFS (%) over the Composition Set, per platform. AS is the atomic-baseline ceiling; CFS is the share of compositional failure attributable to composition rather than to weak atoms.
+Figure 4:
+Transfer Gap on paired atomic tasks of Pi0.5. Each point pairs a Franka atom with its dual-arm counterpart.
+We next evaluate whether learned atomic skills transfer to held-out compositional tasks under the atomic-transfer protocol.
+As shown in Table
+2
+, although most models achieve non-trivial AS, their compositional success rates remain low. Pi0.5 reaches high AS on both Franka Panda and Cobot Magic (
+83.3
+%
+83.3\%
+and
+79.5
+%
+79.5\%
+), yet its compositional SR is only
+15.8
+%
+15.8\%
+and
+16.7
+%
+16.7\%
+. Motus shows the same pattern. LingBot-VLA and GROOT N1.6 on Franka Panda also have moderate AS (
+60.3
+%
+60.3\%
+and
+66.3
+%
+66.3\%
+) that does not translate into compositional success (both
+3.3
+%
+3.3\%
+SR). The gap between AS and compositional SR is consistent across models, showing that learning atomic skills does not automatically yield the ability to recombine them into unseen tasks.
+CFS further shows that this gap is not only caused by weak atomic skills. Pi0.5 has the highest PSR on both tracks and the highest CFS as well, indicating that most of its remaining failure comes from composition itself rather than from unlearned atoms. Motus shows a similar profile with CFS around
+48
+48
+–
+49
+%
+49\%
+on both platforms despite a lower atomic ceiling. In contrast, SmolVLA has both low AS and CFS, suggesting that its failures are still largely atom-limited. Across models, PSR is consistently higher than SR, showing that policies often complete some intermediate steps but fail to finish the full compositional task. Overall, these results suggest that current policies can acquire some useful atomic skills, but still struggle to reliably compose them in real-world settings.
+4.4
+Failure Analysis
+Figure 5:
+Representative failure cases.
+Figure 6:
+Single-arm vs. dual-arm failure comparison on a paired task.
+The single-arm rollout completes the task, whereas the dual-arm
+counterpart fails midway.
+We further analyze failed rollouts to understand where current policies break down. We annotate each failed rollout into five types:
+motor failure
+(correct object but failed execution),
+reference failure
+(wrong object selection),
+constraint failure
+(violating count, exclusion, or other logical constraints),
+safety abort
+(human intervention due to unsafe behavior), and
+timeout
+(failure to finish within the time limit).
+Across all tasks, motor failure, reference failure, and timeout account for over 90% of failures. This suggests that most failures come from three bottlenecks: physical execution, target grounding, and task progress. Figure
+5
+shows representative examples of motor failure and reference failure.
+Motor failures are common in tasks that require precise control, such as pouring, reorientation and articulated-object access.
+Reference failures are more frequent in tasks involving spatial relations, exclusion, or multiple candidate destinations.
+We also compare paired single-arm and dual-arm tasks.
+The dual-arm tasks are designed as bimanual counterparts of the single-arm tasks, but they introduce extra requirements such as hand-role assignment, inter-arm coordination, and longer ordered action sequences, which make them more challenging.
+As shown in Figure
+6
+, the Franka Panda single-arm
+rollout completes the pour-beans task, whereas the Cobot Magic dual-arm rollout
+fails to grasp the bowl with the left hand, leaving the pour-and-receive
+sequence unexecutable.
+4.5
+Atomic-transfer vs. Single-task Atomic Fine-tuning
+We compare atomic-transfer fine-tuning with single-task atomic fine-tuning on Pi0.5.
+For each atomic task, we compute the Transfer Gap (TG) between the single-task checkpoint and the atomic-transfer checkpoint; negative TG indicates that atomic-transfer performs better.
+Since the atomic-transfer checkpoint is trained on all 15 atomic tasks, this comparison should be read as a comparison against a 100-demonstration single-task baseline rather than a general verdict on single-task training.
+Figure
+4
+shows that the effect depends on both platform and atom type.
+On Franka Panda, most atoms have negative TG, suggesting that joint atomic training improves many single-arm skills.
+This is likely because these tasks share low-level behaviors such as object localization, grasping, moving, and placing, while multi-task training provides more data and scene variation than fitting each task separately.
+The pattern is more mixed on Cobot Magic.
+Instruction atoms still mostly benefit from atomic-transfer training, likely because they share visual-language grounding and target selection.
+In contrast, several bimanual motor atoms have positive TG.
+These tasks require hand-role assignment, inter-arm coordination, and precise ordered actions, so single-task fine-tuning can better specialize to the required action pattern.
+Overall, atomic-transfer fine-tuning is a strong default for shared instruction grounding and single-arm manipulation, while complex bimanual motor skills remain more sensitive to task-specific practice.
+5
+Conclusion
+We introduced ATOM-Bench, a real-world benchmark for evaluating atomic skills and compositional generalization in manipulation policies.
+ATOM-Bench contains 30 atomic tasks and 24 held-out compositional tasks across paired single-arm and dual-arm tracks, enabling diagnosis of motor execution, instruction grounding, and compositional reuse. Through 2,700 physical rollouts on five representative policies, we find that current policies can acquire some useful atomic skills, especially simple instruction-grounding skills.
+However, fine-grained motor atoms and instruction atoms that require selecting objects from a set, such as counting and exclusion remain difficult, and strong atomic performance does not reliably transfer to held-out compositional tasks.
+We hope ATOM-Bench helps the community better understand where manipulation policies fail and supports progress toward more reliable real-world generalization.
+6
+Limitations
+ATOM-Bench is limited by the cost of real-robot evaluation and model fine-tuning.
+We evaluate five representative policies, but do not cover all available VLA and WAM models.
+Our task suite focuses on common tabletop manipulation factors that can be reliably instantiated on real robots, and therefore does not cover many long-tail skills such as deformable-object manipulation, tool use, mobile manipulation, or highly long-horizon tasks.
+In addition, evaluation remains labor-intensive: each rollout requires scene setup, safety monitoring, and manual score-point annotation.
+Future work will extend the task coverage and explore more automated reset, success detection, and annotation tools to scale real-world diagnostic evaluation.
+References
+Atreya et al. (2025)
+Pranav Atreya, Karl Pertsch, Tony Lee, Moo Jin Kim, Arhan Jain, Artur Kuramshin, Cyrus Neary, Edward S Hu, Kanav Arora, Kirsty Ellis, et al.
+Roboarena: Distributed real-world evaluation of generalist robot policies.
+In
+Conference on Robot Learning
+, pp.  336–364. PMLR, 2025.
+Bi et al. (2025)
+Hongzhe Bi, Hengkai Tan, Shenghao Xie, Zeyuan Wang, Shuhe Huang, Haitian Liu, Ruowen Zhao, Yao Feng, Chendong Xiang, Yinze Rong, Hongyan Zhao, Hanyu Liu, Zhizhong Su, Lei Ma, Hang Su, and Jun Zhu.
+Motus: A unified latent action world model, 2025.
+URL
+https://arxiv.org/abs/2512.13030
+.
+Black et al. (2025)
+Kevin Black, Noah Brown, Danny Driess, Adnan Esmail, Michael Equi, Chelsea Finn, Niccolo Fusai, Lachy Groom, Karol Hausman, Brian Ichter, Szymon Jakubczak, Tim Jones, Liyiming Ke, Sergey Levine, Adrian Li-Bell, Mohith Mothukuri, Suraj Nair, Karl Pertsch, Lucy Xiaoyang Shi, James Tanner, Quan Vuong, Anna Walling, Haohuan Wang, and Ury Zhilinsky.
+π
+0
+\pi_{0}
+: A vision-language-action flow model for general robot control.
+In
+Robotics: Science and Systems (RSS)
+, 2025.
+doi:
+10.48550/arXiv.2410.24164
+.
+Cai et al. (2026)
+Rui Cai, Jun Guo, Xinze He, Piaopiao Jin, Jie Li, Bingxuan Lin, Futeng Liu, Wei Liu, Fei Ma, Kun Ma, et al.
+Xiaomi-robotics-0: An open-sourced vision-language-action model with real-time execution.
+arXiv preprint arXiv:2602.12684
+, 2026.
+Chen et al. (2025)
+Yangtao Chen, Zixuan Chen, Nga Teng Chan, Junting Chen, Junhui Yin, Jieqi Shi, Yang Gao, Yong-Lu Li, and Jing Huo.
+Robohiman: A hierarchical evaluation paradigm for compositional generalization in long-horizon manipulation.
+arXiv preprint arXiv:2510.13149
+, 2025.
+Fu et al. (2024)
+Zipeng Fu, Tony Z Zhao, and Chelsea Finn.
+Mobile aloha: Learning bimanual mobile manipulation with low-cost whole-body teleoperation.
+arXiv preprint arXiv:2401.02117
+, 2024.
+GEAR Team (2025)
+GEAR Team.
+GR00T N1.6: An improved open foundation model for generalist humanoid robots.
+https://research.nvidia.com/labs/gear/gr00t-n1_6/
+, December 2025.
+NVIDIA Research. Accessed: 2026-05-25.
+Heo et al. (2023)
+Minho Heo, Youngwoon Lee, Doohyun Lee, and Joseph J. Lim.
+Furniturebench: Reproducible real-world benchmark for long-horizon complex manipulation.
+In
+Robotics: Science and Systems
+, 2023.
+Jiang et al. (2023)
+Yunfan Jiang, Agrim Gupta, Zichen Zhang, Guanzhi Wang, Yongqiang Dou, Yanjun Chen, Li Fei-Fei, Anima Anandkumar, Yuke Zhu, and Linxi Fan.
+Vima: General robot manipulation with multimodal prompts.
+In
+Fortieth International Conference on Machine Learning
+, 2023.
+Johnson et al. (2017)
+Justin Johnson, Bharath Hariharan, Laurens van der Maaten, Li Fei-Fei, C. Lawrence Zitnick, and Ross Girshick.
+CLEVR: A diagnostic dataset for compositional language and elementary visual reasoning.
+In
+IEEE Conference on Computer Vision and Pattern Recognition (CVPR)
+, pp.  2901–2910, 2017.
+URL
+https://cs.stanford.edu/people/jcjohns/clevr/
+.
+Kazemzadeh et al. (2014)
+Sahar Kazemzadeh, Vicente Ordonez, Mark Matten, and Tamara Berg.
+ReferItGame: Referring to objects in photographs of natural scenes.
+In
+Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP)
+, pp.  787–798. Association for Computational Linguistics, 2014.
+doi:
+10.3115/v1/D14-1086
+.
+URL
+https://aclanthology.org/D14-1086/
+.
+Khargonkar et al. (2024)
+Ninad Khargonkar, Sai Haneesh Allu, Yangxiao Lu, Balakrishnan Prabhakaran, Yu Xiang, et al.
+Scenereplica: Benchmarking real-world robot manipulation by creating replicable scenes.
+In
+2024 IEEE International Conference on Robotics and Automation (ICRA)
+, pp.  8258–8264. IEEE, 2024.
+Kim et al. (2025)
+Moo Jin Kim, Karl Pertsch, Siddharth Karamcheti, Ted Xiao, Ashwin Balakrishna, Suraj Nair, Rafael Rafailov, Ethan P Foster, Pannag R Sanketi, Quan Vuong, et al.
+Openvla: An open-source vision-language-action model.
+In
+Conference on Robot Learning
+, pp.  2679–2713. PMLR, 2025.
+Liu et al. (2023)
+Bo Liu, Yifeng Zhu, Chongkai Gao, Yihao Feng, Qiang Liu, Yuke Zhu, and Peter Stone.
+Libero: Benchmarking knowledge transfer for lifelong robot learning.
+Advances in Neural Information Processing Systems
+, 36:44776–44791, 2023.
+Luo et al. (2025)
+Jianlan Luo, Charles Xu, Fangchen Liu, Liam Tan, Zipeng Lin, Jeffrey Wu, Pieter Abbeel, and Sergey Levine.
+FMB: A functional manipulation benchmark for generalizable robotic learning.
+The International Journal of Robotics Research
+, 2025.
+doi:
+10.1177/02783649241276017
+.
+URL
+https://journals.sagepub.com/doi/abs/10.1177/02783649241276017
+.
+Mao et al. (2016)
+Junhua Mao, Jonathan Huang, Alexander Toshev, Oana Camburu, Alan L. Yuille, and Kevin Murphy.
+Generation and comprehension of unambiguous object descriptions.
+In
+IEEE Conference on Computer Vision and Pattern Recognition (CVPR)
+, pp.  11–20, 2016.
+doi:
+10.1109/CVPR.2016.9
+.
+URL
+https://arxiv.org/abs/1511.02283
+.
+Nasiriany et al. (2024)
+Soroush Nasiriany, Abhiram Maddukuri, Lance Zhang, Adeet Parikh, Aaron Lo, Abhijeet Joshi, Ajay Mandlekar, and Yuke Zhu.
+Robocasa: Large-scale simulation of everyday tasks for generalist robots.
+In
+Robotics: Science and Systems (RSS)
+, 2024.
+URL
+https://arxiv.org/abs/2406.02523
+.
+NVIDIA et al. (2025)
+NVIDIA, Johan Bjorck, Nikita Cherniadev Fernando Castañeda, Xingye Da, Runyu Ding, Linxi "Jim" Fan, Yu Fang, Dieter Fox, Fengyuan Hu, Spencer Huang, Joel Jang, Zhenyu Jiang, Jan Kautz, Kaushil Kundalia, Lawrence Lao, Zhiqi Li, Zongyu Lin, Kevin Lin, Guilin Liu, Edith Llontop, Loic Magne, Ajay Mandlekar, Avnish Narayan, Soroush Nasiriany, Scott Reed, You Liang Tan, Guanzhi Wang, Zu Wang, Jing Wang, Qi Wang, Jiannan Xiang, Yuqi Xie, Yinzhen Xu, Zhenjia Xu, Seonghyeon Ye, Zhiding Yu, Ao Zhang, Hao Zhang, Yizhou Zhao, Ruijie Zheng, and Yuke Zhu.
+GR00T N1: An open foundation model for generalist humanoid robots.
+In
+ArXiv Preprint
+, March 2025.
+Paulius et al. (2019)
+David Paulius, Yongqiang Huang, Jason Meloncon, and Yu Sun.
+Manipulation motion taxonomy and coding for robots.
+In
+IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)
+, pp.  5596–5601, 2019.
+doi:
+10.1109/IROS40897.2019.8967754
+.
+URL
+https://arxiv.org/abs/1910.00532
+.
+Paulius et al. (2020)
+David Paulius, Nicholas Eales, and Yu Sun.
+A motion taxonomy for manipulation embedding.
+In
+Robotics: Science and Systems (RSS)
+, 2020.
+URL
+https://www.roboticsproceedings.org/rss16/p045.html
+.
+Physical Intelligence et al. (2025a)
+Physical Intelligence, Ali Amin, Raichelle Aniceto, Ashwin Balakrishna, Kevin Black, et al.
+π
+0.6
+∗
+\pi^{*}_{0.6}
+: A vla that learns from experience, 2025a.
+Physical Intelligence et al. (2025b)
+Physical Intelligence, Kevin Black, Noah Brown, James Darpinian, Karan Dhabalia, Danny Driess, Adnan Esmail, Michael Equi, Chelsea Finn, Niccolo Fusai, Manuel Y. Galliker, Dibya Ghosh, Lachy Groom, Karol Hausman, Brian Ichter, Szymon Jakubczak, Tim Jones, Liyiming Ke, Devin LeBlanc, Sergey Levine, Adrian Li-Bell, Mohith Mothukuri, Suraj Nair, Karl Pertsch, Allen Z. Ren, Lucy Xiaoyang Shi, Laura Smith, Jost Tobias Springenberg, Kyle Stachowicz, James Tanner, Quan Vuong, Homer Walke, Anna Walling, Haohuan Wang, Lili Yu, and Ury Zhilinsky.
+π
+0.5
+\pi_{0.5}
+: A vision-language-action model with open-world generalization.
+In
+Conference on Robot Learning (CoRL)
+, 2025b.
+doi:
+10.48550/arXiv.2504.16054
+.
+Physical Intelligence et al. (2026)
+Physical Intelligence, Bo Ai, Ali Amin, Raichelle Aniceto, Ashwin Balakrishna, et al.
+π
+0.7
+\pi_{0.7}
+: A steerable generalist robotic foundation model with emergent capabilities, 2026.
+Shukor et al. (2025)
+Mustafa Shukor, Dana Aubakirova, Francesco Capuano, Pepijn Kooijmans, Steven Palma, Adil Zouitine, Michel Aractingi, Caroline Pascal, Martino Russi, Andres Marafioti, et al.
+Smolvla: A vision-language-action model for affordable and efficient robotics.
+arXiv preprint arXiv:2506.01844
+, 2025.
+Srivastava et al. (2022)
+Sanjana Srivastava, Chengshu Li, Michael Lingelbach, Roberto Martín-Martín, Fei Xia, Kent Elliott Vainio, Zheng Lian, Cem Gokmen, Shyamal Buch, Karen Liu, Silvio Savarese, Hyowon Gweon, Jiajun Wu, and Li Fei-Fei.
+BEHAVIOR: Benchmark for everyday household activities in virtual, interactive, and ecological environments.
+In
+Proceedings of the 5th Conference on Robot Learning
+, volume 164 of
+Proceedings of Machine Learning Research
+, pp.  477–490. PMLR, 2022.
+URL
+https://proceedings.mlr.press/v164/srivastava22a.html
+.
+Taunyazov et al. (2020)
+Tasbolat Taunyazov, Weicong Sng, Hian Hian See, Brian Lim, Jethro Kuan, Abdul Fatir Ansari, Benjamin C. K. Tee, and Harold Soh.
+Event-driven visual-tactile sensing and learning for robots.
+In
+Proceedings of Robotics: Science and Systems
+, Corvalis, Oregon, USA, July 2020.
+doi:
+10.15607/RSS.2020.XVI.020
+.
+URL
+https://www.roboticsproceedings.org/rss16/p020.pdf
+.
+Wang et al. (2025)
+Yi Ru Wang, Carter Ung, Christopher Tan, Grant Tannert, Jiafei Duan, Josephine Li, Anh Le, Rishabh Oswal, Markus Grotz, Wilbert Pumacay, Yuquan Deng, Ranjay Krishna, Dieter Fox, and Siddhartha Srinivasa.
+RoboEval: Where robotic manipulation meets structured and scalable evaluation.
+arXiv preprint arXiv:2507.00435
+, 2025.
+URL
+https://arxiv.org/abs/2507.00435
+.
+Wang et al. (2026)
+Ziyu Wang, Chenyuan Liu, Yushun Xiang, Runhao Zhang, Qingbo Hao, Hongliang Lu, Houyu Chen, Zhizhong Feng, Kaiyue Zheng, Dehao Ye, et al.
+The great march 100: 100 detail-oriented tasks for evaluating embodied ai agents.
+arXiv preprint arXiv:2601.11421
+, 2026.
+Wu et al. (2026)
+Wei Wu, Fan Lu, Yunnan Wang, Shuai Yang, Shi Liu, Fangjing Wang, Qian Zhu, He Sun, Yong Wang, Shuailei Ma, et al.
+A pragmatic vla foundation model.
+arXiv preprint arXiv:2601.18692
+, 2026.
+Yakefu et al. (2025)
+Adina Yakefu, Bin Xie, Chongyang Xu, Enwen Zhang, Erjin Zhou, Fan Jia, Haitao Yang, Haoqiang Fan, Haowei Zhang, Hongyang Peng, et al.
+Robochallenge: Large-scale real-robot evaluation of embodied policies.
+arXiv preprint arXiv:2510.17950
+, 2025.
+Ye et al. (2026)
+Seonghyeon Ye, Yunhao Ge, Kaiyuan Zheng, Shenyuan Gao, Sihyun Yu, George Kurian, Suneel Indupuru, You Liang Tan, Chuning Zhu, Jiannan Xiang, Ayaan Malik, Kyungmin Lee, William Liang, Nadun Ranawaka, Jiasheng Gu, Yinzhen Xu, Guanzhi Wang, Fengyuan Hu, Avnish Narayan, Johan Bjorck, Jing Wang, Gwanghyun Kim, Dantong Niu, Ruijie Zheng, Yuqi Xie, Jimmy Wu, Qi Wang, Ryan Julian, Danfei Xu, Yilun Du, Yevgen Chebotar, Scott Reed, Jan Kautz, Yuke Zhu, Linxi "Jim" Fan, and Joel Jang.
+World action models are zero-shot policies, 2026.
+URL
+https://arxiv.org/abs/2602.15922
+.
+Yu et al. (2016)
+Licheng Yu, Patrick Poirson, Shan Yang, Alexander C. Berg, and Tamara L. Berg.
+Modeling context in referring expressions.
+In
+European Conference on Computer Vision (ECCV)
+, pp.  69–85, 2016.
+URL
+https://arxiv.org/abs/1608.00272
+.
+Yu et al. (2019)
+Tianhe Yu, Deirdre Quillen, Zhanpeng He, Ryan Julian, Karol Hausman, Chelsea Finn, and Sergey Levine.
+Meta-world: A benchmark and evaluation for multi-task and meta reinforcement learning.
+In
+Conference on Robot Learning (CoRL)
+, 2019.
+URL
+https://arxiv.org/abs/1910.10897
+.
+Zhang et al. (2025)
+Borong Zhang, Jiahao Li, Jiachen Shen, Yishuai Cai, Yuhao Zhang, Yuanpei Chen, Juntao Dai, Jiaming Ji, and Yaodong Yang.
+Vla-arena: An open-source framework for benchmarking vision-language-action models, 2025.
+URL
+https://arxiv.org/abs/2512.22539
+.
+Zhang et al. (2024)
+Shiduo Zhang, Zhe Xu, Peiju Liu, Xiaopeng Yu, Yuan Li, Qinghui Gao, Zhaoye Fei, Zhangyue Yin, Zuxuan Wu, Yu-Gang Jiang, and Xipeng Qiu.
+VLABench: A large-scale benchmark for language-conditioned robotics manipulation with long-horizon reasoning tasks.
+arXiv preprint arXiv:2412.18194
+, 2024.
+URL
+https://arxiv.org/abs/2412.18194
+.
+Zhou et al. (2025a)
+Xueyang Zhou, Yangming Xu, Guiyao Tie, Yongchao Chen, Guowen Zhang, Duanfeng Chu, Pan Zhou, and Lichao Sun.
+Libero-pro: Towards robust and fair evaluation of vision-language-action models beyond memorization.
+arXiv preprint arXiv:2510.03827
+, 2025a.
+Zhou et al. (2025b)
+Zhiyuan Zhou, Pranav Atreya, You Liang Tan, Karl Pertsch, and Sergey Levine.
+Autoeval: Autonomous evaluation of generalist robot manipulation policies in the real world.
+arXiv preprint arXiv:2503.24278
+, 2025b.
+Appendix A
+Task Design
+ATOM-Bench instantiates the motor and instruction atoms as concrete real-robot tasks on two platforms.
+Each platform has three task groups: a
+Motor Set
+that isolates a single motor atom under a minimal, unambiguous instruction; an
+Instruction Set
+that isolates a single instruction atom under a simple pick-and-place carrier motor; and a held-out
+Composition Set
+that combines one or more motor atoms with two or more instruction atoms.
+The two platforms share a paired task design.
+The single-arm (Franka Panda) tasks are prefixed
+m
+/
+i
+/
+x
+for the three groups, and the dual-arm (Cobot Magic) tasks are prefixed
+dm
+/
+di
+/
+dx
+.
+The two tracks are constructed in one-to-one correspondence, the biggest difference is that the dual-arm version additionally requires bimanual coordination. The full task list, with prompts and the atoms each task instantiates, is given in Tables
+3
+–
+8
+.
+Table 3:
+Single-arm Motor Set (
+m1
+–
+m8
+). Each task isolates one motor atom under a minimal, unambiguous instruction.
+Task_id
+Prompt
+Instruction_atom
+Image
+m1
+Pick up the cube and place it into the basket.
+pick_place
+m2
+Pick up the ball and place it into the basket.
+pick_place
+m3
+Place the bottle upright on the tray.
+reorient
+m4
+Push the cube into the marked area.
+push
+m5
+Pour the coffee beans from the cup into the bowl.
+pour
+m6
+Open the drawer, then close it.
+access
+m7
+Stack the two cubes.
+stack
+m8
+Open the lid, then close it.
+access
+Table 4:
+Single-arm Instruction Set (
+i1
+–
+i7
+). Each task isolates one instruction atom under a pick-and-place carrier motor.
+Task_id
+Prompt
+Instruction_atom
+Image
+i1
+Pick up the blue cube and place it into the basket.
+color
+i2
+Pick up the triangular block and place it into the basket.
+shape
+i3
+Pick up the largest block and place it onto the tray.
+size
+i4
+Pick up the object to the left of the cylinder and place it into the basket.
+source_relation
+i5
+Pick up exactly two blocks and place them into the basket.
+count
+i6
+Pick up the red cube and place it into the right basket.
+goal_destination
+i7
+Place all non-red objects into the basket.
+exclusion
+Table 5:
+Single-arm Composition Set (
+x1
+–
+x12
+). Each held-out task combines one or more motor atoms with two or more instruction atoms.
+Task_id
+Prompt
+Motor_atom
+Instruction_atoms
+Image
+x1
+Pick up exactly two red cubes and place them into the basket.
+pick_place
+color + count
+x2
+Pick up the non-red object to the right of the cylinder and place it into the basket.
+pick_place
+source_relation + exclusion
+x3
+Open the drawer, pick up the red object to the left of the cylinder, place it into the basket, then close the drawer.
+access + pick_place
+color + source_relation
+x4
+Open the drawer, pick up exactly two blocks, place them into the right basket, then close the drawer.
+access + pick_place
+count + goal_destination
+x5
+Place the two smallest bottles upright into the tray.
+reorient
+count + size
+x6
+Place the green bottle upright onto the right tray.
+reorient
+color + goal_destination
+x7
+Push the non-red block into the right marked area.
+push
+exclusion + goal_destination
+x8
+Push the triangular block to the left of the cylinder into the marked area.
+push
+shape + source_relation
+x9
+Stack the smallest red cube on top of the green cube.
+stack
+color + size
+x10
+Stack the triangular block that is not purple on top of the cube.
+stack
+shape + exclusion
+x11
+Pour the beans from the bean dish into the small bowl on the right.
+pour
+size + goal_destination
+x12
+Pour the beans from the brown bean dish on the left into the bowl.
+pour
+color + source_relation
+Table 6:
+Dual-arm Motor Set (
+dm1
+–
+dm8
+). Bimanual counterparts of the single-arm Motor Set, additionally requiring two-arm coordination.
+Task_id
+Prompt
+Instruction_atom
+Image
+dm1
+Pick up the basket with the left hand and place the cube into the basket with the right hand.
+pick_place
+dm2
+Pick up the basket with the left hand and place the ball into the basket with the right hand.
+pick_place
+dm3
+Place the bottles upright on the tray.
+reorient
+dm4
+Push the two cubes into the marked area.
+push
+dm5
+Pick up the bowl with the left hand and pour the coffee beans from the cup into the bowl with the right hand.
+pour
+dm6
+Open the drawer with the left hand, place the block into the drawer with the right hand, then close the drawer with the left hand.
+access
+dm7
+Pick up one cube with the left hand and another cube with the right hand. First place the cube in the right hand at the target position, then stack the cube in the left hand on top.
+stack
+dm8
+Open the box lid with the left hand, place the block into the box with the right hand, then close the box lid with the left hand.
+access
+Table 7:
+Dual-arm Instruction Set (
+di1
+–
+di7
+). Bimanual counterparts of the single-arm Instruction Set, isolating one instruction atom each.
+Task_id
+Prompt
+Instruction_atom
+Image
+di1
+Pick up the basket with the left hand and place the blue cube into the basket with the right hand.
+color
+di2
+Pick up the basket with the left hand and place the triangular block into the basket with the right hand.
+shape
+di3
+Pick up the basket with the left hand and place the largest block into the basket with the right hand.
+size
+di4
+Pick up the basket with the left hand and place the object to the left of the red cylinder into the basket with the right hand.
+source_relation
+di5
+Pick up one cube with each hand and place exactly two cubes into the same basket, leaving the remaining cube outside.
+count
+di6
+Pick up one cube with the left hand and place it into the upper basket. Pick up one cube with the right hand and place it into the lower basket.
+goal_destination
+di7
+Place all geometric objects except the red cube into the basket.
+exclusion
+Table 8:
+Dual-arm Composition Set (
+dx1
+–
+dx12
+). Bimanual held-out compositions combining one or more motor atoms with two or more instruction atoms.
+Task_id
+Prompt
+Motor_atom
+Instruction_atoms
+Image
+dx1
+Pick up one red cube with each hand and place exactly two red cubes into the basket.
+pick_place
+color + count
+dx2
+Pick up the basket with the left hand and place the all non-red objects to the right of the cylinder into the basket with the right hand.
+pick_place
+source_relation + exclusion
+dx3
+Open the drawer with the left hand, pick up the red cube to the left of the cylinder with the right hand, place it into the basket, then close the drawer with the left hand.
+access + pick_place
+color + source_relation
+dx4
+Open the drawer with the left hand, pick up one block with each hand, place exactly two blocks into the right basket, then close the drawer with the left hand.
+access + pick_place
+count + goal_destination
+dx5
+Place the two smallest bottles upright into the tray.
+reorient
+count + size
+dx6
+Pick up the two green bottles lying down, one with each hand, and place them upright in the right target area, leaving the bottles of other colors in place.
+reorient
+color + goal_destination
+dx7
+Push the block that is not red into the right marked area.
+push
+exclusion + goal_destination
+dx8
+Push the triangular block to the left of the cylinder into the marked area.
+push
+shape + source_relation
+dx9
+Place the green cube on top of the largest blue cube with your left hand, and put the smallest red cube onto the green cube with your right hand.
+stack
+color + size
+dx10
+Pick up the triangular block with the left hand and pick up a cube that is not red with the right hand. First place the cube at the target position, then stack the triangular block on top of it.
+stack
+color + shape + exclusion
+dx11
+Pick up the smaller of the two bowls with the left hand, pick up the bean dish containing beans with the right hand, and pour the beans from the bean dish into that smaller bowl.
+pour
+size + goal_destination
+dx12
+Pick up the bowl with the left hand, pick up the brown bean dish with the right hand, and pour the beans from the brown bean dish into the bowl.
+pour
+color + source_relation
+Appendix B
+Physical Test Seed Placement
+Each task is evaluated under 10 fixed physical test seeds, and the same initial object placements must be reproduced when testing different policies.
+To achieve this without precise measurement, the reference scene of each seed is shown as a semi-transparent mask overlaid on the operator’s camera view (Figure
+7
+).
+Before every rollout, the operator arranges the physical objects until they align with the mask, so that all policies are evaluated under approximately the same initial conditions.
+Figure 7:
+Mask-guided object placement. The reference scene of a physical test seed (overlaid as a mask) lets the operator reproduce the same initial object positions across policies and evaluation runs.
+Appendix C
+Robustness to Language and Visual Perturbations
+Beyond the atomic-transfer and single-task protocols, we probe whether successful policies remain robust under simple perturbations.
+We reuse each policy’s atomic-transfer checkpoint without further fine-tuning, select the tasks on which it already achieves a high success rate, and re-evaluate it under two perturbation types: a visual perturbation (changing the background while keeping the scene layout) and a language perturbation (rewording the instruction while preserving its meaning).
+This isolates whether a policy relies on the specific visual and linguistic surface form seen during fine-tuning rather than on the underlying skill.
+Visual perturbations (Perturbed-Vis).
+We change the tabletop background from the default white cloth to a brown one while keeping all objects, layout, and lighting fixed. The instruction, score-point rubric, and physical test seeds remain unchanged.
+Language perturbations (Perturbed-Lan).
+For each selected task, we author a single paraphrase that preserves the underlying skill but changes the surface form.
+Atom-defining tokens (color, shape, and count words such as “blue,” “triangular,” “exactly two”), the left/right role assignment, and the temporal ordering of multi-stage actions are all preserved verbatim.
+Surface form is varied along three axes: verb synonyms within the same motor family (e.g.,
+pick up
+→
+\rightarrow
+grasp/lift/hold
+;
+place
+→
+\rightarrow
+drop/put
+;
+open/close
+→
+\rightarrow
+pull open/push shut
+;
+pour
+→
+\rightarrow
+tip
+), role-assignment phrasing (
+with the left hand
+→
+\rightarrow
+using your left hand
+), and clause structure (sentence merging or splitting, pronoun replacement, explicit sequencers).
+The score-point rubric and physical test seeds remain unchanged. The paraphrases are listed in Table
+9
+.
+Table 9:
+Original and language-perturbed (Perturbed-Lan) instructions for the evaluated tasks.
+Task
+Original prompt
+Perturbed-Lan prompt
+di1
+Pick up the basket with the left hand and place the blue cube into the basket with the right hand.
+Use your left hand to hold the basket, and use your right hand to drop the blue cube into it.
+di2
+Pick up the basket with the left hand and place the triangular block into the basket with the right hand.
+Hold the basket with the left hand; with the right hand, put the triangular block inside.
+dm2
+Pick up the basket with the left hand and place the ball into the basket with the right hand.
+Grasp the basket using the left hand, then drop the ball into it using the right hand.
+dm6
+Open the drawer with the left hand, place the block into the drawer with the right hand, then close the drawer with the left hand.
+Pull the drawer open with the left hand, put the block inside with the right hand, then push the drawer shut with the left hand.
+dx1
+Pick up one red cube with each hand and place exactly two red cubes into the basket.
+Use each hand to grasp one red cube, then place exactly two red cubes into the basket.
+dx12
+Pick up the bowl with the left hand, pick up the brown bean dish with the right hand, and pour the beans from the brown bean dish into the bowl.
+Lift the bowl with the left hand and the brown bean dish with the right hand, then tip the beans from the brown bean dish into the bowl.
+Results.
+We re-evaluate the Pi0.5 atomic-transfer checkpoint on Cobot Magic under both perturbation types for six tasks — four atomic tasks the policy already solves reliably (
+di1
+,
+di2
+,
+dm2
+,
+dm6
+) and two compositional tasks (
+dx1
+,
+dx12
+). Figure
+8
+reports the per-task SR.
+Figure 8:
+Pi0.5 success rate on Cobot Magic under the baseline atomic-transfer protocol, Perturbed-Vis (brown tablecloth), and Perturbed-Lan (paraphrased instruction). The right-most group is the mean SR across the six tasks.
+On the four atomic tasks, both perturbations have a minimal effect: SR stays at
+90
+90
+–
+100
+%
+100\%
+across all settings, indicating that Pi0.5 has learned the underlying atomic skills rather than overfitting to the training background or wording.
+On the two compositional tasks, however, robustness drops sharply:
+dx1
+falls from
+60
+%
+60\%
+to
+40
+%
+40\%
+under both perturbations, and
+dx12
+falls from
+50
+%
+50\%
+to
+40
+%
+40\%
+(Perturbed-Vis) and
+20
+%
+20\%
+(Perturbed-Lan).
+Averaged across the six tasks, the mean SR decreases from
+78.3
+%
+78.3\%
+(baseline) to
+76.7
+%
+76.7\%
+under visual perturbation and to
+71.7
+%
+71.7\%
+under language perturbation, with the language perturbation being the more damaging of the two.
+This pattern suggests that compositional skills are markedly more brittle to surface-form changes than atomic skills, and that language paraphrasing is a stronger stress test for compositional generalization than background perturbation.
+Appendix D
+SFT Configurations for Models in ATOM-Bench
+We fine-tune five models using their official codebases, following the publicly released training recipes whenever possible.
+In the atomic-transfer setting, each policy is jointly fine-tuned on all 15 atomic tasks, with 100 demonstrations per task and 1,500 demonstrations in total.
+In the single-task setting, which is reported only for Pi0.5, we fine-tune an independent checkpoint for each atomic task using its 100 demonstrations.
+All fine-tuning runs are conducted on NVIDIA H100 GPUs. SmolVLA was fine-tuned with LoRA due to its smaller model size.
+Table
+10
+lists the per-model details in atomic-transfer setting, including the base checkpoint, fine-tuning mode, optimizer, learning rate, batch size, and number of training steps.
+Table 10:
+Per-model SFT configurations in atomic-transfer.
+Model
+Base ckpt.
+Mode
+Optimizer
+LR
+Batch
+Steps
+Franka Panda
+Pi0.5
+pi05_base
+full
+AdamW
+2.0e-5 (cosine, warmup steps 1000)
+256
+3 epochs
+LingBot-VLA
+lingbot-vla-4b
+full
+AdamW
+2.5e-5 (cosine, warmup ratio 0.25)
+128
+3 epochs
+GROOT N1.6
+GR00T N1.6
+full
+AdamW
+1.0e-4 (cosine, warmup ratio 0.05)
+256
+3 epochs
+SmolVLA
+smolvla_base
+LoRA
+AdamW
+1.0e-4 (cosine, warmup steps 1000)
+256
+9 epochs
+Motus
+Motus
+full
+AdamW
+2.0e-5 (linear, warmup steps 1000)
+64
+6 epochs
+Cobot Magic
+Pi0.5
+pi05_base
+full
+AdamW
+2.0e-5 (cosine, warmup steps 1000)
+256
+3 epochs
+LingBot-VLA
+lingbot-vla-4b
+full
+AdamW
+5.0e-5 (constant)
+256
+3 epochs
+GROOT N1.6
+GR00T N1.6
+full
+AdamW
+1.0e-4 (cosine, warmup ratio 0.05)
+256
+6 epochs
+SmolVLA
+smolvla_base
+LoRA
+AdamW
+1.0e-4 (cosine, warmup steps 1000)
+256
+5 epochs
+Motus
+Motus
+full
+AdamW
+2.0e-5 (linear, warmup steps 1000)
+64
+5 epochs
+Appendix E
+Atom Taxonomy and Design Rationale
+E.1
+Motor Atoms
+Table
+11
+summarizes the motor atoms used in ATOM-Bench. We select these atoms from common physical operation families in prior manipulation benchmarks and motion taxonomies
+Yu et al. (2019)
+;
+Nasiriany et al. (2024)
+;
+Luo et al. (2025)
+;
+Wang et al. (2025)
+;
+Zhang et al. (2024)
+;
+Paulius et al. (2019)
+;
+Paulius et al. (2020)
+. They provide a compact set of real-robot-executable skills for evaluating atomic skill acquisition and compositional reuse.
+Table 11:
+Motor atoms in ATOM-Bench.
+Each atom summarizes a recurring physical operation family used for real-robot adaptation and held-out compositional evaluation.
+Motor Atom
+Definition
+Design Rationale
+pick_place
+Grasp an object and place it into a target container or region.
+Foundational tabletop operation and default carrier motor for many instruction atoms.
+reorient
+Change an object’s pose or orientation before completing placement, such as placing a bottle upright.
+Tests object pose control beyond basic transport.
+push
+Move an object along a support surface to a target region without necessarily grasping it.
+Captures canonical non-prehensile tabletop manipulation.
+stack
+Place one object on top of another object.
+Tests relative-pose precision and contact stability.
+pour
+Transfer granular or liquid-like contents from one container to another.
+Tests functional container use and material transfer.
+access
+Open, maintain, or close an articulated container, such as a drawer, box, or lid.
+Tests articulated-object interaction and phase transitions.
+We separate
+stack
+from
+pick_place
+because stacking requires stable contact and accurate relative pose control. We also define
+access
+as a functional operation family, covering tasks such as opening, using, and closing an articulated container.
+E.2
+Instruction Atoms
+Table
+12
+summarizes the instruction atoms used in ATOM-Bench. We select these atoms from common semantic and logical constraints in referring-expression grounding, compositional reasoning, and embodied manipulation benchmarks
+Kazemzadeh et al. (2014)
+;
+Mao et al. (2016)
+;
+Yu et al. (2016)
+;
+Johnson et al. (2017)
+;
+Srivastava et al. (2022)
+;
+Nasiriany et al. (2024)
+;
+Zhang et al. (2024)
+. Each instruction atom is evaluated through an executable robot task, usually with pick-and-place or its bimanual counterpart as the carrier action.
+Table 12:
+Instruction atoms in ATOM-Bench.
+These atoms summarize recurring semantic and logical constraints in language-conditioned manipulation.
+Instruction Atom
+Definition
+Design Rationale
+color
+Select the target object according to color.
+Basic attribute for object-level referring expressions.
+shape
+Select the target object according to geometric shape.
+Stable visual attribute for tabletop object selection.
+size
+Select the target object according to relative size, such as the largest or smallest object.
+Tests comparative attribute grounding.
+count
+Manipulate an exact number of objects.
+Tests set-level reasoning and multi-object selection.
+exclusion
+Select objects by excluding a specified attribute or category.
+Tests logical filtering over candidate objects.
+source_relation
+Select the target object according to its spatial relation to another reference object.
+Tests relation-based object reference.
+goal_destination
+Bind the action endpoint to one among multiple candidate destinations or target regions.
+Tests binding between instruction and action endpoint.
+These atoms cover three roles in a manipulation instruction.
+color
+,
+shape
+,
+size
+,
+source_relation
+, and
+exclusion
+specify which object should be manipulated.
+count
+specifies how many objects should be manipulated.
+goal_destination
+specifies where the object should be delivered.
+goal_destination
+is a goal-binding atom, which determines where the manipulated object should be delivered.
+Experimental support, please
+view the build logs
+for errors. Generated by
+L
+A
+T
+E
+xml
+.
+Instructions for reporting errors
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+      support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+      methods listed below:
+Click the "Report Issue"
+(
+)
+button, located in the page header.
+Tip:
+You can select the relevant text first, to include it in your report.
+Our team has already identified
+the following issues
+. We appreciate your time reviewing and reporting rendering errors we
+      may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+      should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+      all.
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a
+list of packages that need conversion
+, and welcome
+developer contributions
+.
+We gratefully acknowledge support from our
+major funders
+,
+member institutions
+,
+,
+        and all contributors.
+About
+·
+Help
+·
+Contact
+·
+Subscribe
+·
+Copyright
+·
+Privacy
+·
+Accessibility
+·
+Operational Status
+(opens in new tab)

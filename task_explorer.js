@@ -6,9 +6,11 @@
   const catalog = readData("task-data");
   const images = readData("image-data");
   const concepts = readData("search-concepts");
+  const coverage = readData("coverage-data");
   const index = TaskSearch.createIndex(catalog, concepts);
   const taskById = new Map(catalog.map((task) => [task.id, task]));
-  const families = ["LIBERO", "RoboCasa", "SIMPLER", "BEHAVIOR", "DataCenterBench", "RoboDojo"];
+  const families = [...new Set(catalog.map((task) => task.family).filter(Boolean))]
+    .sort((first, second) => first.localeCompare(second));
   const pageSize = 12;
   const maxPins = 3;
   const pins = new Set();
@@ -57,6 +59,59 @@
     const button = node("button", { type: "button", className, textContent: label });
     button.addEventListener("click", handler);
     return button;
+  }
+
+  function renderCoverage() {
+    const manifest = new Map((coverage.families || []).map((entry) => [entry.family, entry]));
+    const tbody = node("tbody");
+    for (const name of families) {
+      const tasks = catalog.filter((task) => task.family === name);
+      const entry = manifest.get(name) || {};
+      const definitions = tasks.filter((task) => task.goal || task.grading_levels?.length).length;
+      const observations = tasks.filter((task) => task.observation).length;
+      const visuals = tasks.filter((task) => task.video || images[task.image]
+        || task.media?.some((media) => media.type === "image" || media.type === "video")).length;
+      const scope = node("td", {}, textBlock(entry.scope, "Task records from the included source catalog."));
+      if (entry.notes) scope.append(node("p", { className: "explorer-scope", textContent: entry.notes }));
+      const source = sourceLink(entry.source, "Catalog source");
+      if (source) scope.append(source);
+      const details = node("td", {},
+        node("div", { textContent: definitions + " goal or rubric excerpts" }),
+        node("div", { textContent: observations + " robot-input descriptions" }),
+        node("div", { textContent: visuals + " records with visual links" }));
+      const button = action(name, () => {
+        family = name;
+        byId("suite").value = "";
+        updateVersionAndSuite("");
+        refresh();
+        byId("search").focus({ preventScroll: true });
+        byId("explorer-controls").scrollIntoView({ block: "start" });
+      }, "explorer-coverage-link");
+      tbody.append(node("tr", {}, node("th", { scope: "row" }, button),
+        node("td", { textContent: tasks.length.toLocaleString() }), scope, details));
+    }
+    const header = node("tr", {},
+      ...["Family", "Entries", "Included scope", "Available fields"].map((label) => node("th", { scope: "col", textContent: label })));
+    const table = node("table", { className: "explorer-coverage-table" }, node("thead", {}, header), tbody);
+    byId("catalog-coverage-table").replaceChildren(node("div", { className: "explorer-coverage-scroll" }, table));
+
+    const review = coverage.corl_review;
+    const reviewed = byId("corl-source-review");
+    reviewed.hidden = !review;
+    if (review) {
+      const label = Number.isInteger(review.screened_count)
+        ? "CoRL source review covered " + review.screened_count + " papers."
+        : "CoRL source review";
+      const content = [node("h3", { textContent: label })];
+      if (review.notes) content.push(node("p", { textContent: review.notes }));
+      if (review.added?.length) {
+        content.push(node("ul", {},
+          ...review.added.map((title) => node("li", { textContent: title }))));
+      }
+      const source = sourceLink(review.source, "CoRL source list");
+      if (source) content.push(node("p", {}, source));
+      reviewed.replaceChildren(...content);
+    }
   }
 
   function setOptions(select, values, allLabel, current = select.value) {
@@ -156,6 +211,9 @@
       textBlock(task.grading_summary || (task.goal ? "See the published definition below." : "")),
       scope && task.grading_summary ? node("div", { className: "explorer-scope", textContent: scope }) : null,
       sourceLink(task.evaluation_source, "Evaluation protocol"));
+    for (const note of [task.source_note, task.catalog_scope].filter(Boolean)) {
+      fields.append(node("p", { className: "explorer-scope", textContent: note }));
+    }
     if (task.grading_levels?.length) {
       const levels = node("ul", { className: "explorer-grading-levels" });
       for (const level of task.grading_levels) {
@@ -499,6 +557,7 @@
   }
 
   setOptions(byId("task-setting"), [...new Set(catalog.map((task) => task.setting).filter(Boolean))].sort(), "All settings");
+  renderCoverage();
   updateVersionAndSuite();
   refresh();
 })();

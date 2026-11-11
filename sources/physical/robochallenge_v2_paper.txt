@@ -1,0 +1,387 @@
+                          Table30 V2: Evaluating Generalized Models by Real Robots at Scale
+
+                                                                         RoboChallenge Dexmal Team
+                                                                                  Dexmal
+
+
+                                                                                  80                       hosted by the RoboChallenge program. With the online
+                   250          Registered users
+                                Max success rate
+                                                                                                           real-robot-based evaluation paradigm, we can clearly ob-
+                   200                                                            70                       serve the evolving capabilities of the models. However, as
+
+
+
+Registered users                                                                        Success rate (%)
+                                                                                                           the SOTA entries accumulate, the benchmark itself is prone
+                   150                                                                                     to saturation. This pushes us to defined an upgraded bench-
+                                                                                  60
+                                                                                                           mark set for evaluating future models.
+                   100
+                                                                                  50                          Our core emphasis is on the generalization ability of the
+                    50
+                                                                                                           models. The reason is as follows. Firstly, the current gener-
+                     0                                                            40                       ation of open-source models like π0.5 [2, 3, 5, 6, 9, 11] have
+                            8                  10                   12              2                      already been highly successful in single task focused fine-
+                         5-0               25-                  25-             6-0
+                     202              20                   20               202                            tuning setting. From our practice, even very seemingly hard
+                                                    Time                                                   task can be well tackled by careful curation of the training
+                                                                                                           set, and the model is usually finetuned to a point where it
+Figure 1. User activity on the previous Table30 benchmark. The                                             loses most capabilities outside the task. So we suggest that
+SOTA success rates of the tasks are rapidly increasing as users
+                                                                                                           testing models on a large set of skills will be a better way
+accumulate.
+                                                                                                           to reveal the true capability of the model. Second, even in
+                                                                                                           the single-task finetuning setting (common in real world ap-
+                                                                                                           plications), a more generalizable model requires much less
+                                              Abstract
+                                                                                                           effort in data preparation. A better starting point benefits
+                                                                                                           model convergence, and hence loosen the constraint on data
+In this work we present Table30 V2, an upgraded version to
+                                                                                                           coverage. Finally, object-level and background-level gen-
+the Table30 benchmark [8] on the real-robot-based large-
+                                                                                                           eralization to unseen settings is a must-have in real world
+scale evaluation system of RoboChallenge. Its main em-
+                                                                                                           applications. An intelligent model is not believed to work
+phasize is on testing the generalization aspect of the mod-
+                                                                                                           if we have to strictly reproduce all its input conditions. So
+els, which we believe will be the key feature of the next-
+                                                                                                           we need to test these aspects of the model for more realistic
+generation embodied models. For this purpose, we take
+                                                                                                           evaluation.
+measures to rework the benchmark task set to cover the en-
+hanced strength of the models, and more importantly, we                                                        Testing for generalization is a non-trivial objective. We
+fundamentally refactored the learning-testing protocol to                                                  decompose this target into three directions of improvements
+exercise the generalization ability of the models. We will                                                 to our benchmark. Task-level expansion of the benchmark
+support multi-task, zero-shot and out-of-domain paradigm                                                   suite introduces more challenging or realistic tasks. They
+of evaluation while keeping the core openness-and-fairness                                                 are to test the upper-bound of model capability in highly
+spirit of the RoboChallenge campaign untouched. A pre-                                                     adaptive and dexterous jobs, which we believe is a conse-
+view version of the benchmark will be online as part of the                                                quence of the model being more generalized. Protocol-
+CVPR 2026 workshop competition of GigaBrain Challenge                                                      level re-design of the learning and testing requirements cre-
+2026.                                                                                                      ate new tracks of multi-task, zero-shot and out-of-domain
+                                                                                                           testing. We need to tailor our testing procedure so that the
+                                                                                                           intended testing method matches the online evaluation for-
+1. Introduction                                                                                            mat. System-level improvements to the underlying evalua-
+                                                                                                           tion infrastructure aims to increase the total throughput of
+Embodied policies like VLA or WMA made tremendous                                                          the tests. As we want stabilized results for more test proto-
+progress on robots in the recent period, as witnessed by the                                               cols, the necessary number of evaluation runs will be mul-
+rapid improving results on the Table30 benchmark (Fig. 1)                                                  tiple times of the status quo. So we need the throughput to
+        Figure 2. The task set of Table30 V2. It includes 18 freshly designed bimanual tasks, and 12 tasks carried from Table30.
+
+
+match the new requirements.                                            the user submit their videos for judgement.
+   Accomplishing the goals above require careful revisit                   This benchmark is moving along the trend of centralized,
+and design of the benchmark system. We will cover these                real-robot-based and online evaluation, yet still the largest
+aspects in the following sections.                                     in terms of number of tasks.
+   The key delivery of Table30 V2 are as follows:
+• An upgraded benchmark task set for large-scale real-                 3. Benchmark Tasks
+  robot-based evaluation of embodied policies;
+• Proposed method to test multi-task and out-of-domain                 3.1. New Tasks
+  generalization;
+                                                                       As the capability of the embodied models expand, we find
+• Improved evaluation system throughput for online real-
+                                                                       there are several important aspects that are not covered in
+  robots.
+                                                                       the previous version of Table30. These lays the core moti-
+                                                                       vation of the expansion of the task set.
+2. Related Works
+                                                                           Handling soft continuum. There are objects like rope,
+Testing embodied by real robot is an increasingly popular              stripe or cloth that can change its shape or even topology
+topic in the community. The early works of [1] and [12]                in a continuous manner. This creates vast variation in the
+initiated the on-line evaluation format, but does not include          state of the system, as a state of the object can hardly be
+a large scale task set. The RoboChallenge [8] demonstrates             produced from run to run. The model need to handle a never
+the feasibility of online and large scale real-robot based test-       seen shape or state of the object.
+ing with 30 tasks. Following the work, [10] proposes an-                   Using tools. In realistic tasks, the robot may need to ma-
+other benchmark with 20 tasks.                                         nipulate a tool to accomplish the task. This tests the robot’s
+    There are also non-centrialized real-robot based eval sys-         ability to understand the tool-object spatial relationship and
+tems proposed for scalability. The [4] and [7] methods let             exercises its precision of control.
+      Task Name                    Description
+      Pick opened book             The robot picks up opened books from the the table to a shelf.
+      Tie a knot                   The robot grips both ends of the strip, forms a square knot, and pulls it tight.
+      Stamp on paper               The robot presses the stamp onto an ink pad and stamps the paper.
+      Sort cosmetics               The robot puts the cosmetics into the brush pot and the tray.
+      Spread jam                   The robot spreads jam on the bread.
+      Box the tablet               The robot puts the tablet and accessories into the box.
+      Wrap with cloth              The robot places the item on the cloth and wraps it around from all sides.
+      Pick the pen                 The robot picks up the pen on the table into pen container.
+      Pack up Stationery box       The robot opens the schoolbag and puts the stationery box on the desk into it.
+      Pair the shoes               The robot put four shoes onto the shelf in two pairs.
+      Remove laces                 The robot removes the laces from the shoes, and place them on the table.
+      Scoop the beans              The robot scoop beans to a bowl.
+      Wipe whiteboard              The robot wipes the whiteboard with an eraser.
+      Set the timer                The robot sets a timer to a specific time.
+      Turn on lamp switch          The robot turns on a lamp switch by pressing the button on it.
+      Move the tray                The robot uses dual arms to pick up a tray and places it into a basket.
+      Folding T-shirt              The robot folds the T-shirt in half twice and put it in the corner of the table.
+      Pack socks                   The robot turns the socks inside-out, fold them and put in the corner of the table.
+      Store the opener             The robot store the opener into the drawer.
+      Sweep the table              The robot sweeps the dust to into the dustpan.
+      Arrange the flowers          The robot puts the flowers into a vase.
+      Press four buttons           The robot presses four buttons sequentially on the table.
+      Search green boxes           The robot finds all green boxes and put them to basket.
+      Hang the cup                 The robot hangs the cup on a rack.
+      Water the flowers            The robot waters the flowers with a watering can.
+      Wipe the table               The robot wipes the table with tissue paper.
+      Arrange fruits in basket     The robot move fruits on the table to a basket.
+      Shred the paper              The robot puts the paper into a shredder.
+      Sort electronic products     The robot puts stationary into the yellow box and electronic products to the blue box.
+      Stack bowls                  The robot stack three bowls on the table.
+
+                                                  Table 1. Description of the tasks
+
+
+    Simultaneous two-hand operation. In the previous ver-             add a new type of robot, the DOS-W1. It is also a mobile
+sion, for the bimanual robots usually only one arm is in ac-          bimanual manipulation, yet the arm becomes Airbot Play.
+tion at the same time. We deliberately add tasks that require         The cameras are keep consistent to the Aloha setup, the Re-
+the two hands to operate at the same time. This also chal-            alSense series being used. The grippper in the DOS-W1
+lenges the control precision, as the relative pose of the hands       setup has a triangle tip, enabling it to more fine-grained ma-
+will be in a constrained state when moving together.                  nipulation tasks.
+    The result of our thinking leads to 18 newly designed                Addition of the robot type enables us to verify whether
+tasks. They are listed in Tab. 1 and illustrated in Fig. 2.           the model’s behavior is consistent across the arm types.
+Almost all these tasks are executed on bimanual robots.               In the previous version, the “performance on bimanual” is
+    We also carry 12 tasks from the previous version of Ta-           identical to “performance on Aloha”. Now we can sepa-
+ble30. They are dedicated to test the performance of single-          rate the two concepts. Also, the DOS-W1 has a lower list-
+arm-based jobs, or the jobs using dual-arm asynchronously.            ing price that other bimanual manipulators, so we can better
+We select the tasks that are most discriminative and popular          amortize the hardware cost.
+in the community.                                                        We also phased out the Franka Research 3 robot, as we
+                                                                      observed the tasks it is executing can well be replaced by
+3.2. New Robot Platform                                               other arms while the hardware cost is greatly reduced. The
+We find the bimanual robots to be the most popular in the             UR5 arm strikes a good balance between cost and perfor-
+community. In the previous version, only one machine type             mance. The ARX5 arm is selected due to its good en-
+is used, the Cobot Magic Aloha. So in this version, we                durance and low cost.
+       System                                          User             should not stop. This requirement is strengthened when we
+                                                                        shift from the single-task protocol to the generalized set-
+           Are you ready for any of the tasks in
+           <task 1>, <task 2>, ..., <task n>?                           tings. When we conduct evaluation of one model on multi-
+                                                                        ple tasks simultaneously, we need to make sure all the de-
+                   legistimate model                                    pendent machines are working. So we need to take more
+                   loading delay                                        measures to avoid single-point-of-failure in the system.
+                                             yes, I am
+
+           work on <task k>, and act immediately                        4.1. Multi-task and Multi-machine Setup
+                    suspicious delay             action                 In all our evaluations, we require that the model handles
+                                                                        multiple tasks of one machine type, and it should operate
+                                                                        well on any instance of the machine inside one type.
+Figure 3. Task-agnostic online interaction protocol. The user               In the previous version of Table30, each task only be-
+gets the exact task seconds before the first interaction starts. This   longs to one machine instance. This creates many hot spots
+probes potential change-of-model behavior. However, it is a             in the machine workload, and when one machine is down,
+necessary-but-not-sufficient test.                                      the whole benchmark cannot be completed. We decide to
+                                                                        get rid of this weakness. However, it is well known that
+                                                                        with the same model and the same task, performance among
+3.3. Statistics and Analysis                                            the machine instances will vary. It is impossible to exactly
+Across the 30 tasks, we find a good distribution among the              reproduce the camera and arm parameters across instances.
+machine types. The DOS-W1 receives 12 tasks, the Aloha 8                To alleviate this, we collect data on all of the machine in-
+tasks. For the single-arm setup, the ARX5 handles 7 tasks,              stances of the same machine type for each task. We ob-
+while the UR5 implements 3 tasks. For each type of robot,               served models trained on the mixture of machine instances
+we purchased the number of robots roughly proportional to               tend to generalize across small variations in the set-up. Fur-
+the tasks on it, so the evaluation workload can be evenly               ther, to ensure fairness, when an evaluation job is submitted,
+distributed among the machine types.                                    the machine instance to do one task is randomly selected.
+    As for the tasks, 7 of them involves using a tool, 9 of             And as we require multiple tasks to be tested in one row,
+them requires two-hand coordination, 6 of them requires                 the randomness will be amortized – it will be harder to roll
+high position accuracy. And these three sets of task inter-             for the “lucky machine” for a particular task.
+sect with each other, so we have a full combination of the                  As for the multi-task requirement, the main motivation
+task difficulties.                                                      is to relief the burden on the participants. We observe that
+    As for the application areas, most of the tasks are kept            when the tasks are evaluated individually, the participants
+as natural skills in everyday life. We removed tasks like               spend very long time on tuning the model parameters of
+sandwich making that tortures the hardware more than the                each individual task. Though this may lead to progress on
+model. The tasks are natural both to human and the robot,               the maximum achieved score, it deviates from what we re-
+so what we are evaluating will be fully targeted on the in-             ally want to measure. Also, training 30 individual models
+telligence part.                                                        consume a great amount of GPU hours, hampering labs and
+                                                                        students from joining the race. So we decide that the bench-
+4. Evaluation Protocols                                                 mark will be multi-task models only (the generalist setting
+                                                                        in Table30). This is in line with the trend to test the gener-
+Nowadays we want to test the generalization ability of the              alized models. The multi-task setting can be seen as a mini
+model, and for an online testing system there are extra re-             version of the task-level generalization, although we do not
+quirements that we must meet.                                           emphasize on this.
+   The first is fairness. We should ensure that the testing                 It is not easy (or even possible) to enforce a multi-task
+method will not bias towards a particular user or model. The            single-model algorithm. However, we still decide to aug-
+outcome is ideally i.i.d. samples of the “true” performance             ment the current protocol so that participants have more
+of the model on real machines. Also, we need to make sure               tendency to use real multi-task models. The idea is that
+that cheating on the system, especially using more restric-             the nowadays models are usually huge in parameter count,
+tive protocols, requires extra work than benign users. This             so loading them will take a measurable amount of time.
+will not stop users’ from claiming false results, but it will           Given this, we use a timing challenge to test if the model
+reduce the probability.                                                 is really multi-tasked, or dynamically switched. As seen in
+   The second is maintainability. We need to make sure                  Fig. 3, when a task is about to start, we first waits for the
+the benchmark service can run for a long duration of time.              model to claim that it is fully loaded and ready to take con-
+When some machines are under maintenance, the service                   trol for a set of tasks. Only then, the actual task will be
+                                                                                    25
+given to the model as the instruction prompt. The model                                                                                         Successful rollout
+is supposed to generate its response with a reasonable de-                          20
+                                                                                                                                                Failed rollout
+lay time (hundreds of milliseconds for typical models). If
+
+
+                                                                      Rollout (%)
+the gap time is huge (on the order of several seconds or                            15
+tens of seconds), there is a strong cue that another model is
+swapped in. Again, this protocol does not stop cheating –                           10
+
+the participant can load many models on multiple machines                            5
+in parallel and routes the request by the prompt. However,
+doing this incurs increased cost, so we just use this machin-                        0
+ery as an auxiliary check of the nature of the model. The                            0.  0   5
+                                                                                             0.   0
+                                                                                                  1.   5
+                                                                                                       1.   0
+                                                                                                            2.   5
+                                                                                                                 2.   0
+                                                                                                                      3.   5
+                                                                                                                           3.   0
+                                                                                                                                4.   5
+                                                                                                                                     4.   0
+                                                                                                                                          5.   5
+                                                                                                                                               5.   0
+                                                                                                                                                    6.   5
+                                                                                                                                                         6.   0
+                                                                                                                                                              7.    5
+                                                                                                                                                                   >8
+                                                                                                                                                                   7.
+main constraint is still enforced by morality, as the partic-                                                    Rollout duration (minutes)
+ipant need to agree our terms of “following the protocols
+strictly” when they submit their entries, and we encourage           Figure 4. Running time distribution of the tasks in Table30.
+the users to open-source their models if they want to claim
+a prize in the competitions.
+
+4.2. The Zero-shot Setting                                         ing the objects and record data themselves).
+
+When we talk about generalization, we need to introduce               Given the two levels of zero-shot settings, there are
+unseen factors to the system. So in addition to the usual          2x2=4 combination of protocols. We will rank the mod-
+mode of using the same distribution across training and in-        els separately in each track. Also, a model can claim itself
+ference, we create a dedicated mode of “zero-shot” testing.        to be of task-level zero-shot (using no demonstration data
+    Currently we consider two level of zero-shot generaliza-       provided by us) or generalizable to different machine types
+tions:                                                             (using one single model for evaluation on the four machine
+• Object-level zero-shot. We will use unseen objects to            types). We do not check for this, while we encourage the
+   test the model.                                                 participants to disclose the details of their methods if they
+• Environment-level zero-shot. We will put the task in an          claim a stronger level of generalization.
+   unseen background / environment setting.
+    There are also more aspects we can test for, e.g. task-
+                                                                   4.3. The Out-of-domain (OOD) Setting
+level or prompt-level zero-shot generalization. However,
+we decide to focus on the above two setups, as they are            To make the protocol future-proof, we propose another
+already hard enough.                                               more challenging setting, which we call the OOD setup. In
+    For the object-level zero-shot testing, we will prepare        this setup, the task is not changed, and the environment /
+dedicated objects in the same category as described in the         objects are largely the same. However, all others can be
+task description. We make sure that in the demonstration           changed, in a totally unknown way. The positions of the
+data these objects do not appear. The objects will vary in         objects can be in a very peculiar way (but still within the
+shape, size or color, so the model need to get a better under-     physical reach of the robot), the table may be changed into
+standing of its tasks instead of memorizing the grasp posi-        a sofa, etc. Also, the test cases can be adversarially set up
+tion.                                                              for the pure reason of finding weakness in the model.
+    For the environment-level zero-shot testing, we will
+mainly use new backgrounds to test the model. Also we                  This mode is not intended to be ranked, as we will be
+will make slight perturbations to the system, e.g. the height      constantly changing the exact test cases so that they are es-
+of the table so that the dynamics may change. As the exact         sentially unknown to the participants, and we will attempt
+details in each perturbation is not revealed to the participant,   to devise “bad cases” depending on previous behavior of
+the model may encounter unanticipated environmental fac-           the tested models. This is a self-check more than a compet-
+tor change, so it must be trained in a generalizable way.          itive evaluation. It studies whether given the task descrip-
+    We do not release demonstration data to the participant        tion (and possibly a few demonstrations) the model learns
+on these zero-shot objects or settings. However, to ensure         the essential purpose of the task, in spite of all other specific
+fairness, we still stick to the rule that the same set of ob-      factor like the shape / color / arrangement of the objects.
+jects will be used to test all models. So there is a theoreti-        This setting will be setup online when we observe that
+cal way of cheating by downloading the successful runs of          most models tested by the system are already achieving sat-
+other models as training data. We again leaves this rule en-       urating performance. We hope it will help shed light on
+forcement to the participants themselves: It is not allowed        future directions of improvement when we want to push the
+to train the testing objects by any means (including purchas-      robots to work in real scenarios.
+5. Evaluation System                                              dents create valid submissions to exercise their models. We
+                                                                  collected very valuable feedback on the content, operation
+In our past evaluations, we find the most important issue is      and rules of the system. Especially, the request for more
+the throughput of the evaluation system. As the number of         testing bandwidth and arguments around fairness push us to
+users increased, a noticeable delay exists after the submis-      think fundamentally of how future evaluations should look
+sion of the evaluation request. This slows down the iteration     like. This version of Table30 V2 roots the idea from both
+cycle of the participants, so this is one of the biggest chal-    our organizers and users.
+lenge that we need to invest in.                                     Perhaps the most fundamental change in terms of user
+    The first technical issue we see is the overly long exe-      base is our switch to multi-task evaluations. Previously,
+cution time of some tasks. See Fig. 4 for example. Some           tuning for 30 different tasks is both laborious and costly.
+rollout goes for 7 or more minutes, even the demonstration        So most individual contributors cannot get a full score av-
+data is typically below 1 minute. They consume a signifi-         eraged over all tasks, and on the leaderboard we can only
+cant portion of time. We empirically observe the long runs.       see institution backed participants. We hope our change en-
+The long running time is mostly attributed to long response       able more individual researchers and students to join this
+delay: The model takes several seconds to give an action          activity.
+after receiving the observations. Another cause is too many          We will setup an initial version of this benchmark in
+retries in each phase (we limit the number of retries to 5 in     the CVPR 2026 Workshop Competition held by GigaBrain
+each step, so there may be tens of retries in one successful      Challenge 2026 and invite participants to compete. After
+run). Also, some models purposely slow down the action            the competition, we plan to continue the operation of the
+chunk in order to obtain better success rate.                     benchmark set so that all researchers worldwide can utilize
+    To handle this, the first approach we will take is to limit   this infrastructure. The version used by the competition will
+the total running time of a rollout. The model will be halted     be a preview of the full benchmark due to schedule con-
+(and scored according to current progress) after a task-          straints. Advanced features like zero-shot or OOD will not
+specific timeout. The timeout will be determined according        be used to score the participants. These entries will be used
+to our baseline implementations and the general distribu-         as the seed users so that we can continuously improve our
+tion of the user’s submissions. Again, according to Fig. 4,       system before being open to public.
+most successful rollouts achieved its success in a very short
+time, so the time limit should not be altering the overall        7. Concluding Remarks
+performance of the models, as it will impact the maximum
+achievable results if some “inference-time tricks” are taken.     In this paper we describe the Table30 V2 benchmark, a suc-
+Also, we will be adding a time to complete score to the           cessor of Table30 that aims the next generation of stronger
+leaderboard, showing the average time of the model to ob-         embodied models. The core emphasis is on generalization,
+tain its success rate. This should encourage the participants     which is manifested by the expansion of task set, addition
+to be aware of the running time of their policies, and hence      of test protocols and improvements of the overall system.
+reduce the occupied time on the real machines.                        We hope our work will inspire future researchers on both
+    There are also other measures that we will take to reduce     constructing their own in-house evaluation facilities and de-
+latency. We will loose the requirement on reproducing the         signing new models based on the findings in the evaluations.
+initial state to a reference image from pixel-level alignment     Also, we welcome anyone interested in the area to join the
+to rough alignments, as we are testing the generalization of      Table30 V2 evaluation activity to compare with each other
+models anyway. This significantly speeds up task prepara-         in a shared ground and ignite ideas for future research.
+tion time as we observe in practice. We have already been
+spreading the evaluations to multiple instances of the same       References
+machine type as we described in the previous section, so the
+                                                                   [1] Pranav Atreya, Karl Pertsch, Tony Lee, Moo Jin Kim, Arhan
+duty cycle of the machines may be improved. Finally, we
+                                                                       Jain, Artur Kuramshin, Clemens Eppner, Cyrus Neary, Ed-
+increased the number of machines for an increased upper                ward Hu, Fabio Ramos, et al. Roboarena: Distributed real-
+bound. After all these measures, we hope the user can get a            world evaluation of generalist robot policies. arXiv preprint
+better experience in our system.                                       arXiv:2506.18123, 2025. 2
+                                                                   [2] Johan Bjorck, Fernando Castañeda, Nikita Cherniadev,
+6. Evaluation Activities                                               Xingye Da, Runyu Ding, Linxi Fan, Yu Fang, Dieter Fox,
+                                                                       Fengyuan Hu, Spencer Huang, et al. Gr00t n1: An open
+The number of attracted users in Table30 goes far beyond               foundation model for generalist humanoid robots. arXiv
+our expectation. Not only institutional participants like              preprint arXiv:2503.14734, 2025. 1
+the Embodied Intelligence start-ups submit their models to         [3] Kevin Black, Noah Brown, James Darpinian, Karan Dha-
+compete for SOTA, but also individual researchers or stu-              balia, Danny Driess, Adnan Esmail, Michael Robert Equi,
+     Chelsea Finn, Niccolo Fusai, Manuel Y Galliker, et al. pi0.5 :
+     a vision-language-action model with open-world generaliza-
+     tion. In 9th Annual Conference on Robot Learning, 2025.
+     1
+ [4] Yiting Chen, Kenneth Kimble, Edward H Adelson, Tamim
+     Asfour, Podshara Chanrungmaneekul, Sachin Chitta, Yash
+     Chitambar, Ziyang Chen, Ken Goldberg, Danica Kragic,
+     et al. Manipulationnet: An infrastructure for benchmark-
+     ing real-world robot manipulation with physical skill chal-
+     lenges and embodied multimodal reasoning. arXiv preprint
+     arXiv:2603.04363, 2026. 2
+ [5] GigaBrain Team, Boyuan Wang, Chaojun Ni, Guan Huang,
+     Guosheng Zhao, Hao Li, Jie Li, Jindi Lv, Jingyu Liu, Lv
+     Feng, et al. Gigabrain-0.5 m*: a vla that learns from
+     world model-based reinforcement learning. arXiv preprint
+     arXiv:2602.12099, 2026. 1
+ [6] Spirit AI Team. Spirit-v1.5: Clean data is the enemy of great
+     robot foundation models, 2026. Accessed: 2026-03-21. 1
+ [7] Ziyu Wang, Chenyuan Liu, Yushun Xiang, Runhao Zhang,
+     Qingbo Hao, Hongliang Lu, Houyu Chen, Zhizhong Feng,
+     Kaiyue Zheng, Dehao Ye, et al. The great march 100:
+     100 detail-oriented tasks for evaluating embodied ai agents.
+     arXiv preprint arXiv:2601.11421, 2026. 2
+ [8] Adina Yakefu, Bin Xie, Chongyang Xu, Enwen Zhang, Er-
+     jin Zhou, Fan Jia, Haitao Yang, Haoqiang Fan, Haowei
+     Zhang, Hongyang Peng, et al. Robochallenge: Large-scale
+     real-robot evaluation of embodied policies. arXiv preprint
+     arXiv:2510.17950, 2025. 1, 2
+ [9] En Yu, Haoran Lv, Jianjian Sun, Kangheng Lin, Ruitao
+     Zhang, Yukang Shi, Yuyang Chen, Ze Chen, Ziheng
+     Zhang, Fan Jia, et al. Dm0: An embodied-native vision-
+     language-action model towards physical ai. arXiv preprint
+     arXiv:2602.14974, 2026. 1
+[10] Sun Yu, Cao Meng, Yang Ping, Xu Rongtao, Xu Runze,
+     Ma Liang, Gan Roy, Zhai Andy, Wang Hao, Liang Lucy,
+     Wang Qian, Laptev Ivan, D Reid Ian, and Liang Xiao-
+     dan. Maniparena: Comprehensive real-world evaluation of
+     reasoning-oriented generalist robot manipulation, 2026. Ac-
+     cessed 2026-03-21. 2
+[11] Andy Zhai, Brae Liu, Bruno Fang, Chalse Cai, Ellie Ma,
+     Ethan Yin, Hao Wang, Hugo Zhou, James Wang, Lights
+     Shi, et al. Igniting vlms toward the embodied space. arXiv
+     preprint arXiv:2509.11766, 2025. 1
+[12] Zhiyuan Zhou, Pranav Atreya, You Liang Tan, Karl Pertsch,
+     and Sergey Levine. Autoeval: Autonomous evaluation of
+     generalist robot manipulation policies in the real world.
+     arXiv preprint arXiv:2503.24278, 2025. 2
+

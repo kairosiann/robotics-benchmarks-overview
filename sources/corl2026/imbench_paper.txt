@@ -1,0 +1,7159 @@
+IMBench: A Benchmark for Intuitive Robotic Manipulation
+Skip to main content
+Report GitHub Issue
+×
+Title:
+Content selection saved. Describe the issue below:
+Description:
+Submit without GitHub
+Submit in GitHub
+Why HTML?
+Report Issue
+Back to Abstract
+Download PDF
+Contents
+Reading mode
+Colour theme
+Abstract
+1
+Introduction
+Contributions:
+2
+Related Work
+Physical Reasoning and Embodied Manipulation.
+Vision-Language-Action Models and Robot Planning.
+3
+IMBench Task Suite
+3.1
+Categories and inference bottlenecks
+4
+Experiments
+4.1
+High-level reasoning with VLMs (Q1, Q2)
+4.1.1
+Results: understanding (Stage 1)
+4.1.2
+Results: action proposal (Stage 2)
+4.2
+Closed-Loop Manipulation Execution (Q3)
+4.2.1
+Reasoning-to-Action Execution (Stage 3)
+4.2.2
+End-to-end manipulation policies
+4.3
+Out-of-distribution generalization
+4.4
+Discussion
+5
+Limitations
+6
+Conclusion
+References
+A
+Related Benchmarks
+B
+Task Suite — Full Specifications
+B.1
+Master catalog
+B.2
+Per-category specifications
+B.2.1
+P1 — Geometry-constrained grasping
+B.2.2
+P2 — Dynamics and trajectory prediction
+B.2.3
+P3 — Causal and indirect action
+B.2.4
+P4 — Tool use and augmented reach
+B.2.5
+P5 — Hidden state and active discovery
+B.2.6
+P6 — Reactive replanning
+B.2.7
+P7 — Stability and equilibrium
+B.2.8
+Miscellaneous
+C
+Data Collection Infrastructure
+C.1
+Teleoperation hardware and protocol
+Single-arm.
+Filtering.
+VR comparison.
+C.2
+Operator training, demographics, and consent
+C.3
+Scripted oracle authoring
+C.4
+Data Filtration
+C.4.1
+Human Annotation Dashboard
+C.4.2
+VLM-Based Automated Filtering
+C.4.3
+Human Verification Dashboard
+C.5
+Modality schemas
+D
+Asset Library
+D.1
+Custom MJCF assets
+D.2
+YCB usage
+E
+Evaluation
+E.1
+Seeds and rollouts
+E.2
+Compute
+F
+VLM Evaluation Details
+F.1
+Implementation Details and Agent Design
+F.2
+Stage 1: Constraint Extraction via ReAct
+F.3
+Stage 2: Constrained Plan Generation via ReAct
+F.4
+Stage 3: Closed-Loop Execution via VLM-Driven ReAct
+F.5
+Per-task VLM Stage-1 and stage-2 results
+G
+Policy Training Details
+G.1
+Diffusion Policy
+G.2
+π
+0.5
+\pi_{0.5}
+Finetuning
+G.3
+GR00T N1.5 Finetuning
+G.4
+Software Environment
+H
+Per-task Policy Results
+I
+Out-of-Distribution Specifications
+J
+Detailed Analysis of Benchmark Results and Emergent Insights
+J.1
+Stage 1: Physical Constraint Understanding
+J.2
+Stage 2 Analysis: Constraint-to-Plan Conversion
+J.3
+Stage 3 Analysis: Performance of IMBAgent
+J.4
+End-to-end Visuomotor Policies
+Coarse-contact tasks (
+domino-select
+,
+domino-single
+,
+seesaw-balance
+).
+Dynamic interception and predictive tasks (
+bounce-intercept
+,
+linear-intercept
+,
+pendulum-grasp
+).
+Mirror correspondence and adaptation (
+mirror-pick-place
+).
+Compositional organization and packing (
+packing
+,
+ramp-sort
+).
+Bimanual coordination (
+hetbi-plate-shelf
+,
+hetbi-bowl-table
+).
+Physical stability reasoning (
+shape-stack
+).
+Active discovery under occlusion (
+occluder-push
+).
+K
+Miscellaneous
+Hardware.
+Vision-Language Models APi versions
+Data
+License: CC BY 4.0
+arXiv:2607.15641v1 [cs.RO] 17 Jul 2026
+IMBench: A Benchmark for Intuitive Robotic Manipulation
+Anurag Maurya
+Sukhvansh Jain
+Prajwal Avhad
+Gautham Balachandran
+Ziyi Zhou
+Atharva Kshirsagar
+Satyam Singh
+Bowen Li
+Rishabh Mukund
+Ritul Singh
+Jatin Vira
+Suvonil Chatterjee
+Devesh K. Jha
+Affiliation:
+Manav Robotics
+, Bengaluru, India
+Abstract
+Humans combine reasoning and motor control to solve complex manipulation tasks under diverse constraints. They build an understanding of the physical world that helps them convert reasoning into actions and quickly adapt to new scenes, tasks, and rules. We refer to
+this capability as intuitive manipulation. Existing benchmarks fail to capture this integration: they evaluate physical reasoning in isolation from execution, or measure policy performance without requiring explicit reasoning. We introduce
+IMBench
+, a benchmark designed to evaluate intuitive manipulation as an
+integrated capability spanning perception, physical reasoning, action generation, and iterative
+execution. Our tasks require models to infer task-relevant physical structure and generate feasible action sequences under explicit constraints, including contact-rich manipulation, tool use, and multi-stage dependencies. We introduce a benchmark of
+35
+35
+tasks,
+14
+14
+K filtered trajectories, and scalable tools for generating diverse scenarios. Experiments reveal a consistent gap: vision-language models show partial physical reasoning ability but fail to produce executable plans, while state-of-the-art vision-language-action models struggle to satisfy task constraints and generalize across scenarios. These results
+identify intuitive manipulation as a missing axis in current foundation models and generalist
+robot policies, and position
+IMBench
+as a step toward evaluating and enabling more integrated,
+adaptive physical intelligence.
+Project Website
+Keywords:
+Benchmarks and datasets for robot learning, Robot manipulation
+1
+Introduction
+Figure 1:
+IMBench — a benchmark for intuitive manipulation.
+Top:
+Each task is decomposed into a three-stage cognitive loop.
+Understand
+extracts latent physical properties from perception (e.g., a thin plate flush on a table affords no top-down grasp).
+Infer
+simulates forward dynamics and selects sub-goals (e.g., slide-then-grasp).
+Act
+executes a closed-loop interactive policy .
+Recent advances in robot learning have brought the field closer to generalist robots capable of performing a broad range of tasks across diverse environments
+[
+49
+]
+. However, a key gap remains: grounding behavior in the physical world the way humans do. Humans naturally reason about object properties, relationships, environmental constraints, and dynamics, using this understanding to guide flexible, adaptive actions
+[
+38
+]
+. In contrast, current robotic systems struggle to capture and leverage such physical intuition, limiting their ability to generalize.
+Consider a simple example (Fig.
+1
+)(Top): a thin object lies flat on a table. A direct grasp is not feasible due to the geometry of the object. Humans, however, intuitively adapt, they slide the plate toward the edge of the table, enabling a stable grasp before lifting it. This behavior reflects more than passive understanding; it demonstrates the ability to convert physical understanding into goal-directed action. It involves reasoning about why a default action fails (
+Understand
+), mentally simulating the effects of alternate actions (
+Infer
+), and selecting a sequence that transforms an infeasible task into a feasible one (
+Act
+). Two cognitive capacities support this behavior. The first is intuitive physics: the brain’s approximate mental simulation of how objects, forces, and contacts behave
+[
+50
+]
+. The second is means-end reasoning, our ability to reason about goals, intentions, and constraints
+[
+24
+]
+, and to act efficiently to achieve them
+[
+40
+]
+. We refer to their integration: the conversion of physical understanding into goal-directed action, as
+intuitive manipulation
+.
+Existing benchmarks probe the components of intuitive manipulation in isolation but rarely together. Physical-reasoning suites
+[
+6
+,
+60
+]
+such as PhysBench
+[
+14
+]
+, video-language QA benchmarks
+[
+33
+,
+73
+,
+68
+,
+23
+,
+71
+]
+like CLEVRER
+[
+79
+]
+, and embodied 3D-spatial QA benchmarks
+[
+16
+,
+46
+,
+31
+,
+45
+,
+76
+,
+75
+]
+like OpenEQA
+[
+47
+]
+evaluate whether models can answer questions about object properties, relations, scene structure, and dynamics, but they stop at inference and do not synthesize executable action. Manipulation benchmarks: LIBERO
+[
+43
+]
+, RoboCasa
+[
+53
+]
+, ManiSkill
+[
+52
+]
+, RLBench
+[
+30
+]
+, Colosseum
+[
+58
+]
+, VLABench
+[
+81
+]
+, and OGBench
+[
+56
+]
+evaluate policy execution across diverse scenes and objects. Intuitive manipulation poses a complementary challenge: actions grounded in physical principles on tasks which heavily require them, an axis prior benchmarks and policies are not designed to isolate. Recent vision-language-action models (VLAs)
+[
+36
+,
+85
+,
+65
+,
+83
+]
+and related vision-language manipulation approaches
+[
+27
+,
+55
+,
+69
+,
+80
+]
+generalize impressively across object identities and scene layouts, yet they underperform when the task structure itself requires this kind of physical reasoning, as we show empirically in §
+4
+.
+We introduce
+IMBench
+, a benchmark of 35 manipulation tasks built on robosuite
+[
+84
+]
+to evaluate intuitive manipulation across three capabilities: physical understanding, action proposal, and low-level execution. The tasks are intentionally non-trivial, requiring explicit physical reasoning to achieve task goals. They are organized around two key questions: (i) Can high-level planners infer task constraints from observations and propose feasible solutions? (ii) Can current physical-AI and foundation-model approaches translate physical understanding into low-level actions?
+Our experiments reveal two key findings. First, vision-language models exhibit partial understanding of physical constraints. For instance, GPT-5.5 achieves
+≈
+74
+%
+\approx 74\%
+on constraint understanding, but drops to
+≈
+70
+%
+\approx 70\%
+on high-level planning, suggesting that the two capabilities are closely coupled. Second, performance degrades sharply when generating executable plans: even with correct high-level plans, action execution success falls to only
+11
+%
+11\%
+. State-of-the-art policies, including diffusion policy
+[
+13
+]
+,
+π
+0.5
+\pi_{0.5}
+[
+29
+]
+, and GROOT
+[
+7
+]
+, achieve low success rates on our physics-grounded tasks despite near-saturating performance on existing manipulation benchmarks such as LIBERO
+[
+43
+]
+, highlighting the difficulty of
+IMBench
+.
+Contributions:
+This paper makes three primary contributions:
+•
+We present
+IMBench
+, a set of 35 robosuite manipulation tasks that test whether models understand physics and can use it to act, and we show where current foundation models and learned policies fail.
+•
+We release a dataset and tools:
+≈
+\approx
+14K filtered trajectories, and scripts to generate more data supporting reproducible research for intuitive manipulation.
+•
+We formalize intuitive manipulation through an
+Understand–Infer–Act
+decomposition and evaluate it using a three-stage VLM protocol (constraint understanding
+→
+\rightarrow
+plan proposal
+→
+\rightarrow
+execution) together with closed-loop policy rollouts, enabling systematic measurement of the understanding-to-execution gap in current foundation models and policies.
+2
+Related Work
+Physical Reasoning and Embodied Manipulation.
+Physical reasoning benchmarks study whether agents can infer object dynamics, contact interactions, and causal physical structure. PHYRE
+[
+3
+]
+, I-PHYRE
+[
+42
+]
+Kinetix
+[
+48
+]
+, and the Virtual Tools Game
+[
+1
+]
+, as well as vision-centric suites like Physion++
+[
+66
+]
+, ComPhy
+[
+9
+]
+, CRAFT
+[
+2
+]
+, and CoPhy
+[
+5
+]
+, alongside video-physics benchmarks
+[
+74
+,
+57
+,
+22
+,
+4
+,
+17
+]
+evaluate prediction and tool-use reasoning in simulated environments. However, these benchmarks terminate at inference, are usually MCQ-style and do not require physically executable robot behavior.
+Manipulation benchmarks instead focus on policy learning and generalization across tasks and environments. LIBERO
+[
+43
+]
+, CALVIN
+[
+51
+]
+, RoboCasa
+[
+53
+]
+, ManiSkill-HAB
+[
+62
+]
+, BEHAVIOR-1K
+[
+41
+]
+, FurnitureBench
+[
+25
+]
+, BiGym
+[
+12
+]
+, and DittoGym
+[
+26
+]
+study long-horizon manipulation, embodied interaction, and transfer across diverse scenes, often entangled with application-specific complexities as seen in household-assistance benchmarks like ALFRED
+[
+61
+]
+and AI2-THOR
+[
+37
+]
+. VIMA
+[
+32
+]
+explores multimodal prompting for robotic manipulation, while large-scale datasets such as DROID
+[
+35
+]
+and BridgeData V2
+[
+67
+]
+emphasize scaling robot learning through diverse demonstrations. These benchmarks primarily evaluate trajectory reproduction, task completion, or policy generalization, but do not isolate whether success depends on reasoning about task-specific physical constraints. Most recently, KinDER
+[
+28
+]
+benchmarks kinematic and dynamic constraints and nonprehensile multi-object manipulation etc. IMBench is complementary with focus on reasoning in both physical and semantics axes with mixed grippers and bimanual setups, and adds hidden-state, reactive-replanning, and bimanual collaboration. KinDER also lacks force-information demonstrations. A comparison with existing benchmarks is provided in Appendix
+A
+.
+Vision-Language-Action Models and Robot Planning.
+Recent Vision-Language-Action (VLA) models have significantly improved robot generalization across objects, scenes, and instructions. PaLM-E
+[
+15
+]
+, RT-2
+[
+85
+]
+,
+π
+\pi
+-0.5
+[
+29
+]
+, VLA-R1
+[
+78
+]
+, and Gemini Robotics
+[
+64
+]
+combine large-scale multimodal pretraining with action generation and reasoning capabilities. Parallel work on language-guided planning uses large language and vision-language models for embodied decision-making and replanning
+[
+63
+,
+70
+,
+11
+,
+72
+,
+77
+]
+, including recent visual-prompting techniques like MOKA
+[
+44
+]
+and PIVOT
+[
+54
+]
+. Despite strong semantic generalization and recent physically-grounded VLM perception efforts
+[
+19
+,
+8
+,
+10
+,
+59
+]
+, these approaches still struggle when successful execution depends on reasoning about physical feasibility, or downstream action consequences. IMBench is designed to expose this limitation directly: tasks are constructed so that physically incorrect reasoning leads to execution failure even when high-level task intent is understood. Classical task and motion planning (TAMP) methods explicitly reason over symbolic and geometric constraints to ensure physically feasible manipulation
+[
+34
+,
+20
+,
+21
+,
+82
+,
+39
+]
+, but typically rely on hand-engineered abstractions and environment-specific formulations.
+POSITIONING:
+IMBench
+complements this line of work by evaluating whether modern learned policies and foundation models acquire such physical reasoning capabilities through embodied interaction.
+3
+IMBench Task Suite
+IMBench
+consists of 35 tasks built on
+robosuite
+[
+84
+]
+. Each task is designed around an
+inference bottleneck
+: a hidden fact such as infeasibility, geometry, dynamics, causality, hidden state, or stability that the agent must infer from observations to achieve the goal reliably. Successful execution needs precise closed loop physical control. Together, these tasks test intuitive physical reasoning rather than simple imitation.
+Tasks follow a Gymnasium-style interface with seeded resets. Episodes terminate on success (from simulator state), failure (e.g., object leaves workspace or forbidden contact), or a time limit, with sparse rewards (
+1
+1
+for success,
+0
+0
+otherwise). Observations include synchronized 2–4 RGB views, proprioception, gripper state, and wrist force/torque. Actions use a unified continuous space of 6-DoF end-effector deltas and gripper commands for both single-arm and bimanual setups. To ensure demonstration quality, episodes pass through a three-stage filtering pipeline: human annotators first score trajectories on a 1-5 scale (keeping only scores
+≥
+4
+\geq 4
+), a VLM-based agent performs anomaly and consistency checks, and a final human review finalizes the decision. More details in Appendix
+C
+.
+Figure 2:
+IMBench: 35 tasks across seven categories.
+Each targets a distinct inference bottleneck: geometry (P1), dynamics (P2), causal chains (P3), tool use (P4), hidden state (P5), reactive replanning (P6), stability (P7); two miscellaneous tasks in grey (bottom row).
+3.1
+Categories and inference bottlenecks
+We group the 35 tasks into seven categories, each defined by the intuition getting invoked (Fig.
+2
+); per-task details appear in Appendix
+B.2
+.
+P1 – Geometry and constrained grasping (9 tasks)
+require the agent to make objects graspable or reason about geometry (e.g., edge-sliding thin plates, suction-to-jaw handovers, lateral rack entry), testing affordance reasoning and sub-goal ordering.
+P2 – Dynamics and trajectory prediction (7 tasks)
+places goals beyond static reach or moving objects (tossing, pendulum grasping, rolling-ball interception with and without bounces, color-routed sorting), probing forward simulation.
+P3 – Causal and indirect action (6 tasks)
+makes the target unreachable or contact-forbidden, so action must transit an intermediary chain (domino cascades with sabotaged distractors, seesaw torque balance under unknown mass, transitive pushing), probing causal-chain construction and structural reasoning.
+P4 – Tool use and augmented reach (2 tasks)
+requires using a tool or actions
+before
+the final grasp, probing multi-stage ordering under embodiment limits.
+P5 – Hidden state and active discovery (2 tasks)
+hides the decision-relevant variable from passive vision; identity only by displacing occluders—probing information-gathering actions and multi-modal grounding.
+P6 – Reactive replanning (3 tasks)
+injects mid-execution disturbances (gripper slip, knocked stack, teleporting goal), probing online failure detection and replanning.
+P7 – Stability and equilibrium (4 tasks)
+hinges feasibility on static balance (mixed-shape stacking, rod balancing on millimeter ridges, zero-gap L-piece packing), probing support-polygon reasoning and precision under low tolerance.
+Miscellaneous (2 tasks)
+adds
+mirror-pick-place
+, which rotates camera frames by
+180
+∘
+180^{\circ}
+to decouple observation and action frames, and
+keyboard-typing
+, a bimanual task where one arm partially finishes the goal, probing partial-completion tracking and coordination. The full task list and additional details are provided in Appendix
+B
+.
+4
+Experiments
+The experimental section is organized around three questions:
+Q1.
+Constraint understanding.
+Given a scene observation(s) and a required goal, can frontier
+vision-language models (VLMs) correctly identify the physical
+constraints: infeasible grasps, hidden state, causal
+dependencies, that prevents naive actions from succeeding?
+Q2.
+High-level action proposal.
+Conditioned on a (possibly correct) understanding of the scene, can the
+same models translate that understanding into high-level plan, expressed as a verifiable and executable sequence of sub-goals?
+Q3.
+Execution and generalization.
+Can current visuomotor policies execute physics grounded plans on
+IMBench
+and generalize beyond the training distribution?
+Q1–Q2 examine
+high-level
+reasoning, while Q3 focuses on
+low-level
+execution and tests whether policies generalize along
+the physical factors each task targets.
+4.1
+High-level reasoning with VLMs (Q1, Q2)
+We evaluate five high-level reasoners:
+(i)
+GPT-5.5
+(ii)
+GPT-5.4-mini
+,
+(iii)
+Gemma-4
+,
+(iv)
+Claude Haiku-4.5
+,
+and (v)
+Claude-Sonnet-4.6
+. All models use a shared chain-of-thought prompting interface to elicit structured traces for human evaluation. For each seed, we render multi-view observations and provide the task description and controller interface (DoF, gripper modes, observables). A small set of temporally spaced frames is given per task. From each response we extract two outputs:
+1) Stage 1: Constraint understanding
+Structured responses to probes (objects, contacts, reachability, infeasibility, hidden state, causal preconditions), evaluated via a task-specific rubric (given to the human evaluator). Success requires identifying all task-critical constraints and interactions.
+2) Stage 2: High-level plan
+A sequence of sub-goals
+(
+g
+1
+,
+…
+,
+g
+T
+)
+(g_{1},\ldots,g_{T})
+(e.g.,
+Grasp
+,
+Slide
+,
+Toss
+), composed by the model without hints. This tests its ability to form task-aligned plans consistent with key constraints. Restricting outputs to primitives reduces the model to MCQ style selection instead of generating new behaviors. Results are aggregated over five temperature settings. Details are provided in Appendix
+F
+.
+Table 1:
+VLM evaluation across three stages.
+Stage 1
+reports constraint-understanding success (%),
+Stage 2
+reports high-level plan correctness (%), and
+Stage 3
+reports closed-loop execution success (%). A Stage 2 plan is marked correct if a human verifies that the proposed sub-goals satisfy task constraints and can achieve task success. Best per column within each stage is shown in
+bold
+.
+Method
+P1
+P2
+P3
+P4
+P5
+P6
+P7
+M
+Mean
+Stage 1: Constraint understanding
+Gemma 4
+±
+30.6
+51.0\!\pm\!30.6
+±
+29.6
+65.2\!\pm\!29.6
+±
+18.5
+79.3\!\pm\!18.5
+±
+0.0
+86.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+31.1
+50.6\!\pm\!31.1
+±
+10.1
+37.5\!\pm\!10.1
+±
+0.0
+0.0\!\pm\!0.0
+±
+32.0
+57.8\!\pm\!32.0
+Claude-Haiku 4.5
+±
+33.5
+63.1\!\pm\!33.5
+±
+10.8
+85.4\!\pm\!10.8
+±
+22.1
+80.7\!\pm\!22.1
+±
+0.0
+70.0\!\pm\!0.0
+±
+16.2
+83.8\!\pm\!16.2
+±
+4.7
+36.7\!\pm\!4.7
+±
+30.2
+35.0\!\pm\!30.2
+±
+2.0
+2.0\!\pm\!2.0
+±
+32.8
+63.6\!\pm\!32.8
+Claude Sonnet 4.6
+±
+33.0
+65.5\!\pm\!33.0
+±
+5.0
+\mathbf{93.1}\!\pm\!5.0
+±
+10.0
+90.0\!\pm\!10.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+2.5
+\mathbf{97.5}\!\pm\!2.5
+±
+27.8
+62.8\!\pm\!27.8
+±
+27.3
+65.0\!\pm\!27.3
+±
+0.0
+0.0\!\pm\!0.0
+±
+31.2
+\mathbf{74.5}\!\pm\!31.2
+GPT-5.4-Mini
+±
+31.0
+55.2\!\pm\!31.0
+±
+24.3
+76.7\!\pm\!24.3
+±
+14.3
+82.2\!\pm\!14.3
+±
+0.0
+90.0\!\pm\!0.0
+±
+5.0
+95.0\!\pm\!5.0
+±
+32.5
+62.2\!\pm\!32.5
+±
+23.9
+46.7\!\pm\!23.9
+±
+5.0
+5.0\!\pm\!5.0
+±
+31.6
+64.8\!\pm\!31.6
+GPT-5.5
+±
+35.4
+\mathbf{71.3}\!\pm\!35.4
+±
+30.1
+75.8\!\pm\!30.1
+±
+9.0
+\mathbf{93.7}\!\pm\!9.0
+±
+4.6
+\mathbf{90.6}\!\pm\!4.6
+±
+4.1
+94.2\!\pm\!4.1
+±
+40.3
+\mathbf{56.7}\!\pm\!40.3
+±
+15.5
+\mathbf{80.5}\!\pm\!15.5
+±
+8.3
+\mathbf{8.3}\!\pm\!8.3
+±
+33.0
+74.1\!\pm\!33.0
+Stage 2: Plan correctness
+Gemma 4
+±
+31.3
+46.7\!\pm\!31.3
+±
+37.1
+53.9\!\pm\!37.1
+±
+21.7
+66.5\!\pm\!21.7
+±
+0.0
+52.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+5.7
+17.8\!\pm\!5.7
+±
+12.8
+11.7\!\pm\!12.8
+±
+2.0
+2.0\!\pm\!2.0
+±
+34.3
+45.3\!\pm\!34.3
+Claude-Haiku 4.5
+±
+36.4
+56.7\!\pm\!36.4
+±
+27.8
+72.6\!\pm\!27.8
+±
+26.3
+67.2\!\pm\!26.3
+±
+0.0
+24.0\!\pm\!0.0
+±
+16.2
+83.8\!\pm\!16.2
+±
+9.6
+48.9\!\pm\!9.6
+±
+25.2
+28.3\!\pm\!25.2
+±
+2.0
+2.0\!\pm\!2.0
+±
+33.9
+55.7\!\pm\!33.9
+Claude Sonnet 4.6
+±
+33.9
+55.2\!\pm\!33.9
+±
+9.2
+\mathbf{89.4}\!\pm\!9.2
+±
+14.8
+84.2\!\pm\!14.8
+±
+0.0
+25.0\!\pm\!0.0
+±
+2.5
+\mathbf{97.5}\!\pm\!2.5
+±
+28.3
+50.6\!\pm\!28.3
+±
+31.0
+39.2\!\pm\!31.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+34.6
+64.1\!\pm\!34.6
+GPT-5.4-Mini
+±
+29.9
+45.2\!\pm\!29.9
+±
+36.1
+58.0\!\pm\!36.1
+±
+19.1
+76.9\!\pm\!19.1
+±
+0.0
+74.0\!\pm\!0.0
+±
+3.5
+91.5\!\pm\!3.5
+±
+19.7
+30.6\!\pm\!19.7
+±
+8.1
+14.6\!\pm\!8.1
+±
+5.0
+5.0\!\pm\!5.0
+±
+34.4
+50.0\!\pm\!34.4
+GPT-5.5
+±
+35.4
+\mathbf{69.0}\!\pm\!35.4
+±
+40.8
+61.3\!\pm\!40.8
+±
+9.9
+\mathbf{93.0}\!\pm\!9.9
+±
+5.9
+\mathbf{75.9}\!\pm\!5.9
+±
+4.1
+94.2\!\pm\!4.1
+±
+40.3
+\mathbf{56.7}\!\pm\!40.3
+±
+15.2
+\mathbf{80.0}\!\pm\!15.2
+±
+8.3
+\mathbf{8.3}\!\pm\!8.3
+±
+35.7
+\mathbf{69.5}\!\pm\!35.7
+Stage 3: Action, uses GPT 5.5
+IMBAgent
+0.0
+0.0
+75.0
+0.0
+0.0
+0.0
+0.0
+15.0
+11.3
+IMBAgent-obj
+0.0
+0.0
+100.0
+0.0
+0.0
+0.0
+0.0
+50.0
+18.8
+4.1.1
+Results: understanding (Stage 1)
+Table
+8
+shows that frontier VLMs
+describe most constraints competently, but the failures concentrate on a
+small, consistent set of
+tasks
+rather than on whole categories
+(Table
+8
+). Several tasks are understood almost perfectly by
+all models, including
+domino-single
+,
+indirect-push
+,
+linear-intercept
+,
+bounce-intercept
+,
+pendulum-grasp
+, and
+sheltered-grasp
+(
+90
+90
+–
+100
+%
+100\%
+). These strong results raise category-level scores for
+geometry (P1), dynamics (P2), and causal action (P3), with
+Sonnet 4.6 (
+74.5
+%
+74.5\%
+) and GPT-5.5 (
+74.1
+%
+74.1\%
+) achieving the best overall
+Stage-1 performance (Table
+1
+).
+The weakest performance appears on tasks such as
+cracker-box-jaw
+,
+cracker-box-suction
+,
+shape-stack
+, and
+slip-recovery
+, where models recognize the
+objects but fail to identify the key grasp or stability constraint.
+Interestingly,
+balance-hard
+often performs better than
+balance-medium
+because its prompt explicitly encourages
+center-of-mass reasoning. Stability and equilibrium tasks (P7) remain the weakest overall
+category (
+37
+37
+–
+80
+%
+80\%
+) escept miscellaneous category. Additional analysis is provided in
+Appendix
+J.1
+.
+4.1.2
+Results: action proposal (Stage 2)
+The understanding-to-plan gap is itself task-specific. The largest drop from understanding to planning appears in tasks that
+require correctly ordered actions, while static geometry tasks largely retain their Stage-1 performance (Table
+9
+).
+slide-catch
+is the clearest example: despite Stage-1 scores of
+88
+88
+–
+95
+%
+95\%
+, most models fail completely in Stage 2 because their plans miss important timing and tracking steps. Similar failures appear in
+tool-retrieve
+,
+cup-inversion
+,
+stack-collapse-recovery
+, and
+cup-extract
+. In contrast, tasks such as
+gap-funnel
+,
+sheltered-grasp
+,
+ramp-sort
+, and
+domino-single
+transfer almost perfectly from understanding to planning
+(
+85
+85
+–
+100
+%
+100\%
+). GPT-5.5 maintains strong performance on geometry, dynamics, and causal-action categories, while stability reasoning (P7)
+remains inconsistent across models. Overall, the main challenge is action sequencing rather than recognizing the constraint itself
+(Appendix
+J.2
+).
+4.2
+Closed-Loop Manipulation Execution (Q3)
+4.2.1
+Reasoning-to-Action Execution (Stage 3)
+We extend the above agentic framework to translate reasoning into executable manipulation actions. In Stage 3, we use a closed-loop
+ReAct (Reasoning + Acting)
+framework where the VLM receives multi-view images, proprioception, and force-torque signals, then selects predefined action primitives with iterative feedback after each step. We evaluate GPT-5.5 in both vision-only and privileged object-centric settings across representative tasks from all categories. Due to the high cost of interactive evaluation (A complete Stage 3 evaluation across 16 tasks costs approximately $1800), we benchmark only GPT-5.5 as an agent, reported as
+IMBAgent
+and
+IMBAgent-obj
+in Table
+1
+. To provide broader insights, we additionally evaluate end-to-end visuomotor policies on
+IMBench
+. Further implementation details are provided in Appendix
+F.4
+.
+Closed-loop execution exposes the largest reasoning-to-action gap.
+Across sixteen evaluated tasks, GPT-5.5 achieves non-zero success on only
+three (Table
+10
+).
+domino-single
+succeeds in
+all runs because corrective pushes tolerate imprecise contact. Privileged
+object poses improve
+domino-select
+and
+mirror-pick-place
+, increasing the mean success rate from
+11.3
+%
+11.3\%
+to
+18.8
+%
+18.8\%
+. However, all tasks requiring precise alignment,
+timing, tool use, hidden-state reasoning, or balancing score
+0
+%
+0\%
+in both
+settings. In some cases, privileged poses even hurt reasoning: on
+mirror-pick-place
+, the agent follows reported coordinates directly
+without applying the required mirror transformation. Per-task rollout
+analysis is provided in Appendix
+J.3
+.
+4.2.2
+End-to-end manipulation policies
+We evaluate three end-to-end visuomotor policies, trained on the 200 human demonstration trajectories.
+Diffusion Policy (DP)
+is trained from scratch for each task, while
+π
+0.5
+\pi_{0.5}
+and
+GR00T N 1.5
+(vision–language–action policies) are evaluated in zero-shot and finetuned settings. We evaluate two regimes: (1)
+Zero-shot (ZS)
+, using publicly available checkpoints without task-specific finetuning applied only to
+π
+0.5
+\pi_{0.5}
+and GR00T N 1.5; and (2)
+expert-demonstration training
+, where all three approaches are trained/finetuned on curated
+IMBench
+data. For tasks where teleoperation is infeasible, data is collected using manually designed scripted policies. Training configurations are kept as close as possible to the original implementations. Full architecture and training details are in Appendix
+G
+.
+Zero-shot VLA performance is extremely low (
+≤
+0.02
+\leq\!0.02
+mean), and useful
+behavior only emerges after task-specific training
+(Table
+15
+). Diffusion Policy performs best on
+mirror reasoning and contact-tolerant tasks, including
+mirror-pick-place
+,
+domino-select
+,
+occluder-push
+, and
+slip-recovery
+. Finetuned
+π
+0.5
+\pi_{0.5}
+mainly succeeds on balancing tasks such as
+balance-medium
+and
+balance-hard
+. Several tasks remain unsolved by all policies, including
+cup-inversion
+,
+shape-stack
+,
+stack-collapse-recovery
+,
+packing
+,
+mass-sort
+, and both cracker-box grasp variants.
+Detailed task-level analysis is provided in
+Appendix
+J.4
+.
+Table 2:
+Policy success rates (%)
+on
+IMBench
+, averaged over
+tasks within each category. Rollouts are over 20 seeds and 5 rollouts each. Bold marks the best entry per row. ZS = zero-shot pretrained
+checkpoint; FT = finetuned on teleoperation data. Diffusion Policy (DP)
+is trained from scratch (Full-training).
+π
+0.5
+\pi_{0.5}
+GR00T 1.5
+DP
+ZS
+FT
+ZS
+FT
+Full-training
+P1
+Geometry and constrained grasp
+0.00
+0.05
+0.00
+0.00
+0.10
+P2
+Dynamics and trajectory
+0.01
+0.09
+0.00
+0.02
+0.12
+P3
+Causal and indirect action
+0.08
+0.29
+0.03
+0.11
+0.37
+P4
+Tool use and augmented reach
+0.00
+0.00
+0.00
+0.00
+0.00
+P5
+Hidden state and discovery
+0.00
+0.08
+0.00
+0.00
+0.25
+P6
+Reactive replanning
+0.00
+0.17
+0.00
+0.00
+0.24
+P7
+Stability and equilibrium
+0.00
+0.32
+0.00
+0.01
+0.12
+Miscellaneous
+0.01
+0.06
+0.00
+0.02
+0.65
+Mean
+0.01
+0.15
+0.00
+0.02
+0.24
+4.3
+Out-of-distribution generalization
+Changing the main physical factor of each task significantly reduces
+performance (Table
+3
+) on tasks with the highest
+in-distribution scores. This suggests that policies rely heavily on
+memorized patterns rather than robust physical understanding.
+For example,
+balance-medium
+drops from
+0.71
+0.71
+to
+0.12
+0.12
+after a
+center-of-mass perturbation, while
+keyboard-typing
+falls from
+0.32
+0.32
+to
+0.04
+0.04
+. Contact-tolerant tasks such as
+domino-single
+remain relatively
+robust. A few tasks show small improvements under perturbation, but overall performance degrades.
+Table 3:
+OOD generalization (task-wise).
+Success rate under in-distribution (ID) and out-of-distribution (OOD) settings, with absolute drop
+Δ
+\Delta
+.
+π
+0.5
+\pi_{0.5}
+GR00T 1.5
+DP
+ID
+OOD
+𝚫
+\boldsymbol{\Delta}
+ID
+OOD
+𝚫
+\boldsymbol{\Delta}
+ID
+OOD
+𝚫
+\boldsymbol{\Delta}
+P1
+sheltered-grasp
+0.10
+0.00
+-0.10
+0.00
+0.00
+0.00
+0.30
+0.00
+-0.30
+P2
+pendulum-grasp
+0.28
+0.40
++0.12
+0.08
+0.04
+-0.04
+0.35
+0.00
+-0.35
+P3
+domino-single
+0.73
+0.52
+-0.21
+0.25
+0.15
+-0.10
+0.70
+0.60
+-0.10
+P4
+tool-retreive
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+P5
+occluder-push
+0.15
+0.08
+-0.07
+0.00
+0.00
+0.00
+0.50
+0.40
+-0.10
+P6
+slip-recovery
+0.22
+0.08
+-0.14
+0.00
+0.00
+0.00
+0.44
+0.56
++0.12
+P7
+balance-medium
+0.71
+0.12
+-0.59
+0.02
+0.00
+-0.02
+0.28
+0.04
+-0.24
+M
+keyboard-typing
+0.13
+0.00
+-0.13
+0.04
+0.00
+-0.04
+0.32
+0.04
+-0.28
+4.4
+Discussion
+Our results highlight three main findings. First, VLMs are much better at
+recognizing physical constraints than converting them into executable
+action plans. Tasks with simple geometric reasoning transfer well from
+understanding to planning, while tasks requiring ordered or timed actions
+often fail. Second, policy learning succeeds mainly on contact-tolerant tasks and a
+small number of structured behaviors such as mirror reasoning. Tasks
+requiring precise alignment, grasp mechanics, reorientation, or balancing
+remain unsolved across nearly all policies. Third, learned behaviors generalize poorly outside the training
+distribution. Even the strongest balancing policy drops sharply under
+small center-of-mass changes, and category-level performance remains low
+across geometry, dynamics, and stability tasks. Together, these results
+suggest that intuitive manipulation remains a missing capability axis that
+is not captured by current physical reasoning or scene understanding
+benchmarks.
+5
+Limitations
+IMBench is currently limited to simulation and evaluates only Franka (widely-supported embodiment) with parallel-jaw and suction grippers, excluding dexterous hands, mobile platforms, and humanoids. Task descriptions are fixed, tasks are low-to-mid horizon, and deformable object manipulation is not considered. While we release force-torque and tactile signals, the evaluated baselines do not use tactile or force-feedback modalities; principled integration of such signals remains an open direction that may improve performance. Finally, we focus on end-to-end vision-language-action baselines without privileged state information, emphasizing generalist agents and policies rather than task-specific engineered systems such as TAMP or long-horizon planners.
+6
+Conclusion
+We introduce
+IMBench
+, a benchmark of 35 manipulation tasks that test whether models can turn physical understanding into action. Tasks are organized around an Understand–Infer–Act loop and grouped by the intuition each one probes. We release ~14K curated demonstrations, a three-stage curation pipeline, and a scripted-demonstration generator, and we evaluate both high-level reasoning and low-level execution on current foundation models.
+Three findings stand out. Frontier VLMs identify task constraints with moderate accuracy but propose valid plans less often. State-of-the-art VLAs score near zero zero-shot and perform poorly overall even after in-domain fine-tuning. And under OOD shifts along each task’s target physical axis, all policies drop sharply. We position intuitive manipulation as a missing axis of capability, orthogonal to the dimensions current benchmarks reward, and release
+IMBench
+as a measurement instrument to help the field localize where intuitive physical intelligence lives in current systems.
+Acknowledgments
+If a paper is accepted, the final camera-ready version will (and probably should) include acknowledgments. All acknowledgments go at the end of the paper, including thanks to reviewers who gave useful comments, to colleagues who contributed to the ideas, and to funding agencies and corporate sponsors that provided financial support.
+References
+[1]
+K. R. Allen, K. A. Smith, and J. B. Tenenbaum
+(2020)
+Rapid trial-and-error learning with simulation supports flexible tool use and physical reasoning
+.
+Proceedings of the National Academy of Sciences
+117
+(
+47
+),
+pp. 29302–29310
+.
+Cited by:
+§2
+.
+[2]
+T. Ates, M. Ateşoğlu, Ç. Yiğit, I. Kesen, M. Kobas, E. Erdem, A. Erdem, T. Goksun, and D. Yuret
+(2022)
+Craft: a benchmark for causal reasoning about forces and interactions
+.
+In
+Findings of the Association for Computational Linguistics: ACL 2022
+,
+pp. 2602–2627
+.
+Cited by:
+§2
+.
+[3]
+A. Bakhtin, L. van der Maaten, J. Johnson, L. Gustafson, and R. Girshick
+(2019)
+Phyre: a new benchmark for physical reasoning
+.
+Advances in Neural Information Processing Systems
+32
+.
+Cited by:
+Table 4
+,
+§2
+.
+[4]
+H. Bansal, Z. Lin, T. Xie, Z. Zong, M. Yarom, Y. Bitton, C. Jiang, Y. Sun, K. Chang, and A. Grover
+(2025)
+Videophy: evaluating physical commonsense for video generation
+.
+In
+International Conference on Learning Representations
+,
+Vol.
+2025
+,
+pp. 102075–102121
+.
+Cited by:
+§2
+.
+[5]
+F. Baradel, N. Neverova, J. Mille, G. Mori, and C. Wolf
+(2019)
+Cophy: counterfactual learning of physical dynamics
+.
+arXiv preprint arXiv:1909.12000
+.
+Cited by:
+§2
+.
+[6]
+D. M. Bear, E. Wang, D. Mrowca, F. J. Binder, H. F. Tung, R. Pramod, C. Holdaway, S. Tao, K. Smith, F. Sun,
+et al.
+(2021)
+Physion: evaluating physical prediction from vision in humans and machines
+.
+arXiv preprint arXiv:2106.08261
+.
+Cited by:
+§1
+.
+[7]
+S. Cai, B. Zhang, Z. Wang, X. Ma, A. Liu, and Y. Liang
+(2024)
+GROOT-1.5: learning to follow multi-modal instructions from weak supervision
+.
+In
+Multi-modal Foundation Model meets Embodied AI Workshop @ ICML2024
+,
+External Links:
+Link
+Cited by:
+§1
+.
+[8]
+B. Chen, Z. Xu, S. Kirmani, B. Ichter, D. Sadigh, L. Guibas, and F. Xia
+(2024)
+Spatialvlm: endowing vision-language models with spatial reasoning capabilities
+.
+In
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition
+,
+pp. 14455–14465
+.
+Cited by:
+§2
+.
+[9]
+Z. Chen, K. Yi, Y. Li, M. Ding, A. Torralba, J. B. Tenenbaum, and C. Gan
+(2022)
+Comphy: compositional physical reasoning of objects and events from videos
+.
+arXiv preprint arXiv:2205.01089
+.
+Cited by:
+§2
+.
+[10]
+A. Cheng, H. Yin, Y. Fu, Q. Guo, R. Yang, J. Kautz, X. Wang, and S. Liu
+(2024)
+Spatialrgpt: grounded spatial reasoning in vision-language models
+.
+Advances in Neural Information Processing Systems
+37
+,
+pp. 135062–135093
+.
+Cited by:
+§2
+.
+[11]
+A. Cherian, R. Corcodel, S. Jain, and D. Romeres
+(2024)
+Llmphy: complex physical reasoning using large language models and world models
+.
+arXiv preprint arXiv:2411.08027
+.
+Cited by:
+§2
+.
+[12]
+N. Chernyadev, N. Backshall, X. Ma, Y. Lu, Y. Seo, and S. James
+(2025)
+BiGym: a demo-driven mobile bi-manual manipulation benchmark
+.
+In
+Conference on Robot Learning
+,
+pp. 4201–4217
+.
+Cited by:
+Table 4
+,
+§2
+.
+[13]
+C. Chi, Z. Xu, S. Feng, E. Cousineau, Y. Du, B. Burchfiel, R. Tedrake, and S. Song
+(2025)
+Diffusion policy: visuomotor policy learning via action diffusion
+.
+The International Journal of Robotics Research
+44
+(
+10-11
+),
+pp. 1684–1704
+.
+Cited by:
+§1
+.
+[14]
+W. Chow, J. Mao, B. Li, D. Seita, V. Campagnolo Guizilini, and Y. Wang
+(2025)
+Physbench: benchmarking and enhancing vision-language models for physical world understanding
+.
+In
+International Conference on Learning Representations
+,
+Vol.
+2025
+,
+pp. 97959–98108
+.
+Cited by:
+Table 4
+,
+§1
+.
+[15]
+D. Driess, F. Xia, M. S. Sajjadi, C. Lynch, A. Chowdhery, B. Ichter, A. Wahid, J. Tompson, Q. Vuong, T. Yu,
+et al.
+(2023)
+Palm-e: an embodied multimodal language model
+.
+arXiv preprint arXiv:2303.03378
+.
+Cited by:
+§2
+.
+[16]
+M. Du, B. Wu, Z. Li, X. Huang, and Z. Wei
+(2024)
+Embspatial-bench: benchmarking spatial understanding for embodied tasks with large vision-language models
+.
+In
+Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers)
+,
+pp. 346–355
+.
+Cited by:
+§1
+.
+[17]
+J. Duan, S. Yu, S. Poria, B. Wen, and C. Tan
+(2022)
+Pip: physical interaction prediction via mental simulation with span selection
+.
+In
+European Conference on Computer Vision
+,
+pp. 405–421
+.
+Cited by:
+§2
+.
+[18]
+G. J. Gao, T. Li, J. Shi, Y. Li, Z. Zhang, N. Figueroa, and D. Jayaraman
+(2025)
+Vlmgineer: vision language models as robotic toolsmiths
+.
+arXiv preprint arXiv:2507.12644
+.
+Cited by:
+Table 4
+.
+[19]
+J. Gao, B. Sarkar, F. Xia, T. Xiao, J. Wu, B. Ichter, A. Majumdar, and D. Sadigh
+(2024)
+Physically grounded vision-language models for robotic manipulation
+.
+In
+2024 IEEE International Conference on Robotics and Automation (ICRA)
+,
+pp. 12462–12469
+.
+Cited by:
+§2
+.
+[20]
+C. R. Garrett, R. Chitnis, R. Holladay, B. Kim, T. Silver, L. P. Kaelbling, and T. Lozano-Pérez
+(2021)
+Integrated task and motion planning
+.
+Annual review of control, robotics, and autonomous systems
+4
+(
+1
+),
+pp. 265–293
+.
+Cited by:
+§2
+.
+[21]
+C. R. Garrett, T. Lozano-Pérez, and L. P. Kaelbling
+(2020)
+Pddlstream: integrating symbolic planners and blackbox samplers via optimistic adaptive planning
+.
+In
+Proceedings of the international conference on automated planning and scheduling
+,
+Vol.
+30
+,
+pp. 440–448
+.
+Cited by:
+§2
+.
+[22]
+R. Girdhar and D. Ramanan
+(2019)
+Cater: a diagnostic dataset for compositional actions and temporal reasoning
+.
+arXiv preprint arXiv:1910.04744
+.
+Cited by:
+§2
+.
+[23]
+R. Goyal, S. Ebrahimi Kahou, V. Michalski, J. Materzynska, S. Westphal, H. Kim, V. Haenel, I. Fruend, P. Yianilos, M. Mueller-Freitag,
+et al.
+(2017)
+The" something something" video database for learning and evaluating visual common sense
+.
+In
+Proceedings of the IEEE international conference on computer vision
+,
+pp. 5842–5850
+.
+Cited by:
+§1
+.
+[24]
+T. L. Griffiths, F. Callaway, M. B. Chang, E. Grant, P. M. Krueger, and F. Lieder
+(2019)
+Doing more with less: meta-reasoning and meta-learning in humans and machines
+.
+Current Opinion in Behavioral Sciences
+29
+,
+pp. 24–30
+.
+Cited by:
+§1
+.
+[25]
+M. Heo, Y. Lee, D. Lee, and J. J. Lim
+(2025)
+Furniturebench: reproducible real-world benchmark for long-horizon complex manipulation
+.
+The International Journal of Robotics Research
+44
+(
+10-11
+),
+pp. 1863–1891
+.
+Cited by:
+§2
+.
+[26]
+S. Huang, B. Chen, H. Xu, and V. Sitzmann
+(2024)
+Dittogym: learning to control soft shape-shifting robots
+.
+arXiv preprint arXiv:2401.13231
+.
+Cited by:
+§2
+.
+[27]
+W. Huang, C. Wang, R. Zhang, Y. Li, J. Wu, and L. Fei-Fei
+(2023)
+VoxPoser: composable 3d value maps for robotic manipulation with language models
+.
+In
+Conference on Robot Learning
+,
+pp. 540–562
+.
+Cited by:
+§1
+.
+[28]
+Y. Huang, B. Li, V. Saxena, Y. Liang, U. A. Mishra, L. Ji, L. Zha, J. Wu, N. Kumar, S. Scherer,
+et al.
+(2026)
+KinDER: a physical reasoning benchmark for robot learning and planning
+.
+arXiv preprint arXiv:2604.25788
+.
+Cited by:
+Table 4
+,
+§2
+.
+[29]
+P. Intelligence, K. Black, N. Brown, J. Darpinian, K. Dhabalia, D. Driess, A. Esmail, M. Equi, C. Finn, N. Fusai,
+et al.
+(2025)
+π
+0.5
+\pi_{0.5}
+: A vision-language-action model with open-world generalization
+.
+arXiv preprint arXiv:2504.16054
+.
+Cited by:
+§1
+,
+§2
+.
+[30]
+S. James, Z. Ma, D. R. Arrojo, and A. J. Davison
+(2020)
+Rlbench: the robot learning benchmark & learning environment
+.
+IEEE Robotics and Automation Letters
+5
+(
+2
+),
+pp. 3019–3026
+.
+Cited by:
+Table 4
+,
+§1
+.
+[31]
+B. Jia, Y. Chen, H. Yu, Y. Wang, X. Niu, T. Liu, Q. Li, and S. Huang
+(2024)
+Sceneverse: scaling 3d vision-language learning for grounded scene understanding
+.
+In
+European Conference on Computer Vision
+,
+pp. 289–310
+.
+Cited by:
+§1
+.
+[32]
+Y. Jiang, A. Gupta, Z. Zhang, G. Wang, Y. Dou, Y. Chen, L. Fei-Fei, A. Anandkumar, Y. Zhu, and L. Fan
+(2023)
+Vima: robot manipulation with multimodal prompts
+.
+Cited by:
+§2
+.
+[33]
+J. Johnson, B. Hariharan, L. Van Der Maaten, L. Fei-Fei, C. Lawrence Zitnick, and R. Girshick
+(2017)
+Clevr: a diagnostic dataset for compositional language and elementary visual reasoning
+.
+In
+Proceedings of the IEEE conference on computer vision and pattern recognition
+,
+pp. 2901–2910
+.
+Cited by:
+§1
+.
+[34]
+L. P. Kaelbling and T. Lozano-Perez
+(2013)
+Integrated task and motion planning in belief space
+.
+Sage Publications
+.
+External Links:
+ISSN 0278-3649
+,
+Link
+Cited by:
+§2
+.
+[35]
+A. Khazatsky, K. Pertsch, S. Nair, A. Balakrishna, S. Dasari, S. Karamcheti, S. Nasiriany, M. K. Srirama, L. Y. Chen, K. Ellis,
+et al.
+(2024)
+Droid: a large-scale in-the-wild robot manipulation dataset
+.
+arXiv preprint arXiv:2403.12945
+.
+Cited by:
+§2
+.
+[36]
+M. J. Kim, K. Pertsch, S. Karamcheti, T. Xiao, A. Balakrishna, S. Nair, R. Rafailov, E. Foster, G. Lam, P. Sanketi,
+et al.
+(2024)
+Openvla: an open-source vision-language-action model
+.
+arXiv preprint arXiv:2406.09246
+.
+Cited by:
+§1
+.
+[37]
+E. Kolve, R. Mottaghi, W. Han, E. VanderBilt, L. Weihs, A. Herrasti, M. Deitke, K. Ehsani, D. Gordon, Y. Zhu,
+et al.
+(2017)
+Ai2-thor: an interactive 3d environment for visual ai
+.
+arXiv preprint arXiv:1712.05474
+.
+Cited by:
+§2
+.
+[38]
+J. R. Kubricht, K. J. Holyoak, and H. Lu
+(2017)
+Intuitive physics: current research and controversies
+.
+Trends in Cognitive Sciences
+21
+(
+10
+),
+pp. 749–759
+.
+External Links:
+ISSN 1364-6613
+,
+Document
+,
+Link
+Cited by:
+§1
+.
+[39]
+F. Lagriffoul, {. T. Dantam, C. Garrett, A. Akbari, S. Srivastava, and {. E. Kavraki
+(2018)
+Platform-independent benchmarks for task and motion planning
+.
+IEEE Robotics and Automation Letters
+3
+(
+4
+),
+pp. 3765–3772
+(
+English (US)
+).
+External Links:
+Document
+,
+ISSN 2377-3766
+Cited by:
+§2
+.
+[40]
+B. M. Lake, T. D. Ullman, J. B. Tenenbaum, and S. J. Gershman
+(2017)
+Building machines that learn and think like people
+.
+Behavioral and brain sciences
+40
+,
+pp. e253
+.
+Cited by:
+§1
+.
+[41]
+C. Li, R. Zhang, J. Wong, C. Gokmen, S. Srivastava, R. Martín-Martín, C. Wang, G. Levine, M. Lingelbach, J. Sun,
+et al.
+(2023)
+Behavior-1k: a benchmark for embodied ai with 1,000 everyday activities and realistic simulation
+.
+In
+Conference on Robot Learning
+,
+pp. 80–93
+.
+Cited by:
+§2
+.
+[42]
+S. Li, K. Wu, C. Zhang, and Y. Zhu
+(2024)
+I-phyre: interactive physical reasoning
+.
+In
+International Conference on Learning Representations
+,
+Vol.
+2024
+,
+pp. 28195–28215
+.
+Cited by:
+§2
+.
+[43]
+B. Liu, Y. Zhu, C. Gao, Y. Feng, Q. Liu, Y. Zhu, and P. Stone
+(2023)
+Libero: benchmarking knowledge transfer for lifelong robot learning
+.
+Advances in Neural Information Processing Systems
+36
+,
+pp. 44776–44791
+.
+Cited by:
+Table 4
+,
+§1
+,
+§1
+,
+§2
+.
+[44]
+F. Liu, K. Fang, P. Abbeel, and S. Levine
+(2024)
+Moka: open-world robotic manipulation through mark-based visual prompting
+.
+arXiv preprint arXiv:2403.03174
+.
+Cited by:
+§2
+.
+[45]
+R. Lyu, J. Lin, T. Wang, S. Yang, X. Mao, Y. Chen, R. Xu, H. Huang, C. Zhu, D. Lin,
+et al.
+(2024)
+Mmscan: a multi-modal 3d scene dataset with hierarchical grounded language annotations
+.
+Advances in Neural Information Processing Systems
+37
+,
+pp. 50898–50924
+.
+Cited by:
+§1
+.
+[46]
+X. Ma, S. Yong, Z. Zheng, Q. Li, Y. Liang, S. Zhu, and S. Huang
+(2022)
+Sqa3d: situated question answering in 3d scenes
+.
+arXiv preprint arXiv:2210.07474
+.
+Cited by:
+§1
+.
+[47]
+A. Majumdar, A. Ajay, X. Zhang, P. Putta, S. Yenamandra, M. Henaff, S. Silwal, P. Mcvay, O. Maksymets, S. Arnaud, K. Yadav, Q. Li, B. Newman, M. Sharma, V. Berges, S. Zhang, P. Agrawal, Y. Bisk, D. Batra, M. Kalakrishnan, F. Meier, C. Paxton, S. Sax, and A. Rajeswaran
+(2024)
+OpenEQA: embodied question answering in the era of foundation models
+.
+In
+Conference on Computer Vision and Pattern Recognition (CVPR)
+,
+Cited by:
+§1
+.
+[48]
+M. Matthews, M. Beukman, C. Lu, and J. Foerster
+(2025)
+Kinetix: investigating the training of general agents through open-ended physics-based control tasks
+.
+In
+International Conference on Learning Representations
+,
+Vol.
+2025
+,
+pp. 58515–58564
+.
+Cited by:
+§2
+.
+[49]
+R. McCarthy, D. C. Tan, D. Schmidt, F. Acero, N. Herr, Y. Du, T. G. Thuruthel, and Z. Li
+(2025)
+Towards generalist robot learning from internet video: a survey
+.
+Journal of Artificial Intelligence Research
+83
+.
+Cited by:
+§1
+.
+[50]
+M. McCloskey, A. Washburn, and L. Felch
+(1983)
+Intuitive physics: the straight-down belief and its origin
+.
+Journal of Experimental Psychology: Learning, Memory, and Cognition
+9
+,
+pp. 636–649
+.
+External Links:
+Document
+Cited by:
+§1
+.
+[51]
+O. Mees, L. Hermann, E. Rosete-Beas, and W. Burgard
+(2022)
+Calvin: a benchmark for language-conditioned policy learning for long-horizon robot manipulation tasks
+.
+IEEE Robotics and Automation Letters
+7
+(
+3
+),
+pp. 7327–7334
+.
+Cited by:
+§2
+.
+[52]
+T. Mu, Z. Ling, F. Xiang, D. Yang, X. Li, S. Tao, Z. Huang, Z. Jia, and H. Su
+(2021)
+ManiSkill: generalizable manipulation skill benchmark with large-scale demonstrations
+.
+External Links:
+2107.14483
+,
+Link
+Cited by:
+§1
+.
+[53]
+S. Nasiriany, A. Maddukuri, L. Zhang, A. Parikh, A. Lo, A. Joshi, A. Mandlekar, and Y. Zhu
+(2024)
+Robocasa: large-scale simulation of everyday tasks for generalist robots
+.
+arXiv preprint arXiv:2406.02523
+.
+Cited by:
+Table 4
+,
+§1
+,
+§2
+.
+[54]
+S. Nasiriany, F. Xia, W. Yu, T. Xiao, J. Liang, I. Dasgupta, A. Xie, D. Driess, A. Wahid, Z. Xu,
+et al.
+(2024)
+Pivot: iterative visual prompting elicits actionable knowledge for vlms
+.
+arXiv preprint arXiv:2402.07872
+.
+Cited by:
+§2
+.
+[55]
+D. Niu, Y. Sharma, G. Biamby, J. Quenum, Y. Bai, B. Shi, T. Darrell, and R. Herzig
+(2025)
+LLARVA: vision-action instruction tuning enhances robot learning
+.
+In
+Conference on Robot Learning
+,
+pp. 3333–3355
+.
+Cited by:
+§1
+.
+[56]
+S. Park, K. Frans, B. Eysenbach, and S. Levine
+(2025)
+Ogbench: benchmarking offline goal-conditioned rl
+.
+In
+International Conference on Learning Representations
+,
+Vol.
+2025
+,
+pp. 94937–94982
+.
+Cited by:
+§1
+.
+[57]
+M. Patel, T. Gokhale, C. Baral, and Y. Yang
+(2022)
+Cripp-vqa: counterfactual reasoning about implicit physical properties via video question answering
+.
+In
+Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing
+,
+pp. 9856–9870
+.
+Cited by:
+§2
+.
+[58]
+W. Pumacay, I. Singh, J. Duan, R. Krishna, J. Thomason, and D. Fox
+(2024)
+THE colosseum: a benchmark for evaluating generalization for robotic manipulation
+.
+In
+Robotics: Science and Systems (RSS)
+,
+External Links:
+Document
+Cited by:
+Table 4
+,
+§1
+.
+[59]
+N. F. Rajani, R. Zhang, Y. C. Tan, S. Zheng, J. Weiss, A. Vyas, A. Gupta, C. Xiong, R. Socher, and D. Radev
+(2020)
+ESPRIT: explaining solutions to physical reasoning tasks
+.
+In
+Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics
+,
+pp. 7906–7917
+.
+Cited by:
+§2
+.
+[60]
+R. Riochet, M. Y. Castro, M. Bernard, A. Lerer, R. Fergus, V. Izard, and E. Dupoux
+(2018)
+Intphys: a framework and benchmark for visual intuitive physics reasoning
+.
+arXiv preprint arXiv:1803.07616
+.
+Cited by:
+§1
+.
+[61]
+M. Shridhar, J. Thomason, D. Gordon, Y. Bisk, W. Han, R. Mottaghi, L. Zettlemoyer, and D. Fox
+(2020)
+Alfred: a benchmark for interpreting grounded instructions for everyday tasks
+.
+In
+Proceedings of the IEEE/CVF conference on computer vision and pattern recognition
+,
+pp. 10740–10749
+.
+Cited by:
+§2
+.
+[62]
+A. Shukla, S. Tao, and H. Su
+(2025)
+Maniskill-hab: a benchmark for low-level manipulation in home rearrangement tasks
+.
+In
+International Conference on Learning Representations
+,
+Vol.
+2025
+,
+pp. 15288–15317
+.
+Cited by:
+Table 4
+,
+§2
+.
+[63]
+C. H. Song, J. Wu, C. Washington, B. M. Sadler, W. Chao, and Y. Su
+(2023)
+Llm-planner: few-shot grounded planning for embodied agents with large language models
+.
+In
+Proceedings of the IEEE/CVF international conference on computer vision
+,
+pp. 2998–3009
+.
+Cited by:
+§2
+.
+[64]
+G. R. Team, S. Abeyruwan, J. Ainslie, J. Alayrac, M. G. Arenas, T. Armstrong, A. Balakrishna, R. Baruch, M. Bauza, M. Blokzijl,
+et al.
+(2025)
+Gemini robotics: bringing ai into the physical world
+.
+arXiv preprint arXiv:2503.20020
+.
+Cited by:
+§2
+.
+[65]
+O. M. Team, D. Ghosh, H. Walke, K. Pertsch, K. Black, O. Mees, S. Dasari, J. Hejna, T. Kreiman, C. Xu,
+et al.
+(2024)
+Octo: an open-source generalist robot policy
+.
+arXiv preprint arXiv:2405.12213
+.
+Cited by:
+§1
+.
+[66]
+H. Tung, M. Ding, Z. Chen, D. Bear, C. Gan, J. Tenenbaum, D. Yamins, J. Fan, and K. Smith
+(2023)
+Physion++: evaluating physical scene understanding that requires online inference of different physical properties
+.
+Advances in Neural Information Processing Systems
+36
+,
+pp. 67048–67068
+.
+Cited by:
+§2
+.
+[67]
+H. R. Walke, K. Black, T. Z. Zhao, Q. Vuong, C. Zheng, P. Hansen-Estruch, A. W. He, V. Myers, M. J. Kim, M. Du,
+et al.
+(2023)
+Bridgedata v2: a dataset for robot learning at scale
+.
+In
+Conference on Robot Learning
+,
+pp. 1723–1736
+.
+Cited by:
+§2
+.
+[68]
+A. Wang, B. Wu, S. Chen, Z. Chen, H. Guan, W. Lee, L. E. Li, and C. Gan
+(2024)
+Sok-bench: a situated video reasoning benchmark with aligned open-world knowledge
+.
+In
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition
+,
+pp. 13384–13394
+.
+Cited by:
+§1
+.
+[69]
+C. Wang, L. Fan, J. Sun, R. Zhang, L. Fei-Fei, D. Xu, Y. Zhu, and A. Anandkumar
+(2023)
+MimicPlay: long-horizon imitation learning by watching human play
+.
+In
+Conference on Robot Learning
+,
+pp. 201–221
+.
+Cited by:
+§1
+.
+[70]
+S. Wang, M. Han, Z. Jiao, Z. Zhang, Y. N. Wu, S. Zhu, and H. Liu
+(2024)
+Llmˆ 3: large language model-based task and motion planning with motion failure reasoning
+.
+In
+2024 IEEE/RSJ international conference on intelligent robots and systems (IROS)
+,
+pp. 12086–12092
+.
+Cited by:
+§2
+.
+[71]
+X. Wang, W. Ma, A. Wang, S. Chen, A. Kortylewski, and A. Yuille
+(2025)
+Compositional 4d dynamic scenes understanding with physics priors for video question answering
+.
+In
+International Conference on Learning Representations
+,
+Vol.
+2025
+,
+pp. 93688–93700
+.
+Cited by:
+§1
+.
+[72]
+Y. Wang, J. Duan, D. Fox, and S. Srinivasa
+(2023)
+NEWTON: are large language models capable of physical reasoning?
+.
+In
+Findings of the Association for Computational Linguistics: EMNLP 2023
+,
+pp. 9743–9758
+.
+Cited by:
+§2
+.
+[73]
+B. Wu, S. Yu, Z. Chen, J. B. Tenenbaum, and C. Gan
+(2024)
+Star: a benchmark for situated reasoning in real-world videos
+.
+arXiv preprint arXiv:2405.09711
+.
+Cited by:
+§1
+.
+[74]
+J. Wu, J. J. Lim, H. Zhang, J. B. Tenenbaum, and W. T. Freeman
+(2016)
+Physics 101: learning physical object properties from unlabeled videos.
+.
+In
+BMVC
+,
+Vol.
+2
+,
+pp. 7
+.
+Cited by:
+§2
+.
+[75]
+Q. Wu, H. Zhao, M. Saxon, T. Bui, W. Y. Wang, Y. Zhang, and S. Chang
+(2024)
+Vsp: assessing the dual challenges of perception and reasoning in spatial planning tasks for vlms
+.
+arXiv preprint arXiv:2407.01863
+.
+Cited by:
+§1
+.
+[76]
+J. Yang, S. Yang, A. W. Gupta, R. Han, L. Fei-Fei, and S. Xie
+(2025)
+Thinking in space: how multimodal large language models see, remember, and recall spaces
+.
+In
+Proceedings of the Computer Vision and Pattern Recognition Conference
+,
+pp. 10632–10643
+.
+Cited by:
+§1
+.
+[77]
+R. Yang, H. Chen, J. Zhang, M. Zhao, C. Qian, K. Wang, Q. Wang, T. V. Koripella, M. Movahedi, M. Li,
+et al.
+(2025)
+EmbodiedBench: comprehensive benchmarking multi-modal large language models for vision-driven embodied agents
+.
+In
+International Conference on Machine Learning
+,
+pp. 70576–70631
+.
+Cited by:
+§2
+.
+[78]
+A. Ye, Z. Zhang, B. Wang, X. Wang, D. Zhang, and Z. Zhu
+(2025)
+Vla-r1: enhancing reasoning in vision-language-action models
+.
+arXiv preprint arXiv:2510.01623
+.
+Cited by:
+§2
+.
+[79]
+K. Yi, C. Gan, Y. Li, P. Kohli, J. Wu, A. Torralba, and J. B. Tenenbaum
+(2019)
+Clevrer: collision events for video representation and reasoning
+.
+arXiv preprint arXiv:1910.01442
+.
+Cited by:
+Table 4
+,
+§1
+.
+[80]
+M. Zawalski, W. Chen, K. Pertsch, O. Mees, C. Finn, and S. Levine
+(2025)
+Robotic control via embodied chain-of-thought reasoning
+.
+In
+Conference on Robot Learning
+,
+pp. 3157–3181
+.
+Cited by:
+§1
+.
+[81]
+S. Zhang, Z. Xu, P. Liu, X. Yu, Y. Li, Q. Gao, Z. Fei, Z. Yin, Z. Wu, Y. Jiang,
+et al.
+(2025)
+Vlabench: a large-scale benchmark for language-conditioned robotics manipulation with long-horizon reasoning tasks
+.
+In
+Proceedings of the IEEE/CVF International Conference on Computer Vision
+,
+pp. 11142–11152
+.
+Cited by:
+Table 4
+,
+§1
+.
+[82]
+Z. Zhao, S. Cheng, Y. Ding, Z. Zhou, S. Zhang, D. Xu, and Y. Zhao
+(2024)
+A survey of optimization-based task and motion planning: from classical to learning approaches
+.
+IEEE/ASME Transactions On Mechatronics
+30
+(
+4
+),
+pp. 2799–2825
+.
+Cited by:
+§2
+.
+[83]
+H. Zhen, X. Qiu, P. Chen, J. Yang, X. Yan, Y. Du, Y. Hong, and C. Gan
+(2024)
+3d-vla: a 3d vision-language-action generative world model
+.
+arXiv preprint arXiv:2403.09631
+.
+Cited by:
+§1
+.
+[84]
+Y. Zhu, J. Wong, A. Mandlekar, and R. Martín-Martín
+(2020)
+Robosuite: a modular simulation framework and benchmark for robot learning
+.
+In
+Proceedings of the IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)
+,
+pp. 10950–10957
+.
+External Links:
+Document
+Cited by:
+§1
+,
+§3
+.
+[85]
+B. Zitkovich, T. Yu, S. Xu, P. Xu, T. Xiao, F. Xia, J. Wu, P. Wohlhart, S. Welker, A. Wahid,
+et al.
+(2023)
+Rt-2: vision-language-action models transfer web knowledge to robotic control
+.
+In
+Conference on Robot Learning
+,
+pp. 2165–2183
+.
+Cited by:
+§1
+,
+§2
+.
+Appendix A
+Related Benchmarks
+IMBench
+differs from prior benchmarks by explicitly evaluating the full pipeline from physical reasoning to executable manipulation. It separately measures VLM constraint understanding, plan generation, and closed-loop execution while covering all five key physical reasoning categories. In addition, it introduces bimanual coordination tasks with expert demonstrations, enabling evaluation of both reasoning and control. We additionally release tactile and force/torque data to support multimodal manipulation research and improve performance on
+IMBench
+.
+Table 4:
+Related Benchmarks.
+IMBench
+is the only benchmark that (i) focuses on physical reasoning, (ii) evaluates VLM constraint understanding and plan generation
+separately
+from closed-loop policy execution, (iii) covers all five physical reasoning categories (geometry, dynamics, causal chains, hidden state, reactive replanning), and (iv) provides bimanual coordination tasks with demonstrations.
+Benchmark
+Phys. Reasoning
+Focus
+Sep. VLM +
+Policy Eval
+Geometry /
+Affordance
+Dynamics /
+Prediction
+Causal /
+Indirect
+Hidden
+State
+Reactive
+Replanning
+Bimanual
+Coordination
+Demonstrations
+PHYRE
+[
+3
+]
+✓
+×
+\times
+×
+\times
+✓
+✓
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+PhysBench
+[
+14
+]
+✓
+×
+\times
+×
+\times
+✓
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+CLEVRER
+[
+79
+]
+✓
+×
+\times
+×
+\times
+✓
+✓
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+LIBERO
+[
+43
+]
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+✓
+RLBench
+[
+30
+]
+×
+\times
+×
+\times
+✓
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+✓
+RoboCasa
+[
+53
+]
+×
+\times
+×
+\times
+✓
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+✓
+ManiSkill-HAB
+[
+62
+]
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+✓
+VLABench
+[
+81
+]
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+✓
+×
+\times
+×
+\times
+×
+\times
+✓
+Colosseum
+[
+58
+]
+×
+\times
+×
+\times
+✓
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+✓
+BiGym
+[
+12
+]
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+✓
+✓
+VLMgineer
+[
+18
+]
+✓
+✓
+✓
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+×
+\times
+KinDER
+[
+28
+]
+✓
+×
+\times
+✓
+✓
+✓
+×
+\times
+×
+\times
+×
+\times
+✓
+IMBench
+(Ours)
+✓
+✓
+✓
+✓
+✓
+✓
+✓
+✓
+✓
+Appendix B
+Task Suite — Full Specifications
+This appendix gives the full specification of every
+IMBench
+task. Each entry lists: phenomenon category, embodiment, end-effector configuration, the physical axis the task isolates, the success predicate, the reset-time randomization ranges, the canonical sub-goal sequence used by the Stage-2 oracle, the demonstration counts after curation, and the mean episode length. We release a subset of the dataset (10 episodes) via Hugging Face for review purposes. To facilitate easy inspection, we provide utilities that allow reviewers to directly visualize the dataset through a web link without requiring any installation. The complete benchmark and full dataset will be released upon acceptance. Each task description below includes an associated link that redirects to the LeRobot visualizer for interactive inspection.
+B.1
+Master catalog
+Table 5:
+Master catalog of
+IMBench
+tasks. “Demos” lists curated counts after the three-stage filtering pipeline. A dash (–) in the teleop column denotes a task for which teleoperation is infeasible with the SpaceMouse interface.
+ID
+Task
+Cat.
+Embodiment / EE
+Demos (teleop / scripted)
+Mean ep. (s)
+T01
+edge-slide
+P1
+1-arm / jaw
+200 / 200
+12.4
+T02
+recover-peg-insert
+P1
+1-arm / jaw
+200 / 200
+14.1
+T03
+sheltered-grasp
+P1
+1-arm / jaw
+200 / 200
+9.8
+T04
+cup-inversion
+P1
+het. bi / suc+jaw
+200 / 200
+18.6
+T05
+plate-shelf-hobi
+P1
+hom. bi / jaw+jaw
+200 / 200
+21.3
+T06
+plate-shelf-hetbi
+P1
+het. bi / suc+jaw
+200 / 200
+19.7
+T07
+bowl-table
+P1
+het. bi / suc+jaw
+200 / 200
+17.2
+T08
+cracker-box-suction
+P1
+1-arm / suction
+200 / 200
+11.7
+T09
+cracker-box-jaw
+P1
+1-arm / jaw
+200 / 200
+13.2
+T10
+cube-toss
+P2
+1-arm / jaw
+– / 400
+4.6
+T11
+pendulum-grasp
+P2
+1-arm / jaw
+– / 400
+7.3
+T12
+linear-intercept
+P2
+1-arm / jaw
+– / 400
+5.1
+T13
+bounce-intercept
+P2
+1-arm / jaw
+– / 400
+6.8
+T14
+galileo-ramp-drop
+P2
+1-arm / jaw
+– / 400
+8.4
+T15
+slide-catch
+P2
+1-arm / jaw
+200 / 200
+9.6
+T16
+ramp-sort
+P2
+1-arm / jaw
+200 / 200
+16.2
+T17
+domino-single
+P3
+1-arm / jaw
+200 / 200
+6.3
+T18
+domino-select
+P3
+1-arm / jaw
+200 / 200
+8.1
+T19
+seesaw-balance
+P3
+1-arm / jaw
+200 / 200
+11.5
+T20
+indirect-push
+P3
+1-arm / jaw
+200 / 200
+9.4
+T21
+gap-funnel
+P3
+1-arm / jaw
+200 / 200
+10.7
+T22
+ball-cage-escape
+P3
+1-arm / jaw
+200 / 200
+13.9
+T23
+tool-retrieve
+P4
+1-arm / jaw
+200 / 200
+17.8
+T24
+cup-extract
+P4
+1-arm / jaw
+200 / 200
+15.4
+T25
+mass-sort
+P5
+1-arm / jaw
+200 / 200
+24.6
+T26
+occluder-push
+P5
+1-arm / jaw
+200 / 200
+14.3
+T27
+slip-recovery
+P6
+1-arm / jaw
+200 / 200
+11.2
+T28
+stack-collapse-recovery
+P6
+1-arm / jaw
+200 / 200
+19.5
+T29
+pick-place-ycb
+P6
+1-arm / jaw
+200 / 200
+13.7
+T30
+shape-stack
+P7
+1-arm / jaw
+200 / 200
+16.8
+T31
+balance-medium
+P7
+1-arm / jaw
+200 / 200
+18.9
+T32
+balance-hard
+P7
+1-arm / jaw
+200 / 200
+21.6
+T33
+packing
+P7
+1-arm / jaw
+200 / 200
+25.4
+M01
+mirror-pick-place
+M
+1-arm / jaw
+200 / 200
+8.7
+M02
+keyboard-typing
+M
+1-arm / jaw
+200 / 200
+28.3
+For each task we target
+200
+200
+curated teleoperation and
+200
+200
+curated scripted trajectories. For the five tasks where teleoperation is infeasible (T10–T14),
+400
+400
+scripted trajectories per task are collected to compensate. After the three-stage curation pipeline, the released dataset contains
+6,000
+6{,}000
+teleoperation
++
++
+8,000
+8{,}000
+scripted
+=
+14,000
+=14{,}000
+trajectories (
+≈
+14
+\approx 14
+K total).
+B.2
+Per-category specifications
+For each task we report:
+Setup
+(initial scene),
+Goal
+(success condition),
+Intuition bottleneck
+(the physical fact a model must infer), and
+Canonical plan
+(the Stage-2 reference sub-goal sequence). Only quantities that change how the task is reasoned about are listed; spawn jitter, control gains, and episode budgets are deferred to the task configs. A representative initial-state image of each scene appears to the left of its description.
+B.2.1
+P1 — Geometry-constrained grasping
+T01
+edge-slide
+.
+Setup:
+a thin rectangular plate, lies flush on the table.
+Goal:
+lift the plate above the table.
+Intuition:
+a top-down jaw closure cannot close around this small thickness; the plate must first be slid to overhang the table edge to expose a graspable lip.
+Canonical plan:
+approach the plate, push it sideways until it overhangs the table edge, pinch the exposed lip, and lift.
+T01 edge-slide
+T02
+recover-peg-insert
+.
+Setup:
+a rod stands vertically; a through-slot present horizontally on a side board.
+Goal:
+drive the peg through
+≈
+95
+%
+\approx 95\%
+of its length into the slot, aligned with the slot axis.
+Intuition:
+the slot is horizontal, the arm must grasp and align the peg to the axis of the slot. A one-time
+±
+10
+∘
+\pm 10^{\circ}
+yaw perturbation, applied once the peg aligns with the slot. This forces the agent to think of correct geometric alignment and constrained insertion.
+Canonical plan:
+tip the rod onto its side against a nearby surface, regrasp it laterally so its long axis lies along the slot axis, then push it through. Realign if the line of approach is not correct.
+T02 recover-peg-insert
+T03
+sheltered-grasp
+.
+Setup:
+a cube sits in either the top or bottom story of a covered two-tier rack; the side face is open but the top is occluded. A goal tray sits on the table. The observations include camera views where the object is initially not visible, requiring the agent to first explore and then rely solely on the gripper camera to locate and pick the object.
+Goal:
+drop the cube in the tray.
+Intuition:
+only lateral approach through the open face is feasible; the gripper must yaw to enter the rack.
+Canonical plan:
+Explore the scene to locate object, yaw the gripper to face the rack’s open side, enter laterally, grasp the cube, withdraw, and drop it in the tray.
+T03 sheltered-grasp
+T04
+cup-inversion
+.
+Setup:
+a handle-less cup starts upside-down on the table. Grippers are heterogeneous: one parallel-jaw, one suction.
+Goal:
+place the cup upright inside a goal region.
+Intuition:
+suction couples to the closed bottom but cannot achieve upright placement alone; the jaw cannot grasp the smooth rim. A reorienting suction-to-jaw handover is required. Toppling is not a reliable option since the cup just slides out.
+Canonical plan:
+attach suction to the cup’s exposed (upward-facing) base, lift, rotate the cup so the opening faces up, hand it off to the jaw which grabs it by the rim, and place it inside the goal region.
+T04 cup-inversion
+T05
+plate-shelf-hobi
+.
+Setup:
+A cutlery plate is positioned next to a center-shelf slot. Both arms carry parallel-jaw grippers.
+Goal:
+Insert the plate on edge into the shelf slot.
+Intuition:
+The flat plate cannot be grasped by a single arm. A symmetric two-handed pick is also infeasible, since mid air transfer is not possible without grasping, which renders final shelf placement impossible. The plate’s slight incline geometry enables an alternative approach: one robotic arm presses the plate near its circumference to tilt it, creating a graspable entry for the other arm.
+Canonical Plan:
+Press the plate with one arm around the corner to create an edge. Grasp the plate with the other arm and transport it to the center-shelf for insertion.
+T05 plate-shelf-hobi
+T06
+plate-shelf-hetbi
+.
+Setup:
+Similar to T05, but the two arms carry different end-effectors: one suction cup, one parallel-jaw gripper.
+Goal:
+Insert the plate on edge into the shelf slot.
+Intuition:
+The asymmetric grippers enforce a role split. The suction cup lifts the plate by its broad face, replacing the press action needed in T05. The parallel-jaw gripper then grasps the plate edge. An explicit suction-to-jaw handover is required, as the suction cup cannot reach into the shelf to perform final insertion.
+Canonical Plan:
+Suction arm lifts the plate by its broad face. Jaw arm grasps the plate edge and inserts it into the shelf slot.
+T06 plate-shelf-hetbi
+T07
+bowl-table
+.
+Setup:
+a bowl starts upside-down in a rack. Grippers: parallel-jaw + suction.
+Goal:
+place the bowl upright on the table.
+Intuition:
+The jaw cannot grasp the bowl since no feasible affordances are available. The suction can extract the bowl from the rack but cannot reorient it cleanly on the smooth exterior; jaw must take over on the bowl rim to invert and lower it to place it in goal position.
+Canonical plan:
+use the suction to lift the bowl out of the rack, attach jaw to its (now exposed) rim, rotate it to upright, and set it down on the table.
+T07 bowl-table
+T08
+cracker-box-suction
+.
+Setup:
+A cracker box stands upright on the table. A horizontal slot fixture is within reach. Only the suction arm is active; the parallel-jaw arm is frozen.
+Goal:
+Insert the box into the slot with its centroid aligned to the slot interior.
+Intuition:
+Grasping the narrow side is inefficient and requires extensive readjustment. Suction couples reliably to the broad cardboard face, making it the preferred approach.
+Canonical Plan:
+Align the suction cup to the broad side of the box, transport and realign to the slot and descend uniformly into it.
+T08 cracker-box-suction
+T09
+cracker-box-jaw
+.
+Setup:
+Same as T08, but only the parallel-jaw arm is active; the suction arm is frozen.
+Goal:
+Insert the box into the slot.
+Intuition:
+The jaw can apply lateral forces but cannot directly fit the box into the tight slot outline. The box must be partially inserted first, then adjusted through knocking, shifting, and aligning actions to achieve final alignment.
+Canonical Plan:
+Grasp the box by its narrow side (flat-side grasping is not feasible with the jaw). Partially insert the box into the slot and then adjust laterally to achieve full insertion and alignment.
+T09 cracker-box-jaw
+B.2.2
+P2 — Dynamics and trajectory prediction
+T10
+cube-toss
+.
+Setup:
+A gripper holds a cube; the goal zone lies beyond the arm’s reach.
+Goal:
+The cube comes to rest inside the goal zone after release.
+Intuition:
+Since the goal is out of reach, the cube must be thrown with sufficient velocity to reach the zone. This requires understanding projectile motion under gravity to determine appropriate throw velocity and direction.
+Canonical Plan:
+Lift the cube and throw it toward the goal zone with sufficient velocity and direction to land inside.
+T10 cube-toss
+T11
+pendulum-grasp
+.
+Setup:
+A sphere swings on an undamped pendulum at moderate amplitude.
+Goal:
+Grasp the bob at the swing apex.
+Intuition:
+Angular velocity reaches zero only at the swing extremes. Grasp timing must align with the apex phase when the bob’s velocity is zero. This requires understanding periodic motion and predicting when the bob reaches the turning point.
+Canonical Plan:
+Track the pendulum motion and time the grasp to coincide with the swing apex, where the bob momentarily stops before reversing direction.
+T11 pendulum-grasp
+T12
+linear-intercept
+.
+Setup:
+A ball rolls across the table at constant velocity, starting near one edge and heading toward the table center.
+Goal:
+Grasp the ball and hold it above the table for 30 consecutive steps.
+Intuition:
+Linear extrapolation of the constant-velocity trajectory determines the future position and timing of the ball. The gripper must be positioned at the interception point to grasp the ball when it arrives.
+Canonical Plan:
+Predict the ball’s trajectory using its current velocity. Position the gripper at the future interception point and close the gripper as the ball arrives. Lift and hold the grasped ball above the table.
+T12 linear-intercept
+T13
+bounce-intercept
+.
+Setup:
+A ball is launched at a U-shaped wall enclosure and ricochets at least once before reaching the catchable zone.
+Goal:
+Grasp the ball and hold it above the table for 30 consecutive steps.
+Intuition:
+Predicting the post-bounce trajectory requires understanding how the ball’s pre-bounce heading and the wall geometry jointly determine the final direction.
+Canonical Plan:
+Predict the ball’s trajectory after bouncing off the wall using its initial heading and the wall normals. Position the gripper at the predicted interception point. Close the gripper as the ball arrives and lift it.
+T13 bounce-intercept
+T14
+galileo-ramp-drop
+.
+Setup:
+A steel ball sits in an open container next to a frictionless symmetric ramp.
+Goal:
+Release the ball on the ramp so it arrives at a goal patch on the far side at near-zero velocity.
+Intuition:
+Energy conservation on the frictionless ramp determines the release height needed to achieve near-zero terminal velocity at the goal patch. The ball’s potential energy at release must equal its kinetic energy at the patch to minimize arrival speed.
+Canonical Plan:
+Approximate the required release height using energy conservation and the ramp geometry. Bring the ball at that height and release it.
+T14 galileo-ramp-drop
+T15
+slide-catch
+.
+Setup:
+An incline tilts from
+10
+∘
+10^{\circ}
+to
+55
+∘
+55^{\circ}
+. Cubes with different friction coefficients sit on the incline. A graspable bin is on the table.
+Goal:
+Catch all cubes in the bin.
+Intuition:
+Each cube slides when the incline angle exceeds its friction limit, causing them to slide off at different times. The cubes closer to the bottom slide first. The bin must be positioned at the hinge edge at the right time to catch each cube in sequence.
+Canonical Plan:
+Position the bin to catch the first (lowest) cube as it slides off. After catching, reposition the bin for the next cube, repeating until all are captured.
+T15 slide-catch
+T16
+ramp-sort
+.
+Setup:
+Multiple colored balls spawn in a low-walled box. A tilted ramp routes them downward into two bins. Barriers for goal are invisible to balls but solid to the arm.
+Goal:
+Every ball lands in its correct bin based on color.
+Intuition:
+Color-dependent rolling trajectories separate red balls from blue balls down the ramp. Any misdirected placement is irreversible. Release pose and timing determine the ball’s trajectory down the ramp, so they must be chosen carefully to reach the correct bin.
+Canonical Plan:
+For each ball, determine the correct target bin based on its color. Release the ball at a pose such that it rolls down the ramp and lands in the correct bin.
+T16 ramp-sort
+B.2.3
+P3 — Causal and indirect action
+T17
+domino-single
+.
+Setup:
+a chain of dominoes leads to a red target slab.
+Goal:
+the cascade displaces the target by at least
+5
+5
+cm,
+and the gripper never touches the target
+.
+Intuition:
+cascade physics — toppling the first domino must propagate through the chain. Touching the target directly is an immediate, latched failure.
+Canonical plan:
+approach the first domino in the chain, push it toward its neighbour, and wait for the cascade to reach the target.
+T17 domino-single
+T18
+domino-select
+.
+Setup:
+Five domino chains are present. Only one cascades fully to the target. Others contain failures: gap (domino offset perpendicular), drift (spacing increases along the chain), or the chain points to the wrong target.
+Goal:
+Displace the target domino via chain reaction.
+Intuition:
+The correct chain must be identified by visual inspection before triggering. Determine whether the chosen cascade will successfully reach the target.
+Canonical Plan:
+Select the structurally intact chain. Knock down the first domino in that chain.
+T18 domino-select
+T19
+seesaw-balance
+.
+Setup:
+A block sits at a random offset on one arm of a pivoted seesaw. A counterweight with unknown mass starts off the seesaw. Both masses are randomized.
+Goal:
+Hold the seesaw tilted within
+5
+∘
+5^{\circ}
+of level.
+Intuition:
+Torque balance requires
+m
+target
+⋅
+r
+target
+=
+m
+counter
+⋅
+r
+counter
+m_{\text{target}}\cdot r_{\text{target}}=m_{\text{counter}}\cdot r_{\text{counter}}
+. Since masses are unknown, the counterweight position must be found through trial and adjustment by observing the seesaw’s tilt.
+Canonical Plan:
+Place the counterweight at an estimated offset. Observe the seesaw’s tilt and adjust the counterweight position accordingly. Iterate until balance is achieved.
+T19 seesaw-balance
+T20
+indirect-push
+.
+Setup:
+A scatter of colored blocks and a red target block sit on the table. The goal zone is beyond the arm’s direct reach.
+Goal:
+Drive the target into the goal zone.
+Intuition:
+Direct contact with the target is not possible from the arm’s reach. The scattered blocks must be arranged into a contiguous chain to transmit force. Pushing the chain propagates the impulse through to the target.
+Canonical Plan:
+Arrange the colored blocks into a contiguous chain connecting the target to the goal zone. Push the first block in the chain so the impulse propagates through to the target, driving it into the goal zone.
+T20 indirect-push
+T21
+gap-funnel
+.
+Setup:
+A static wall with a single narrow gap runs across the table. A medium sphere is positioned in front of the wall.
+Goal:
+Push the sphere through the gap into the goal zone (outside robot’s workspace).
+Intuition:
+The sphere must first be steered to align with the gap, then pushed through with appropriate velocity and direction. Path planning must account for the barrier and the narrow passage.
+Canonical Plan:
+Align the sphere with the gap by pushing it laterally into position. Once aligned, push the sphere through the gap with controlled velocity to reach the goal zone.
+T21 gap-funnel
+T22
+ball-cage-escape
+.
+Setup:
+A thin rectangular cage containing a ball sits on a narrow stool. The cage’s bottom has a hole that is blocked by the stool.
+Goal:
+Extract the ball from the cage onto the table.
+Intuition:
+Lifting and reorienting the cage will allow the ball to escape through the hole. The reorientation must account for the ball’s position inside the cage to ensure it falls out.
+Canonical Plan:
+Lift the cage off the stool. Tilt and reorient it to align the hole with the ball’s position. Continue until the ball falls out onto the table.
+T22 ball-cage-escape
+B.2.4
+P4 — Tool use and augmented reach
+T23
+tool-retrieve
+.
+Setup:
+an L-shaped hook is reachable; a cube target sits beyond the arm’s normal reach.
+Goal:
+lift the cube above the table.
+Intuition:
+the tool extends reach, but the gripper cannot hold both tool and target : the tool must be released
+before
+the final grasp; releasing it after grasping the target is kinematically infeasible.
+Canonical plan:
+pick up the hook, drag the cube inward until it sits within normal reach, set the hook down, then grasp the cube and lift.
+T23 tool-retrieve
+T24
+cup-extract
+.
+Setup:
+A small cuboid is trapped inside an open-top cup. The handle points toward the robot. A goal region sits away from the cup.
+Goal:
+Extract the cuboid from the cup and place it in the goal region.
+Intuition:
+The cuboid cannot be grasped directly. Only the cup handle affords a clean grasp. The cup must be manipulated by its handle to dump the cuboid out.
+Canonical Plan:
+Grasp the cup by its handle. Tip and invert the cup to pour the cuboid out onto the table. Move the cuboid into the goal region.
+T24 cup-extract
+B.2.5
+P5 — Hidden state and active discovery
+T25
+mass-sort
+.
+Setup:
+Three visually identical cubes have hidden masses of 50 g, 100 g, and 200 g in randomized order. Three labeled zones on the table accept the cubes in light-to-heavy order from left to right.
+Goal:
+Place each cube in its correct zone according to mass.
+Intuition:
+Mass cannot be determined visually. It is observable only through wrist force and torque during a probing lift. Each cube must be probed before placement. Any wrong-zone placement is an immediate failure.
+Canonical Plan:
+Lift and probe each cube to estimate its mass. Sort the cubes by inferred mass. Place them in the zones in light-to-heavy order from left to right.
+T25 mass-sort
+T26
+occluder-push
+.
+Setup:
+One red target cube and two distractor cubes are each covered by a lightweight lid. A green goal patch sits elsewhere on the table.
+Goal:
+Place the red target cube on the goal patch.
+Intuition:
+The red cube cannot be identified until its lid is lifted or pushed aside. The agent must uncover each cube to locate the target.
+Canonical Plan:
+Lift or push aside the lids to reveal each cube. Identify the red target. Grasp the red cube and place it on the goal patch.
+T26 occluder-push
+B.2.6
+P6 — Reactive replanning
+T27
+slip-recovery
+.
+Setup:
+A YCB object is placed on the table. The agent must pick and place it. Once during transport, the gripper unexpectedly opens for a brief window creating a synthetic failure. Sliding the object is not allowed. This tests state awareness and recovery behavior.
+Goal:
+Place the object inside the goal region.
+Intuition:
+The agent must detect the slip, re-grasp the object, and continue transport.
+Canonical Plan:
+Lift the object and transport it toward the goal. When the gripper opens, detect the slip. Re-grasp the object and resume task.
+T27 slip-recovery
+T28
+stack-collapse-recovery
+.
+Setup:
+Three cubes of different sizes start pre-stacked.
+Goal:
+Rebuild a stable stack.
+Intuition:
+An external impulse knocks over the stack, dislodging either the top cube alone or both upper cubes in different directions. The agent must rebuild a stable stack, respecting the cube sizes and mass distribution to prevent tipping.
+Canonical Plan:
+Detect the collapse and gather the fallen cubes. Rebuild the stack ensuring stability.
+T28 stack-collapse-recovery
+T29
+pick-place-ycb
+.
+Setup:
+A single YCB object and a green goal patch sit on the table.
+Goal:
+Place the object at rest in the goal patch (after lifting it at least once).
+Intuition:
+When the lifted object approaches the patch, the patch teleports to a new location on the table. After 1–3 relocations, the patch locks in place. The agent must replan and approach the locked patch.
+Canonical Plan:
+Lift the object and move it toward the goal patch. When the patch relocates, track its new position, replans the path, and approach again. Repeat until the patch locks, then complete the placement.
+T29 pick-place-ycb
+B.2.7
+P7 — Stability and equilibrium
+T30
+shape-stack
+.
+Setup:
+A random subset of 3–5 mixed-shape objects on the table: cylinders, cubes, prisms, hex prisms, and cone frustums.
+Goal:
+Stack all objects so exactly one touches the table.
+Intuition:
+Stable stacking requires each upper piece’s center of mass to lie within the support polygon of the base. Shape-dependent geometry determines which orientations are stable.
+Canonical Plan:
+Select the largest or most stable object as the base. Stack objects in order, ensuring each piece’s center of mass aligns over the supporting base.
+T30 shape-stack
+T31
+balance-medium
+.
+Setup:
+A rod must be balanced on a narrow ridge of width 12 mm.
+Goal:
+The rod stands within
+10
+∘
+10^{\circ}
+of vertical and remains in contact with the ridge.
+Intuition:
+The 12 mm ridge provides modest tolerance for initial tilt. The rod must be released with low angular velocity and its center of mass positioned above the ridge for stable balance.
+Canonical Plan:
+Position the rod on the ridge with minimal tilt and angular velocity. Release the rod and allow it to balance on its own.
+T31 balance-medium
+T32
+balance-hard
+.
+Setup:
+A rod must be balanced on a narrow ridge of width 8 mm.
+Goal:
+The rod stands within
+10
+∘
+10^{\circ}
+of vertical and remains in contact with the ridge.
+Intuition:
+The 8 mm ridge provides minimal tolerance. The rod must be released with very low residual angular velocity and its center of mass nearly perfectly positioned above the ridge for stable balance.
+Canonical Plan:
+Carefully position the rod on the ridge with minimal tilt and angular velocity. Release the rod and allow it to balance on its own.
+T32 balance-hard
+T33
+packing
+.
+Setup:
+A rectangular bin and a set of L-shaped pieces obtained from guillotine cuts of a rectangle. A suction gripper is used.
+Goal:
+Pack every piece flat inside the bin with zero gaps.
+Intuition:
+The L-pieces originate from a guillotine partition of the bin’s footprint, so a perfect zero-gap packing exists. The agent must recover the partition structure and orient each piece to fit its slot exactly.
+Canonical Plan:
+Determine how the L-pieces fit together to reconstruct the original rectangular partition. Orient and place each piece into its corresponding slot in the bin, working toward a complete zero-gap packing.
+T33 packing
+B.2.8
+Miscellaneous
+M01
+mirror-pick-place
+.
+Setup:
+A single cube sits on the table. Every camera frame is rotated
+180
+∘
+180^{\circ}
+each step.
+Goal:
+Lift the cube to a small height above the table.
+Intuition:
+The agent must distinguish between the observation frame (rotated) and the action frame (fixed). Direct imitation would invert the action direction.
+Canonical Plan:
+Track the cube’s position in the rotated frame. Execute lift actions in the correct action frame, accounting for the
+180
+∘
+180^{\circ}
+rotation.
+M01 mirror
+M02
+keyboard-typing
+.
+Setup:
+Two robotic arms face a QWERTY virtual keyboard. Arm 0 is scripted to type a subset of letters. Arm 1 is the agent. The letter partition between arms is randomized each episode.
+Goal:
+Type the target word in correct sequence, with each letter pressed and briefly held.
+Intuition:
+The agent must track which letters remain untyped and which it owns. Visual feedback on the keyboard indicates typed (bold) versus untyped (faint) letters.
+Canonical Plan:
+Observe which letters are marked as untyped. Identify your assigned letters from the remaining set. Press and hold each of your letters in the order required by the target word.
+M02 keyboard-typing
+Appendix C
+Data Collection Infrastructure
+C.1
+Teleoperation hardware and protocol
+Single-arm.
+Xbox-compatible gamepad, mapped to 6-DoF end-effector delta commands in the robot base frame. Translation magnitude 0.3 per tick, rotation magnitude 0.2 per tick. Gripper value is ramped via analog trigger; a snap-toggle to fully open/close is available on the A button with a boolean latch.
+Bimanual tasks:
+Same controller in arm-switching configuration: A pilot study with parallel two-handed control yielded poorer trajectory quality.
+Filtering.
+Actions are smoothed via an Exponential Moving Average (EMA) filter with
+α
+\alpha
+= 0.8, applied independently to each of the 6 motion channels (dx, dy, dz, droll, dpitch, dyaw) per arm. A per-step delta clamp of ±0.15 is applied after smoothing to limit abrupt transitions. Gripper channels pass through unfiltered to preserve snap-toggle responsiveness. Filter parameters are fixed across operators.
+VR comparison.
+We conducted a pilot study using
+Meta Quest
+-based teleoperation on six representative tasks across 120 episodes. The mean post-filter success rate was
+11.2
+%
+11.2\%
+, compared to
+58.7
+%
+58.7\%
+achieved using an XBox controller on the same tasks. We attribute this difference to the smoother and more stable motion control provided by the XBox controller, particularly in the motion regimes dominant in
+IMBench
+. Based on these initial results, we used the XBox controller for full data collection, while retaining support for VR teleoperation within the benchmark.
+C.2
+Operator training, demographics, and consent
+Operators completed 50-60 training trajectories on each of the tasks before contributing. Calibration is repeated at the start of each session. We collected from
+N
+=
+10
+N{=}10
+operators (10 male; ages 21-34; all university-affiliated graduate students or research staff with backgrounds in STEM).
+C.3
+Scripted oracle authoring
+Each task has a hand-written policy. Oracles consume privileged simulator state and produce 6-DoF end-effector delta pose at, using the same action interface a deployed policy uses. Oracle actions are passed through the same filtering as teleop. Oracles are not motion planners; they encode task-specific strategies. For example, the
+edge-slide
+oracle:
+def step(state):
+    if not plate_at_edge(state):
+        return slide_action(plate_pos, nearest_edge)
+    elif not gripper_under_overhang(state):
+        return descend_action(plate_overhang_pose)
+    else:
+        return close_and_lift_action()
+C.4
+Data Filtration
+C.4.1
+Human Annotation Dashboard
+Prior to automated analysis, each recorded robotic episode is reviewed through a human annotation
+dashboard. A human annotator inspects the episode( comprising RGB-D frames, joint states,
+end-effector poses, and object positions and labels scene-level metadata such as task
+completion intent, object identities, and any immediately apparent recording artifacts) and assigns a quality rating on a scale of 1 to 5.
+Only episodes receiving a rating greater than or equal to 4 are passed to the automated filtration stage;
+all others are discarded immediately. This initial screening ensures that only demonstrations
+of sufficient quality enter the downstream pipeline.
+C.4.2
+VLM-Based Automated Filtering
+Following human annotation, each episode is passed through an autonomous VLM-guided filtration
+agent built on a LangChain/LangGraph tool-calling framework. The agent
+executes a deterministic preflight sequence over every episode, invoking tools for metadata and
+field integrity validation, full-episode sensor signal reading, rule-based anomaly evaluation,
+signal-processing metric computation, and FFmpeg-based visual glitch detection via blur
+(
+Sobel gradient
+<
+0.3
+\text{Sobel gradient}<0.3
+) and scene-change (
+MAD score
+>
+10.0
+\text{MAD score}>10.0
+) filters. Following
+this fixed pass, the agent enters a dynamic reasoning loop, issuing targeted follow-up tool
+calls such as high-FPS local frame inspection and per-channel signal plots until a
+verification gate confirms that completion status, anomaly evidence, sensor coverage, and
+signal-processing analyses are all satisfied. The agent produces a structured
+EpisodeAnalysisReport
+for each episode, flagging issues such as state discontinuities,
+action–response inconsistencies, index–timestamp mismatches, and visual anomalies, each with
+an associated severity and human-readable explanation.
+C.4.3
+Human Verification Dashboard
+The agent-generated reports are surfaced through a second human verification dashboard, where
+annotators review the flagged episodes and their associated evidence including anomaly
+timestamps, sensor signal plots, and high-FPS frame windows before issuing a final
+accept or reject decision. This stage serves as a quality gate over the automated flagging,
+allowing annotators to override false positives and confirm true failures. Only episodes that
+clear this final human review are retained for training. Full prompt templates, tool schemas,
+verification gate logic, and filtration thresholds are provided in the supplementary material.
+C.5
+Modality schemas
+Table 6:
+Per-trajectory streams written by the
+IMBench
+LeRobot recorder. Rates are configurable per category via
+recording.save_freq.*
+; values shown are typical defaults for a 100 Hz control loop. Cameras are stored as MP4 with per-row
+frame_index.*
+pointers in Parquet.
+Stream
+Shape per frame
+Rate
+Notes
+Cameras (RGB, MP4-encoded)
+rgb_exo_right_cam
+(
+480,640
+,
+3
+)
+(480,640,3)
+uint8
+25 Hz
+3rd-person right (
+agentview
+)
+rgb_exo_left_cam
+(
+480,640
+,
+3
+)
+(480,640,3)
+uint8
+25 Hz
+3rd-person left (
+sideview
+)
+rgb_ego_cam
+(
+480,640
+,
+3
+)
+(480,640,3)
+uint8
+25 Hz
+robot-view (
+robot0_robotview
+)
+rgb_gripper_cam
+(
+480,640
+,
+3
+)
+(480,640,3)
+uint8
+25 Hz
+wrist-mounted (
+robot0_eye_in_hand
+)
+Proprioception
+robot0_eef_pos
+(
+3
+,
+)
+(3,)
+float32
+100 Hz
+EEF position, world frame, m
+robot0_eef_quat
+(
+4
+,
+)
+(4,)
+float32
+100 Hz
+EEF orientation
+[
+x
+,
+y
+,
+z
+,
+w
+]
+[x,y,z,w]
+robot0_joint_pos
+(
+7
+,
+)
+(7,)
+float32
+100 Hz
+arm joints, rad
+robot0_joint_vel
+(
+7
+,
+)
+(7,)
+float32
+100 Hz
+arm joints, rad/s
+robot0_gripper_qpos
+(
+2
+,
+)
+(2,)
+float32
+100 Hz
+jaw positions
+Contact & tactile
+force_torque
+(
+6
+,
+)
+(6,)
+float32
+50 Hz
+wrist F/T in EEF frame,
+N
+\mathrm{N}
++
+N
+⋅
+m
+\mathrm{N}{\cdot}\mathrm{m}
+force_torque_world
+(
+3
+,
+)
+(3,)
+float32
+50 Hz
+wrist force in world frame, gravity-aligned
+robot0_tactile_left
+(
+8
+,
+8
+)
+(8,8)
+float32
+50 Hz
+left finger taxel grid
+robot0_tactile_right
+(
+8
+,
+8
+)
+(8,8)
+float32
+50 Hz
+right finger taxel grid
+Action & reward
+action
+(
+7
+,
+)
+(7,)
+float32
+100 Hz
+OSC
+cartesian_delta
+:
+Δ
+​
+pos
+​
+(
+3
+)
++
+Δ
+​
+𝝎
+​
+(
+3
+)
++
+grip
+\Delta\text{pos}(3)+\Delta\boldsymbol{\omega}(3)+\text{grip}
+reward
+scalar float32
+100 Hz
+Sparse reward
+All streams are aligned to simulator wall-clock at ingestion; camera intrinsics and extrinsics are stored under
+meta/cameras
+.
+Appendix D
+Asset Library
+D.1
+Custom MJCF assets
+The following assets ship under IMBench:
+•
+Galileo ramp
+(parametric angle
+10
+∘
+−
+60
+∘
+10^{\circ}\!-\!60^{\circ}
+,
+μ
+∈
+[
+0.10
+,
+0.50
+]
+\mu\in[0.10,0.50]
+).
+•
+Domino strips
+(configurable inter-tile gap
+0.6
+×
+−
+1.4
+×
+0.6\times\!-\!1.4\times
+tile width; tile mass
+−
+0.08
+0.02\!-\!0.08
+kg).
+•
+Seesaw
+(pivot offset
+±
+0.10
+\pm 0.10
+m; beam mass
+−
+0.80
+0.20\!-\!0.80
+kg).
+•
+Hook tools
+: J-shape (two variants) and T-shape, parametric handle length and hook radius.
+•
+Handled cup
+(rigid handle, variable curvature).
+•
+Holed cuboid cage
+(one circular hole on a configurable face).
+•
+Cracker box
+(4 size variants, low-friction surface).
+•
+Plates
+(3 thicknesses: 2, 3, 5 mm; 4 diameters).
+•
+Bowl
+(2 sizes).
+•
+Virtual QWERTY keyboard
+with per-key contact triggers and visual feedback.
+All custom assets are authored in MJCF, rendered with the default
+robosuite
+material set, and licensed under CC-BY-4.0. Source meshes are provided in STL formats. We use the YCB-Object meshes, with collision geometry simplified by V-HACD.
+D.2
+YCB usage
+Table 7:
+YCB object subsets per task.
+YCB ID
+Object
+Tasks
+002
+master chef can
+pick-place-ycb
+003
+cracker box
+sheltered-grasp
+004
+sugar box
+pick-place-ycb
+005
+tomato soup can
+pick-place-ycb
+008
+pudding box
+sheltered-grasp
+010
+banana
+pick-place-ycb
+Appendix E
+Evaluation
+E.1
+Seeds and rollouts
+Each task ships with
+S
+=
+20
+S{=}20
+evaluation seeds drawn i.i.d. from the randomization distribution and held out from all demonstration data. Each policy is evaluated with
+K
+=
+5
+K{=}5
+rollout repeats per seed (different action-sampling noise but identical reset). Reported success rate is
+SR
+=
+1
+S
+​
+K
+​
+∑
+i
+=
+1
+S
+∑
+j
+=
+1
+K
+𝟏
+​
+[
+s
+i
+​
+j
+]
+,
+\mathrm{SR}\;=\;\frac{1}{SK}\sum_{i=1}^{S}\sum_{j=1}^{K}\mathbf{1}[s_{ij}],
+E.2
+Compute
+Training and evaluation were performed on AWS multi-GPU cloud instances
+using NVIDIA H100 and L40S GPUs. In total, the project consumed
+approximately 454 H100 GPU-hours and 1358 L40S GPU-hours across policy
+training, ablations, and evaluation. Training runs used distributed
+mixed-precision (BF16) execution. Interactive VLM evaluation additionally
+incurred substantial API costs, with Stage 3 closed-loop evaluation costing
+approximately $1800 in total.
+Appendix F
+VLM Evaluation Details
+The vision language model (VLM) evaluation pipeline comprises two sequentially executed stages, each independently assessed. Stage 1 evaluates visual constraint extraction from multi-view scene frames and structured metadata, while Stage 2 assesses high-level plan generation conditioned on the output of Stage 1. Detailed prompt templates for both stages are provided in the supplementary materials.
+F.1
+Implementation Details and Agent Design
+The Agent operates through a two-stage architectural design that progressively grounds task planning in physical constraints derived from visual observation and sensor data.
+In Stage 1, the agent receives multi-view camera frames of the scene alongside task descriptions, robot configuration parameters, and sensor signals (e.g., force and tactile feedback). The agent processes this information to extract physical constraints essential for task completion, such as robot mobility characteristics, motion restrictions imposed by the scene geometry, and robot-specific constraints relevant to the task. The output of Stage 1 is a constraint memory artifact, a structured representation grounding the plan in observed physical reality rather than generic procedural knowledge. This artifact maintains both episodic memory (frame-by-frame observations from each camera view) and semantic memory (facts extracted from observations, such as object contact relationships, functional roles, and critical physical properties). The artifact explicitly documents information that cannot be inferred from visual input alone, indicating what must be confirmed through sensor feedback during execution. This explicit separation of known and unknown information ensures that Stage 2 operates with full awareness of its knowledge boundaries.
+In Stage 2, the agent receives the Stage 1 constraint artifact along with the original scene and sensor data. The agent treats all content in the Stage 1 artifact as inviolable constraints that must guide planning. Stage 2 operates through its own reasoning loop, using the extracted constraints and evidence as episodic memory and leveraging the physical facts as semantic memory to establish a grounded understanding of the scene. The agent then reasons about causal and temporal dependencies between actions, using the Stage 1 constraints to establish a partial order over required steps. This reasoning produces an ordered sequence of sub-goals, where each sub-goal specifies: (1) the physical state to be achieved, (2) preconditions that must hold before execution, (3) postconditions expected after completion, and (4) the specific Stage 1 constraint that necessitates this step. The complete sequence of sub-goals constitutes the procedural memory of the task: not merely a collection of facts about the scene, but the actionable knowledge required to execute the task step by step. All intermediate artifacts are preserved: prompts, frames, reasoning traces, validation logs, and explicit constraint links. As multiple task instances are executed, the episodic records accumulate into generalizable semantic knowledge that can be leveraged by future planning instances.
+F.2
+Stage 1: Constraint Extraction via ReAct
+Stage 1 uses a structured Chain-of-Thought (CoT) prompting strategy. The model receives a single prompt containing multi-view camera frames, task metadata, controller specification, and a prescribed five step reasoning protocol (system instructions) it must execute before producing any output. All reasoning occurs within a single LLM call and gets converted into structured output for stage 2’s system instructions.
+The reasoning process unfolds in four phases:
+1.
+Observation:
+The agent systematically examines each camera view, reviews sensor data, and ingests the task description.
+2.
+Reasoning:
+The agent asks itself structured questions: What objects are present in the scene? Where are they located? Are there task-specific constraints or tricks imposed by scene configuration?
+3.
+Constraint Ranking:
+Identified constraints are prioritized according to their impact on task success, with task-critical constraints ranked highest.
+4.
+Verification:
+Each constraint claim is validated against actual observed frames or metadata facts to prevent hallucinations or unsupported inferences.
+Should the quality check fail, the agent re-executes the stage, with each attempt logged for traceability. The final output is a well-defined constraint memory artifact documenting both episodic observations (what was seen frame-by-frame across cameras) and semantic facts (object relationships, roles, and physical properties).
+F.3
+Stage 2: Constrained Plan Generation via ReAct
+For Stage 2, the input comprises the constraint artifact from Stage 1 in addition to the original scene frame and the sensor information metadata. The system views all constraints in the artifact from Stage 1 as obligatory conditions on the plan, which none of the sub-goals can violate or ignore.
+Stage 2 employs a structured Chain-of-Thought prompt to determine the dependency between actions and causal order through Stage 1 constraints to produce a viable partial order for actions. Prior to generation of sub-goals, the model must first explain why the simplest possible action does not work and which constraint causes its failure. Based on such reasoning, the model produces a list of sub-goals, specifying their physical outcome, preconditions, post-conditions, and the respective constraint ID from Stage 1. The model also conducts a three-way audit of failure modes to ensure the completion of the plan – F1 (all the necessary prerequisites are included in the plan), F2 (no invalid orders among sub-goals), and F3 (no informational probe sub-goals are discarded). If the combined quality score is too low, the process is repeated up to six times using the original plan as feedback, and the best solution is chosen.
+F.4
+Stage 3: Closed-Loop Execution via VLM-Driven ReAct
+Stage 3 realises manipulation tasks through a closed-loop
+ReAct (Reasoning + Acting)
+cycle. At each decision step the VLM receives the full robot and scene state, expressed as structured text and camera images, and selects one motor primitive to execute. The simulator advances until that primitive converges, the resulting state becomes the next observation, and the loop continues until the task succeeds, a budget is exhausted, or the VLM signals completion.
+State Representation and Visual Context
+At every step, a
+structured textual observation summary
+is assembled from configurable sensor channels: end-effector pose (position in metres, quaternion, roll/pitch/yaw in degrees), gripper openness, a six-axis wrist force-torque reading in sensor and world frames, per-object names and poses with physical extents (width
+×
+\times
+depth
+×
+\times
+height in metres) resolved from MuJoCo geometry, and camera calibration metadata. This summary is paired with camera images from up to four viewpoints, including an eye-in-hand gripper camera and fixed exocentric cameras, appended as base64-encoded JPEGs.
+To provide temporal awareness, a
+rolling frame history
+of the last
+H
+H
+camera batches (default
+H
+=
+12
+H=12
+) is prepended to each prompt, oldest first, so the VLM can observe scene evolution rather than a single snapshot. Each additional history batch adds approximately
+1,800
+1{,}800
+input tokens; the rolling window bounds per-step cost independently of episode length.
+Prompt Architecture and Working Memory
+Every call uses a
+slot-based prompt template
+that is fully self-contained: task specification, current observation summary, frame history, and working memory are all injected fresh at each step. A fixed block of robot-specific reference documentation covers the world-frame coordinate convention, canonical height landmarks (table:
+z
+≈
+0.82
+z\approx 0.82
+,m; safe transit:
+∼
+1.05
+{\sim}1.05
+,m; grasp/place:
+0.82
+0.82
+–
+0.86
+0.86
+,m), controller scaling, and common failure modes, giving the VLM the domain knowledge needed for physically plausible planning without fine-tuning.
+Because the VLM has no implicit cross-call memory, a
+sliding-window working memory
+(
+ReactMemory
+) supplies continuity. After each step an
+Observation
+–
+Agent
+pair is appended (abbreviated state, primitive executed, reward delta), and a window of the last
+H
+H
+pairs is serialised into the prompt. The rolling
+frame history
+thus provides visual continuity while
+text memory
+provides action continuity.
+Action Space and Primitive Vocabulary
+The VLM selects from eight
+named motor primitives
+:
+MoveEEF
+(world-frame position and optional orientation target),
+CloseGripper
+,
+OpenGripper
+,
+Lift
+(vertical offset),
+Descend
+(lower to target
+z
+z
+holding
+x
+x
+,
+y
+y
+),
+AtomicAction
+(raw
+7
+7
+D action for
+N
+N
+ticks),
+Hold
+, and
+Done
+.
+MoveEEF
+runs a proportional control loop that exits on convergence (position
+<
+5
+<5
+,mm, orientation
+<
+5
+∘
+<5^{\circ}
+), so the VLM specifies a step budget rather than a duration. A per-robot
+gripper state register
+propagates the last commanded open/close state into all movement primitives, preventing mid-transport drops.
+VLM Integration and Control Flow
+The system supports OpenAI, Anthropic, Google, and AWS Bedrock via a unified interface. Primitives are exposed as typed JSON schemas with
+tool_choice: required
+, enforcing provider-side schema validation and a structured
+reasoning
+/
+description
+/
+params
+response per step. Each call is wrapped in a retry loop (default: 3 attempts); failed attempts execute a
+Hold
+.
+The ReAct loop runs for up to
+K
+K
+steps (default
+K
+=
+24
+K=24
+) and exits on: (1)reward
+=
+1.0
+=1.0
+(success); (2)
+Done
+signal; (3) simulator termination; or (4) step budget exhausted. A hard simulator-tick cap (default:
+10,000
+10{,}000
+ticks) prevents runaway primitive loops.
+F.5
+Per-task VLM Stage-1 and stage-2 results
+Per-task results for Stage 1 and Stage 2 are reported in Tables
+8
+and
+9
+, respectively.
+Table 8:
+Stage-1 understanding accuracy per task (%). A response is graded correct on a probe if it satisfies all required identifications and contains no forbidden false positives; task-level accuracy is the macro-average across applicable probes
+Cat.
+Task
+GPT-5.4-Mini
+Gemma 4
+Claude-Haiku 4.5
+Claude Sonnet 4.6
+GPT-5.5
+P1
+edge-slide
+±
+4.3
+87.5\!\pm\!4.3
+±
+10.0
+80.0\!\pm\!10.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P1
+recover-peg-insert
+±
+30.9
+43.3\!\pm\!30.9
+±
+26.2
+36.7\!\pm\!26.2
+±
+24.9
+33.3\!\pm\!24.9
+±
+30.9
+43.3\!\pm\!30.9
+±
+0.0
+\mathbf{80.0}\!\pm\!0.0
+P1
+sheltered-grasp
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P1
+cup-inversion
+±
+15.0
+64.0\!\pm\!15.0
+±
+8.0
+74.0\!\pm\!8.0
+±
+4.9
+86.0\!\pm\!4.9
+±
+5.0
+85.0\!\pm\!5.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P1
+plate-shelf-hobi
+±
+4.9
+84.0\!\pm\!4.9
+±
+6.9
+71.7\!\pm\!6.9
+±
+9.0
+81.7\!\pm\!9.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P1
+plate-shelf-hetbi
+±
+11.8
+65.7\!\pm\!11.8
+±
+10.5
+64.3\!\pm\!10.5
+±
+18.9
+76.7\!\pm\!18.9
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P1
+bowl-table
+±
+44.1
+54.0\!\pm\!44.1
+±
+41.8
+34.0\!\pm\!41.8
+±
+4.0
+\mathbf{92.0}\!\pm\!4.0
+±
+31.2
+82.0\!\pm\!31.2
+±
+0.0
+90.0\!\pm\!0.0
+P1
+cracker-box-suction
+±
+8.0
+4.0\!\pm\!8.0
+±
+8.0
+4.0\!\pm\!8.0
+±
+8.0
+4.0\!\pm\!8.0
+±
+9.4
+\mathbf{13.3}\!\pm\!9.4
+±
+24.0
+12.0\!\pm\!24.0
+P1
+cracker-box-jaw
+±
+8.0
+4.0\!\pm\!8.0
+±
+8.0
+4.0\!\pm\!8.0
+±
+28.0
+\mathbf{14.0}\!\pm\!28.0
+±
+12.0
+6.0\!\pm\!12.0
+±
+0.0
+0.0\!\pm\!0.0
+P2
+cube-toss
+±
+20.0
+70.0\!\pm\!20.0
+±
+10.0
+40.0\!\pm\!10.0
+±
+20.0
+80.0\!\pm\!20.0
+±
+5.0
+\mathbf{95.0}\!\pm\!5.0
+±
+0.0
+90.0\!\pm\!0.0
+P2
+pendulum-grasp
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P2
+linear-intercept
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+5.0
+95.0\!\pm\!5.0
+±
+5.0
+95.0\!\pm\!5.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+P2
+bounce-intercept
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P2
+galileo-ramp-drop
+±
+9.4
+43.3\!\pm\!9.4
+±
+4.7
+46.7\!\pm\!4.7
+±
+15.0
+65.0\!\pm\!15.0
+±
+5.0
+\mathbf{85.0}\!\pm\!5.0
+±
+8.0
+66.0\!\pm\!8.0
+P2
+slide-catch
+±
+14.7
+88.0\!\pm\!14.7
+±
+0.0
+20.0\!\pm\!0.0
+±
+13.6
+89.0\!\pm\!13.6
+±
+5.0
+\mathbf{95.0}\!\pm\!5.0
+±
+0.0
+80.0\!\pm\!0.0
+P2
+ramp-sort
+±
+14.7
+32.0\!\pm\!14.7
+±
+12.6
+40.0\!\pm\!12.6
+±
+23.3
+74.0\!\pm\!23.3
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P2
+domino-single
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+P3
+domino-select
+±
+7.6
+55.0\!\pm\!7.6
+±
+12.0
+44.0\!\pm\!12.0
+±
+10.2
+34.0\!\pm\!10.2
+±
+28.3
+70.0\!\pm\!28.3
+±
+7.5
+\mathbf{82.0}\!\pm\!7.5
+P3
+seesaw-balance
+±
+9.4
+83.3\!\pm\!9.4
+±
+13.6
+66.0\!\pm\!13.6
+±
+13.0
+82.5\!\pm\!13.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+80.0\!\pm\!0.0
+P3
+indirect-push
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+4.9
+96.0\!\pm\!4.9
+±
+4.3
+97.5\!\pm\!4.3
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P3
+gap-funnel
+±
+5.0
+75.0\!\pm\!5.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P3
+ball-cage-escape
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P3
+tool-retrieve
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+10.0
+80.0\!\pm\!10.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P4
+cup-extract
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+8.0
+86.0\!\pm\!8.0
+±
+21.0
+70.0\!\pm\!21.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+8.0
+86.0\!\pm\!8.0
+P5
+mass-sort
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+P5
+occluder-push
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+39.0
+67.5\!\pm\!39.0
+±
+5.0
+95.0\!\pm\!5.0
+±
+3.7
+\mathbf{98.3}\!\pm\!3.7
+P6
+slip-recovery
+±
+12.5
+16.7\!\pm\!12.5
+±
+9.4
+6.7\!\pm\!9.4
+±
+24.5
+30.0\!\pm\!24.5
+±
+24.9
+33.3\!\pm\!24.9
+±
+0.0
+\mathbf{80.0}\!\pm\!0.0
+P6
+stack-collapse-recovery
+±
+10.0
+\mathbf{80.0}\!\pm\!10.0
+±
+15.0
+75.0\!\pm\!15.0
+±
+0.0
+40.0\!\pm\!0.0
+±
+15.0
+55.0\!\pm\!15.0
+±
+0.0
+0.0\!\pm\!0.0
+P6
+pick-place-ycb
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+70.0\!\pm\!0.0
+±
+0.0
+40.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+10.0
+90.0\!\pm\!10.0
+P7
+shape-stack
+±
+9.4
+6.7\!\pm\!9.4
+±
+20.5
+23.3\!\pm\!20.5
+±
+0.0
+0.0\!\pm\!0.0
+±
+25.0
+25.0\!\pm\!25.0
+±
+11.0
+\mathbf{60.0}\!\pm\!11.0
+P7
+balance-medium
+±
+4.7
+63.3\!\pm\!4.7
+±
+18.9
+43.3\!\pm\!18.9
+±
+9.4
+13.3\!\pm\!9.4
+±
+4.7
+86.7\!\pm\!4.7
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P7
+balance-hard
+±
+17.0
+66.7\!\pm\!17.0
+±
+47.1
+33.3\!\pm\!47.1
+±
+20.5
+76.7\!\pm\!20.5
+±
+4.7
+\mathbf{93.3}\!\pm\!4.7
+±
+9.8
+72.0\!\pm\!9.8
+P7
+packing
+±
+0.0
+50.0\!\pm\!0.0
+±
+0.0
+50.0\!\pm\!0.0
+±
+0.0
+50.0\!\pm\!0.0
+±
+5.0
+55.0\!\pm\!5.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+M
+mirror-pick-place
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+8.0
+\mathbf{4.0}\!\pm\!8.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+M
+keyboard-typing
+±
+10.0
+10.0\!\pm\!10.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+23.6
+\mathbf{16.7}\!\pm\!23.6
+Table 9:
+Stage-2 plan correctness per task (%). Plans graded correct if a human verifier finds the generated plan sufficient to execute the task correctly.
+Cat.
+Task
+GPT-5.4-Mini
+Gemma 4
+Claude-Haiku 4.5
+Claude Sonnet 4.6
+GPT-5.5
+P1
+edge-slide
+±
+4.3
+87.5\!\pm\!4.3
+±
+10.0
+80.0\!\pm\!10.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P1
+recover-peg-insert
+±
+18.9
+26.7\!\pm\!18.9
+±
+21.6
+30.0\!\pm\!21.6
+±
+18.9
+26.7\!\pm\!18.9
+±
+33.0
+46.7\!\pm\!33.0
+±
+0.0
+\mathbf{80.0}\!\pm\!0.0
+P1
+sheltered-grasp
+±
+5.0
+85.0\!\pm\!5.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P1
+cup-inversion
+±
+41.8
+34.0\!\pm\!41.8
+±
+4.0
+82.0\!\pm\!4.0
+±
+4.0
+88.0\!\pm\!4.0
+±
+20.0
+40.0\!\pm\!20.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P1
+plate-shelf-hobi
+±
+10.2
+64.0\!\pm\!10.2
+±
+7.5
+46.7\!\pm\!7.5
+±
+18.0
+43.3\!\pm\!18.0
+±
+8.2
+70.0\!\pm\!8.2
+±
+8.7
+\mathbf{75.0}\!\pm\!8.7
+P1
+plate-shelf-hetbi
+±
+7.3
+55.7\!\pm\!7.3
+±
+14.0
+55.7\!\pm\!14.0
+±
+18.9
+76.7\!\pm\!18.9
+±
+4.9
+85.7\!\pm\!4.9
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P1
+bowl-table
+±
+41.5
+50.0\!\pm\!41.5
+±
+39.7
+32.0\!\pm\!39.7
+±
+4.0
+\mathbf{92.0}\!\pm\!4.0
+±
+37.2
+74.0\!\pm\!37.2
+±
+4.0
+88.0\!\pm\!4.0
+P1
+cracker-box-suction
+±
+8.0
+4.0\!\pm\!8.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+16.0
+\mathbf{8.0}\!\pm\!16.0
+P1
+cracker-box-jaw
+±
+0.0
+0.0\!\pm\!0.0
+±
+8.0
+\mathbf{4.0}\!\pm\!8.0
+±
+8.0
+\mathbf{4.0}\!\pm\!8.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+P2
+cube-toss
+±
+45.0
+45.0\!\pm\!45.0
+±
+15.0
+15.0\!\pm\!15.0
+±
+20.0
+80.0\!\pm\!20.0
+±
+15.0
+75.0\!\pm\!15.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P2
+pendulum-grasp
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P2
+linear-intercept
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+5.0
+95.0\!\pm\!5.0
+±
+5.0
+95.0\!\pm\!5.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+P2
+bounce-intercept
+±
+9.4
+76.7\!\pm\!9.4
+±
+10.0
+70.0\!\pm\!10.0
+±
+4.7
+86.7\!\pm\!4.7
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P2
+galileo-ramp-drop
+±
+4.7
+26.7\!\pm\!4.7
+±
+4.7
+23.3\!\pm\!4.7
+±
+10.0
+40.0\!\pm\!10.0
+±
+15.0
+\mathbf{75.0}\!\pm\!15.0
+±
+25.3
+30.0\!\pm\!25.3
+P2
+slide-catch
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+21.4
+15.0\!\pm\!21.4
+±
+5.0
+\mathbf{95.0}\!\pm\!5.0
+±
+0.0
+0.0\!\pm\!0.0
+P2
+ramp-sort
+±
+8.0
+26.0\!\pm\!8.0
+±
+14.7
+38.0\!\pm\!14.7
+±
+23.3
+74.0\!\pm\!23.3
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+P2
+domino-single
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+P3
+domino-select
+±
+12.6
+45.0\!\pm\!12.6
+±
+12.0
+34.0\!\pm\!12.0
+±
+12.0
+26.0\!\pm\!12.0
+±
+28.3
+70.0\!\pm\!28.3
+±
+14.7
+\mathbf{78.0}\!\pm\!14.7
+P3
+seesaw-balance
+±
+12.5
+76.7\!\pm\!12.5
+±
+18.3
+42.0\!\pm\!18.3
+±
+12.2
+70.0\!\pm\!12.2
+±
+5.0
+\mathbf{85.0}\!\pm\!5.0
+±
+0.0
+80.0\!\pm\!0.0
+P3
+indirect-push
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+39.2
+68.0\!\pm\!39.2
+±
+33.4
+77.5\!\pm\!33.4
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P3
+gap-funnel
+±
+0.0
+90.0\!\pm\!0.0
+±
+15.0
+75.0\!\pm\!15.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P3
+ball-cage-escape
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P3
+tool-retrieve
+±
+30.0
+60.0\!\pm\!30.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+10.0
+40.0\!\pm\!10.0
+±
+30.0
+60.0\!\pm\!30.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+P4
+cup-extract
+±
+10.2
+\mathbf{74.0}\!\pm\!10.2
+±
+18.3
+52.0\!\pm\!18.3
+±
+4.9
+24.0\!\pm\!4.9
+±
+5.0
+25.0\!\pm\!5.0
+±
+11.0
+70.0\!\pm\!11.0
+P5
+mass-sort
+±
+5.0
+95.0\!\pm\!5.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+±
+0.0
+90.0\!\pm\!0.0
+P5
+occluder-push
+±
+4.0
+88.0\!\pm\!4.0
+±
+0.0
+90.0\!\pm\!0.0
+±
+39.0
+67.5\!\pm\!39.0
+±
+5.0
+95.0\!\pm\!5.0
+±
+3.7
+\mathbf{98.3}\!\pm\!3.7
+P6
+slip-recovery
+±
+9.4
+6.7\!\pm\!9.4
+±
+20.5
+23.3\!\pm\!20.5
+±
+26.2
+36.7\!\pm\!26.2
+±
+26.2
+36.7\!\pm\!26.2
+±
+0.0
+\mathbf{80.0}\!\pm\!0.0
+P6
+stack-collapse-recovery
+±
+15.0
+55.0\!\pm\!15.0
+±
+10.0
+10.0\!\pm\!10.0
+±
+0.0
+\mathbf{60.0}\!\pm\!0.0
+±
+25.0
+25.0\!\pm\!25.0
+±
+0.0
+0.0\!\pm\!0.0
+P6
+pick-place-ycb
+±
+0.0
+30.0\!\pm\!0.0
+±
+0.0
+20.0\!\pm\!0.0
+±
+0.0
+50.0\!\pm\!0.0
+±
+0.0
+\mathbf{90.0}\!\pm\!0.0
+±
+10.0
+\mathbf{90.0}\!\pm\!10.0
+P7
+shape-stack
+±
+9.4
+6.7\!\pm\!9.4
+±
+9.4
+6.7\!\pm\!9.4
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+11.0
+\mathbf{60.0}\!\pm\!11.0
+P7
+balance-medium
+±
+28.3
+20.0\!\pm\!28.3
+±
+9.4
+6.7\!\pm\!9.4
+±
+9.4
+6.7\!\pm\!9.4
+±
+33.0
+23.3\!\pm\!33.0
+±
+4.0
+\mathbf{88.0}\!\pm\!4.0
+P7
+balance-hard
+±
+9.4
+6.7\!\pm\!9.4
+±
+47.1
+33.3\!\pm\!47.1
+±
+41.9
+56.7\!\pm\!41.9
+±
+17.0
+\mathbf{83.3}\!\pm\!17.0
+±
+9.8
+72.0\!\pm\!9.8
+P7
+packing
+±
+25.0
+25.0\!\pm\!25.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+50.0\!\pm\!0.0
+±
+0.0
+50.0\!\pm\!0.0
+±
+0.0
+\mathbf{100.0}\!\pm\!0.0
+M
+mirror-pick-place
+±
+0.0
+0.0\!\pm\!0.0
+±
+8.0
+\mathbf{4.0}\!\pm\!8.0
+±
+8.0
+\mathbf{4.0}\!\pm\!8.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+M
+keyboard-typing
+±
+10.0
+10.0\!\pm\!10.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+0.0
+0.0\!\pm\!0.0
+±
+23.6
+\mathbf{16.7}\!\pm\!23.6
+Table 10:
+Stage-3 action success rate per task (%) for GPT-5.5 without and with privileged object context.
+Cat.
+Task
+GPT-5.5
+GPT-5.5-obj
+P1
+edge-slide
+0.0
+0.0
+0.0
+0.0
+P1
+recover-peg-insert
+0.0
+0.0
+0.0
+0.0
+P2
+bounce-intercept
+0.0
+0.0
+0.0
+0.0
+P2
+slide-catch
+0.0
+0.0
+0.0
+0.0
+P3
+domino-single
+100.0
+\mathbf{100.0}
+100.0
+\mathbf{100.0}
+P3
+domino-select
+50.0
+50.0
+100.0
+\mathbf{100.0}
+P4
+tool-retrieve
+0.0
+0.0
+0.0
+0.0
+P4
+cup-extract
+0.0
+0.0
+0.0
+0.0
+P5
+mass-sort
+0.0
+0.0
+0.0
+0.0
+P5
+occluder-push
+0.0
+0.0
+0.0
+0.0
+P6
+slip-recovery
+0.0
+0.0
+0.0
+0.0
+P6
+pick-place-ycb
+0.0
+0.0
+0.0
+0.0
+P7
+shape-stack
+0.0
+0.0
+0.0
+0.0
+P7
+balance-medium
+0.0
+0.0
+0.0
+0.0
+M
+mirror-pick-place
+30.0
+30.0
+100.0
+\mathbf{100.0}
+M
+keyboard-typing
+0.0
+0.0
+0.0
+0.0
+Appendix G
+Policy Training Details
+G.1
+Diffusion Policy
+We train Diffusion Policy (DP) from scratch using the LeRobot diffusion policy implementation. Unlike
+π
+0.5
+\pi_{0.5}
+and GR00T N1.5, no pretrained policy checkpoint is finetuned.
+Table 11:
+Diffusion Policy training settings.
+Hyperparameter
+Value
+Trainable parameters
+Trained from scratch
+Optimizer
+AdamW
+Learning rate
+×
+10
+−
+4
+1\!\times\!10^{-4}
+LR schedule
+Cosine with 500-step warmup
+Batch size
+32
+Training steps
+50k steps
+Weight decay
+×
+10
+−
+6
+1\!\times\!10^{-6}
+Checkpoint save frequency
+every 5K steps
+G.2
+π
+0.5
+\pi_{0.5}
+Finetuning
+We finetune the public
+lerobot/pi05_base
+checkpoint.
+Table 12:
+π
+0.5
+\pi_{0.5}
+finetuning settings.
+Hyperparameter
+Value
+Base checkpoint
+lerobot/pi05_base
+LoRA config
+Rank 64,
+α
+=
+128
+\alpha=128
+, dropout 0.05
+Observations
+4 RGB cameras (front/left/right/gripper), language instruction
+State/action dims
+Native single-arm 7D action, bimanual 14D; padded to unified format
+Optimizer
+AdamW
+Learning rate
+3
+×
+10
+−
+4
+3\times 10^{-4}
+LR schedule
+Cosine decay, 200-step warmup
+Batch size
+128
+Training steps
+50K
+Gradient clip norm
+1.0
+Weight decay
+0.0
+G.3
+GR00T N1.5 Finetuning
+We finetune
+nvidia/GR00T-N1.5-3B
+through LeRobot’s GR00T policy stack.
+Table 13:
+GR00T N1.5 finetuning settings.
+Hyperparameter
+Value
+Base checkpoint
+nvidia/GR00T-N1.5-3B
+LoRA config
+Rank 64,
+α
+=
+128
+\alpha=128
+, dropout 0.05
+Observations
+4 RGB cameras (resized to 224
+×
+\times
+224), 15D state, 7D action
+Optimizer
+AdamW
+Learning rate
+3
+×
+10
+−
+4
+3\times 10^{-4}
+LR schedule
+Cosine decay, 400-step warmup
+Batch size
+64
+Training steps
+20K
+Gradient clip norm
+1.0
+Weight decay
+0.0
+G.4
+Software Environment
+Both
+π
+0.5
+\pi_{0.5}
+and GR00T N1.5 are trained in bf16 mixed precision. Flash attention is enabled for GR00T System-1 VLM attention and the
+π
+0.5
+\pi_{0.5}
+PaliGemma backbone.
+Table 14:
+Software environment used for policy training.
+Package
+Version
+Python
+3.12
+PyTorch
+2.7.1 + cu126
+Flash-Attention
+2.7.4.post1
+robosuite
+1.5
+MuJoCo
+3.1.2
+CUDA
+12.6
+Appendix H
+Per-task Policy Results
+Table 15:
+Policy success rates (%) per task
+on
+IMBench
+. Bold marks the best per row.
+π
+0.5
+\pi_{0.5}
+GR00T 1.5
+DP
+ZS
+FT
+ZS
+FT
+Full-training
+T01
+edge-slide
+0.00
+0.07
+0.00
+0.00
+0.28
+T02
+recover-peg-insert
+0.00
+0.03
+0.00
+0.00
+0.29
+T03
+sheltered-grasp
+0.00
+0.10
+0.00
+0.00
+0.30
+T04
+cup-inversion
+0.00
+0.00
+0.00
+0.00
+0.00
+T05
+plate-shelf-hobi
+0.00
+0.00
+0.00
+0.00
+0.00
+T06
+plate-shelf-hetbi
+0.00
+0.00
+0.00
+0.00
+0.00
+T07
+bowl-table
+0.00
+0.27
+0.00
+0.00
+0.00
+T08
+cracker-box-suction
+0.00
+0.00
+0.00
+0.00
+0.00
+T09
+cracker-box-jaw
+0.00
+0.00
+0.00
+0.00
+0.00
+T10
+cube-toss
+0.00
+0.12
+0.00
+0.00
+0.09
+T11
+pendulum-grasp
+0.08
+0.28
+0.00
+0.08
+0.35
+T12
+linear-intercept
+0.00
+0.04
+0.00
+0.04
+0.01
+T13
+bounce-intercept
+0.00
+0.00
+0.00
+0.04
+0.00
+T14
+galileo-ramp-drop
+0.00
+0.00
+0.00
+0.00
+0.34
+T15
+slide-catch
+0.00
+0.10
+0.00
+0.00
+0.00
+T16
+ramp-sort
+0.00
+0.00
+0.00
+0.00
+0.07
+T17
+domino-single
+0.28
+0.73
+0.08
+0.25
+0.70
+T18
+domino-select
+0.00
+0.32
+0.08
+0.17
+0.80
+T19
+seesaw-balance
+0.00
+0.10
+0.00
+0.00
+0.13
+T20
+indirect-push
+0.00
+0.07
+0.00
+0.00
+0.08
+T21
+gap-funnel
+0.00
+0.06
+0.00
+0.00
+0.07
+T22
+ball-cage-escape
+0.22
+0.45
+0.00
+0.22
+0.43
+T23
+tool-retrieve
+0.18
+0.00
+0.00
+0.00
+0.00
+T24
+cup-extract
+0.00
+0.02
+0.00
+0.00
+0.07
+T25
+mass-sort
+0.00
+0.00
+0.00
+0.00
+0.00
+T26
+occluder-push
+0.00
+0.15
+0.00
+0.00
+0.50
+T27
+slip-recovery
+0.00
+0.22
+0.00
+0.00
+0.44
+T28
+stack-collapse-recovery
+0.00
+0.00
+0.00
+0.00
+0.00
+T29
+pick-place-ycb
+0.00
+0.30
+0.00
+0.00
+0.28
+T30
+shape-stack
+0.00
+0.00
+0.00
+0.00
+0.00
+T31
+balance-medium
+0.00
+0.71
+0.00
+0.02
+0.28
+T32
+balance-hard
+0.00
+0.58
+0.00
+0.03
+0.20
+T33
+packing
+0.00
+0.00
+0.00
+0.00
+0.00
+M01
+mirror-pick-place
+0.02
+0.00
+0.00
+0.00
+0.98
+M02
+keyboard-typing
+0.00
+0.13
+0.00
+0.04
+0.32
+Appendix I
+Out-of-Distribution Specifications
+For each task we list the physical axis the OOD evaluation probes, the training distribution along that axis, and the OOD distribution. OOD distributions are designed to require
+extrapolation
+of the reasoning to diverse scenarios.
+P1 sheltered-grasp
+(Geometry-aware grasping under occlusion): object sheltered from a canonical lateral side
+→
+\;\rightarrow\;
+object placed on the opposite side, requiring adaptation of grasp approach
+P2 pendulum-grasp
+(Dynamic interception of a swinging object): pendulum swings in the sagittal plane (
+0
+∘
+0^{\circ}
+)
+→
+\;\rightarrow\;
+pendulum swing plane rotated to
+45
+∘
+45^{\circ}
+, altering timing and approach trajectory
+P3 domino-single
+(Sequential contact-rich manipulation): axis-aligned domino chain configuration
+→
+\;\rightarrow\;
+domino chain rotated diagonally by
+45
+∘
+45^{\circ}
+, changing spatial interaction geometry
+P4 tool-retrieve
+(Tool-use for indirect object interaction): standard hook orientation used for retrieval
+→
+\;\rightarrow\;
+hook mirror-flipped with the tip on the opposite side, requiring strategy adaptation
+P5 occluder-push
+(Manipulation under increasing clutter and occlusion): single occluder lid covering the target
+→
+\;\rightarrow\;
+2-3 additional lids stacked on top, increasing obstruction complexity
+P6 slip-recovery
+(Reactive replanning after unexpected disturbances): single slip event during object transport
+→
+\;\rightarrow\;
+two independent slips introduced during transport, requiring repeated recovery
+P7 balance-medium
+(Balancing under geometric distribution shifts): limited base and rod orientations during training
+→
+\;\rightarrow\;
+both base and rod orientations shifted outside the training distribution
+M keyboard-typing
+(Language-conditioned long-horizon typing): fixed vocabulary words seen during training
+→
+\;\rightarrow\;
+previously unseen words requiring compositional generalization
+Appendix J
+Detailed Analysis of Benchmark Results and Emergent Insights
+We evaluated performance across the three evaluation stages: constraint
+understanding, plan generation, and policy execution to
+identify where competence is gained, lost, or never acquired. Numbers in this
+section reference Tables
+8
+,
+9
+, and
+15
+.
+J.1
+Stage 1: Physical Constraint Understanding
+Stage 1 results show that current VLMs can identify basic physical constraints
+needed for common manipulation tasks, yet consistently miss fine-grained details
+that are critical for task success. Models perform relatively well on simpler
+tasks: domino-single and indirect-push reached
+90
+90
+–
+100
+%
+100\%
+across all models,
+linear-intercept scored
+95
+95
+–
+100
+%
+100\%
+, and bounce-intercept reached
+90
+%
+90\%
+uniformly. Performance drops considerably once tasks require precise physical
+reasoning.
+Understands the goal but skips small critical details.
+Balance and stacking tasks expose this gap clearly. For balance-medium, most
+models scored in the
+43
+43
+–
+87
+%
+87\%
+range (Haiku and GPT-5.5 were outliers on this), while shape-stack scores were near
+floor level (GPT-5.4-Mini
+6.7
+%
+6.7\%
+, Claude-Haiku
+0
+%
+0\%
+, Claude-Sonnet
+25
+%
+25\%
+), except GPT-5.5 which scored
+60
+%
+60\%
+,
+indicating that COM-grounded reasoning is rarely produced for most models. Interestingly,
+balance-hard showed higher average accuracy than balance-medium for several
+models—Claude-Haiku improved from
+13.3
+%
+13.3\%
+to
+76.7
+%
+76.7\%
+and Claude-Sonnet from
+86.7
+%
+86.7\%
+to
+93.3
+%
+93.3\%
+—because hard-balance tasks were designed to test sub-point
+precision, which directly prompted COM positioning and alignment reasoning.
+In insertion tasks (recover-peg-insert), scores remained moderate and variable
+(
+33
+33
+–
+80
+%
+80\%
+), consistent with models identifying the high-level insert goal
+while omitting the required pre-insertion alignment constraint.
+Recognizes the object but misses its mechanical role.
+Cracker-box tasks show the most severe failure in Stage 1. Both cracker-box-jaw
+and cracker-box-suction scored near zero across all models: jaw scores ranged
+from
+0
+%
+0\%
+(GPT-5.5) to
+14
+%
+14\%
+(Claude-Haiku), and suction scores ranged from
+4
+%
+4\%
+to
+13.3
+%
+13.3\%
+. Models identified the object and the relevant surface but never produced the specific mechanical constraints required for a valid grasp, such as gripper alignment angle for jaw grasping or correct face selection for suction.
+Understands start and end but misses the transition.
+Orientation tasks such as cup-inversion scored in the
+64
+64
+–
+90
+%
+90\%
+range, and
+plate-shelf tasks (hobi/hetbi) scored
+65
+65
+–
+90
+%
+90\%
+, suggesting that models
+recognized the target configuration. However, they consistently omitted the
+rotation or reorientation step required to reach it. Tool-retrieve scores were
+high (
+80
+80
+–
+100
+%
+100\%
+), meaning models knew the hook was relevant, but as
+discussed in Stage 2, the hook-to-gripper transition was still missing from
+their plans.
+Detects hidden constraints only when the test is direct.
+Models handled observable hidden constraints well: occluder-push scored
+90
+90
+–
+98
+%
+98\%
+across models, and mass-sort reached
+90
+90
+–
+100
+%
+100\%
+, because both
+tasks require a single direct action (move the plate, lift the cube) to expose
+the missing information. In contrast, mirror-pick-place scored
+0
+%
+0\%
+for all
+models except Claude-Haiku at
+4
+%
+4\%
+. This task required reasoning that the
+visual input was horizontally flipped and that left-right motions must be
+reversed, a non-obvious, abstract constraint that no model reliably identified.
+Overall, Stage 1 failures follow a consistent pattern: models understand the
+objective and identify the relevant objects but skip the specific physical
+constraint that makes the task succeed,
+describing tasks procedurally
+rather than reasoning from physical principles.
+J.2
+Stage 2 Analysis: Constraint-to-Plan Conversion
+Since Stage 2 requires grounding Stage 1 understanding into concrete actions, the relatively small performance gap between the two stages suggests that once models understand the constraints, they can usually translate them into appropriate actions. We discuss when the models struggled to convert correctly identified physical constraints from Stage 1 into an ordered and executable action plan.
+Mentioned dynamic constraints but did not track them in the plan.
+The slide-catch task illustrates this gap most sharply. Stage 1 scores were
+strong for most models (GPT-5.4-Mini
+88
+%
+88\%
+, Claude-Haiku
+89
+%
+89\%
+, Claude-Sonnet
+95
+%
+95\%
+), showing they understood the ramp-tilt dynamics and bin-timing
+constraint. Yet Stage 2 scores collapsed to
+0
+%
+0\%
+for GPT-5.4-Mini, Gemma 4,
+and GPT-5.5, and only
+15
+%
+15\%
+for Claude-Haiku, with Claude-Sonnet the only
+model maintaining a high score at
+95
+%
+95\%
+. Models produced plans that named
+the bin and the cube but contained no steps for tracking the tilt angle,
+predicting the release point, or adjusting the bin position dynamically.
+Knowing the constraint existed was not enough to generate a plan that
+satisfied it.
+Knew a tool switch was needed but did not include it in the plan.
+In tool-retrieve tasks, Stage 1 scores were uniformly high (
+80
+80
+–
+100
+%
+100\%
+across all models), confirming that the hook-to-gripper transition was
+identified. However, Stage 2 scores dropped noticeably for several models:
+Claude-Haiku fell from
+80
+%
+80\%
+to
+40
+%
+40\%
+and GPT-5.4-Mini from
+90
+%
+90\%
+to
+60
+%
+60\%
+. Even in cases where the transition appeared in the output, plans often
+described dragging the hook across the surface without releasing it, which is
+an incorrect action sequence. This shows that models can recognize a
+constraint in Stage 1 and still fail to place it correctly in the plan.
+Detected slip but did not plan real recovery.
+Slip-recovery was among the weakest tasks across both stages. Stage 1 scores
+were already low (GPT-5.4-Mini
+16.7
+%
+16.7\%
+, Gemma 4
+6.7
+%
+6.7\%
+, Claude-Haiku
+30
+%
+30\%
+,
+Claude-Sonnet
+33.3
+%
+33.3\%
+), and Stage 2 scores remained similarly low or declined
+further (GPT-5.4-Mini
+6.7
+%
+6.7\%
+, Gemma 4
+23.3
+%
+23.3\%
+, Claude-Haiku
+36.7
+%
+36.7\%
+,
+Claude-Sonnet
+36.7
+%
+36.7\%
+), with GPT-5.5 the only model reaching
+80
+%
+80\%
+in
+both stages. Where slip was mentioned, plans typically added only a monitor or
+grip-force step. Models planned for observation but not for the corrective action.
+Recognized collapse but planned only a partial rebuild.
+Stack-collapse-recovery showed a consistent downward shift from Stage 1 to
+Stage 2. GPT-5.4-Mini went from
+80
+%
+80\%
+to
+55
+%
+55\%
+, Gemma 4 from
+75
+%
+75\%
+to
+10
+%
+10\%
+, and Claude-Sonnet from
+55
+%
+55\%
+to
+25
+%
+25\%
+. GPT-5.5 scored
+0
+%
+0\%
+in both
+stages. Stage 2 plans typically described placing the top cube back onto an
+assumed intact tower, ignoring that all blocks may have scattered and need to
+be located and restacked from the base upward.
+Performed better when Stage 1 constraint was simple geometry.
+Gap-funnel and sheltered-grasp were the clearest successes. For gap-funnel,
+Stage 2 scores were high across all models (GPT-5.4-Mini
+90
+%
+90\%
+, Claude-Haiku
+and Claude-Sonnet
+100
+%
+100\%
+, GPT-5.5
+100
+%
+100\%
+), closely matching their Stage 1
+scores. The geometric constraint; align sphere with gap, push through, verify,
+translated directly into an ordered sequence of actions. Sheltered-grasp
+similarly maintained high Stage 2 scores (
+85
+85
+–
+100
+%
+100\%
+), because the physical
+shelter forced a specific entry order that was hard to omit. Ramp-sort also
+showed good Stage 1 to Stage 2 retention for stronger models, with
+Claude-Sonnet and GPT-5.5 both at
+90
+%
+90\%
+in Stage 2, consistent with their
+Stage 1 scores.
+Sequencing is the core requirement of Stage 2.
+The majority of Stage 2 errors stemmed from incorrect or incomplete step
+ordering rather than from missing object references. In tool-retrieve, releasing
+the hook must come before grasping the cube. The models predicted to use the tool iteself for picking and then releasing the tool. In stack-collapse, locating
+scattered blocks must precede reconstruction. In slide-catch, tilt
+tracking and release prediction must precede the catch. If the sequence is wrong,
+the plan fails even when all objects and constraints are named. Across the board,
+Stage 2 succeeds when each Stage 1 constraint is converted into a clearly
+ordered action step, not merely restated in the plan.
+J.3
+Stage 3 Analysis: Performance of IMBAgent
+Tasks requiring precise geometric alignment showed consistent reasoning failures.
+In
+recover-peg-insert
+, the agent failed to identify the correct insertion
+axis and often rotated in the wrong direction even with privileged object-centric
+information (GPT-5.5
+0
+%
+0\%
+, GPT-5.5-obj
+0
+%
+0\%
+). The agent confused the hole
+orientation and never achieved alignment. Similarly, in
+balance-medium
+,
+the agent partially understood the task by grasping near the rod’s center, but
+reduced execution to a simple pick-and-place behavior instead of true balancing
+(GPT-5.5
+0
+%
+0\%
+, GPT-5.5-obj
+0
+%
+0\%
+). Failed placements were never corrected or
+retried, showing limited online recovery.
+Tasks that only required approximate interactions showed strong performance.
+In
+domino-single
+, the agent repeatedly attempted corrective pushes after
+failures and eventually succeeded in collapsing the domino chain in all runs
+(GPT-5.5
+100
+%
+100\%
+, GPT-5.5-obj
+100
+%
+100\%
+). A similar trend appeared in
+domino-select
+, where privileged object-centric information removed
+ambiguity about the target chain (GPT-5.5
+50
+%
+50\%
+, GPT-5.5-obj
+100
+%
+100\%
+). With
+accurate pose information, the agent reliably aligned with the correct domino
+sequence and achieved high success rates.
+Across several tasks, policies followed open-loop plans and rarely adapted after
+execution errors. In
+pick-place-ycb
+, the agent continued executing the
+initial plan even after failed grasps or incorrect placements, often treating
+the task as complete regardless of the final outcome (GPT-5.5
+0
+%
+0\%
+,
+GPT-5.5-obj
+0
+%
+0\%
+). These failures were amplified by irregular YCB object
+geometries, where unstable grasps required corrective adjustments that never
+emerged.
+Privileged information can both help performance and hurt reasoning.
+Object-centric information improved performance in tasks where ambiguity was
+mainly spatial, but hurt reasoning about transformations or hidden structure.
+In
+domino-select
+, exact pose information enabled reliable target
+identification and directional pushing (GPT-5.5
+50
+%
+50\%
+, GPT-5.5-obj
+100
+%
+100\%
+).
+In contrast,
+mirror-pick-place
+exposed failures in reasoning about
+mirrored coordinate frames (GPT-5.5
+30
+%
+30\%
+, GPT-5.5-obj
+100
+%
+100\%
+). In
+image-only settings, the agent sometimes succeeded by visually grounding the
+mirrored scene and correcting actions online. However, with privileged poses,
+the agent ignored image observations and directly executed actions toward the
+reported coordinates without transforming them into the mirrored frame.
+Policies fail to infer latent interaction strategies.
+Several failures came not from low-level control, but from failing to infer
+the correct physical strategy. In
+cup-extract
+, the agent never
+discovered that rotating the cup was necessary to release the cube inside
+(GPT-5.5
+0
+%
+0\%
+, GPT-5.5-obj
+0
+%
+0\%
+). Instead, it often grasped the rim rather
+than the handle, blocking the object from exiting. Similarly, in
+occluder-push
+, the agent often failed to infer that the cube could be
+hidden beneath the plates and prematurely terminated execution, treating the
+task as impossible (GPT-5.5
+0
+%
+0\%
+, GPT-5.5-obj
+0
+%
+0\%
+). Even when the plates
+were identified as occluders, the generated actions failed to remove them
+effectively. With privileged object poses, the agent bypassed occluder
+reasoning entirely and attempted direct interaction with the hidden target,
+again resulting in failure.
+J.4
+End-to-end Visuomotor Policies
+We discuss task-specific behaviors, emergent properties of the policies, their
+success and failure modes, implications of these behaviors, and the physical
+reasoning axes that current policies fail to capture. All values in the section below are referred from the table
+H
+for the Finetuned values.
+Coarse-contact tasks (
+domino-select
+,
+domino-single
+,
+seesaw-balance
+).
+Tasks that require only coarse directional interaction, rather than precise
+end-effector placement, achieve the highest success rates across all evaluated
+policies (
+domino-single
+:
+π
+0.5
+\pi_{0.5}
+73
+%
+73\%
+, GR00T
+25
+%
+25\%
+, DP
+70
+%
+70\%
+;
+domino-select
+:
+π
+0.5
+\pi_{0.5}
+32
+%
+32\%
+, GR00T
+17
+%
+17\%
+, DP
+80
+%
+80\%
+). We
+observed that even approximately correct behaviors can solve the domino tasks,
+sometimes by directly knocking intermediate dominoes instead of propagating
+through the full chain. A similar pattern appears in
+domino-select
+,
+where policies learn an approximate spatial correspondence for selecting the
+correct chain. The motion remains coarse, but the correspondence is learned
+reliably. On
+seesaw-balance
+, policies failed to exhibit emergent
+corrective behavior (
+π
+0.5
+\pi_{0.5}
+10
+%
+10\%
+, GR00T
+0
+%
+0\%
+, DP
+13
+%
+13\%
+). Unlike
+humans in teleoperation demonstrations, the policies did not repeatedly adjust
+load placement until the beam reached equilibrium.
+For tasks requiring accurate end-effector placement within a narrow success
+region, policies often demonstrate qualitatively correct motion plans but fail
+at the geometry level. On
+balance-hard
+, the object is
+typically grasped successfully and placed near the target location (
+π
+0.5
+\pi_{0.5}
+58
+%
+58\%
+, GR00T
+3
+%
+3\%
+, DP
+20
+%
+20\%
+). Importantly, the model learns to grasp near
+the center of mass, which is crucial for stable manipulation. The policy also
+shows adjustment behaviors to better align the center of mass during placement.
+However, the harder balance variants require substantially more precise control,
+leading to lower success rates (balance-medium:
+π
+0.5
+\pi_{0.5}
+71
+%
+71\%
+, GR00T
+2
+%
+2\%
+, DP
+28
+%
+28\%
+). In
+ball-cage-escape
+, despite moderate task
+success (
+π
+0.5
+\pi_{0.5}
+45
+%
+45\%
+, GR00T
+22
+%
+22\%
+, DP
+43
+%
+43\%
+), the policy behavior
+differs significantly from human strategies. Human teleoperators first align the
+cage into orientations from which rotating the object naturally releases the
+ball. Policies fail to consistently learn this strategy, although they still
+perform multiple reorientation attempts, some of which succeed. On
+keyboard-typing
+, the high-level intent is preserved, but
+cumulative end-effector drift causes frequent key misalignments (
+π
+0.5
+\pi_{0.5}
+13
+%
+13\%
+, GR00T
+4
+%
+4\%
+, DP
+32
+%
+32\%
+). The correct finger posture often reaches an
+adjacent key instead of the target. Furthermore, in nearly
+60
+%
+60\%
+of failures,
+the policy misunderstands the task semantics and presses keys that were already
+pressed.
+Dynamic interception and predictive tasks (
+bounce-intercept
+,
+linear-intercept
+,
+pendulum-grasp
+).
+Policies generate trajectories that approximately follow the motion direction of
+the target object but fail to accurately match its speed (bounce-intercept:
+π
+0.5
+\pi_{0.5}
+0
+%
+0\%
+, GR00T
+4
+%
+4\%
+, DP
+0
+%
+0\%
+; linear-intercept:
+π
+0.5
+\pi_{0.5}
+4
+%
+4\%
+,
+GR00T
+4
+%
+4\%
+, DP
+1
+%
+1\%
+). An interesting observation is that successful episodes
+primarily occur when the object moves toward the robot arm, while failures are
+common when the object moves away. In
+pendulum-grasp
+, the policy learns
+to move toward a small set of likely grasp locations due to the limited number
+of feasible interception points (
+π
+0.5
+\pi_{0.5}
+28
+%
+28\%
+, GR00T
+8
+%
+8\%
+, DP
+35
+%
+35\%
+).
+Common failure modes include grasping too early or too late, indicating partial
+understanding of timing, proximity, and reactivity.
+The
+edge-slide
+task fails for most VLAs with a similar failure
+mode: the policies apply excessive force while exposing the edge, causing the
+object to fall (
+π
+0.5
+\pi_{0.5}
+7
+%
+7\%
+, GR00T
+0
+%
+0\%
+). Diffusion Policy learns
+smoother motion speeds compared to VLAs, but the dominant failure mode remains
+similar (DP
+28
+%
+28\%
+).
+Mirror correspondence and adaptation (
+mirror-pick-place
+).
+Mirror-pick-place
+results in near-zero performance for most VLAs
+(
+π
+0.5
+\pi_{0.5}
+0
+%
+0\%
+, GR00T
+0
+%
+0\%
+). This strongly supports our central hypothesis
+that humans possess implicit intuitive correspondence reasoning. Human
+teleoperators were shown only mirrored observations and, after roughly
+20
+20
+–
+30
+30
+trials, adapted reliably to the reversed control mapping. Humans
+quickly infer correspondences such as “left becomes right” and “up becomes
+down.”
+This adaptation does not emerge in VLAs, likely because mirrored interaction is
+outside the distribution of their pretraining data. In contrast, Diffusion
+Policy performs substantially better, achieving nearly
+98
+%
+98\%
+success (DP
+98
+%
+98\%
+), likely because it learns representations directly from task-specific
+demonstrations. Interestingly, our Stage 3 IMBAgent achieves approximately
+30
+%
+30\%
+success and occasionally discovers through iterative interaction that
+observation-action correspondences are reversed (GPT-5.5
+30
+%
+30\%
+, GPT-5.5-obj
+100
+%
+100\%
+). These results highlight that our benchmark evaluates not only physical
+understanding but also broader forms of intuitive reasoning.
+Compositional organization and packing (
+packing
+,
+ramp-sort
+).
+In
+packing
+, none of the evaluated policies achieve successful
+completion (
+π
+0.5
+\pi_{0.5}
+0
+%
+0\%
+, GR00T
+0
+%
+0\%
+, DP
+0
+%
+0\%
+). Policies attempt
+pick-and-place behaviors but fail to organize subtasks in a way that satisfies
+the geometric packing constraints. The objects fit together in only a small set
+of valid configurations, enforced by the L-shaped geometry. In
+ramp-sort
+,
+we observe two dominant failure modes (
+π
+0.5
+\pi_{0.5}
+0
+%
+0\%
+, GR00T
+0
+%
+0\%
+, DP
+7
+%
+7\%
+). First, policies often fail to place the ball on the correct side of the
+ramp. Second, even when placement occurs on the correct side, inaccurate
+positioning causes the ball to roll into the wrong bin. As a result, the task
+is highly sensitive to action precision.
+Bimanual coordination (
+hetbi-plate-shelf
+,
+hetbi-bowl-table
+).
+The heterogeneous bimanual tasks are among the most challenging tasks in the
+benchmark, as they require simultaneous success across multiple coordination
+axes (hetbi-plate-shelf:
+π
+0.5
+\pi_{0.5}
+0
+%
+0\%
+, GR00T
+0
+%
+0\%
+, DP
+0
+%
+0\%
+). Failures
+are distributed across several stages of execution. Grasping itself is usually
+reliable, suggesting that finetuning successfully teaches the policies to acquire
+the object. Approximately
+80
+%
+80\%
+of failures occur during the handover stage.
+Interestingly, a similar trend is observed in the bowl-table task (
+π
+0.5
+\pi_{0.5}
+27
+%
+27\%
+, GR00T
+0
+%
+0\%
+, DP
+0
+%
+0\%
+), although some failed handovers accidentally
+invert the bowl and still lead to successful upright placement on the table. In
+such cases, the task semantics are not followed strictly, but the final goal
+state is nevertheless achieved.
+Physical stability reasoning (
+shape-stack
+).
+In
+shape-stack
+, we observe that the notion of physical stability is not
+naturally encoded in current policies (
+π
+0.5
+\pi_{0.5}
+0
+%
+0\%
+, GR00T
+0
+%
+0\%
+, DP
+0
+%
+0\%
+). Human teleoperators quickly realize that certain objects, such as cones,
+cannot produce stable stacks unless placed on top. Policies learn the stacking
+action itself but fail to reason about long-term physical stability.
+Active discovery under occlusion (
+occluder-push
+).
+Diffusion Policy significantly outperforms VLAs on
+occluder-push
+(
+π
+0.5
+\pi_{0.5}
+15
+%
+15\%
+, GR00T
+0
+%
+0\%
+, DP
+50
+%
+50\%
+). VLA baselines frequently attempt
+to directly pick the occluding plates instead of performing clearing motions for
+active discovery. Diffusion Policy, trained from scratch on demonstrations,
+learns the intended clearing behavior more effectively. The dominant failure mode
+for Diffusion Policy occurs when the clearing motion becomes too aggressive,
+causing both the occluding plates and the hidden cubes to fall off the table
+simultaneously.
+Overall, the rollout analysis reveals a consistent gap between high-level intent
+and physically precise execution. Policies often learn coarse task structure,
+approximate correspondences, and object interaction strategies, but fail when
+tasks require accurate geometry, stability reasoning, predictive timing, or
+adaptive corrections. Success is strongest in tasks with tolerant dynamics and
+broad success regions, while failures are dominated by incorrect physical
+reasoning, and limited adaptation where intuitive actions are required.
+Appendix K
+Miscellaneous
+Hardware.
+Training and evaluations reported in §
+4
+ran on a mix of NVIDIA H100-80GB GPUs (for VLAs), and on L40S (48 GB) for Diffusion policy.
+Vision-Language Models APi versions
+Evaluations used the following VLM backbone versions:
+•
+GPT-5.5
+(
+gpt-5.5-2026-04-23
+)
+•
+GPT-5.4-mini
+(
+gpt-5.4-mini-2026-03-17
+)
+•
+Claude Sonnet 4.6
+(
+claude-sonnet-4-6
+)
+•
+Claude Haiku 4.5
+(
+claude-haiku-4-5-20251001
+)
+•
+Gemma 4 31B Instruct
+(
+google/gemma-4-31B-it
+)
+All models were queried via their respective APIs or hosted inference endpoints. No fine-tuning was applied to any VLM backbone. All the models were used with maximum reasoning.
+Data
+•
+Sample Data: Hosted on
+Hugging Face Datasets
+. Individual task datasets can be explored by entering the dataset ID in the official Hugging Face dataset viewer.
+Experimental support, please
+view the build logs
+for errors. Generated by
+L
+A
+T
+E
+xml
+.
+Instructions for reporting errors
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+      support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+      methods listed below:
+Click the "Report Issue"
+(
+)
+button, located in the page header.
+Tip:
+You can select the relevant text first, to include it in your report.
+Our team has already identified
+the following issues
+. We appreciate your time reviewing and reporting rendering errors we
+      may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+      should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+      all.
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a
+list of packages that need conversion
+, and welcome
+developer contributions
+.
+We gratefully acknowledge support from our
+major funders
+,
+member institutions
+,
+,
+        and all contributors.
+About
+·
+Help
+·
+Contact
+·
+Subscribe
+·
+Copyright
+·
+Privacy
+·
+Accessibility
+·
+Operational Status
+(opens in new tab)

@@ -1,0 +1,209 @@
+Robotic Disassembly/Assembly NIST Task board 3 BENCHMARK
+ 
+Reference No / Version
+
+URL
+
+Authors 
+
+Institution 
+RAL-SI-2020-B-3 [Benchmarking Protocols for Evaluating Small Parts Robotic Assembly Systems]-V1.0
+
+https://www.nist.gov/el/intelligent-systems-division-73500/robotic-grasping-and-manipulation-assembly/assembly
+
+Kenneth~Kimble, Karl~Van~Wyk, Joe~Falco, Elena~Messina, Yu~Sun, Mizuho Shibata, Wataru Uemura, Yasuyoshi~Yokokohji
+
+National Institute of Standards and Technology, University of South Florida (USF), Kindai University, Ryukoku University, Kobe University
+Contact information
+Joseph.falco@nist.gov, Kenneth.kimble@nist.gov
+Adopted Protocol
+RAL-SI-2020-P [Benchmarking Protocols for Evaluating Small Parts Robotic Assembly Systems]-V1.0
+Kenneth Kimble1, Karl Van Wyk2, Joe Falco1, Elena Messina1, Yu Sun3, Mizuho Shibata4, Wataru Uemura5, Yasuyoshi Yokokohji6
+
+1National Institute of Standards and Technology (NIST), 2NVIDIA, 3University of South Florida, 4Kindai University, 5Ryukoku University, 6Kobe University 
+Scoring
+
+Disassembly
+
+Cable type
+Qty
+Disassemble
+Place*
+Sub-Total
+Route Flexible cable
+2
+5 ea.
+0
+
+Route Stiff cable
+2
+5 ea.
+0
+
+Route Flat cable
+2
+5 ea.
+0
+
+Place/Clip Flexible cable
+3
+5 ea.
+0
+
+Place/Clip Stiff cable
+3
+5 ea.
+0
+
+Place/Clip Flat cable
+3
+5 ea.
+0
+
+Thread Flexible cable
+3
+5 ea.
+0
+
+Thread Stiff cable
+3
+5 ea.
+0
+
+Thread Flat cable
+3
+5 ea.
+0
+
+Insert Flexible cable
+1
+2 ea.
+1 ea.
+
+Insert Stiff cable
+1
+2 ea.
+1 ea.
+
+Insert Flat cable
+1
+2 ea.
+1 ea.
+
+*Place in Kit Tray
+Note: Max Score = 129
+
+
+Assembly
+
+Description
+Qty
+Task 1
+Task 2
+Sub-Total
+ 
+ 
+Routed
+ 
+ 
+Route Flexible cable
+2
+5 ea.
+ 
+
+Route Stiff cable
+2
+5 ea.
+ 
+
+Route Flat cable
+2
+5 ea.
+ 
+
+ 
+ 
+Placed
+Clipped
+ 
+Place/Clip Flexible cable
+3
+5 ea.
+2 ea.
+
+Place/Clip Stiff cable
+3
+5 ea.
+2 ea.
+
+Place/Clip Flat cable
+3
+5 ea.
+2 ea.
+
+ 
+ 
+Threaded
+Through
+ 
+Thread Flexible cable
+3
+5 ea.
+5 ea.
+
+Thread Stiff cable
+3
+5 ea.
+5 ea.
+
+Thread Flat cable
+3
+5 ea.
+5 ea.
+
+ 
+ 
+Inserted
+Seated
+ 
+Insert Flexible cable
+1
+3 ea.
+2 ea.
+
+Insert Stiff cable
+1
+3 ea.
+2 ea.
+
+Insert Flat cable
+1
+3 ea.
+2 ea.
+
+Note: Max Score = 198                     Total Sore
+
+
+Example of a fully assembled task board. Corresponds to the set-up just prior to the disassembly task or an assembly trial with 100% completion.
+
+
+Details of Setup
+Describe your system design including robots and end-effector technologies used, perception type and how it is used to localize board, kit and components, use of CAD.  Also describe all tools used with end-effectors.
+Results to Submit
+Submit scoresheets and a summary of results over 32 trials to include analysis of speed, completion, and reliability. Make notes in the summary of the incomplete/failed tasks and the reasons for the failure. Speed is measured as the completion time of a task board as:
+
+Ttaskboard = Tfinish − Tstart.
+
+Task board completion should be reported as the percentage of total points received for each task board for disassembly and assembly. 
+
+% Disassembled = Total Score/129 x 100
+
+% Assembled = Total Score/198 x 100
+
+For each set of 32 trials, compute the mean, standard deviation, and 95% confidence interval of the completion times, disassembly completion and assembly completion. 
+
+Reliability can also be captured as the probability of successfully completing a task or sub-task. The theoretical upper bound probability for successfully inserting a component (PS) is calculated given a confidence level (CL), the number of successes (m), and the number of independent trials (n). Given the binomial cumulative distribution function:
+
+
+
+The PS is its minimum value to some precision while still satisfying the above inequality

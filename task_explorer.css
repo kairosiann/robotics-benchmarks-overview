@@ -203,6 +203,28 @@
 .explorer-comparison-table th .explorer-remove { margin-top: 6px; min-height: 32px; }
 .explorer-comparison-table .proposal-column { background: #f3f6e7; }
 .explorer-api { margin-top: 20px; }
+.catalog-coverage { margin: 20px 0; }
+.catalog-coverage > summary { color: var(--green); }
+.catalog-coverage > p { margin-top: 10px; }
+.explorer-coverage-scroll { max-width: 100%; overflow: auto; }
+.explorer-coverage-table { min-width: 700px; margin: 12px 0; }
+.explorer-coverage-table th, .explorer-coverage-table td { font-size: .86rem; padding: 10px; }
+.explorer-coverage-table th:first-child { min-width: 125px; }
+.explorer-coverage-table td:last-child { min-width: 170px; }
+.explorer-coverage-table .explorer-coverage-link {
+  padding: 0;
+  min-height: 30px;
+  border: 0;
+  background: transparent;
+  font-weight: 650;
+  color: var(--green);
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.explorer-coverage-table .explorer-coverage-link:hover { background: transparent; }
+#corl-source-review { margin-top: 18px; }
+#corl-source-review h3 { font-size: 1.1rem; }
 @media (max-width: 820px) {
   .explorer-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .explorer-comparison-table th[scope="row"], .explorer-comparison-table th:first-child { min-width: 105px; }

@@ -1,0 +1,240 @@
+ATOM-Bench
+ATOM-Bench
+Overview
+Tasks
+Platforms
+Results
+Videos
+Real-world robot benchmark for manipulation policies
+ATOM-Bench
+A real-world benchmark for atomic skills and compositional generalization in manipulation policies.
+ATOM-Bench factorizes tabletop manipulation into motor atoms and instruction atoms, then tests
+          whether policies fine-tuned on atomic tasks can recombine those skills on held-out real-robot
+          compositions across paired single-arm and dual-arm tracks.
+arXiv Paper
+Download Dataset
+Video Examples
+30
+atomic real-robot tasks
+24
+held-out compositional tasks
+3,000
+human teleoperation demos
+2,700
+physical evaluation rollouts
+2
+paired robot tracks
+5
+representative policies
+Overview
+From atomic fine-tuning to held-out composition.
+Policies are adapted with demonstrations from atomic tasks only. Evaluation then measures
+              two surfaces: skill acquisition on the same atomic factors, and compositional reuse on tasks
+              whose structures were not demonstrated during fine-tuning.
+Play overview video
+Benchmark overview: motor and instruction atoms define the adaptation set, while held-out
+              single-arm and dual-arm compositions probe real-robot generalization.
+Task Factorization
+Atomic skills are separated from compositional task structure.
+Each platform contains a Motor Set, an Instruction Set, and a Composition Set. The paired
+            single-arm and dual-arm suites share task intent, while the dual-arm track adds role assignment,
+            inter-arm coordination, and ordered action sequences.
+Motor atoms
+pick place
+reorient
+push
+stack
+pour
+access
+Instruction atoms
+color
+shape
+size
+count
+exclusion
+source relation
+goal destination
+Motor Set
+Isolates one physical operation at a time, including precise pose control, non-prehensile
+                movement, stacking, pouring, and articulated-object access.
+Instruction Set
+Tests one language constraint under a simple carrier action, covering object attributes,
+                spatial references, counting, logical filtering, and destination binding.
+Composition Set
+Holds out tasks that combine one or more motor atoms with multiple instruction atoms,
+                exposing whether learned atoms transfer beyond their training templates.
+Platforms
+Paired real-world tracks for single-arm and dual-arm manipulation.
+ATOM-Bench uses matched task designs on Franka Panda and Agilex Cobot Magic. Each task is
+            evaluated with shared physical seeds and three RGB camera views.
+Franka Panda
+Single-arm track with a 7-DoF Franka Panda arm, Robotiq 2F-85 gripper, three
+                  Intel RealSense views, and 8-D robot actions.
+Agilex Cobot Magic
+Dual-arm track built on a Mobile ALOHA-style system, with coordinated bimanual control,
+                  three Intel RealSense views, and 14-D robot actions.
+Evaluation Protocol
+Diagnose whether failures come from weak atoms or weak composition.
+The protocol controls the adaptation distribution, evaluates every task with shared physical
+            seeds, and reports process-aware metrics for both atomic execution and compositional reuse.
+1
+Collect atomic demos
+Each atomic task receives 100 expert teleoperation demonstrations recorded at 30 Hz.
+2
+Fine-tune policies
+Models are jointly fine-tuned on all 15 atomic tasks per platform, with no composition demos.
+3
+Evaluate physical seeds
+Every task is evaluated over 10 fixed real-world seeds reproduced by mask-guided placement.
+4
+Report diagnostic metrics
+SR, PSR, AS, CFS, and TG separate task completion, partial progress, and composition failures.
+Results
+Strong atomic performance does not guarantee held-out composition.
+Across five representative policies, simple instruction grounding is often easier than fine-grained
+            motor control. Even the strongest atomic performers show sharp drops on held-out compositions.
+Atomic Skill Acquisition
+Mean SR and PSR over the Motor and Instruction Sets, with a compact per-atom view for
+              motor and instruction skills.
+Franka Panda
+Cobot Magic
+Model
+Motor SR
+Motor PSR
+Instr. SR
+Instr. PSR
+Motor SR
+Motor PSR
+Instr. SR
+Instr. PSR
+Pi0.5
+46.2
+56.2
+94.3
+95.7
+45.0
+72.0
+71.4
+83.2
+Motus
+36.2
+46.2
+67.1
+78.7
+35.0
+59.3
+50.0
+67.5
+LingBot-VLA
+37.5
+46.5
+54.3
+60.5
+26.2
+42.8
+21.4
+47.1
+GROOT N1.6
+28.8
+47.1
+57.1
+69.5
+23.8
+41.0
+27.1
+52.1
+SmolVLA
+17.5
+29.8
+11.4
+31.2
+10.0
+32.2
+5.7
+29.3
+Atomic-to-Compositional Transfer
+Held-out composition performance compared with the atomic-baseline ceiling, plus the paired-task
+              transfer gap for Pi0.5.
+Franka Panda
+Cobot Magic
+Model
+SR
+PSR
+AS
+CFS
+SR
+PSR
+AS
+CFS
+Pi0.5
+15.8
+30.4
+83.3
+73.7
+16.7
+42.6
+79.5
+56.8
+Motus
+10.8
+26.5
+69.3
+49.4
+7.5
+31.5
+68.5
+48.3
+LingBot-VLA
+3.3
+12.1
+60.3
+54.5
+0.0
+24.4
+47.2
+29.3
+GROOT N1.6
+3.3
+11.6
+66.3
+61.2
+1.7
+13.7
+48.2
+38.8
+SmolVLA
+0.0
+6.6
+33.3
+28.3
+0.0
+6.3
+32.5
+27.3
+Metric key
+SR
+: Success Rate
+PSR
+: Process Success Rate
+AS
+: Atomic Score
+CFS
+: Compositional Failure Share
+Transfer Gap on paired atomic tasks of Pi0.5.
+Failure cases reveal distinct sources of error, including correct object selection with failed
+                execution and wrong object selection under compositional references.
+Videos
+Rollout video examples.
+Browse success and failure rollouts. Each card parses the model and task id from its filename,
+            then keeps the corresponding task prompt visible below the video.
+Franka Panda
+Cobot Magic
+Success
+rollouts
+Failure
+rollouts
+Success
+rollouts
+Failure
+rollouts
+ATOM-Bench: Atomic Skills and Compositional Generalization in Real-World Manipulation.

@@ -1,0 +1,117 @@
+{
+  "updated_at": "November 11, 2026",
+  "families": [
+    {
+      "family": "LIBERO",
+      "scope": "130 suite entries",
+      "source": "https://github.com/Lifelong-Robot-Learning/LIBERO",
+      "notes": "Retains scene IDs and the 90/10 split of LIBERO-100."
+    },
+    {
+      "family": "RoboCasa",
+      "scope": "Current and archived catalogs",
+      "source": "https://robocasa.ai/",
+      "notes": "Includes RoboCasa365 and archived v0.2 entries."
+    },
+    {
+      "family": "SIMPLER",
+      "scope": "Registered names and aliases",
+      "source": "https://github.com/simpler-env/SimplerEnv",
+      "notes": "Aliases and orientation/drawer variants are retained."
+    },
+    {
+      "family": "BEHAVIOR",
+      "scope": "Current and legacy definitions",
+      "source": "https://behavior.stanford.edu/knowledgebase/tasks/index.html",
+      "notes": "Includes the current library, challenge labels, and original 100 definitions."
+    },
+    {
+      "family": "DataCenterBench",
+      "scope": "Tier 1 physical tasks",
+      "source": "https://robocurve.org/datacenterbench/",
+      "notes": "Ten published task setups and rubrics."
+    },
+    {
+      "family": "RoboDojo",
+      "scope": "Simulation and real catalogs",
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/",
+      "notes": "Includes 42 scored simulation tasks, 18 real tasks, and auxiliary DLC."
+    },
+    {
+      "family": "RLBench",
+      "scope": "Pinned source registry",
+      "source": "https://github.com/stepjam/RLBench",
+      "notes": "Task-class count can differ from the paper\u2019s 100-task claim."
+    },
+    {
+      "family": "ManiSkill",
+      "scope": "Built-in registered environments",
+      "source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
+      "notes": "Includes environment variants and supporting entries. Ground-truth and visual observation modes differ."
+    },
+    {
+      "family": "CALVIN",
+      "scope": "Language task registry",
+      "source": "https://github.com/mees/calvin",
+      "notes": "Task-level oracles and sequential evaluation have different scopes."
+    },
+    {
+      "family": "RoboTwin 2.0",
+      "scope": "Dual-arm task catalog",
+      "source": "https://robotwin-platform.github.io/doc/tasks/",
+      "notes": "Clean and randomized evaluation reuse physical task definitions."
+    },
+    {
+      "family": "NIST Assembly",
+      "scope": "Task-board operations and competencies",
+      "source": "https://www.nist.gov/el/intelligent-systems-division-73500/robotic-grasping-and-manipulation-assembly/assembly",
+      "notes": "Assembly/disassembly operations and board competencies are distinct entry types."
+    },
+    {
+      "family": "FurnitureBench",
+      "scope": "Furniture assembly tasks",
+      "source": "https://clvrai.github.io/furniture-bench/",
+      "notes": "Subtasks are assembly pairs within each full furniture task."
+    },
+    {
+      "family": "RoboChallenge",
+      "scope": "Versioned physical task suites",
+      "source": "https://robochallenge.ai/challenges",
+      "notes": "Table30 and Table30 V2 are kept as separate versions."
+    },
+    {
+      "family": "Adroit",
+      "scope": "Registered dexterous-hand variants",
+      "source": "https://robotics.farama.org/envs/adroit_hand/",
+      "notes": "Dense/sparse reward variants represent four underlying skills."
+    },
+    {
+      "family": "WireCraft",
+      "scope": "Three industrial wire task families",
+      "source": "https://chongyuzhu.github.io/wirecraft/",
+      "notes": "Added after CoRL 2026 screening. Includes task-family success conditions and official demonstrations."
+    },
+    {
+      "family": "IMBench",
+      "scope": "35 published task descriptions",
+      "source": "https://arxiv.org/html/2607.15641",
+      "notes": "Added after CoRL screening. Setup and physical goal excerpts come from the paper appendix."
+    },
+    {
+      "family": "ATOM-Bench",
+      "scope": "54 paired physical tasks",
+      "source": "https://arxiv.org/html/2606.16826",
+      "notes": "Added after CoRL screening. Exact prompts are available. Individual process-score point rubrics are not enumerated in the task tables."
+    }
+  ],
+  "corl_review": {
+    "source": "https://www.corl.org/program/accepted-papers",
+    "screened_count": 687,
+    "notes": "Screened the public accepted program and 33 benchmark/evaluation title candidates. Added three suites with retrievable task-level evidence. The retained corl_review.json records reviewed candidates. Public accepted papers are the scope of this review.",
+    "added": [
+      "WireCraft: A Simulation Benchmark for Industrial DLO Manipulation",
+      "IMBench: A Benchmark for Intuitive Robotic Manipulation",
+      "ATOM-Bench: A Real-World Benchmark for Atomic Skills and Compositional Generalization in Manipulation Policies"
+    ]
+  }
+}

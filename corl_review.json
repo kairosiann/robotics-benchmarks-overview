@@ -1,0 +1,275 @@
+{
+  "reviewed_at": "2026-11-11",
+  "official_list": "https://www.corl.org/program/accepted-papers",
+  "discovery_index": "https://arpit15.github.io/corl2026/",
+  "screened_count": 687,
+  "screening_method": "Screened all accepted-paper titles and available abstract metadata for benchmark, task-suite and evaluation contributions. Verified selected titles in the official conference page and used authors\u2019 papers and task catalogs for task ingestion. This covers the public accepted program, not confidential or inaccessible submissions.",
+  "candidate_count": 33,
+  "selected_rationale": "WireCraft adds industrial flexible-wire tasks. IMBench adds physical constraints, hidden-state reasoning and recovery. ATOM-Bench adds paired physical atomic and compositional tasks with public instruction tables.",
+  "candidates": [
+    {
+      "title": "When Vision Overrides Language: Evaluating and Mitigating Counterfactual Failures in VLAs",
+      "openreview": "https://openreview.net/forum?id=HmdwOezjlQ",
+      "paper": "https://arxiv.org/abs/2602.17659",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "What Are We Actually Benchmarking in Robot Manipulation?",
+      "openreview": "https://openreview.net/forum?id=RdvH11pAfJ",
+      "paper": "https://arxiv.org/abs/2606.04233",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "Scalable Behavior Cloning with Open Data, Training, and Evaluation",
+      "openreview": "https://openreview.net/forum?id=qd6clCx6QY",
+      "paper": "",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "TopoUrbanBench: Group-Structural Compliance Evaluation for Urban Robot Navigation",
+      "openreview": "https://openreview.net/forum?id=1JcOSLXzHB",
+      "paper": "",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "NavVerse: Benchmarking Indoor-to-Outdoor Embodied Navigation in Continuous Robot Simulation",
+      "openreview": "https://openreview.net/forum?id=0rvhGgRYjx",
+      "paper": "https://arxiv.org/abs/2607.19695",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "CostNav: A Navigation Benchmark for Real-World Economic-Cost Evaluation of Physical AI Agents",
+      "openreview": "https://openreview.net/forum?id=qbninLImrj",
+      "paper": "https://arxiv.org/abs/2511.20216",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "WireCraft: A Simulation Benchmark for Industrial DLO Manipulation",
+      "openreview": "https://openreview.net/forum?id=cQPnBRGgWM",
+      "paper": "https://arxiv.org/abs/2606.18097",
+      "official_title_verified": true,
+      "status": "added",
+      "family": "WireCraft"
+    },
+    {
+      "title": "ACE-VLA: Action Centric Evaluation for Token Pruning in Vision-Language-Action Models",
+      "openreview": "https://openreview.net/forum?id=Qu7v3GmYDU",
+      "paper": "",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "The Imitator Game: Benchmarking Robot Imitative Ability Beyond Action Prediction",
+      "openreview": "https://openreview.net/forum?id=qH1h7UkK0k",
+      "paper": "https://arxiv.org/abs/2608.22301",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "HARP-Bench: Benchmarking Robot Manipulation Around Active Humans",
+      "openreview": "https://openreview.net/forum?id=cCI6zZIcEw",
+      "paper": "",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "HelpMeOut: A Neuropsychology-Grounded Benchmark for Error-Aware Monitoring of Household Task Execution",
+      "openreview": "https://openreview.net/forum?id=59kpavSqlw",
+      "paper": "https://arxiv.org/abs/2610.17694",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "Scale Up Strategically: Learning Compositional Generalization via Bias-Aware Evaluation and Data Collection for Robotic Manipulation",
+      "openreview": "https://openreview.net/forum?id=quVJ7qbQl6",
+      "paper": "https://arxiv.org/abs/2607.21582",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "MESA: An Evaluation Framework for Compositional, Semantic, and Spatial Generalization in Robotics",
+      "openreview": "https://openreview.net/forum?id=Br2rXixvyN",
+      "paper": "",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "ScaleEvals: Scaling Generalist Policy Evaluation through Reset-Free Autonomous Play",
+      "openreview": "https://openreview.net/forum?id=bL51SsKShM",
+      "paper": "",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "RoboFQE: Rollout-Free Evaluation of Visual Robot Policies from Offline Trajectories",
+      "openreview": "https://openreview.net/forum?id=xMysKLF2hX",
+      "paper": "https://arxiv.org/abs/2610.18699",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "RMMBench: A Comprehensive Benchmark for Robotic Mobile Manipulation",
+      "openreview": "https://openreview.net/forum?id=Nxn1pyNZpE",
+      "paper": "https://arxiv.org/abs/2610.05414",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "Monkey See, Can Monkey Do? A Benchmark for Evaluating Robot Skill Learning by Observation",
+      "openreview": "https://openreview.net/forum?id=SMBnET3Mz9",
+      "paper": "https://arxiv.org/abs/2609.08209",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "IMBench: A Benchmark for Intuitive Robotic Manipulation",
+      "openreview": "https://openreview.net/forum?id=GRyPwVAxpq",
+      "paper": "https://arxiv.org/abs/2607.15641",
+      "official_title_verified": true,
+      "status": "added",
+      "family": "IMBench"
+    },
+    {
+      "title": "HiPHI: A Large-Scale Benchmark for High-Precision Human Motion and Object-Interaction",
+      "openreview": "https://openreview.net/forum?id=lTLiSuIBAj",
+      "paper": "https://arxiv.org/abs/2608.16222",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "LiquidLab: Benchmarking Robotic Automation for Liquid Operation in Laboratory",
+      "openreview": "https://openreview.net/forum?id=SBGylS4zwM",
+      "paper": "",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "Benchmarking Real-World Robotic Manipulation through Stochastic Challenges",
+      "openreview": "https://openreview.net/forum?id=MWHlzlo4UD",
+      "paper": "",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "Coverage Aware Active Evaluation for Failure Discovery with Paired Systems",
+      "openreview": "https://openreview.net/forum?id=QJI3N7JzBc",
+      "paper": "https://arxiv.org/abs/2608.13719",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "SCAPE: Scenario-Conditioned Simulation-Augmented Policy Evaluation",
+      "openreview": "https://openreview.net/forum?id=51YZMUGRUA",
+      "paper": "https://arxiv.org/abs/2608.19425",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "UniVTAC: A Unified Simulation Platform for Visuo-Tactile Manipulation Data Generation, Learning, and Benchmarking",
+      "openreview": "https://openreview.net/forum?id=CtcahYuPBL",
+      "paper": "https://arxiv.org/abs/2602.10093",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "SIMPLE: Simulation-Based Policy Learning and Evaluation for Humanoid Loco-manipulation",
+      "openreview": "https://openreview.net/forum?id=aRtb8NIgc3",
+      "paper": "https://arxiv.org/abs/2606.08278",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "AM-Bench: A Modular Simulation Suite and Benchmark for Aerial Manipulation Policy Learning",
+      "openreview": "https://openreview.net/forum?id=8iFziu27Yy",
+      "paper": "https://arxiv.org/abs/2609.00641",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "ATOM-Bench: A Real-World Benchmark for Atomic Skills and Compositional Generalization in Manipulation Policies",
+      "openreview": "https://openreview.net/forum?id=DpOVq6nE2d",
+      "paper": "https://arxiv.org/abs/2606.16826",
+      "official_title_verified": true,
+      "status": "added",
+      "family": "ATOM-Bench"
+    },
+    {
+      "title": "SidewalkBench: Benchmarking Visual Navigation on Urban Sidewalks",
+      "openreview": "https://openreview.net/forum?id=wBzyyPlFs6",
+      "paper": "https://arxiv.org/abs/2606.16953",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "StressDream: Steering Video World Models for Robust Policy Evaluation and Improvement",
+      "openreview": "https://openreview.net/forum?id=9uM5JbXz4T",
+      "paper": "https://arxiv.org/abs/2606.00267",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "H2RBench: A Real-to-Sim Benchmark for Evaluating Human-to-Robot Transfer",
+      "openreview": "https://openreview.net/forum?id=SMKzI5HX9P",
+      "paper": "https://arxiv.org/abs/2609.24778",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "RoboSnap: One-Shot Real-to-Sim Scene Generation for Generalizable Robot Learning and Evaluation",
+      "openreview": "https://openreview.net/forum?id=MWj9u2VZPx",
+      "paper": "https://arxiv.org/abs/2607.06699",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "SimFoundry: Modular and Automated Scene Generation for Policy Learning and Evaluation",
+      "openreview": "https://openreview.net/forum?id=8gqhCYKrxR",
+      "paper": "https://arxiv.org/abs/2606.28276",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    },
+    {
+      "title": "KlaskTron-IL: A Contact-Rich Adversarial Imitation Learning Benchmark with a Validated Sim-to-Real Bridge",
+      "openreview": "https://openreview.net/forum?id=ik1SfLQgZA",
+      "paper": "",
+      "official_title_verified": true,
+      "status": "reviewed; not ingested",
+      "family": ""
+    }
+  ]
+}

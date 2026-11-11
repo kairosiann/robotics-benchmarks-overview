@@ -1,0 +1,255 @@
+Robotic Disassembly/Assembly NIST Task board 1 BENCHMARK
+ 
+Reference No / Version
+
+URL
+RAL-SI-2020-B-1 [Benchmarking Protocols for Evaluating Small Parts Robotic Assembly Systems]-V1.0
+
+https://www.nist.gov/el/intelligent-systems-division-73500/robotic-grasping-and-manipulation-assembly/assembly
+Authors
+Kenneth Kimble1, Karl Van Wyk2, Joe Falco1, Elena Messina1, Yu Sun3, Mizuho Shibata4, Wataru Uemura5, Yasuyoshi Yokokohji6
+Institution
+1National Institute of Standards and Technology (NIST), 2NVIDIA, 3University of South Florida, 4Kindai University, 5Ryukoku University, 6Kobe University
+Contact information
+Joseph.falco@nist.gov, Kenneth.kimble@nist.gov
+Adopted Protocol
+RAL-SI-2020-P [Benchmarking Protocols for Evaluating Small Parts Robotic Assembly Systems]-V1.0
+Kenneth Kimble1, Karl Van Wyk2, Joe Falco1, Elena Messina1, Yu Sun3, Mizuho Shibata4, Wataru Uemura5, Yasuyoshi Yokokohji6
+
+1National Institute of Standards and Technology (NIST), 2NVIDIA, 3University of South Florida, 4Kindai University, 5Ryukoku University, 6Kobe University  
+Scoring
+Disassembly Score Sheet:
+
+         Start Time:                   End Time:
+Item
+Removed 
+(2 points)
+Placed in Kit Tray
+(1 point)
+Sub-Total
+Small Gear
+2
+1
+
+Medium Gear
+2
+1
+
+Large Gear
+2
+1
+
+Rod 4 mm
+2
+1
+
+Rod 8 mm
+2
+1
+
+Rod 12 mm
+2
+1
+
+Rod 16 mm
+2
+1
+
+Bar 4 mm x 4 mm x 300 mm
+2
+1
+
+Bar 8 mm x 7 mm x 300 mm
+2
+1
+
+Bar 12 mm x 8 mm x 300 mm
+2
+1
+
+Bar 16 mm x 10 mm x 300 mm
+2
+1
+
+BNC Connector
+2
+1
+
+Waterproof Connector
+2
+1
+
+DSUB Connector
+2
+1
+
+USB Connector
+2
+1
+
+RJ45 Connector
+2
+1
+
+M4 Nut
+2
+1
+
+M8 Nut
+2
+1
+
+M12 Nut
+2
+1
+
+M16 Nut
+2
+1
+
+                    Note: Max Score = 60                   Total Score                               
+
+
+Example of start and end of a disassembly trial with 100% completion:
+
+                                                Start                                   End
+Assembly Score Sheet:
+
+             Start Time:                   End Time: 
+Item
+Inserted/Threaded 
+Seated
+Place*
+Sub-Total
+Small Gear
+3
+2
+1
+
+Medium Gear
+3
+2
+1
+
+Large Gear
+3
+2
+1
+
+Rod 4 mm
+3
+2
+1
+
+Rod 8 mm
+3
+2
+1
+
+Rod 12 mm
+3
+2
+1
+
+Rod 16 mm
+3
+2
+1
+
+Bar 4 mm x 4 mm x 300 mm
+3
+2
+1
+
+Bar 8 mm x 7 mm x 300 mm
+3
+2
+1
+
+Bar 12 mm x 8 mm x 300 mm
+3
+2
+1
+
+Bar 16 mm x 10 mm x 300 mm
+3
+2
+1
+
+BNC Connector
+3
+2
+1
+
+Waterproof Connector
+3
+2
+1
+
+DSUB Connector
+3
+2
+1
+
+USB Connector
+3
+2
+1
+
+RJ45 Connector
+3
+2
+1
+
+M4 Nut
+3
+2
+1
+
+M8 Nut
+3
+2
+1
+
+M12 Nut
+3
+2
+1
+
+M16 Nut
+3
+2
+1
+
+      Note: Max Score = 120                     Total Score
+
+          *The part is manipulated to the task board and at least sits on the task board
+
+Example of start and end of an assembly trial with 100% completion:
+
+
+                                             Start                                         End
+
+Details of Setup
+Describe your system design including robots and end-effector technologies used, perception type and how it is used to localize board, kit and components, use of CAD.  Also describe all tools used with end-effectors.
+Results to Submit
+Submit scoresheets and a summary of results over 32 trials to include analysis of speed, completion, and reliability. Make notes in the summary of the incomplete/failed tasks and the reasons for the failure. Speed is measured as the completion time of a task board as:
+
+Ttaskboard = Tfinish − Tstart.
+
+Task board completion should be reported as the percentage of total points received for each task board for disassembly and assembly. 
+
+% Disassembled = Total Score/60 x 100
+
+% Assembled = Total Score/120 x 100
+
+
+For each set of 32 trials, compute the mean, standard deviation, and 95% confidence interval of the completion times, disassembly completion and assembly completion. 
+
+Reliability can also be captured as the probability of successfully completing a task or sub-task. The theoretical upper bound probability for successfully inserting a component (PS) is calculated given a confidence level (CL), the number of successes (m), and the number of independent trials (n). Given the binomial cumulative distribution function:
+
+
+
+The PS is its minimum value to some precision while still satisfying the above inequality.
+
+

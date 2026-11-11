@@ -1,0 +1,505 @@
+[
+    {
+        "benchmark_id": "table30v2",
+        "benchmark_name": "Table 30 V2",
+        "benchmark_description": "Table30 V2 takes \"Large-scale real-device native generalization evaluation for next-generation models\" as the standard. Compared to v1, it has been deeply reconstructed from three dimensions: task upgrade, evaluation upgrade, and system upgrade.",
+        "benchmark_version": "v2.0",
+        "runs_number": 0,
+        "episode_number": 32980,
+        "last_update_time": "2026-05-28",
+        "training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2",
+        "task_number": 30,
+        "tasks": [
+            {
+                "task_name": "arrange_flowers",
+                "task_description": "Pick up the four flowers one by one and insert them into the vase.",
+                "prompt": "Put the 4 flowers into the vase.",
+                "task_banner": "/api/v2/banner/arrange_flowers.jpg",
+                "task_tag": [
+                    "repeated",
+                    "precise3d",
+                    "single-arm",
+                    "ARX5"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.5 points x 4: Successfully pick up one flower and insert it accurately into the vase.",
+                "task_episode_number": 1070
+            },
+            {
+                "task_name": "arrange_fruits",
+                "task_description": "Pick up the fruits on the table one by one and place them into the basket.",
+                "prompt": "Arrange the fruit in the basket.",
+                "task_banner": "/api/v2/banner/arrange_fruits.jpg",
+                "task_tag": [
+                    "simple-pick",
+                    "repeated",
+                    "single-arm",
+                    "UR5"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points x 5: Successfully pick up one fruit and place it into the basket.",
+                "task_episode_number": 1031
+            },
+            {
+                "task_name": "fold_the_clothes",
+                "task_description": "Fold the T-shirt neatly and place it in the upper-left corner of the table.",
+                "prompt": "Fold the T-shirts and stack them neatly in the upper-left corner of the table.",
+                "task_banner": "/api/v2/banner/fold_the_clothes.jpg",
+                "task_tag": [
+                    "softbody",
+                    "bimanual",
+                    "dual-arm",
+                    "DOS-W1"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points: Pick up the T-shirt and spread it flat on the table.\n1.0 points: Fold one sleeve inward and flatten it.\n1.0 points: Fold the other sleeve inward and flatten it.\n3.0 points: Fold the shoulder section upward with both arms and flatten it.\n2.0 points: Fold the right side of the shirt to the left and flatten it.\n1.0 points: Place the folded T-shirt in the upper-left corner of the table.",
+                "task_episode_number": 1033
+            },
+            {
+                "task_name": "hang_the_cup",
+                "task_description": "Hang the cup on the rack.",
+                "prompt": "Hang the cup on the rack.",
+                "task_banner": "/api/v2/banner/hang_the_cup.jpg",
+                "task_tag": [
+                    "precise3d",
+                    "single-arm",
+                    "ARX5"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n3.0 points: Grasp the cup by its handle.\n3.0 points: Move the cup to the rack.\n4.0 points: Hang the cup successfully.",
+                "task_episode_number": 1041
+            },
+            {
+                "task_name": "hold_the_tray_with_both_hands",
+                "task_description": "Place the ping-pong ball onto the small tray without dropping it, then lift the small tray and stack it onto the large tray.",
+                "prompt": "Place the ball from the desk onto the small tray, and then move the small tray onto the large tray.",
+                "task_banner": "/api/v2/banner/hold_the_tray_with_both_hands.jpg",
+                "task_tag": [
+                    "bimanual",
+                    "precise3d",
+                    "dual-arm",
+                    "DOS-W1"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points: Pick up the small tray and place it near the center-front of the table.\n4.0 points: Place the ball onto the small tray without dropping it.\n4.0 points: Move the small tray onto the large tray while keeping the ball stable.",
+                "task_episode_number": 1067
+            },
+            {
+                "task_name": "item_classification",
+                "task_description": "Place the stationery into the yellow box and the electronic items into the blue box.",
+                "prompt": "Place the stationery in the yellow box and the electronics in the blue box.",
+                "task_banner": "/api/v2/banner/item_classification.jpg",
+                "task_tag": [
+                    "classification",
+                    "repeated",
+                    "single-arm",
+                    "UR5"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.5 points x 2: Successfully place one stationery item into the yellow box.\n2.5 points x 2: Successfully place one electronic item into the blue box.",
+                "task_episode_number": 1026
+            },
+            {
+                "task_name": "lint_roller_remove_dirt",
+                "task_description": "Use the lint roller to remove debris from the clothing.",
+                "prompt": "Use a lint roller to remove the debris from the clothing.",
+                "task_banner": "/api/v2/banner/lint_roller_remove_dirt.jpg",
+                "task_tag": [
+                    "softbody",
+                    "bimanual",
+                    "manipulation",
+                    "dual-arm",
+                    "ALOHA"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n1.0 points: Hold the clothing steady with one gripper.\n2.0 points: Pick up the lint roller with the other gripper.\n4.0 points: Remove the debris from the clothing with the lint roller.\n2.0 points: Put down the lint roller.\n1.0 points: Retract the gripper.",
+                "task_episode_number": 1089
+            },
+            {
+                "task_name": "pack_the_items",
+                "task_description": "Place the charger, charging cable, accessory bag, and tablet into the box, then close the lid.",
+                "prompt": "Box up the tablet and its accessories.",
+                "task_banner": "/api/v2/banner/pack_the_items.jpg",
+                "task_tag": [
+                    "repeated",
+                    "manipulation",
+                    "precise3d",
+                    "temporal",
+                    "dual-arm",
+                    "ALOHA"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n1.0 points: Place the charger into the corresponding slot.\n1.0 points: Place the charging cable into the corresponding slot.\n3.0 points: Place the accessory bag into the correct position and press it flat.\n1.0 points: Place the tablet into the box.\n3.0 points: Close the box lid.\n1.0 points: Move the packed box to the center of the table.",
+                "task_episode_number": 1045
+            },
+            {
+                "task_name": "pack_the_toothbrush_holder",
+                "task_description": "Put the toothbrush and toothpaste into the toiletries case, close it, and place it into the basket.",
+                "prompt": "Put the toothbrush and toothpaste into the toiletries case in sequence, close the case, and then place it into the basket.",
+                "task_banner": "/api/v2/banner/pack_the_toothbrush_holder.jpg",
+                "task_tag": [
+                    "repeated",
+                    "bimanual",
+                    "manipulation",
+                    "temporal",
+                    "dual-arm",
+                    "ALOHA"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points: Pick up and position the toiletries case for packing.\n2.0 points: Place the toothbrush into the toiletries case.\n2.0 points: Place the toothpaste into the toiletries case.\n2.0 points: Close the toiletries case.\n2.0 points: Place the toiletries case into the basket.",
+                "task_episode_number": 1017
+            },
+            {
+                "task_name": "paint_jam",
+                "task_description": "Hold the toast with one hand, scoop jam from the jar with the other hand, spread it onto the toast, and put the knife down.",
+                "prompt": "Spread the bread with jam.",
+                "task_banner": "/api/v2/banner/paint_jam.jpg",
+                "task_tag": [
+                    "bimanual",
+                    "manipulation",
+                    "precise3d",
+                    "dual-arm",
+                    "ALOHA"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points: Pick up the knife.\n2.0 points: Scoop jam with the knife.\n4.0 points: Spread the jam onto the bread.\n2.0 points: Return the knife to its original position.",
+                "task_episode_number": 1013
+            },
+            {
+                "task_name": "pick_out_the_green_blocks",
+                "task_description": "Search for the two green blocks one by one and place them into the yellow basket.",
+                "prompt": "Find all the green blocks and put them into the basket.",
+                "task_banner": "/api/v2/banner/pick_out_the_green_blocks.jpg",
+                "task_tag": [
+                    "repeated",
+                    "multiview",
+                    "single-arm",
+                    "ARX5"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n5.0 points: Locate and place the first green block into the yellow basket.\n5.0 points: Locate and place the second green block into the yellow basket.",
+                "task_episode_number": 1056
+            },
+            {
+                "task_name": "place_objects_into_desk_drawer",
+                "task_description": "Open the drawer, place the bottle opener inside, and close the drawer.",
+                "prompt": "Open the drawer, put the bottle opener inside, and close the drawer.",
+                "task_banner": "/api/v2/banner/place_objects_into_desk_drawer.jpg",
+                "task_tag": [
+                    "precise3d",
+                    "manipulation",
+                    "temporal",
+                    "dual-arm",
+                    "DOS-W1"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n3.0 points: Open the drawer while keeping it stable.\n4.0 points: Place the bottle opener into the drawer.\n3.0 points: Close the drawer.",
+                "task_episode_number": 1150
+            },
+            {
+                "task_name": "press_the_button",
+                "task_description": "Press the buttons in the following order: pink, blue, green, and yellow.",
+                "prompt": "Press the buttons in the following sequence: pink, blue, green, and then yellow.",
+                "task_banner": "/api/v2/banner/press_the_button.jpg",
+                "task_tag": [
+                    "temporal",
+                    "repeated",
+                    "single-arm",
+                    "ARX5"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.5 points x 4: Press the buttons in the correct order: pink, blue, green, and yellow.",
+                "task_episode_number": 1060
+            },
+            {
+                "task_name": "put_in_pen_container",
+                "task_description": "Pick up the pens on the table and place them into the pen holder one by one.",
+                "prompt": "Put the pens on the desk into the pen holder.",
+                "task_banner": "/api/v2/banner/put_in_pen_container.jpg",
+                "task_tag": [
+                    "repeated",
+                    "precise3d",
+                    "dual-arm",
+                    "DOS-W1"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points x 5: Successfully pick up one pen and insert it accurately into the pen holder.",
+                "task_episode_number": 1244
+            },
+            {
+                "task_name": "put_the_books_back",
+                "task_description": "Pick up the two books on the table one by one and place them onto the bookshelf.",
+                "prompt": "Place the books back onto the bookshelf.",
+                "task_banner": "/api/v2/banner/put_the_books_back.jpg",
+                "task_tag": [
+                    "repeated",
+                    "precise3d",
+                    "dual-arm",
+                    "ALOHA"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points: Close one book successfully.\n3.0 points: Place that book onto the bookshelf.\n2.0 points: Close the second book successfully.\n3.0 points: Place that book onto the bookshelf.",
+                "task_episode_number": 1022
+            },
+            {
+                "task_name": "put_the_pencil_case_into_the_schoolbag",
+                "task_description": "Unzip the backpack and place the pencil case inside.",
+                "prompt": "Put the pencil case into the backpack.",
+                "task_banner": "/api/v2/banner/put_the_pencil_case_into_the_schoolbag.jpg",
+                "task_tag": [
+                    "bimanual",
+                    "manipulation",
+                    "temporal",
+                    "dual-arm",
+                    "ALOHA"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n4.0 points: Open the backpack zipper successfully.\n2.0 points: Hold the backpack opening open.\n2.0 points: Pick up the pencil case and place it into the backpack.\n2.0 points: Place the backpack back on the table.",
+                "task_episode_number": 1100
+            },
+            {
+                "task_name": "put_the_shoes_back",
+                "task_description": "Match the two pairs of shoes on the table and place them onto the shoe rack.",
+                "prompt": "Pair the two pairs of shoes on the desk and place them on the shoe rack",
+                "task_banner": "/api/v2/banner/put_the_shoes_back.jpg",
+                "task_tag": [
+                    "repeated",
+                    "dual-arm",
+                    "DOS-W1"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n3.0 points: Identify and pick up the first matching pair of shoes.\n1.0 points: Place the first shoe of that pair onto the rack.\n1.0 points: Place the second shoe of that pair onto the rack.\n3.0 points: Identify and pick up the second matching pair of shoes.\n1.0 points: Place the first shoe of that pair onto the rack.\n1.0 points: Place the second shoe of that pair onto the rack.",
+                "task_episode_number": 1147
+            },
+            {
+                "task_name": "scoop_with_a_small_spoon",
+                "task_description": "Hold the bowl steady with one hand and use the spoon with the other hand to scoop beans into the other bowl.",
+                "prompt": "Scoop beans and place them into the empty bowl.",
+                "task_banner": "/api/v2/banner/scoop_with_a_small_spoon.jpg",
+                "task_tag": [
+                    "bimanual",
+                    "manipulation",
+                    "precise3d",
+                    "dual-arm",
+                    "ALOHA"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points: Hold the bowl of beans steady with one gripper.\n3.0 points: Scoop up the beans successfully with the spoon.\n3.0 points: Pour the beans into the empty bowl.\n2.0 points: Return the spoon to its original position.",
+                "task_episode_number": 1101
+            },
+            {
+                "task_name": "shred_paper",
+                "task_description": "Pick up the paper, move it above the shredder, and feed it into the shredder successfully.",
+                "prompt": "Put the paper into the shredder.",
+                "task_banner": "/api/v2/banner/shred_paper.jpg",
+                "task_tag": [
+                    "softbody",
+                    "precise3d",
+                    "single-arm",
+                    "UR5"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n4.0 points: Pick up one sheet of paper.\n2.0 points: Move the paper above the shredder.\n4.0 points: Feed the paper into the shredder successfully.",
+                "task_episode_number": 1016
+            },
+            {
+                "task_name": "stack_bowls",
+                "task_description": "Place the blue bowl into the beige bowl, then place the green bowl into the blue bowl.",
+                "prompt": "Put the blue bowl into the beige bowl, and put the green bowl into the blue bowl.",
+                "task_banner": "/api/v2/banner/stack_bowls.jpg",
+                "task_tag": [
+                    "repeated",
+                    "precise3d",
+                    "dual-arm",
+                    "DOS-W1"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n5.0 points: Place the blue bowl into the beige bowl successfully.\n5.0 points: Place the green bowl into the blue bowl successfully.",
+                "task_episode_number": 1148
+            },
+            {
+                "task_name": "stamp_positioning",
+                "task_description": "Hold the paper with one gripper, pick up the stamp with the other, ink it, stamp the signature area, and return the stamp to the ink pad.",
+                "prompt": "Stamp the signature area on the paper.",
+                "task_banner": "/api/v2/banner/stamp_positioning.jpg",
+                "task_tag": [
+                    "bimanual",
+                    "manipulation",
+                    "precise3d",
+                    "dual-arm",
+                    "ALOHA"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n3.0 points: Pick up the stamp and ink it successfully.\n2.0 points: Hold the paper steady with the other gripper.\n3.0 points: Stamp the signature area accurately.\n2.0 points: Return the stamp to the ink pad.",
+                "task_episode_number": 1082
+            },
+            {
+                "task_name": "sweep_the_trash",
+                "task_description": "Hold the broom with one gripper and the dustpan with the other, then sweep the trash on the table into the dustpan.",
+                "prompt": "Sweep the trash on the table into the dustpan.",
+                "task_banner": "/api/v2/banner/sweep_the_trash.jpg",
+                "task_tag": [
+                    "bimanual",
+                    "manipulation",
+                    "dual-arm",
+                    "DOS-W1"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points: Pick up the broom successfully.\n2.0 points: Pick up the dustpan successfully.\n4.0 points: Sweep all trash into the dustpan.\n1.0 points: Place the broom back into the holder.\n1.0 points: Place the dustpan back on the table.",
+                "task_episode_number": 1675
+            },
+            {
+                "task_name": "tidy_up_the_makeup_table",
+                "task_description": "Put items such as makeup brushes, eyeliner, and mascara into the makeup cup, and place items such as lotion and sunscreen into the makeup bag.",
+                "prompt": "Sort and organize the cosmetics on the table.",
+                "task_banner": "/api/v2/banner/tidy_up_the_makeup_table.jpg",
+                "task_tag": [
+                    "classification",
+                    "repeated",
+                    "dual-arm",
+                    "DOS-W1"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points x 5: Successfully pick up one cosmetic item and place it into the correct organizer.",
+                "task_episode_number": 1303
+            },
+            {
+                "task_name": "tie_a_knot",
+                "task_description": "Grasp one end of the string with each hand, cross them, tie a square knot, and tighten it.",
+                "prompt": "Tie a knot with the string on the table.",
+                "task_banner": "/api/v2/banner/tie_a_knot.jpg",
+                "task_tag": [
+                    "softbody",
+                    "bimanual",
+                    "manipulation",
+                    "dual-arm",
+                    "DOS-W1"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n3.0 points: Grasp the two ends of the string and cross them into a loop.\n3.0 points: Form the knot correctly.\n3.0 points: Tighten the knot.\n1.0 points: Place the tied string back on the table.",
+                "task_episode_number": 1197
+            },
+            {
+                "task_name": "turn_on_the_light_switch",
+                "task_description": "Turn on the desk lamp.",
+                "prompt": "Turn on the lamp.",
+                "task_banner": "/api/v2/banner/turn_on_the_light_switch.jpg",
+                "task_tag": [
+                    "precise3d",
+                    "manipulation",
+                    "single-arm",
+                    "ARX5"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n5.0 points: Position the gripper next to the switch button.\n5.0 points: Press the switch to turn on the lamp.",
+                "task_episode_number": 1001
+            },
+            {
+                "task_name": "untie_the_shoelaces",
+                "task_description": "Remove the shoelace from the shoe and place it on the table.",
+                "prompt": "Remove the laces from the shoes, then place them on the table.",
+                "task_banner": "/api/v2/banner/untie_the_shoelaces.jpg",
+                "task_tag": [
+                    "softbody",
+                    "bimanual",
+                    "manipulation",
+                    "precise3d",
+                    "dual-arm",
+                    "DOS-W1"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points: Grasp and stabilize the shoe.\n6.0 points: Remove the entire shoelace from the shoe.\n2.0 points: Place the shoelace and the shoe back on the table.",
+                "task_episode_number": 1079
+            },
+            {
+                "task_name": "water_the_flowers",
+                "task_description": "Pick up the watering can and water the potted plant.",
+                "prompt": "Water the potted plants.",
+                "task_banner": "/api/v2/banner/water_the_flowers.jpg",
+                "task_tag": [
+                    "temporal",
+                    "single-arm",
+                    "ARX5"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n4.0 points: Grasp the handle of the watering can accurately.\n5.0 points: Align the spout with the flowerpot and water the plant.\n1.0 points: Return the watering can to its original position.",
+                "task_episode_number": 1006
+            },
+            {
+                "task_name": "wipe_the_blackboard",
+                "task_description": "Hold the blackboard steady with one gripper and use the eraser with the other to wipe the writing clean.",
+                "prompt": "Wipe the blackboard clean.",
+                "task_banner": "/api/v2/banner/wipe_the_blackboard.jpg",
+                "task_tag": [
+                    "bimanual",
+                    "manipulation",
+                    "dual-arm",
+                    "ALOHA"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points: Hold the blackboard steady with one gripper.\n2.0 points: Pick up the eraser with the other gripper.\n4.0 points: Wipe the writing off the blackboard.\n2.0 points: Return the eraser to its original position.",
+                "task_episode_number": 1021
+            },
+            {
+                "task_name": "wipe_the_table",
+                "task_description": "Pick up the rag and wipe the stain off the table.",
+                "prompt": "Wipe the stains off the desk with a rag.",
+                "task_banner": "/api/v2/banner/wipe_the_table.jpg",
+                "task_tag": [
+                    "softbody",
+                    "single-arm",
+                    "ARX5"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n3.0 points: Pick up the rag.\n2.0 points: Move the rag to the stained area.\n4.0 points: Wipe the stain clean.\n1.0 points: Return the rag to the tray.",
+                "task_episode_number": 1076
+            },
+            {
+                "task_name": "wrap_with_a_soft_cloth",
+                "task_description": "Place the object on the cloth and wrap it from all four sides.",
+                "prompt": "Bundle the objects together using the cloth on the table.",
+                "task_banner": "/api/v2/banner/wrap_with_a_soft_cloth.jpg",
+                "task_tag": [
+                    "softbody",
+                    "bimanual",
+                    "manipulation",
+                    "dual-arm",
+                    "ALOHA"
+                ],
+                "task_training_data": "https://huggingface.co/datasets/RoboChallenge/Table30v2/tree/main",
+                "last_update_time": "2026-05-28",
+                "scoring": "\n2.0 points: Pick up one object and place it at the center of the cloth.\n2.0 points: Fold the two lower corners of the cloth upward.\n2.0 points: Fold the two upper corners of the cloth downward.\n2.0 points: Fold the left side of the cloth to the right.\n2.0 points: Fold the right side of the cloth to the left.",
+                "task_episode_number": 1064
+            }
+        ]
+    }
+]

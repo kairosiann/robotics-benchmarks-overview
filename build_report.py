@@ -2,6 +2,7 @@ import base64
 import json
 import mimetypes
 import re
+from html import escape
 from pathlib import Path
 
 
@@ -16,6 +17,9 @@ def embedded_json(value):
 def build():
     tasks = json.loads((ROOT / "tasks.json").read_text(encoding="utf-8"))
     concepts = json.loads((ROOT / "task_concepts.json").read_text(encoding="utf-8"))
+    coverage_path = ROOT / "coverage.json"
+    coverage = json.loads(coverage_path.read_text(encoding="utf-8")) if coverage_path.exists() else {}
+    families = {task["family"] for task in tasks if task.get("family")}
     images = {}
     for path in (ROOT / "media").iterdir():
         if path.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}:
@@ -30,6 +34,9 @@ def build():
 
     values = {
         "TASKCOUNT": f"{len(tasks):,}",
+        "FAMILYCOUNT": str(len(families)),
+        "CATALOG_DATE": escape(str(coverage.get("updated_at", "November 10, 2026"))),
+        "COVERAGEDATA": embedded_json(coverage),
         "SNAPSHOTS": " · ".join(revisions),
         "TASKDATA": embedded_json(tasks),
         "IMAGEDATA": embedded_json({key: value for key, value in images.items() if key.startswith("DC-")}),

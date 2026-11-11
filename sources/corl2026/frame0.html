@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>body,html,iframe{margin:0;padding:0;height:100%;width:100%;overflow:hidden}.forceIosScrolling{overflow:scroll;-webkit-overflow-scrolling:touch}</style>
+</head>
+
+<body>
+<iframe id='userHtmlFrame' frameborder='0' scrolling='yes'>
+</iframe>
+
+<script>
+  const MessageAction = {
+    BACKGROUND_COLOR: 'ATARI_CODE_EMBED_BACKGROUND_COLOR',
+    GENAI_TEXT_EDIT: 'ATARI_GENAI_TEXT_EDIT',
+    GENAI_TEXT_FORMAT: 'ATARI_GENAI_TEXT_FORMAT',
+    IMAGE_CLICK: 'ATARI_CODE_EMBED_IMAGE_CLICK',
+    JS_CRASH: 'onJsCrash',
+    REDO: 'ATARI_CODE_EMBED_REDO',
+    RESIZE: 'ATARI_CODE_EMBED_RESIZE',
+    UNDO: 'ATARI_CODE_EMBED_UNDO'
+  };
+
+  const LIQUID_APP_CSP_META =
+      '<meta http-equiv="Content-Security-Policy" content="' +
+      "default-src 'none'; " +
+      "connect-src 'none'; " +
+      "form-action 'none'; " +
+      "object-src 'none'; " +
+      "frame-src 'none'; " +
+      'img-src data: blob: https://www.gstatic.com; ' +
+      "script-src 'self' " + window.location.origin +
+      " 'unsafe-inline' https://www.gstatic.com; " +
+      "style-src 'self' " + window.location.origin +
+      " 'unsafe-inline' https://www.gstatic.com " +
+      'https://fonts.googleapis.com; ' +
+      'font-src data: https://fonts.gstatic.com https://www.gstatic.com">';
+
+  let enableErrorReporting = false;
+
+  function handleError(event) {
+    if (enableErrorReporting && window.parent && window.parent.postMessage) {
+      if (event instanceof ErrorEvent || event.message) {
+        window.parent.postMessage({
+          type: MessageAction.JS_CRASH,
+          message: event.message || 'Unknown JS Error',
+          stack: event.error ? event.error.stack : undefined
+        }, '*');
+      } else if (event.target && (event.target.src || event.target.href)) {
+        var failedElement = event.target;
+        var resourceUrl = failedElement.src || failedElement.href;
+        var tagName = failedElement.tagName ? failedElement.tagName.toLowerCase() : 'element';
+        // Suppress placeholder and canvas image load failures from triggering
+        // crash reporting so that unresolved or loading images do not crash the embed.
+        if (tagName === 'img' && (resourceUrl.startsWith('canvas:') || failedElement.hasAttribute('data-ph'))) {
+          return;
+        }
+        window.parent.postMessage({
+          type: MessageAction.JS_CRASH,
+          message: 'Resource load failed for <' + tagName + '>: ' + resourceUrl,
+          stack: undefined
+        }, '*');
+      }
+    }
+  }
+
+  function handleUnhandledRejection(event) {
+    if (enableErrorReporting && window.parent && window.parent.postMessage) {
+      window.parent.postMessage({
+        type: MessageAction.JS_CRASH,
+        message: event.reason ? event.reason.message || String(event.reason) : 'Unhandled Promise Rejection',
+        stack: event.reason ? event.reason.stack : undefined
+      }, '*');
+    }
+  }
+
+  // The app's frame gets the same listeners in updateUserHtmlFrame.
+  window.addEventListener('error', handleError, true);
+  window.addEventListener('unhandledrejection', handleUnhandledRejection);
+  let policy;
+  if (window.trustedTypes && window.trustedTypes.createPolicy) {
+    policy = window.trustedTypes.createPolicy('atari-gapi-loader', {
+      createScriptURL: (url) => {
+        if (url === 'https://apis.google.com/js/api.js?checkCookie=1') {
+          return url;
+        }
+        throw new Error('Attempted to load unexpected script URL');
+      },
+      createHTML: (html) => html
+    });
+  }
+
+  function loadGapi() {
+    var loaderScript = document.createElement('script');
+    var url = 'https://apis.google.com/js/api.js?checkCookie=1';
+    if (policy) {
+      loaderScript.src = policy.createScriptURL(url);
+    } else {
+      loaderScript.setAttribute('src', url);
+    }
+    loaderScript.onload = function() {
+      this.onload = function() {};
+      loadGapiClient();
+    };
+    loaderScript.onreadystatechange = function() {
+      if (this.readyState === 'complete') {
+        this.onload();
+      }
+    };
+    (document.head || document.body || document.documentElement).appendChild(loaderScript);
+  }
+
+  function updateUserHtmlFrame(userHtml, enableInteraction, forceIosScrolling, enableHtmlSitesGenAi, isLiquidArtifact, inEditor, enableLiquidAppsVerticalScrolling = false, isFullPageEmbed = false, isInteractiveFullPageEmbed = false, textEditLabels = null, enableLiquidAppsObjectSegmentation = false, enableLiquidAppsEmbeddedPix = false) {
+    const enableHeightSync = !!enableLiquidAppsVerticalScrolling && (!!isLiquidArtifact || !!isInteractiveFullPageEmbed);
+    enableErrorReporting = !!isLiquidArtifact;
+    const enableInlineTextEdit = !!(enableHtmlSitesGenAi && (isLiquidArtifact || isInteractiveFullPageEmbed) && inEditor);
+    const enableObjectSegmentation = enableInlineTextEdit && !!enableLiquidAppsObjectSegmentation;
+    const enableEmbeddedPix = !!(enableLiquidAppsEmbeddedPix && inEditor);
+    if (enableInlineTextEdit) {
+      window.__atariSourcePayloadDom = new DOMParser().parseFromString(policy ? policy.createHTML(userHtml) : userHtml, 'text/html');
+    }
+    let appHtml = userHtml;
+    if (enableObjectSegmentation) {
+      markSelectableElements(window.__atariSourcePayloadDom);
+      appHtml = window.__atariSourcePayloadDom.documentElement.outerHTML;
+    }
+    var frame = document.getElementById('userHtmlFrame');
+    if (enableInteraction) {
+      if (enableHeightSync) {
+        // The frame grows to fit its content, so only horizontal overflow can
+        // scroll. This must take precedence over forceIosScrolling: on iOS a
+        // scrollable frame captures touch scrolls even when it has nothing to
+        // scroll, which stops the page around the embed from scrolling.
+        frame.style.overflowX = 'auto';
+        frame.style.overflowY = 'hidden';
+        frame.setAttribute('scrolling', 'no');
+      } else if (forceIosScrolling) {
+        var iframeParent = frame.parentElement;
+        iframeParent.classList.add('forceIosScrolling');
+      } else {
+        frame.style.overflow = 'auto';
+      }
+    } else {
+      // TODO(tianm): Figure out a better way to do this, esp if the scrolling attribute stops being
+      // supported in browsers. Even though the scrolling attribute is deprecated, we need it for
+      // the innermost frame because we can't set "overflow:hidden" on its body and html without
+      // manually inserting a style tag into the frame, which we want to avoid (because it could
+      // interfere/conflict with the user code).
+      frame.setAttribute('scrolling', 'no');
+      frame.style.pointerEvents = 'none';
+    }
+    clearCookies();
+    clearStorage();
+    const oldSegmentation = frame.contentWindow.__atariObjectSegmentation;
+    if (oldSegmentation) {
+      oldSegmentation.destroy();
+      frame.contentWindow.__atariObjectSegmentation = null;
+    }
+    frame.contentWindow.document.open();
+    // The app runs in its own frame, so its errors don't reach the listeners
+    // on this frame. document.open() removes all listeners from the app's
+    // frame, so they are added after it.
+    if (enableErrorReporting) {
+      frame.contentWindow.addEventListener('error', handleError, true);
+      frame.contentWindow.addEventListener('unhandledrejection', handleUnhandledRejection);
+    }
+    const hoverClass = 'atari-ai-hover-' + Math.random().toString(36).substring(2, 9);
+    const selectedClass = 'atari-ai-selected-' + Math.random().toString(36).substring(2, 9);
+    const bootstrapStyle = isLiquidArtifact ? '<link rel="stylesheet" href="bootstrap.min.css">' : '';
+    const prosemirrorBundle = enableInlineTextEdit ? '<script src="prosemirror_bundle.js"><\/script>' : '';
+
+    const scrollRevealShim = enableHeightSync ? `
+      <style>
+        .reveal-node, .reveal, .fade-in, [data-reveal] {
+          opacity: 1 !important;
+          transform: none !important;
+          visibility: visible !important;
+        }
+      </style>
+      <script>
+        (function() {
+          if (typeof IntersectionObserver !== 'undefined') {
+            var OrigObserver = window.IntersectionObserver;
+            window.IntersectionObserver = function(callback, options) {
+              return new OrigObserver(function(entries, observer) {
+                var modifiedEntries = entries.map(function(entry) {
+                  if (!entry.isIntersecting) {
+                    try {
+                      return new Proxy(entry, {
+                        get: function(target, prop) {
+                          if (prop === 'isIntersecting') return true;
+                          if (prop === 'intersectionRatio') return 1;
+                          return target[prop];
+                        }
+                      });
+                    } catch (e) {}
+                  }
+                  return entry;
+                });
+                callback(modifiedEntries, observer);
+              }, options);
+            };
+            window.IntersectionObserver.prototype = OrigObserver.prototype;
+          }
+        })();
+      <\/script>
+    ` : '';
+
+    const textEditorPayload = enableInlineTextEdit ? `
+      <style>
+        .${hoverClass} {
+          cursor: pointer !important;
+        }
+        .${selectedClass} {
+          cursor: text !important;
+        }
+        .ProseMirror { outline: none !important; white-space: pre-wrap; cursor: text !important; }
+        .ProseMirror p { margin: 0; padding: 0; display: inline; }
+        .ProseMirror > p:only-child {
+          font-family: inherit; font-size: inherit; font-weight: inherit;
+          font-style: inherit; line-height: inherit;
+          color: inherit; text-shadow: inherit;
+          letter-spacing: inherit; word-spacing: inherit;
+          text-transform: inherit; text-align: inherit; text-indent: inherit;
+        }
+        .ProseMirror:focus { outline: none !important; }
+        .editable-text.atari-pm-edited, .atari-pm-edited { white-space: pre-wrap; }
+      </style>
+      <script>
+        (function() {
+          var waitForProsemirrorToInitialize = function() {
+            if (window.ProseMirror && window.ProseMirror.initLiquidAppsTextEditor) {
+              window.ProseMirror.initLiquidAppsTextEditor({
+                hoverClass: '${hoverClass}',
+                selectedClass: '${selectedClass}',
+                postMessageType: '${MessageAction.GENAI_TEXT_EDIT}',
+                labels: ${JSON.stringify(textEditLabels).replace(/</g, '\\u003c')}
+              });
+              ${enableObjectSegmentation ? `
+              if (window.__atariObjectSegmentation) {
+                window.__atariObjectSegmentation.destroy();
+              }
+              window.__atariObjectSegmentation =
+                  window.ProseMirror.initObjectSegmentation();
+              ` : ''}
+            } else {
+              setTimeout(waitForProsemirrorToInitialize, 10);
+            }
+          };
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', waitForProsemirrorToInitialize);
+          } else {
+            waitForProsemirrorToInitialize();
+          }
+        })();
+      <\/script>
+    ` : '';
+    // In-page hash link interceptor:
+    // In code embeds, <base target="_blank"> is injected so external links open
+    // in a new tab. However, this causes in-page anchor links (<a href="#...">)
+    // to also default to target="_blank", opening the sandboxed harness
+    // (inner-frame-minified.html#...) in a blank new tab.
+    //
+    // This script intercepts clicks in the capturing phase (useCapture: true)
+    // before the browser triggers default navigation, preventing the new tab
+    // and scrolling smoothly to the target element within the iframe.
+    const hashLinkInterceptor = `
+      <script>
+        (function() {
+          // Listen during capturing phase to intercept before <base target="_blank"> takes effect.
+          document.addEventListener('click', function(e) {
+            // Find the nearest ancestor anchor (handles nested icons, spans, svgs).
+            var el = e.target;
+            var anchor = null;
+            while (el && el !== document) {
+              if (el.tagName && el.tagName.toLowerCase() === 'a') {
+                anchor = el;
+                break;
+              }
+              el = el.parentElement;
+            }
+            if (!anchor) return;
+
+            // Only intercept relative in-page fragment links, not external links with hashes.
+            var href = anchor.getAttribute('href');
+            if (!href) return;
+            href = href.trim();
+            if (!href.startsWith('#')) return;
+
+            // Prevent default <base target="_blank"> navigation to a new blank tab.
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Handle empty anchor or top anchor.
+            if (href === '#' || href === '#top') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              return;
+            }
+
+            // Resolve target element by id, falling back to legacy name attribute.
+            var targetId = href.slice(1);
+            try {
+              targetId = decodeURIComponent(targetId);
+            } catch (err) {}
+
+            var targetEl = document.getElementById(targetId);
+            if (!targetEl) {
+              try {
+                var escaped = window.CSS && CSS.escape ? CSS.escape(targetId) : targetId.replace(/["\\\\]/g, '\\\\$&');
+                targetEl = document.querySelector('[name="' + escaped + '"]');
+              } catch (err) {}
+            }
+
+            // Smoothly scroll to the target within the embed and update URL hash history.
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              if (window.history && window.history.pushState) {
+                window.history.pushState(null, '', href);
+              }
+            }
+          }, true); // useCapture: true is critical to preempt <base target="_blank">
+        })();
+      <\/script>
+    `;
+    const heightSyncPayload = enableHeightSync ? `
+      <style>
+        html, body {
+          overflow-x: auto !important;
+          overflow-y: visible !important;
+          height: auto !important;
+          min-height: 0 !important;
+          max-height: none !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        body > * {
+          min-height: auto !important;
+        }
+        [style*="overflow-y: scroll"],
+        [style*="overflow-y: auto"],
+        [style*="overflow-y:scroll"],
+        [style*="overflow-y:auto"],
+        [style*="overflow: scroll"],
+        [style*="overflow: auto"],
+        [style*="overflow:scroll"],
+        [style*="overflow:auto"],
+        .overflow-y-auto,
+        .overflow-y-scroll,
+        .overflow-auto,
+        .overflow-scroll {
+          overflow-y: visible !important;
+          height: auto !important;
+          max-height: none !important;
+        }
+        [style*="100vh"],
+        [style*="min-height: 100vh"],
+        [style*="max-height: 100vh"],
+        .h-screen,
+        .min-h-screen,
+        .max-h-screen {
+          height: auto !important;
+          min-height: 0 !important;
+          max-height: none !important;
+        }
+      </style>
+      <script>
+        (function() {
+          var scrollContainers =
+              typeof WeakSet !== 'undefined' ? new WeakSet() : null;
+          var resizedClippedAncestors = [];
+
+          function setImportantStyle(el, prop, value) {
+            if (!el.style) return;
+            if (el.style.getPropertyValue(prop) !== value ||
+                el.style.getPropertyPriority(prop) !== 'important') {
+              el.style.setProperty(prop, value, 'important');
+            }
+          }
+
+          function isElementVisible(el) {
+            var currentElement = el;
+            while (currentElement && currentElement.nodeType === 1) {
+              var style = window.getComputedStyle(currentElement);
+              if (!style || style.display === 'none' ||
+                  style.visibility === 'hidden' ||
+                  style.visibility === 'collapse' ||
+                  (parseFloat(style.opacity) === 0 &&
+                   style.pointerEvents === 'none')) {
+                return false;
+              }
+              currentElement = currentElement.parentElement;
+            }
+            return true;
+          }
+
+          function normalizeInnerContainers() {
+            try {
+              var all = document.querySelectorAll('*');
+              var scrollContainerList = [];
+              for (var i = 0; i < all.length; i++) {
+                var el = all[i];
+                if (el === document.body || el === document.documentElement ||
+                    el.tagName === 'SCRIPT' || el.tagName === 'STYLE' ||
+                    el.tagName === 'LINK') {
+                  continue;
+                }
+                var computedStyle = window.getComputedStyle(el);
+                if (!computedStyle) continue;
+                var isScrollContainer =
+                    computedStyle.overflowY === 'auto' ||
+                    computedStyle.overflowY === 'scroll' ||
+                    (scrollContainers && scrollContainers.has(el));
+                if (isScrollContainer) {
+                  if (scrollContainers) scrollContainers.add(el);
+                  if (isElementVisible(el)) {
+                    scrollContainerList.push(el);
+                    setImportantStyle(el, 'overflow-y', 'visible');
+                    setImportantStyle(el, 'height', 'auto');
+                    setImportantStyle(el, 'max-height', 'none');
+                    // Release bottom and flex-grow constraints so that an inner
+                    // scroll container (such as a slide or tab panel with
+                    // position: absolute; inset: 0 or flex: 1) sizes to its own
+                    // content instead of stretching to its parent's height.
+                    if (computedStyle.position === 'absolute') {
+                      setImportantStyle(el, 'bottom', 'auto');
+                    }
+                    if ((computedStyle.flexGrow !== '0' &&
+                         computedStyle.flexGrow !== '') ||
+                        (computedStyle.flexBasis !== 'auto' &&
+                         computedStyle.flexBasis !== '')) {
+                      setImportantStyle(el, 'flex-grow', '0');
+                      setImportantStyle(el, 'flex-shrink', '0');
+                      setImportantStyle(el, 'flex-basis', 'auto');
+                    }
+                  } else {
+                    setImportantStyle(el, 'overflow-y', 'hidden');
+                    setImportantStyle(el, 'max-height', '0px');
+                  }
+                }
+                if (el !== document.body && el !== document.documentElement) {
+                  if (el.style && (el.style.height === '100vh' || el.style.height === '100%')) {
+                    setImportantStyle(el, 'height', 'auto');
+                  }
+                  if (el.style && (el.style.minHeight === '100vh' || el.style.minHeight === '100%')) {
+                    setImportantStyle(el, 'min-height', '0');
+                  }
+                }
+              }
+
+              // When visible inner scroll containers (such as active tab or
+              // slide panels) are positioned inside a clipped ancestor element
+              // (with overflow: hidden), size that ancestor to fit the visible
+              // scroll containers so each tab/slide gets its own content height
+              // without clipping or leaving empty space.
+              var clippedAncestorEntries = [];
+              for (var s = 0; s < scrollContainerList.length; s++) {
+                var scroller = scrollContainerList[s];
+                var scrollerStyle = window.getComputedStyle(scroller);
+                if (!scrollerStyle || scrollerStyle.position === 'fixed') continue;
+                var hasAbsolute = scrollerStyle.position === 'absolute';
+                var bottomSpacing = 0;
+                var clippedAncestor = null;
+                var clippedAncestorBottomSpacing = 0;
+                var aborted = false;
+                var ancestor = scroller.parentElement;
+                while (ancestor && ancestor !== document.body &&
+                       ancestor !== document.documentElement) {
+                  var ancestorStyle = window.getComputedStyle(ancestor);
+                  if (!ancestorStyle || ancestorStyle.position === 'fixed') {
+                    aborted = true;
+                    break;
+                  }
+                  bottomSpacing += (parseFloat(ancestorStyle.paddingBottom) || 0) +
+                      (parseFloat(ancestorStyle.borderBottomWidth) || 0) +
+                      (parseFloat(ancestorStyle.marginBottom) || 0);
+                  if (ancestorStyle.position === 'absolute') {
+                    hasAbsolute = true;
+                    bottomSpacing += (parseFloat(ancestorStyle.bottom) || 0);
+                  }
+                  if (ancestorStyle.overflowY === 'hidden' ||
+                      ancestorStyle.overflowY === 'clip') {
+                    clippedAncestor = ancestor;
+                    clippedAncestorBottomSpacing =
+                        bottomSpacing - (parseFloat(ancestorStyle.marginBottom) || 0);
+                  }
+                  ancestor = ancestor.parentElement;
+                }
+                if (aborted || !hasAbsolute || !clippedAncestor) continue;
+                var ancestorRect = clippedAncestor.getBoundingClientRect();
+                var scrollerRect = scroller.getBoundingClientRect();
+                var neededHeight = Math.ceil(
+                    Math.max(0, scrollerRect.top - ancestorRect.top) +
+                    scrollerRect.height +
+                    Math.max(0, clippedAncestorBottomSpacing));
+                var foundEntry = null;
+                for (var j = 0; j < clippedAncestorEntries.length; j++) {
+                  if (clippedAncestorEntries[j].element === clippedAncestor) {
+                    foundEntry = clippedAncestorEntries[j];
+                    break;
+                  }
+                }
+                if (foundEntry) {
+                  if (neededHeight > foundEntry.height) {
+                    foundEntry.height = neededHeight;
+                  }
+                } else {
+                  clippedAncestorEntries.push({
+                    element: clippedAncestor,
+                    height: neededHeight,
+                  });
+                }
+              }
+
+              var nextResizedAncestors = [];
+              for (var n = 0; n < clippedAncestorEntries.length; n++) {
+                var entry = clippedAncestorEntries[n];
+                if (entry.height > 0) {
+                  setImportantStyle(entry.element, 'height', entry.height + 'px');
+                  setImportantStyle(entry.element, 'min-height', '0');
+                  nextResizedAncestors.push(entry.element);
+                }
+              }
+              for (var p = 0; p < resizedClippedAncestors.length; p++) {
+                var previousAncestor = resizedClippedAncestors[p];
+                if (nextResizedAncestors.indexOf(previousAncestor) === -1 &&
+                    previousAncestor.style) {
+                  previousAncestor.style.removeProperty('height');
+                  previousAncestor.style.removeProperty('min-height');
+                }
+              }
+              resizedClippedAncestors = nextResizedAncestors;
+            } catch (e) {}
+          }
+
+          function syncBackground() {
+            try {
+              if (document.body) {
+                var bodyBg = window.getComputedStyle(document.body).backgroundColor;
+                if (bodyBg && bodyBg !== 'rgba(0, 0, 0, 0)' && bodyBg !== 'transparent') {
+                  document.documentElement.style.backgroundColor = bodyBg;
+                } else {
+                  for (var i = 0; i < document.body.children.length; i++) {
+                    var child = document.body.children[i];
+                    if (child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE' && child.tagName !== 'LINK') {
+                      var childBg = window.getComputedStyle(child).backgroundColor;
+                      if (childBg && childBg !== 'rgba(0, 0, 0, 0)' && childBg !== 'transparent') {
+                        document.body.style.backgroundColor = childBg;
+                        document.documentElement.style.backgroundColor = childBg;
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+            } catch (e) {}
+          }
+
+          // An element sized in viewport units is as tall as the iframe, and
+          // the iframe is as tall as its content, so the iframe could never
+          // get smaller, or would keep growing. This removes such heights from
+          // the app's own CSS, whichever framework or style sheet they come
+          // from. Fixed elements don't make the page taller, so they keep
+          // their heights.
+          var VIEWPORT_HEIGHT_PATTERN = /[0-9.][sld]?(?:v[hb]|vmax)(?![a-z])/i;
+          var HEIGHT_PROPERTIES = ['height', 'min-height', 'max-height',
+              'block-size', 'min-block-size', 'max-block-size'];
+          // The number of rules that each style sheet had when it was scanned.
+          var scannedRuleCounts =
+              typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+
+          function removeViewportHeights(style) {
+            if (style.getPropertyValue('position') === 'fixed') return;
+            for (var i = 0; i < HEIGHT_PROPERTIES.length; i++) {
+              var value = style.getPropertyValue(HEIGHT_PROPERTIES[i]);
+              if (value && VIEWPORT_HEIGHT_PATTERN.test(value)) {
+                style.removeProperty(HEIGHT_PROPERTIES[i]);
+              }
+            }
+          }
+
+          function removeViewportHeightsFromRules(rules) {
+            for (var i = 0; i < rules.length; i++) {
+              var rule = rules[i];
+              if (rule.style) removeViewportHeights(rule.style);
+              // A style sheet included with @import.
+              if (rule.styleSheet) removeViewportHeightsFromSheet(rule.styleSheet);
+              // Rules nested in @media, @supports, @layer and so on.
+              if (rule.cssRules) removeViewportHeightsFromRules(rule.cssRules);
+            }
+          }
+
+          function removeViewportHeightsFromSheet(sheet) {
+            var rules = null;
+            try {
+              rules = sheet.cssRules;
+            } catch (e) {
+              // The rules of a style sheet loaded from another origin without
+              // CORS can't be read.
+            }
+            if (!rules) return;
+            if (scannedRuleCounts) {
+              if (scannedRuleCounts.get(sheet) === rules.length) return;
+              scannedRuleCounts.set(sheet, rules.length);
+            }
+            removeViewportHeightsFromRules(rules);
+          }
+
+          function removeAllViewportHeights() {
+            try {
+              var sheets = document.styleSheets;
+              for (var i = 0; i < sheets.length; i++) {
+                removeViewportHeightsFromSheet(sheets[i]);
+              }
+              var adoptedSheets = document.adoptedStyleSheets || [];
+              for (var j = 0; j < adoptedSheets.length; j++) {
+                removeViewportHeightsFromSheet(adoptedSheets[j]);
+              }
+              var styledElements = document.querySelectorAll('[style]');
+              for (var k = 0; k < styledElements.length; k++) {
+                if (styledElements[k].style) {
+                  removeViewportHeights(styledElements[k].style);
+                }
+              }
+            } catch (e) {}
+          }
+
+          // Returns the height of the content. Unlike the html/body scroll
+          // heights, this does not depend on the iframe's own viewport height,
+          // so it can get smaller when the content shrinks.
+          function measureContentHeight(body, docEl) {
+            // Height-synced apps render in standards mode, where html is
+            // exactly as tall as the body's content, including margins that
+            // collapse through the bottom of the body's children.
+            var height = docEl.getBoundingClientRect().height;
+            var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop || 0;
+            var maxChildBottom = 0;
+            for (var i = 0; i < body.children.length; i++) {
+              var child = body.children[i];
+              if (child.nodeType !== 1 || child.tagName === 'SCRIPT' || child.tagName === 'STYLE' || child.tagName === 'LINK') {
+                continue;
+              }
+              var style = window.getComputedStyle ? window.getComputedStyle(child) : null;
+              if (style && (style.position === 'fixed' || style.display === 'none' ||
+                  style.visibility === 'hidden' || style.visibility === 'collapse')) {
+                continue;
+              }
+              var rect = child.getBoundingClientRect();
+              var childHeight = rect.height;
+              // Content that overflows an absolutely positioned child makes
+              // the page taller, unless the child clips or scrolls it.
+              // scrollHeight includes it either way. The body clips content
+              // that overflows its other children (overflow-x: auto makes the
+              // body a scroll container), so html's height already covers
+              // everything that those children show.
+              if (style && style.position === 'absolute' && style.overflowY === 'visible') {
+                childHeight = Math.max(rect.height, child.scrollHeight || 0);
+              }
+              var marginBottom = style ? (parseFloat(style.marginBottom) || 0) : 0;
+              var bottom = scrollTop + rect.top + childHeight + marginBottom;
+              if (bottom > maxChildBottom) maxChildBottom = bottom;
+            }
+            if (maxChildBottom > 0) {
+              // Include the body's own bottom edges. Overestimating by a
+              // collapsed margin is harmless.
+              var bodyStyle = window.getComputedStyle ? window.getComputedStyle(body) : null;
+              if (bodyStyle) {
+                maxChildBottom += (parseFloat(bodyStyle.paddingBottom) || 0) +
+                    (parseFloat(bodyStyle.borderBottomWidth) || 0) +
+                    (parseFloat(bodyStyle.marginBottom) || 0);
+              }
+            }
+            return Math.ceil(Math.max(height, maxChildBottom));
+          }
+
+          function reportHeight() {
+            var body = document.body;
+            var docEl = document.documentElement;
+            if (!body || !docEl) return;
+            removeAllViewportHeights();
+            normalizeInnerContainers();
+            syncBackground();
+            var contentHeight = measureContentHeight(body, docEl);
+            var scroller = document.scrollingElement || docEl;
+            var scrollHeight = Math.ceil(scroller.scrollHeight || 0);
+            for (var r = 0; r < resizedClippedAncestors.length; r++) {
+              setImportantStyle(
+                  resizedClippedAncestors[r], 'min-height', '100vh');
+            }
+            if (mutationObserver) mutationObserver.takeRecords();
+            var viewportHeight = Math.ceil(window.innerHeight || docEl.clientHeight || 0);
+            var height;
+            if (scrollHeight > viewportHeight + 1) {
+              // The content overflows the iframe, so the embed needs to grow.
+              height = Math.max(scrollHeight, contentHeight);
+              if (viewportHeight === shrunkToHeight) {
+                // The embed just shrank to a height that the content doesn't
+                // fit in, so part of the content wasn't measured.
+                overflowedHeight = viewportHeight;
+              }
+            } else {
+              if (viewportHeight === shrunkToHeight ||
+                  (shrunkToHeight > 0 && viewportHeight < shrunkFromHeight)) {
+                // The content fits at the height the embed shrank to (or at the
+                // minimum height the parent page clamped it to).
+                shrunkToHeight = 0;
+                shrunkFromHeight = 0;
+              }
+              // The html/body scroll heights never drop below the iframe's
+              // viewport (which is the last reported height), so only the
+              // content height can make the embed smaller.
+              height = contentHeight || scrollHeight;
+              // Shrinking to a height that the content overflowed would make
+              // the embed grow and shrink forever.
+              if (height === overflowedHeight) return;
+            }
+            if (height > 0 && height !== lastReportedHeight) {
+              if (height < viewportHeight) {
+                shrunkToHeight = height;
+                shrunkFromHeight = viewportHeight;
+              } else {
+                shrunkToHeight = 0;
+                shrunkFromHeight = 0;
+              }
+              lastReportedHeight = height;
+              window.parent.postMessage({
+                type: '${MessageAction.RESIZE}',
+                height: height
+              }, '*');
+            }
+          }
+
+          // Coalesce reports to at most once per frame. reportHeight itself
+          // writes inline styles, which would otherwise re-trigger the
+          // MutationObserver synchronously.
+          var lastReportedHeight = 0;
+          // The last height reported to shrink the embed, and the last height
+          // that the content didn't fit in after the embed shrank to it.
+          var shrunkToHeight = 0;
+          var shrunkFromHeight = 0;
+          var overflowedHeight = 0;
+          var reportScheduled = false;
+          function resetOverflowTracking() {
+            shrunkToHeight = 0;
+            shrunkFromHeight = 0;
+            overflowedHeight = 0;
+          }
+          window.addEventListener('pointerdown', resetOverflowTracking, true);
+          window.addEventListener('mousedown', resetOverflowTracking, true);
+          window.addEventListener('click', resetOverflowTracking, true);
+          window.addEventListener('keydown', resetOverflowTracking, true);
+          window.addEventListener('scroll', resetOverflowTracking, true);
+          function scheduleReportHeight() {
+            if (reportScheduled) return;
+            reportScheduled = true;
+            window.requestAnimationFrame(function() {
+              reportScheduled = false;
+              reportHeight();
+            });
+          }
+
+          function observeBodyChildren(resizeObserver) {
+            resizeObserver.observe(document.body);
+            for (var i = 0; i < document.body.children.length; i++) {
+              var child = document.body.children[i];
+              if (child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE') {
+                resizeObserver.observe(child);
+              }
+            }
+          }
+
+          if (typeof ResizeObserver !== 'undefined') {
+            var resizeObserver = new ResizeObserver(scheduleReportHeight);
+            if (document.documentElement) {
+              resizeObserver.observe(document.documentElement);
+            }
+            if (document.body) {
+              observeBodyChildren(resizeObserver);
+            } else {
+              document.addEventListener('DOMContentLoaded', function() {
+                if (document.body) {
+                  observeBodyChildren(resizeObserver);
+                }
+                scheduleReportHeight();
+              });
+            }
+          }
+
+          if (typeof MutationObserver !== 'undefined') {
+            var mutationObserver = new MutationObserver(scheduleReportHeight);
+            mutationObserver.observe(document.documentElement || document, {
+              childList: true,
+              subtree: true,
+              attributes: true,
+              characterData: true
+            });
+          }
+
+          if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(scheduleReportHeight);
+          }
+
+          window.addEventListener('load', scheduleReportHeight);
+          window.addEventListener('resize', scheduleReportHeight);
+          window.addEventListener('transitionend', scheduleReportHeight);
+          window.addEventListener('animationend', scheduleReportHeight);
+          if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            scheduleReportHeight();
+          } else {
+            document.addEventListener('DOMContentLoaded', scheduleReportHeight);
+          }
+        })();
+      <\/script>
+    ` : '';
+    // Tells the page around the embed which color fills the user page, so the
+    // page can paint the same color behind the iframe. When the page scrolls a
+    // tall cross-origin iframe, the browser may not have painted the newly
+    // visible part of the iframe yet, and that color shows instead of the
+    // page's own background. Only reads styles and never changes the user page.
+    const backgroundColorPayload = `
+      <script>
+        (function() {
+          // The root element's background fills the whole page. As in CSS,
+          // the body's background is used when the root element has none.
+          function getPageBackgroundColor() {
+            var docStyle = window.getComputedStyle(document.documentElement);
+            var color = docStyle.backgroundColor;
+            if ((color === 'rgba(0, 0, 0, 0)' || color === 'transparent') &&
+                docStyle.backgroundImage === 'none' && document.body) {
+              color = window.getComputedStyle(document.body).backgroundColor;
+            }
+            return color || '';
+          }
+
+          var lastReportedColor = '';
+          function reportBackgroundColor() {
+            try {
+              var color = getPageBackgroundColor();
+              if (color === lastReportedColor) return;
+              lastReportedColor = color;
+              window.parent.postMessage({
+                type: '${MessageAction.BACKGROUND_COLOR}',
+                backgroundColor: color
+              }, '*');
+            } catch (e) {}
+          }
+
+          // The page background usually changes through an attribute on html
+          // or body (for example a theme class), a style sheet in head, or the
+          // system color scheme.
+          if (typeof MutationObserver !== 'undefined') {
+            var observer = new MutationObserver(reportBackgroundColor);
+            observer.observe(document.documentElement, {attributes: true});
+            if (document.body) {
+              observer.observe(document.body, {attributes: true});
+            }
+            if (document.head) {
+              observer.observe(document.head, {
+                attributes: true,
+                childList: true,
+                subtree: true,
+                characterData: true
+              });
+            }
+          }
+          var colorSchemeQuery =
+              window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+          if (colorSchemeQuery && colorSchemeQuery.addEventListener) {
+            colorSchemeQuery.addEventListener('change', reportBackgroundColor);
+          }
+          window.addEventListener('load', reportBackgroundColor);
+          window.addEventListener('transitionend', reportBackgroundColor);
+          window.addEventListener('animationend', reportBackgroundColor);
+          reportBackgroundColor();
+        })();
+      <\/script>
+    `;
+    const embeddedPixPayload = enableEmbeddedPix ? `
+      <style>
+        .atari-embedded-pix-edit-btn {
+          align-items: center;
+          background: #fff;
+          border: 1px solid #dadce0;
+          border-radius: 18px;
+          box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+          box-sizing: border-box;
+          color: #1f1f1f;
+          cursor: pointer;
+          display: none;
+          font-family: 'Google Sans', Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+          font-size: 13px;
+          font-weight: 500;
+          gap: 6px;
+          line-height: 16px;
+          padding: 6px 12px;
+          position: absolute;
+          transition: background-color 0.15s ease, box-shadow 0.15s ease;
+          user-select: none;
+          z-index: 2147483647;
+        }
+        .atari-embedded-pix-edit-btn:hover {
+          background-color: #f1f3f4;
+          box-shadow: 0 2px 6px 2px rgba(60, 64, 67, 0.3);
+        }
+        .atari-embedded-pix-edit-btn:active {
+          background-color: #e8eaed;
+        }
+        .atari-embedded-pix-edit-btn svg {
+          fill: currentColor;
+          flex-shrink: 0;
+          height: 16px;
+          width: 16px;
+        }
+      </style>
+      <button type="button" class="atari-embedded-pix-edit-btn" data-atari-embedded-pix-btn="true" style="display: none;"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg><span>Edit</span></button>
+      <script>
+        (function() {
+          var editBtn = document.querySelector('.atari-embedded-pix-edit-btn');
+          if (!editBtn) return;
+
+          var currentImg = null;
+          var hideTimeout = null;
+
+          function isBase64Image(img) {
+            var src = (img.getAttribute('src') || img.src || '').trim().toLowerCase();
+            return src.startsWith('data:');
+          }
+
+          editBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!currentImg || isBase64Image(currentImg)) return;
+            var src = currentImg.getAttribute('src') || currentImg.src;
+            var placeholderKey = currentImg.getAttribute('data-ph') ||
+                                 currentImg.getAttribute('data-placeholder') ||
+                                 src;
+            window.parent.postMessage({
+              type: '${MessageAction.IMAGE_CLICK}',
+              src: src,
+              placeholderKey: placeholderKey
+            }, '*');
+          });
+
+          editBtn.addEventListener('mouseenter', function() {
+            if (hideTimeout) {
+              clearTimeout(hideTimeout);
+              hideTimeout = null;
+            }
+          });
+
+          editBtn.addEventListener('mouseleave', function(e) {
+            if (e.relatedTarget !== currentImg) {
+              scheduleHide();
+            }
+          });
+
+          function showButton(img) {
+            if (hideTimeout) {
+              clearTimeout(hideTimeout);
+              hideTimeout = null;
+            }
+            if (!img) return;
+            if (isBase64Image(img)) {
+              if (editBtn) {
+                editBtn.style.display = 'none';
+              }
+              currentImg = null;
+              return;
+            }
+            var width = img.offsetWidth || (img.getBoundingClientRect ? img.getBoundingClientRect().width : 0);
+            var height = img.offsetHeight || (img.getBoundingClientRect ? img.getBoundingClientRect().height : 0);
+            if ((width > 0 && width < 10) || (height > 0 && height < 10)) {
+              return;
+            }
+            currentImg = img;
+            var rect = img.getBoundingClientRect ? img.getBoundingClientRect() : {top: 0, left: 0};
+            var top = Math.max(0, (rect.top || 0) + (window.pageYOffset || document.documentElement.scrollTop || 0) + 8);
+            var left = Math.max(0, (rect.left || 0) + (window.pageXOffset || document.documentElement.scrollLeft || 0) + 8);
+            editBtn.style.top = top + 'px';
+            editBtn.style.left = left + 'px';
+            editBtn.style.display = 'inline-flex';
+          }
+
+          function scheduleHide() {
+            if (hideTimeout) clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(function() {
+              if (editBtn) {
+                editBtn.style.display = 'none';
+              }
+              currentImg = null;
+            }, 100);
+          }
+
+          document.addEventListener('mouseover', function(e) {
+            var target = e.target;
+            if (target && target.tagName && target.tagName.toLowerCase() === 'img') {
+              showButton(target);
+            } else if (editBtn && (target === editBtn || editBtn.contains(target))) {
+              if (hideTimeout) {
+                clearTimeout(hideTimeout);
+                hideTimeout = null;
+              }
+            }
+          }, true);
+
+          document.addEventListener('mouseout', function(e) {
+            var target = e.target;
+            if (target && target.tagName && target.tagName.toLowerCase() === 'img') {
+              if (!editBtn || (e.relatedTarget !== editBtn && !editBtn.contains(e.relatedTarget))) {
+                scheduleHide();
+              }
+            } else if (editBtn && (target === editBtn || editBtn.contains(target))) {
+              if (e.relatedTarget !== currentImg) {
+                scheduleHide();
+              }
+            }
+          }, true);
+        })();
+      <\/script>
+    ` : '';
+    // Anything written before the app's HTML makes the browser ignore the
+    // app's own doctype and render the app in quirks mode. In quirks mode, html
+    // and body stretch to the frame's height, and so does content sized to
+    // them, so a height-synced frame could never get smaller. Height-synced
+    // frames therefore always render in standards mode. Other embeds keep
+    // rendering in quirks mode, which many existing embeds rely on, for
+    // example to fill their box with height: 100%.
+    const doctype = enableHeightSync ? '<!DOCTYPE html>' : '';
+    const liquidAppCsp = isLiquidArtifact ? LIQUID_APP_CSP_META : '';
+    const content = doctype + liquidAppCsp +
+        '<base href="' + window.location.href + '" target="_blank">' +
+        hashLinkInterceptor + scrollRevealShim + bootstrapStyle +
+        prosemirrorBundle + appHtml + textEditorPayload + heightSyncPayload +
+        backgroundColorPayload + embeddedPixPayload;
+    frame.contentWindow.document.write(policy ? policy.createHTML(content) : content);
+    frame.contentWindow.document.close();
+  }
+
+  function isBase64Image(img) {
+    var src = (img.getAttribute('src') || img.src || '').trim().toLowerCase();
+    return src.startsWith('data:');
+  }
+
+  /**
+   * Gives each element in `doc`'s body a data-atari-segment-id, excluding
+   * base64 images which cannot be segmented or edited.
+   */
+  function markSelectableElements(doc) {
+    let nextId = 0;
+    for (const el of doc.body.querySelectorAll('*')) {
+      if (el.tagName === 'IMG' && isBase64Image(el)) {
+        continue;
+      }
+      if (!el.parentElement.closest('svg')) {
+        el.setAttribute('data-atari-segment-id', nextId);
+        nextId++;
+      }
+    }
+  }
+
+  function onGapiInitialized() {
+    // Inform the parent frame that GAPI has been initialized.
+    gapi.rpc.call('..', 'innerFrameGapiInitialized');
+    gapi.rpc.register('updateUserHtmlFrame', updateUserHtmlFrame);
+  }
+
+  function loadGapiClient() {
+    gapi.load('gapi.rpc', onGapiInitialized);
+  }
+
+  if (document.readyState == 'complete') {
+    loadGapi();
+  } else {
+    self.addEventListener('load', loadGapi);
+  }
+
+  function clearCookies() {
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var equalPosition = cookie.indexOf("=");
+        var name = equalPosition > -1 ? cookie.substr(0, equalPosition) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        // Try deleting any cookies set on the googleusercontent domain.
+        document.cookie =
+          name + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT ;domain=.googleusercontent.com";
+    }
+  }
+
+  function clearStorage() {
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch (e) {}
+  }
+  window.addEventListener('message', function(e) {
+    var type = e.data && e.data.type;
+    if (type === MessageAction.GENAI_TEXT_EDIT || type === MessageAction.GENAI_TEXT_FORMAT ||
+        type === MessageAction.RESIZE || type === MessageAction.BACKGROUND_COLOR ||
+        type === MessageAction.UNDO || type === MessageAction.REDO ||
+        type === MessageAction.IMAGE_CLICK) {
+      var innerIframe = document.getElementById('userHtmlFrame');
+      if (innerIframe && e.source !== innerIframe.contentWindow) return;
+      window.parent.postMessage(e.data, '*');
+    }
+  });
+</script>
+</body>
+</html>

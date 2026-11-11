@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parent
 SEARCH_PARAMETERS = {"q", "mode", "family", "benchmark", "suite", "setting", "limit", "offset"}
 MODES = {"related", "all", "exact"}
 PREVIEW_FIELDS = (
+    "source_note", "catalog_scope",
     "id", "name", "title", "family", "benchmark", "suite", "split", "setting", "description", "instruction",
     "setup_summary", "setup_source", "observation", "observation_scope", "observation_source",
     "grading_summary", "grading_scope", "grading_evidence", "evaluation_source", "source",
@@ -29,6 +30,8 @@ STATIC_FILES = {
     "/TASK_API.md": ("TASK_API.md", "text/markdown; charset=utf-8"),
     "/api/openapi.json": ("task-api.openapi.json", "application/json; charset=utf-8"),
     "/task-api.openapi.json": ("task-api.openapi.json", "application/json; charset=utf-8"),
+    "/coverage.json": ("coverage.json", "application/json; charset=utf-8"),
+    "/corl_review.json": ("corl_review.json", "application/json; charset=utf-8"),
 }
 
 

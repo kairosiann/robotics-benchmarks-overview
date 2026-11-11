@@ -1,0 +1,349 @@
+Assembly Performance Metrics and Test Methods | NIST
+Skip to main content
+An official website of the United States government
+Here’s how you know
+Here’s how you know
+Official websites use .gov
+A
+.gov
+website belongs to an official government organization in the United States.
+Secure .gov websites use HTTPS
+A
+lock
+(
+Lock
+A locked padlock
+) or
+https://
+means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
+https://www.nist.gov/el/intelligent-systems-division-73500/robotic-grasping-and-manipulation-assembly/assembly
+Search NIST
+Menu
+Close
+Publications
+What We Do
+All Topics
+Advanced communications
+Bioscience
+Buildings and construction
+Chemistry
+Cybersecurity and Privacy
+Electronics
+Energy
+Environment
+Fire
+Forensic science
+Health
+Information technology
+Infrastructure
+Manufacturing
+Materials
+Mathematics and statistics
+Metrology
+Nanotechnology
+Neutron research
+Performance excellence
+Physics
+Public safety
+Quantum information science
+Resilience
+Standards
+Super intelligence
+Transportation
+Labs & Major Programs
+Laboratories
+Communications Technology Laboratory
+Engineering Laboratory
+Information Technology Laboratory
+Material Measurement Laboratory
+Physical Measurement Laboratory
+User Facilities
+NIST Center for Neutron Research
+CNST NanoFab
+Research Test Beds
+Research Projects
+Tools & Instruments
+Major Programs
+CHIPS for America Initiative
+Congressionally Identified Project Program (CIPP)
+Manufacturing Extension Partnership (MEP)
+Manufacturing USA
+Office of Advanced Manufacturing
+Technology Partnerships Office
+Services & Resources
+Measurements and Standards
+Calibration Services
+Laboratory Accreditation (NVLAP)
+Quality System
+Standard Reference Materials (SRMs)
+Standard Reference Instruments (SRIs)
+Standards.gov
+Time Services
+Office of Weights and Measures
+Software
+Data
+Chemistry WebBook
+National Vulnerability Database
+Physical Reference Data
+Standard Reference Data (SRD)
+Storefront
+License & Patents
+Computer Security Resource Center (CSRC)
+NIST Research Library
+News & Events
+News
+Events
+Blogs
+NIST In Focus
+Feature Stories
+Awards
+Video Gallery
+Image Gallery
+Media Contacts
+About NIST
+About Us
+Leadership
+Organization Structure
+Budget & Planning
+Contact Us
+Visit
+Careers
+Student programs
+Work with NIST
+History
+NIST Digital Archives
+NIST Museum
+NIST and the Nobel
+Educational Resources
+Engineering Laboratory
+Intelligent Systems Division
+Robotic Grasping and Manipulation for Assembly
+Previous
+Menu
+Next
+Grasping Performance Metrics and Test Methods
+Assembly Performance Metrics and Test Methods
+Robotic Grasping and Manipulation Competition: Manufacturing Track (RGMC)
+Expand or Collapse
+RGMC: Practice Task Board
+How to Participate
+Conference Information
+Announcements
+Performance Data Analytics
+Publications
+Past Meetings
+Standards Efforts
+Assembly Performance Metrics and Test Methods
+Summary
+New technologies in the areas of robotic arms and end-effectors have the potential to accelerate the use of robotics for assembly.  The force sensing and compliance capabilities used in collaborative robots to prevent injuries and enable them work safely alongside human workers in manufacturing environments lend themselves to robotic assembly tasks.  Additionally, robotic hands are emerging as a next generation end-effector technology with advanced force control and manipulation capabilities.  These new technologies as well as their simplified programming interfaces and reconfigurability promise new ways of tackling the small parts assembly field especially for low-volume, high-mix manufacturing operations.  A set of performance metrics, test methods and associated artifacts are being developed to progress the application of these technologies and can also be used to evaluate existing robotic assembly technologies.
+Description
+Performance benchmarks are being built as a modular set of task-based tests. These reconfigurable tests incorporate small part insertions and fastening methods such as threading, snap fits, and gear meshing using standard components including screws, nuts, washers, gears and electrical connectors. The test methods leverage factors identified by Boothroyd-Dewhurst (B-D) design for assembly (DFA) studies. These studies have already identified and tabulated various important factors based on manual human performance in an assembly task. For instance, size and symmetry of parts, tool usage, fixturing, mechanical resistance, mechanical fastening processes, visual occlusion, and physical obstruction are all influential towards time-based human performance. Designing benchmarking tasks that efficiently sample this design space will greatly aid the assessment of a robotic system and quickly identify its strengths and weaknesses.
+Another important aspect of performance measurement is providing confidence in the measured results. Consequently, multiple repetitions of a task are required to generate enough data for benchmarking comparisons. Moreover, the use of various statistical tests including test for correlation, distribution, variance, and mean will help identify significant comparative differences in performance data.  Conducting these tests would also help reduce the number of false claims that may be issued regarding a robot’s level of performance.
+The development of assembly-relevant metrics and tests is part of a NIST-led effort
+sponsored by
+ASTM committee F45.05 on Grasping and Manipulation
+with the goal of identifying key competencies and characteristics of robotic systems using a robust set of formalized evaluations and benchmarks.  Ultimately, these benchmarks can help to match robotic hand capabilities to end-user needs as well as to help provide developers and researchers insight for improving their hardware and software designs.
+Current Assembly Test Designs
+NIST prototype Assembly Task Boards (ATB) are outlined below
+.  Although shown in vertical orientations, the task boards can be placed horizontally or in other orientations that are representative of specific assembly requirements.  Procedures for conducting the tests and capturing performance data can be found in the
+protocol template
+.
+Task Board #1
+Competencies: peg insertions, gear meshing, electrical connector insertions, nut threading
+Credit:
+NIST
+Description
+This task board is designed to quantify a robot system’s capability for performing peg insertions, gear meshing, electrical connector insertions, and nut threading. Design factors include size, shape, location, and type of parts.
+Benchmark Template
+Replication
+Instructions for reproducing the task board can be downloaded
+here
+.
+Design files for laser cut board can be downloaded
+here
+.
+STL files for 3D printing connector housings can be downloaded
+here
+.
+CAD models for all components can be downloaded
+here
+.
+STL models for all components can be downloaded
+here
+.
+Kit tray for all components can be downloaded
+here
+.
+Generalized test metrics, methods, and data analysis recommendations can be downloaded
+here
+.
+Adoption
+A similar task board was used during the
+IROS 2017 Robotic Grasping and Manipulation Competition
+.
+The details of the competition can be found
+here
+.
+NTB1 can now be purchased from the University of Massachusetts at Lowell, New England Robotics Validation and Experimentation (NERVE) Center:
+https://www.uml.edu/Research/NERVE/NIST-Assembly-Task-Board-Form.aspx
+Task Board #2
+Competencies: alignment and insertion of collars and pulleys, handling flexible parts, meshing/threading belts, actuating tensioners, and threading bolts.
+Credit:
+NIST
+Description
+This task board is designed to quantify a robot system’s capability for performing alignment and insertion of collars and pulleys, handling flexible parts, meshing/threading belts, actuating tensioners, and threading bolts. Design factor: type of parts - based on commercial use and difficulty of task.
+Benchmark Template
+Replication
+Instructions for reproducing the task board can be downloaded
+here
+.
+Design files for laser cut board can be downloaded
+here
+.
+CAD models for all components can be downloaded
+here
+.
+Kit tray for all components can be downloaded
+here
+.
+STL models for all components can be downloaded
+here
+.
+Adoption
+A similar task board was used during the World Robot Summit
+WRC: challenge 2018
+The details of this competition can be found
+here
+.
+Task Board #3
+Competencies: tracking, placement, weaving and manipulation of loose cables, handling flexible parts, and inserting ends into various connectors.
+Credit:
+NIST
+Description
+This task board is designed to quantify a robot system’s capability for performing tracking, placement, and weaving loose parts that require advanced manipulation in the form of hand-off and/or release and re-acquiring cables. Design factors include thickness, shape, and stiffness of cables as well as location and spacing of obstacles.
+Benchmark Template
+Replication
+Instructions for reproducing the task board can be downloaded
+here
+.
+Design files for laser cut board can be downloaded
+here
+.
+CAD models for all components can be downloaded
+here
+.
+STL models for all components can be downloaded
+here
+.
+Adoption
+This task board as well as all previous ones were used as inspiration for a combination task for the Manufacturing Track of
+IROS 2020
+.
+The details of this competition can be found
+here
+.
+Task Board #4
+Competencies: Placement, weaving and
+manipulation of wires, pin insertions, bundling of wires, and connecting/disconnecting harness from connectors.
+Credit:
+NIST
+Description
+This task board is designed to quantify a robot system’s capability to make a wire harness by routing and grouping wires according to a diagram then removing the completed harness from the board.
+Benchmark Template
+Replication
+Instructions for reproducing the task board can be downloaded
+here
+.
+Design files for laser cut board can be downloaded
+here
+.
+CAD models for all components can be downloaded
+here
+.
+STL models for all components can be downloaded
+here
+.
+Adoption
+This task board as well as all previous ones were used as inspiration for a combination task for the Manufacturing Track of
+ICRA 2022
+.
+Details for the competition can be found
+here
+.
+Task Board #5
+Competencies: Bolt alignment and threading, Nut alignment and threading, assembly near obstructions.
+Bolt alignment and threading, Nut alignment and threading, assembly near obstructions.
+Credit:
+NIST
+Description
+This task board is designed to quantify a robot system’s capability for performing threading operations for bolt and nut type fasteners. Design factors include size and shape of the bolts and nuts. User may also vary bolt head geometries for specific use case benchmarking.
+Replication
+Instructions for reproducing the task board can be downloaded
+here
+.
+Design files for laser cut board can be downloaded
+here
+.
+STL files for 3D printing obstruction blocks can be downloaded
+here.
+CAD models for all components can be downloaded
+here.
+STL models for all components can be downloaded
+here.
+Adoption:
+The design of the task board reflects critical industrial needs for robotic manipulation, specifically threading tasks which have featured in the
+RGMC
+manufacturing track for nine of the competition's twelve years.
+Related Work
+The
+NIST-Manufacturing Objects for Assembly Database (MOAD) ATB dataset
+provides high resolution RGB images, colored point clouds, and metadata related to the objects and environment of each part included in ATB 1 as well as the full assembly. Additional data will be provided which includes, segmentation masks for images, texture mapped 3D mesh models, and the script for easily downloading and processing the data. This resource also includes information for users to replicate the data capture system, opensource code and custom CAD files. It will soon be expanded to include all ATB and other manufacturing objects.
+Impact of Robotic Hand on Pick-and-Place Performance
+Comparative Peg-in-Hole Testing of Robotic Hand and Gripper
+For performance benchmarking and test replication, please download the generated robot performance data and artifact CAD models:
+Peg Hole Performance Data
+(zip file)
+Peg Hole CAD
+(zip file)
+Manufacturing
+,
+Robotics
+and
+Dexterous grasping
+Created May 23, 2018, Updated October 1, 2026
+Grasping Performance Metrics and Test Methods
+Robotic Grasping and Manipulation Competition: Manufacturing Track (RGMC)
+Was this page helpful?
+HEADQUARTERS
+100 Bureau Drive
+Gaithersburg, MD 20899
+301-975-2000
+Webmaster
+|
+Contact Us
+|
+Our Other Offices
+X.com
+Facebook
+LinkedIn
+Instagram
+YouTube
+Giphy
+RSS Feed
+Mailing List
+How are we doing?
+Feedback
+Site Privacy
+Accessibility
+Privacy Program
+Copyright & Disclaimers
+Vulnerability Disclosure
+No Fear Act Policy
+FOIA
+Environmental Policy
+Scientific Integrity
+Information Quality Standards
+Commerce.gov
+Science.gov
+USA.gov
+Vote.gov

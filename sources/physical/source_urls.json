@@ -1,0 +1,17 @@
+{
+  "nist_metrics.pdf": "https://www.nist.gov/system/files/documents/2018/01/11/test_method-metrics-analysis_v3.pdf",
+  "nist_paper.html": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7537423/",
+  "nist_deformable.html": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9720326/",
+  "nist_video.html": "https://www.nist.gov/video/robotic-grasping-and-manipulation-competition-task-1-task-board-assembly",
+  "furniture_home.html": "https://clvrai.github.io/furniture-bench/",
+  "furniture_tree.json": "https://api.github.com/repos/clvrai/furniture-bench/git/trees/main?recursive=1",
+  "adroit_tree.json": "https://api.github.com/repos/Farama-Foundation/Gymnasium-Robotics/git/trees/main?recursive=1",
+  "adroit_home.html": "https://robotics.farama.org/envs/adroit_hand/",
+  "robochallenge_home.html": "https://robochallenge.ai/challenges",
+  "robochallenge_v1.md": "https://huggingface.co/datasets/RoboChallenge/Table30/raw/main/README.md",
+  "robochallenge_v2.md": "https://huggingface.co/datasets/RoboChallenge/Table30v2/raw/main/README.md",
+  "robochallenge_v1_tree.json": "https://huggingface.co/api/datasets/RoboChallenge/Table30/tree/main?recursive=true&limit=1000",
+  "robochallenge_v2_tree.json": "https://huggingface.co/api/datasets/RoboChallenge/Table30v2/tree/main?recursive=true&limit=1000",
+  "robochallenge_v1_paper.html": "https://arxiv.org/html/2510.17950",
+  "robochallenge_v2_paper.pdf": "https://robochallenge.ai/robochallenge_techreport_V2.pdf"
+}

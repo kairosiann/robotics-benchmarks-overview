@@ -1,0 +1,3193 @@
+WireCraft: A Simulation Benchmark for Industrial DLO Manipulation
+Skip to main content
+Report GitHub Issue
+×
+Title:
+Content selection saved. Describe the issue below:
+Description:
+Submit without GitHub
+Submit in GitHub
+Why HTML?
+Report Issue
+Back to Abstract
+Download PDF
+Contents
+Reading mode
+Colour theme
+Abstract
+1
+Introduction
+2
+Related Work
+3
+WireCraft Infrastructure
+3.1
+WireCraft Engine
+3.2
+WireCraft Assets
+4
+WireCraft Benchmark
+4.1
+WireCraft Tasks
+4.2
+WireCraft Demonstrations
+5
+Experiments
+5.1
+Baselines on Connector Insertion
+5.2
+RL Baselines on Diverse Connector Insertion
+5.3
+Clip Routing and Channel Seating
+6
+Real-World Validation
+7
+Limitations
+8
+Conclusion
+References
+A
+Related Work
+B
+DLO Physics and Simulation Details
+B.1
+Simulation Backend
+B.2
+DLO Models
+B.3
+DLO–Connector Interaction
+B.4
+Computational Scaling and Throughput
+C
+Task Design
+C.1
+Connector Insertion
+C.2
+Clip Routing
+C.3
+Channel Seating
+C.4
+Randomization
+C.5
+Control Modes
+D
+Scripted Policy
+D.1
+Insertion
+D.2
+Clip Routing
+D.3
+Channel Seating
+D.4
+Scripted Demonstrations
+E
+RL Experiment Detail
+E.1
+State-based RL
+Observation.
+Action and control.
+Reward.
+Networks.
+E.2
+Vision PPO
+Design rationale.
+Architecture.
+Hyperparameters.
+E.3
+RL Rollout Demonstrations
+F
+Connector-Insertion IL/VLA Experimental Details
+F.1
+Dataset
+F.2
+Policy Training Configurations
+F.3
+Checkpoint Selection
+F.4
+Evaluation Protocol
+G
+Clip Routing and Channel Seating Experimental Details
+Datasets.
+Training.
+Checkpoint selection and evaluation.
+H
+Real-World Validation
+H.1
+Setup
+Physical setup.
+Task initialization.
+Bridging the sim-to-real visual gap.
+H.2
+Protocol
+Data sources.
+Training.
+Checkpoint selection.
+H.3
+Results and Analysis
+Connector insertion.
+Clip routing.
+Channel seating.
+Limitations.
+I
+Teleoperation Data Collection
+License: arXiv.org perpetual non-exclusive license
+arXiv:2606.18097v3 [cs.RO] 16 Oct 2026
+WireCraft: A Simulation Benchmark
+for Industrial DLO Manipulation
+Chongyu Zhu
+†
+†
+thanks:
+Equal contribution.
+†
+†
+thanks:
+Corresponding author:
+cyzhu@mie.utoronto.ca
+Affiliation:
+Department of Mechanical and Industrial Engineering, University of Toronto, Canada
+Ramy ElMallah
+1
+1
+footnotemark:
+1
+Affiliation:
+Department of Mechanical and Industrial Engineering, University of Toronto, Canada
+Hyegang Kim
+Affiliation:
+Department of Mechanical and Industrial Engineering, University of Toronto, Canada
+Zachary Tang
+Affiliation:
+Department of Mechanical and Industrial Engineering, University of Toronto, Canada
+Jiachen Rao
+Affiliation:
+Department of Mechanical and Industrial Engineering, University of Toronto, Canada
+Artem Arutyunov
+Affiliation:
+Department of Mechanical and Industrial Engineering, University of Toronto, Canada
+Seungyeon Ha
+Affiliation:
+CREFLE Inc., Seongnam, Republic of Korea
+Chi-Guhn Lee
+Affiliation:
+Department of Mechanical and Industrial Engineering, University of Toronto, Canada
+Abstract
+Deformable Linear Objects (DLOs), such as wires and cables, are central to industrial assembly. Unlike rigid objects, whose state is captured by a 6-DoF pose, DLOs have an infinite-dimensional configuration space and deform continuously under contact with grippers, fixtures, and the workspace, making them a demanding benchmark for general dexterous manipulation. Despite their importance, policy development and comparison remain difficult: existing benchmarks are often tied to specific hardware setups, lack modular and customizable task assets, or study generic deformable-object tasks without the fixtures relevant to real-world industrial wire manipulation. Few benchmarks align simulation, real-world data, and shared evaluation protocols. To bridge this gap, we introduce
+WireCraft
+, a simulation benchmark for industrial DLO manipulation with configurable difficulty and assets, spanning three task families: connector insertion, clip routing, and channel seating. It supports two complementary DLO physics models, articulated and deformable, and the released trajectories come from both simulation and a physical UR5. We benchmark reinforcement learning (RL), imitation learning (IL), and vision-language-action (VLA) policies under shared metrics. Privileged state-based RL solves a representative setting in each task family with over 82% success, confirming the tasks are well-posed. Image-based policies remain less successful across the evaluated tasks, with ACT and DiT VLA falling below privileged State PPO. On a physical UR5, supplementing real demonstrations with simulated data improves success by 15–65 percentage points in the best-performing mixture for each task. These results indicate that industrial DLO manipulation, though tractable under privileged state, remains an open challenge for current vision-based learning.
+Our project is open-sourced at
+https://github.com/DORLR/WireCraft
+.
+1
+Introduction
+Manipulating Deformable Linear Objects (DLOs)
+[
+58
+]
+, particularly wires, is important for industrial wire-harness assembly
+[
+53
+]
+and cable management
+[
+47
+,
+33
+]
+. These settings require the robot to do more than grasp and move a flexible object: it must interact with structured fixtures such as clips, connectors, sockets, and channels
+[
+33
+,
+24
+]
+while controlling the DLO’s deformation
+[
+51
+]
+. Unlike rigid objects, whose state can be captured by their 3D position and orientation, DLOs possess an infinite-dimensional configuration space and deform continuously
+[
+16
+,
+52
+,
+28
+]
+. Forces applied at the gripper propagate along the body, causing simultaneous deformation and motion across the DLO
+[
+6
+]
+. DLOs further exhibit complex contact dynamics, self-occlusion, and deformation uncertainty arising from variation in material stiffness and damping
+[
+6
+,
+49
+]
+. These properties make policy learning difficult. Compounding the challenge, existing efforts often tie simulation, fixtures, and sensing to specific hardware setups, leaving industrial DLO tasks without reusable simulation benchmarks or shared data interfaces.
+Figure 1:
+WireCraft
+simulates industrial DLO manipulation across three task families: connector insertion, clip routing, and channel seating with trajectories from multiple sources. Tasks run on the UR5, Franka, and Trossen Stationary AI in simulation, with real-world validation on a UR5.
+General robot learning benchmarks such as RLBench
+[
+23
+]
+and ManiSkill3
+[
+45
+]
+are not centered on DLO manipulation and provide limited DLO-specific data. Deformable-object benchmarks such as SoftGym
+[
+32
+]
+, DeformableRavens
+[
+42
+]
+, and DaXBench
+[
+10
+]
+include DLOs alongside other deformable categories, while DLO-dedicated environments such as ReForm
+[
+27
+]
+and DLO-Lab
+[
+7
+]
+target canonical DLO behaviors like shape control and coiling. However, both lack structured industrial fixtures such as connectors, clips, and channels central to assembly tasks. A parallel line of work studies these industrial tasks on physical testbeds
+[
+53
+,
+47
+,
+33
+,
+30
+,
+44
+,
+25
+]
+, but each effort is tied to specific robots, fixtures, cable geometries, and sensing setups, limiting reuse for new model training or sim-to-real research.
+Physical task boards such as NIST
+[
+35
+]
+and the ManipulationNet Cable Routing Benchmark
+[
+11
+]
+standardize real-world evaluation but offer no simulation environment. WireCraft combines configurable insertion, routing, and seating tasks with shared policy interfaces and trajectory data from simulation and physical robots.
+To address this gap, we make the following contributions:
+•
+We introduce WireCraft, a unified simulation benchmark for industrial DLO manipulation across connector insertion, clip routing, and channel seating, with configurable task components, standardized policy interfaces, and two complementary DLO physics models trading off speed and fidelity.
+•
+We evaluate representative RL, IL, and VLA policies under a shared evaluation protocol, providing a consistent reference for future work on industrial DLO learning. Simulation baseline evaluation and physical UR5 validation cover all three task families.
+•
+We open-source the benchmark with available trajectory data, data-generation tools, and 3D-printable task-board components. This enables researchers to reproduce the setups, collect demonstrations, and study sim-to-real transfer for industrial DLO manipulation.
+2
+Related Work
+Robot learning and deformable-object benchmarks.
+General benchmarks have standardized rigid-object manipulation. RLBench
+[
+23
+]
+provides tabletop tasks with motion-planner-generated demonstrations, while ManiSkill3
+[
+45
+]
+extends this to contact-rich manipulation across 12 task categories. However, neither is centered on DLOs, and neither models fixture-constrained DLO assembly. A second line of work targets deformable-object manipulation: SoftGym
+[
+32
+]
+provides environments for ropes, cloth, and fluids; PlasticineLab
+[
+19
+]
+contributes a differentiable soft-body benchmark for deformation; DaXBench
+[
+10
+]
+unifies rope, cloth, and liquid manipulation under differentiable physics; and DeformableRavens
+[
+42
+]
+benchmarks goal-conditioned rearrangement of deformables. MoDeSuite
+[
+54
+]
+introduces mobile-manipulation deformable tasks in Isaac Sim. These benchmarks have driven progress on shape control and free-space rearrangement, but their DLO tasks are not industrially grounded.
+DLO-specific simulators and learning environments.
+A more focused thread targets DLO modeling and control. ReForm
+[
+27
+]
+introduces an early sandbox of DLO shape-control tasks. Chen et al.
+[
+9
+]
+integrate Discrete Elastic Rods (DER)
+[
+2
+]
+into MuJoCo, targeting dynamic DLO simulation rather than benchmarked task suites. DexDLO
+[
+43
+]
+studies goal-conditioned dexterous manipulation of DLOs. DEFORM
+[
+13
+]
+and its extension DEFT
+[
+12
+]
+provide differentiable DER
+[
+2
+]
+models aimed at perception/control rather than assembly benchmarks. Govoni et al.
+[
+15
+]
+analyze DLO models under domain randomization across Isaac Sim and Gazebo, focusing on parameter sensitivity. The closest concurrent benchmark is DLO-Lab
+[
+7
+]
+, a differentiable Genesis/Taichi-based simulator paired with DLO tasks and multiple policy-learning baselines. However, DLO-Lab emphasizes generic DLO shape control and material modeling rather than industrial tasks. WireCraft differs by organizing tasks around industrial task families, offering dual wire representations and policy-learning-ready datasets.
+Industrial DLO manipulation and physical task boards.
+A growing body of applied work tackles the three task families WireCraft unifies. For
+clip routing
+, prior work learns motion primitives for guiding cables through clips
+[
+47
+,
+33
+]
+, proposes spatial representations with fixture-aware planning
+[
+24
+,
+29
+]
+, and combines VLM-based planning with RL for long-horizon tasks
+[
+30
+]
+. For
+connector insertion
+, methods generalize across materials and novel connectors via visual flexibility cues or meta-RL
+[
+28
+,
+55
+]
+, and optimize cable following, search, and mating
+[
+25
+,
+5
+]
+. For
+channel seating and constrained placement
+, prior work has addressed clamp engagement
+[
+53
+]
+, plugging/clipping/routing in constrained environments
+[
+44
+,
+57
+]
+, dual-arm planning under constraints
+[
+50
+]
+, simulated cable laying
+[
+31
+]
+, and DLO manipulation in benchmark task spaces
+[
+8
+]
+. Physical task boards provide standardized real-world evaluation: the NIST Assembly Task Boards
+[
+35
+,
+26
+]
+and ManipulationNet
+[
+11
+]
+standardize protocols for deformable-part assembly, MOTORCYCLE 1.0
+[
+1
+]
+automates bimanual cable routing on a reconfigurable board, and Intrinsic’s AIC provides a 3D-printable cable insertion board with Gazebo simulation
+[
+20
+]
+. However, each system is tied to specific robots, fixtures, sensing, or protocols. WireCraft unifies all three task families under shared simulation, industrially grounded assets, and multi-source demonstrations, making it, to our knowledge, the first unified industrial DLO benchmark.
+Learning algorithms for contact-rich and deformable manipulation.
+Recent progress in robot learning has produced several policy classes relevant to contact-rich manipulation, including on-policy and off-policy reinforcement learning
+[
+41
+,
+46
+]
+, action chunking
+[
+56
+]
+, diffusion-based visuomotor policies
+[
+14
+]
+, transformer-based diffusion backbones
+[
+39
+,
+18
+]
+, and VLA language-conditioned action prediction
+[
+3
+]
+. Subsequent work has also advanced deformable-object manipulation through geometry-aware RL and equivariant graph policies
+[
+17
+]
+and through model-based RL with differentiable multiphysics simulation gradients
+[
+48
+]
+. These methods motivate the need for benchmarks that expose contact-rich deformable manipulation under shared task definitions and evaluation metrics. To this end, we incorporate representative policy families across RL, IL, and VLAs as evaluation baselines rather than exhaustively optimized solvers, establishing WireCraft as a foundation for future specialized algorithms.
+3
+WireCraft Infrastructure
+Figure 2:
+WireCraft Architecture
+, including the WireCraft simulation engine, asset library, task suite, demonstration sources, policy baselines, and real-world validation setup.
+WireCraft supports articulated and FEM-based deformable wire models, provides configurable industrial DLO manipulation tasks across connector insertion, clip routing, and channel seating, and pairs simulation data with real-world teleoperation trajectories under a shared dataset schema.
+3.1
+WireCraft Engine
+Simulation Backend.
+WireCraft is built on Isaac Lab v2.2.1
+[
+34
+]
+, an open-source robot learning framework on top of Isaac Sim 4.5
+[
+37
+]
+; full version and physics details are in Appendix
+B
+. Isaac Sim provides photo-realistic scenes and fast simulation, while Isaac Lab supports GPU-accelerated, multi-instance training for scalable policy learning and trajectory generation.
+DLO Physics.
+WireCraft simulates its two wire representations through complementary physics mechanisms. The articulated wire uses rigid-body dynamics: each segment is a rigid body, and neighboring segments are coupled by 6-DoF joints (PhysX D6). This supports high-throughput trajectory generation due to efficient rigid-body contact but can become unstable under adjacent-segment collision or accumulated contact forces. The deformable wire uses Isaac Sim’s deformable body API and PhysX FEM deformable body simulation
+[
+21
+,
+36
+]
+, improving local bending, compression, and contact deformation with higher fidelity, but at higher computational cost. We treat the two wire types as complementary benchmark representations. Detailed wire-model parameters and throughput measurements are reported in Appendix
+B
+, and a wire–connector physics visualization is shown in Figure
+6
+. Details of DLO and scene interaction are provided in Appendix
+B.3
+.
+Sensors.
+Beyond standard camera RGB data, WireCraft provides built-in interfaces to optional depth channels. To capture physical interactions, the platform integrates contact sensors for precise collision detection and force sensors to monitor grasping force magnitudes and insertion states. Furthermore, real-time robot proprioception, including joint positions and velocities, is natively supported. Observation inputs are selected per baseline, and users can add other sensor types supported by the NVIDIA Isaac ecosystem.
+3.2
+WireCraft Assets
+Articulated
+Deformable
+Articulated Rigid-body Chain
+FEM-based Deformable Wire
+Cylinder
+Cuboid
+Ethernet-style
+DisplayPort
+USB-A
+USB-A Socket
+Clip
+Figure 3:
+WireCraft Assets
+.
+Top:
+the two configurable wire representations, articulated and FEM-based deformable, shown as rendered DLOs (left) and their construction-level chain/mesh structure (right).
+Bottom:
+a subset of representative 3D-printable connectors and task fixtures.
+DLO Assets.
+The articulated wires are parameterized by length, radius, colors, damping, and stiffness. The deformable wires are simulated via FEM, where Young’s modulus, Poisson’s ratio, and density govern its elastic response, alongside geometric parameters for length, radius, and mesh resolution. Both share the same connector and task-component interfaces, so all tasks can be instantiated with either wire type.
+Connector Assets.
+DLO-mounted connectors are 3D-printable and span two families: reference-based connectors modeled after real standards such as USB-A, and geometry-based connectors built from primitives such as cylinders and cuboids. They differ in rotational symmetry, allowing task difficulty to range from rotation-invariant to orientation-sensitive insertion.
+Fixture Assets.
+Task-side fixtures, including clips, channels, and sockets, are likewise 3D-printable. They define the geometric constraints of each task family and remain configurable for different layouts and difficulty levels.
+Robot Embodiments.
+Three simulated embodiments are supported: the UR5, Franka, and Trossen Stationary AI, each with its own gripper and control interface. Tasks can be instantiated across different arms under a unified observation framework, where robot-specific proprioception scales to each robot’s degrees of freedom.
+4
+WireCraft Benchmark
+4.1
+WireCraft Tasks
+We benchmark three industrial task families.
+Connector Insertion
+performs precision contact-rich insertion with a trailing deformable wire;
+Clip Routing
+performs fixture-constrained routing under contact and topological constraints; and
+Channel Seating
+performs continuous shape control along extended geometric constraints.
+Task Curriculum.
+Task difficulty varies through connector geometry, fixture complexity, and path geometry. Connector insertion ranges from a rotation-invariant cylindrical connector to an asymmetric, orientation-sensitive DisplayPort-style connector. Clip routing difficulty scales with the number and placement of clips, while channel seating difficulty is controlled by channel curvature.
+Randomization.
+All tasks share a randomized free-fall wire initialization, where the wire is spawned with varying position and orientation. Task-specific randomization varies the socket position for insertion, clip position and orientation for routing, and channel geometry for seating; detailed ranges are provided in Appendix
+C.4
+.
+4.2
+WireCraft Demonstrations
+Data Collection.
+WireCraft supports four data collection methods that share a common dataset schema. Scripted policies provide scalable, successful demonstrations using privileged simulator state; RL rollouts add closed-loop interaction data and failure-adjacent states; human teleoperation in simulation captures corrective visual strategies for contact-rich manipulation; and real-world UR5 demonstrations provide physical validation. Our data-collection stack builds on an open-source ROS 2 + LeRobot teleoperation stack for WireCraft, with a shared episode recorder for simulation and real-robot data.
+Shared Dataset Schema.
+All sources are serialized into a LeRobot v3.0 dataset format. For the UR5 robot, they include a 7-D state (six joint positions and gripper), a 7-D action (six joint commands and gripper), synchronized wrist and third-person RGB streams at the task control rate, and the language instruction for each task. This shared schema allows IL and VLA policies to be trained from any mixture of these sources without policy-specific task wrappers.
+5
+Experiments
+To establish the benchmark’s validity, we evaluate representative RL, IL, and VLA methods on our task suite under common task definitions, randomization, and success criteria. Experiments cover RL, IL, and VLA baselines on deformable-wire connector insertion, and privileged state PPO, ACT, and DiT VLA baselines on clip routing and channel seating.
+For connector insertion,
+Reach Success
+(
+SR
+reach
+\mathrm{SR}_{\mathrm{reach}}
+) measures whether the gripper-held connector comes within 2 cm of the socket, and
+Insert Success
+(
+SR
+insert
+\mathrm{SR}_{\mathrm{insert}}
+) measures whether the tip seats in the socket. For clip routing, success requires the wire to be seated in the clips. For channel seating, success requires the wire to lie inside the channel over 80% of its length. Simulation results are reported as mean
+±
+\pm
+standard deviation across seeds.
+5.1
+Baselines on Connector Insertion
+On Ethernet-style deformable-wire insertion with 3 mm clearance, we evaluate PPO
+[
+41
+]
+, SAC from Demonstration (SACfD)
+[
+46
+]
+, Vision PPO
+[
+41
+,
+38
+,
+22
+,
+40
+]
+, ACT
+[
+56
+]
+, Diffusion Policy
+[
+14
+]
+, a Diffusion Transformer VLA policy
+[
+4
+]
+, and
+π
+0.5
+\pi_{0.5}
+[
+3
+]
+. IL and VLA policies use the same dataset and evaluation, while state PPO and SACfD use privileged state information. IL/VLA results report the best observed checkpoint among three
+SR
+reach
+\mathrm{SR}_{\mathrm{reach}}
+-selected checkpoints (see Appendix
+F
+).
+Figure 4:
+Ethernet-style Connector Insertion performance.
+SR
+reach
+\mathrm{SR}_{\mathrm{reach}}
+and
+SR
+insert
+\mathrm{SR}_{\mathrm{insert}}
+on the shared simulated insertion task show privileged RL solves the task reliably, while vision-based baselines exhibit a substantial gap between reaching the socket neighborhood and completing insertion.
+Figure
+4
+shows three trends. First, privileged state-based RL solves the task reliably (
+SR
+insert
+≥
+92
+%
+\mathrm{SR}_{\mathrm{insert}}{}\!\geq\!92\%
+for both PPO and SACfD), establishing that the task is well-posed and that contact-rich alignment is tractable when socket and tail pose are directly observable. Second, every non-privileged baseline exhibits a sizeable reach–insert gap, showing that reaching the socket does not ensure successful insertion. Vision PPO, however, collapses at the reach stage (
+51.6
+%
+51.6\%
+), indicating the bottleneck for vision RL is both contact dynamics and RGB-only state estimation under occlusion and tight clearance. ACT and Diffusion Policy achieve higher contact-rich insertion phase success rates than the other image-input baselines, but both retain a clear gap between reaching the socket and completing insertion. Third, both VLA baselines underperform IL, with
+π
+0.5
+\pi_{0.5}
+reaching only
+6.2
+%
+/
+0.0
+%
+6.2\%/0.0\%
+; we attribute this primarily to a much shorter fine-tuning budget and a frozen vision tower (Appendix
+F
+), together with a pre-training distribution containing limited fine-grained contact-rich DLO interaction, rather than to a fundamental limitation of the architecture.
+5.2
+RL Baselines on Diverse Connector Insertion
+We then extend the RL baselines to the full connector suite under the same 3 mm fixture clearance and task interfaces, evaluating privileged-state PPO, SACfD, and Vision PPO in Table
+1
+.
+Table 1:
+RL baseline success rates (%) on the diverse connector insertion tasks.
+Connector
+Metric
+State PPO
+SACfD
+Vision PPO
+Cylinder
+SR
+reach
+\mathrm{SR}_{\mathrm{reach}}
+95.00
+±
+1.25
+95.00\pm 1.25
+97.27
+±
+1.06
+97.27\pm 1.06
+68.07
+±
+6.02
+68.07\pm 6.02
+SR
+insert
+\mathrm{SR}_{\mathrm{insert}}
+93.75
+±
+1.25
+93.75\pm 1.25
+85.55
+±
+8.68
+85.55\pm 8.68
+41.49
+±
+1.32
+41.49\pm 1.32
+Cuboid
+SR
+reach
+\mathrm{SR}_{\mathrm{reach}}
+97.08
+±
+1.44
+97.08\pm 1.44
+96.70
+±
+1.06
+96.70\pm 1.06
+41.67
+±
+4.73
+41.67\pm 4.73
+SR
+insert
+\mathrm{SR}_{\mathrm{insert}}
+95.00
+±
+3.75
+95.00\pm 3.75
+93.06
+±
+6.46
+93.06\pm 6.46
+6.25
+±
+3.31
+6.25\pm 3.31
+Ethernet-style
+SR
+reach
+\mathrm{SR}_{\mathrm{reach}}
+95.86
+±
+1.93
+95.86\pm 1.93
+98.05
+±
+1.05
+98.05\pm 1.05
+51.63
+±
+4.82
+51.63\pm 4.82
+SR
+insert
+\mathrm{SR}_{\mathrm{insert}}
+95.86
+±
+1.93
+95.86\pm 1.93
+92.40
+±
+5.91
+92.40\pm 5.91
+17.74
+±
+1.21
+17.74\pm 1.21
+DisplayPort
+SR
+reach
+\mathrm{SR}_{\mathrm{reach}}
+95.00
+±
+1.25
+95.00\pm 1.25
+95.62
+±
+10.58
+95.62\pm 10.58
+34.01
+±
+5.73
+34.01\pm 5.73
+SR
+insert
+\mathrm{SR}_{\mathrm{insert}}
+92.92
+±
+3.15
+92.92\pm 3.15
+77.43
+±
+6.17
+77.43\pm 6.17
+3.32
+±
+1.45
+3.32\pm 1.45
+Three observations follow: First, both privileged baselines, PPO and SACfD, are largely insensitive to connector geometry, solving the alignment-sensitive DisplayPort about as well as the simpler connectors (
+SR
+insert
+≥
+92
+%
+\mathrm{SR}_{\mathrm{insert}}{}\!\geq\!92\%
+for PPO;
+≥
+77
+%
+\geq\!77\%
+for SACfD). Second, the ordering is not monotonic in geometric difficulty: the rotation-invariant cylinder, nominally the easiest connector, sits at or below the cuboid and Ethernet-style for both methods. We attribute this tentatively to the shared reward fixing a target socket orientation, which penalizes the cylinder’s many equally valid yaw configurations and broadens the set of rewarded behaviors. Third, Vision PPO degrades sharply on every connector, and not monotonically; Ethernet-style is solved more often than the simpler cuboid. One likely explanation is the visual cues each shape provides for yaw estimation: the latch-like feature may give an orientation cue that the smooth cuboid lacks in RGB without depth.
+Across connectors, the curriculum degrades vision-based performance while leaving privileged-state performance essentially unaffected, indicating that it stresses the visual observability of orientation rather than control. This supports its use as a difficulty axis (see Appendix
+E
+).
+5.3
+Clip Routing and Channel Seating
+We further evaluate State PPO, ACT, and DiT VLA on 1-clip routing and straight-channel seating in Table
+2
+. ACT and DiT VLA results are averaged over three evaluation seeds. With privileged state observations, PPO achieves 95.32% and 82.33% success, respectively. Despite plateauing training losses, image-based ACT and DiT VLA achieve lower success rates, particularly in channel seating, with 18.80% and 15.62% success, respectively. Dataset sizes, training configurations, and checkpoint selection are detailed in Appendix
+G
+.
+Table 2:
+Evaluation results on 1-clip routing and straight channel seating tasks in simulation.
+Task
+Setting
+State PPO
+ACT
+DiT VLA
+Clip routing
+1-clip
+95.32
+±
+0.93
+\bm{95.32\pm 0.93}
+64.06
+±
+11.16
+64.06\pm 11.16
+39.06
+±
+16.16
+39.06\pm 16.16
+Channel seating
+Straight channel
+82.33
+±
+0.31
+\bm{82.33\pm 0.31}
+18.80
+±
+7.65
+18.80\pm 7.65
+15.62
+±
+12.88
+15.62\pm 12.88
+6
+Real-World Validation
+For real-world validation, we evaluate all three WireCraft tasks on a physical UR5 using ACT, which achieved the highest insertion success rate among image-input baselines in Section
+5
+. We first reproduce the physical setup in simulation, then train ACT on four combinations of real demonstrations (R), scripted simulation demonstrations (S), and simulation RL rollouts (P): R, R+S, R+P, and R+S+P. All configurations train for 80k steps, with checkpoints selected by the lowest L1 loss on held-out real demonstrations. Preliminary simulation-only policies showed poor zero-shot transfer, so we focus the quantitative evaluation on mixtures containing real demonstrations.
+The hardware evaluation uses a narrower randomization range than simulation. For insertion, the connector is placed within a
+3
+×
+3
+3\times 3
+cm region with varying tilt, while the socket remains fixed. For 1-clip routing, a single clip is randomly positioned near the wire on both sides. For straight-channel seating, one wire endpoint remains fixed while the other is placed at varying positions outside the channel. We evaluate each task and data-source combination over 20 real-robot trials, and report different effects of simulation data across tasks in Figure
+5
+.
+Figure 5:
+ACT success rates on the physical UR5 for (a) Ethernet-style connector insertion, (b) 1-clip routing, and (c) straight-channel seating. Insertion reports both
+SR
+reach
+\mathrm{SR}_{\mathrm{reach}}
+and
+SR
+insert
+\mathrm{SR}_{\mathrm{insert}}
+; routing and seating each report task success.
+For insertion, reach success remains between 80% and 95% across data combinations, while insertion success increases from 15% with R to 80% with R+S+P. Higher reach success does not necessarily translate into higher insertion success: R+P reaches more often than R+S+P (95% vs. 85%), but inserts less often (65% vs. 80%). Qualitatively, R+S+P more often produces insertion-compatible grasp poses, whereas R+P sometimes reaches the socket with a grasp that leaves the connector poorly aligned for insertion. The benefit of broader variability of data coverage is therefore associated with grasping the connector in a pose that supports subsequent socket alignment. Successful pickup and reach alone are insufficient.
+Clip routing also benefits from simulated data, but the improvement is non-monotonic: success increases from 45% with R to 65% with R+P, while R+S+P achieves 60%. Qualitatively, failures with simulated training data more often place the wire on top of the clip opening instead of beside the clip. These near-misses remain unsuccessful under the binary criterion but indicate closer placement alignment. Clip localization during wire grasping relies on the side-camera view alone, leaving limited visual information for preparing the subsequent placement.
+For channel seating, simulated data increase success from 75% with R to 90% with R+P and R+S+P. Most failures occur during the initial grasp; once the wire is successfully grasped, seating is usually completed. Its remaining bottleneck is therefore grasp acquisition, unlike the final alignment and placement failures observed in insertion and clip routing.
+Overall, simulated trajectories improve the observed success rates across all three tasks, with task-dependent effects on grasp selection and fixture engagement. The hardware results support the portability of the three task definitions under restricted initialization ranges. Since source diversity and dataset size increase together, these comparisons show the benefit of supplementing real demonstrations with simulated trajectories, without isolating the effect of diversity alone. Further setup and failure details are provided in Appendix
+H
+.
+7
+Limitations
+WireCraft has several limitations. First, policy transfer between the articulated and FEM-based wire models has not been evaluated, and their dynamic deformation and contact response remain quantitatively unmatched. Neither model has been calibrated against the physical wire, so hardware task validation does not establish wire-model accuracy or reliable zero-shot transfer. Second, full force/torque feedback remains unused: privileged insertion uses only saturated fingertip contact magnitudes, while the UR5’s mounted force/torque sensor is unread. Simulated contact forces remain physically unvalidated, and the benefits of force/torque feedback and optional depth observations for task completion are untested. Third, hardware evaluation covers all three task families but only selected settings on one UR5, leaving generalization across robots, fixtures, and wire materials untested. Success metrics also do not capture contact loads or wire damage. Finally, the VLA results reflect constrained fine-tuning and do not establish an upper bound on VLA capability; longer training, improved checkpoint selection, and stronger visual adaptation remain future work.
+8
+Conclusion
+We presented WireCraft, a simulation benchmark for industrial DLO manipulation across connector insertion, clip routing, and channel seating. WireCraft provides configurable 3D-printable assets, articulated and FEM-based wire representations, shared policy interfaces, and trajectory data from scripted, RL, and real-world sources, together with teleoperation tools. Our experiments show a clear gap between task feasibility and current vision-based policy performance. Privileged state-based RL solves the evaluated insertion, routing, and seating settings, indicating that the tasks are well posed in simulation. In contrast, vision-based RL, imitation learning, and VLA policies degrade sharply on connector insertion, while ACT and DiT VLA also fall below State PPO on routing and seating. The reach–insert gap shows that reaching the socket neighborhood is not sufficient: fine alignment, occlusion, deformation, and contact-rich seating remain the central bottlenecks. Real-world UR5 validation covers all three task families and shows improved ACT success rates when real demonstrations are supplemented with simulated trajectories.
+By releasing WireCraft, we aim to provide a common substrate for studying where industrial DLO policies fail and how they improve, including visual localization, deformation-aware control, contact-rich insertion, fixture-constrained routing, and sim-to-real transfer.
+Acknowledgments
+This research has been partially funded by the Industrial Technology Innovation Program [P0030285, Autonomous Assembly through AI Agent-Driven Dexterous Manipulation of Flexible and Complex Industrial Components] of the Ministry of Trade, Industry and Energy of the Republic of Korea.
+References
+[1]
+O. Azulay, K. Kondap, J. Drake, S. Xie, H. Li, S. Chitta, and K. Goldberg
+(2025)
+MOTORCYCLE 1.0: automating bimanual cable routing around fixtures on the nist task board
+.
+In
+2025 IEEE 21st International Conference on Automation Science and Engineering (CASE)
+,
+pp. 2636–2641
+.
+Cited by:
+§2
+.
+[2]
+M. Bergou, M. Wardetzky, S. Robinson, B. Audoly, and E. Grinspun
+(2008)
+Discrete elastic rods
+.
+In
+ACM Siggraph 2008 Papers
+,
+pp. 1–12
+.
+Cited by:
+§2
+.
+[3]
+K. Black N. Brown
+et al.
+(2025)
+π
+0.5
+\pi_{0.5}
+: A vision-language-action model with open-world generalization
+.
+In
+Proceedings of the 9th Conference on Robot Learning (CoRL)
+,
+Note:
+Oral Presentation
+Cited by:
+§2
+,
+§5.1
+.
+[4]
+R. Cadene, S. Alibert, A. Soare, Q. Gallouedec, A. Zouitine, S. Palma, P. Kooijmans, M. Aractingi, M. Shukor, D. Aubakirova,
+et al.
+(2024)
+LeRobot: state-of-the-art machine learning for real-world robotics in pytorch
+.
+Note:
+https://github.com/huggingface/lerobot
+Cited by:
+§5.1
+.
+[5]
+B. Cao, X. Zang, S. Li, X. Zhang, C. Li, and J. Zhao
+(2026)
+Robotic cable following and insertion with tactile sensing
+.
+IEEE Sensors Journal
+26
+,
+pp. 6216–6224
+.
+External Links:
+Link
+Cited by:
+§2
+.
+[6]
+B. Cao, X. Zang, X. Zhang, Z. Chen, S. Li, and J. Zhao
+(2024)
+Shape control of elastic deformable linear objects for robotic cable assembly
+.
+Advanced Intelligent Systems
+6
+(
+7
+),
+pp. 2300835
+.
+Cited by:
+§1
+.
+[7]
+J. Cao, Y. Wang, Z. Xiong, C. Lin, Z. Chen, and C. Gan
+(2026)
+DLO-Lab: benchmarking deformable linear object manipulations with differentiable physics
+.
+In
+Proceedings of the 43rd International Conference on Machine Learning (ICML)
+,
+Note:
+Accepted
+External Links:
+Link
+Cited by:
+§1
+,
+§2
+.
+[8]
+P. Chang, R. Luo, M. Zolotas, and T. Padır
+(2022)
+Manipulation of deformable linear objects in benchmark task spaces
+.
+In
+2022 IEEE 18th International Conference on Automation Science and Engineering (CASE)
+,
+Vol.
+,
+pp. 1910–1916
+.
+External Links:
+Document
+Cited by:
+§2
+.
+[9]
+Q. J. Chen, T. Bretl, and Q. Pham
+(2025)
+Accurate simulation and parameter identification of deformable linear objects using discrete elastic rods in generalized coordinates
+.
+In
+2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)
+,
+Vol.
+,
+pp. 20454–20460
+.
+External Links:
+Document
+Cited by:
+§2
+.
+[10]
+S. Chen, Y. Xu, C. Yu, L. Li, X. Ma, Z. Xu, and D. Hsu
+(2023)
+DaxBench: benchmarking deformable object manipulation with differentiable physics
+.
+In
+The Eleventh International Conference on Learning Representations
+,
+Cited by:
+§1
+,
+§2
+.
+[11]
+Y. Chen, K. Kimble, E. H. Adelson, T. Asfour, P. Chanrungmaneekul, S. Chitta, Y. Chitambar, Z. Chen, K. Goldberg, D. Kragic,
+et al.
+(2026)
+Manipulationnet: an infrastructure for benchmarking real-world robot manipulation with physical skill challenges and embodied multimodal reasoning
+.
+arXiv preprint arXiv:2603.04363
+.
+Cited by:
+§1
+,
+§2
+.
+[12]
+Y. Chen, X. Wu, Y. Zong, Y. Chen, A. Li, B. Zhang, and R. Vasudevan
+(2025)
+DEFT: differentiable branched discrete elastic rods for modeling furcated DLOs in real-time
+.
+arXiv preprint arXiv:2502.15037
+.
+External Links:
+Document
+,
+Link
+Cited by:
+§2
+.
+[13]
+Y. Chen, Y. Zhang, Z. Brei, T. Zhang, Y. Chen, J. Wu, and R. Vasudevan
+(2025)
+Differentiable discrete elastic rods for real-time modeling of deformable linear objects
+.
+In
+Proceedings of The 8th Conference on Robot Learning
+,
+P. Agrawal, O. Kroemer, and W. Burgard (Eds.)
+,
+Proceedings of Machine Learning Research
+, Vol.
+270
+,
+pp. 2996–3014
+.
+External Links:
+Link
+Cited by:
+§2
+.
+[14]
+C. Chi, Z. Xu, S. Feng, E. Cousineau, Y. Du, B. Burchfiel, R. Tedrake, and S. Song
+(2025)
+Diffusion policy: visuomotor policy learning via action diffusion
+.
+The International Journal of Robotics Research
+44
+(
+10-11
+),
+pp. 1684–1704
+.
+Cited by:
+§2
+,
+§5.1
+.
+[15]
+A. Govoni, N. Zubair, S. Soprani, and G. Palli
+(2025)
+Performance analysis of a mass-spring-damper deformable linear object model in robotic simulation frameworks
+.
+In
+European Robotics Forum 2025
+,
+Springer Proceedings in Advanced Robotics
+, Vol.
+36
+,
+pp. 187–192
+.
+External Links:
+Document
+Cited by:
+§2
+.
+[16]
+F. Gu, Z. Wang, Z. Zhu, J. Ma, Y. Zhou, S. Jiang, and B. He
+(2026)
+A survey on robotic manipulation of deformable objects: recent advances, open challenges and new frontiers
+.
+Neurocomputing
+,
+pp. 134058
+.
+Cited by:
+§1
+.
+[17]
+T. Hoang, H. Le, P. Becker, V. A. Ngo, and G. Neumann
+(2025)
+Geometry-aware rl for manipulation of varying shapes and deformable objects
+.
+In
+International Conference on Learning Representations
+,
+Vol.
+2025
+,
+pp. 47376–47405
+.
+Cited by:
+§2
+.
+[18]
+Z. Hou, T. Zhang, Y. Xiong, H. Duan, H. Pu, R. Tong, C. Zhao, X. Zhu, Y. Qiao, J. Dai,
+et al.
+(2025)
+Dita: scaling diffusion transformer for generalist vision-language-action policy
+.
+In
+Proceedings of the IEEE/CVF International Conference on Computer Vision
+,
+pp. 7686–7697
+.
+Cited by:
+§2
+.
+[19]
+Z. Huang, Y. Hu, T. Du, S. Zhou, H. Su, J. B. Tenenbaum, and C. Gan
+(2021)
+PlasticineLab: a soft-body manipulation benchmark with differentiable physics
+.
+In
+International Conference on Learning Representations
+,
+Cited by:
+§2
+.
+[20]
+Intrinsic
+(2026)
+AI for Industry Challenge Toolkit
+.
+Note:
+https://github.com/intrinsic-dev/aic
+Accessed: 2026-10-08
+Cited by:
+§2
+.
+[21]
+Isaac Lab Project Developers
+(2026)
+Interacting with a Deformable Object
+.
+Note:
+Isaac Lab DocumentationAccessed: 2026-05-16
+External Links:
+Link
+Cited by:
+§3.1
+.
+[22]
+A. Jaegle, S. Borgeaud, J. Alayrac, C. Doersch, C. Ionescu, D. Ding, S. Koppula, D. Zoran, A. Brock, E. Shelhamer,
+et al.
+(2022)
+Perceiver io: a general architecture for structured inputs & outputs
+.
+In
+International Conference on Learning Representations
+,
+Cited by:
+§E.2
+,
+§5.1
+.
+[23]
+S. James, Z. Ma, D. R. Arrojo, and A. J. Davison
+(2020)
+Rlbench: the robot learning benchmark & learning environment
+.
+IEEE Robotics and Automation Letters
+5
+(
+2
+),
+pp. 3019–3026
+.
+Cited by:
+§1
+,
+§2
+.
+[24]
+S. Jin, W. Lian, C. Wang, M. Tomizuka, and S. Schaal
+(2022)
+Robotic cable routing with spatial representation
+.
+IEEE Robotics and Automation Letters
+7
+(
+2
+),
+pp. 5687–5694
+.
+External Links:
+Document
+Cited by:
+§1
+,
+§2
+.
+[25]
+C. Kienle, B. Alt, F. Schneider, T. Pertlwieser, R. Jäkel, and R. Rayyes
+(2025)
+AI-based framework for robust model-based connector mating in robotic wire harness installation
+.
+In
+2025 IEEE 21st International Conference on Automation Science and Engineering (CASE)
+,
+pp. 2444–2449
+.
+Cited by:
+§1
+,
+§2
+.
+[26]
+K. Kimble, J. Albrecht, M. Zimmerman, and J. Falco
+(2022)
+Performance measures to benchmark the grasping, manipulation, and assembly of deformable objects typical to manufacturing applications
+.
+Frontiers in Robotics and AI
+9
+,
+pp. 999348
+.
+Cited by:
+§2
+.
+[27]
+R. Laezza, R. Gieselmann, F. T. Pokorny, and Y. Karayiannidis
+(2021)
+ReForm: a robot learning sandbox for deformable linear object manipulation
+.
+In
+2021 IEEE International Conference on Robotics and Automation (ICRA)
+,
+Vol.
+,
+pp. 4717–4723
+.
+External Links:
+Document
+Cited by:
+§1
+,
+§2
+.
+[28]
+M. Li and C. Choi
+(2024)
+Learning for deformable linear object insertion leveraging flexibility estimation from visual cues
+.
+In
+2024 IEEE International Conference on Robotics and Automation (ICRA)
+,
+pp. 5183–5189
+.
+External Links:
+Link
+,
+Document
+Cited by:
+§1
+,
+§2
+.
+[29]
+M. Li, H. Yu, and C. Choi
+(2025)
+Routing manipulation of deformable linear object using reinforcement learning and diffusion policy
+.
+In
+2025 IEEE International Conference on Robotics and Automation (ICRA)
+,
+Vol.
+,
+pp. 01–07
+.
+External Links:
+Document
+Cited by:
+§2
+.
+[30]
+M. Li, H. Yu, Y. Huang, Y. Hong, C. Choi, and H. Ye
+(2025)
+Hierarchical dlo routing with reinforcement learning and in-context vision-language models
+.
+External Links:
+2510.19268
+,
+Link
+Cited by:
+§1
+,
+§2
+.
+[31]
+W. Li, Z. Zhu, D. Li, Z. Gong, N. Lv, H. Chen, and J. Li
+(2025)
+An automated cable laying simulation method by robot for planar routing
+.
+In
+Proceedings of the 2025 11th Annual International Conference on Network and Information Systems for Computers
+,
+ICNISC ’25
+,
+New York, NY, USA
+,
+pp. 209–214
+.
+External Links:
+ISBN 9798400715839
+,
+Link
+,
+Document
+Cited by:
+§2
+.
+[32]
+X. Lin, Y. Wang, J. Olkin, and D. Held
+(2021)
+Softgym: benchmarking deep reinforcement learning for deformable object manipulation
+.
+In
+Conference on Robot Learning
+,
+pp. 432–448
+.
+Cited by:
+§1
+,
+§2
+.
+[33]
+J. Luo, C. Xu, X. Geng, G. Feng, K. Fang, L. Tan, S. Schaal, and S. Levine
+(2024)
+Multistage cable routing through hierarchical imitation learning
+.
+IEEE Transactions on Robotics
+40
+,
+pp. 1476–1491
+.
+Cited by:
+§1
+,
+§1
+,
+§2
+.
+[34]
+M. Mittal
+et al.
+(2025)
+Isaac lab: a gpu-accelerated simulation framework for multi-modal robot learning
+.
+arXiv preprint arXiv:2511.04831
+.
+Cited by:
+Appendix B
+,
+§3.1
+.
+[35]
+National Institute of Standards and Technology
+(2018)
+Assembly Performance Metrics and Test Methods
+.
+Note:
+https://www.nist.gov/el/intelligent-systems-division-73500/robotic-grasping-and-manipulation-assembly/assembly
+Accessed: 2026-05-22
+Cited by:
+§1
+,
+§2
+.
+[36]
+NVIDIA
+(2024)
+Soft Bodies
+.
+Note:
+PhysX DocumentationAccessed: 2026-05-16
+External Links:
+Link
+Cited by:
+§B.4
+,
+§3.1
+.
+[37]
+NVIDIA
+(2026)
+NVIDIA isaac sim
+.
+GitHub
+.
+Note:
+https://github.com/isaac-sim/IsaacSim
+External Links:
+Link
+Cited by:
+Appendix B
+,
+§3.1
+.
+[38]
+M. Oquab, T. Darcet, T. Moutakanni, H. Vo, M. Szafraniec, V. Khalidov, P. Fernandez, D. Haziza, F. Massa, A. El-Nouby,
+et al.
+(2024)
+DINOv2: learning robust visual features without supervision
+.
+Transactions on Machine Learning Research Journal
+.
+Cited by:
+§E.2
+,
+§5.1
+.
+[39]
+W. Peebles and S. Xie
+(2023)
+Scalable diffusion models with transformers
+.
+2023 IEEE/CVF International Conference on Computer Vision (ICCV)
+,
+pp. 4172–4182
+.
+External Links:
+Document
+Cited by:
+§2
+.
+[40]
+L. Pinto, M. Andrychowicz, P. Welinder, W. Zaremba, and P. Abbeel
+(2018)
+Asymmetric actor critic for image-based robot learning
+.
+In
+Robotics: Science and Systems
+,
+Cited by:
+§E.2
+,
+§5.1
+.
+[41]
+J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov
+(2017)
+Proximal policy optimization algorithms
+.
+arXiv preprint arXiv:1707.06347
+.
+Cited by:
+§E.1
+,
+§2
+,
+§5.1
+.
+[42]
+D. Seita, P. Florence, J. Tompson, E. Coumans, V. Sindhwani, K. Goldberg, and A. Zeng
+(2021)
+Learning to rearrange deformable cables, fabrics, and bags with goal-conditioned transporter networks
+.
+In
+2021 IEEE International Conference on Robotics and Automation (ICRA)
+,
+pp. 4568–4575
+.
+Cited by:
+§1
+,
+§2
+.
+[43]
+Z. Sun, J. Zhu, and R. B. Fisher
+(2024)
+DexDLO: learning goal-conditioned dexterous policy for dynamic manipulation of deformable linear objects
+.
+In
+2024 IEEE International Conference on Robotics and Automation (ICRA)
+,
+pp. 16009–16015
+.
+External Links:
+Document
+Cited by:
+§2
+.
+[44]
+J. Tanureza, B. Michalak, M. Radke, and K. Haninger
+(2025)
+Industrial cabling in constrained environments: a practical approach and current challenges
+.
+In
+2025 IEEE/SICE International Symposium on System Integration (SII)
+,
+pp. 1428–1433
+.
+Cited by:
+§1
+,
+§2
+.
+[45]
+S. Tao, F. Xiang, A. Shukla, Y. Qin, X. Hinrichsen, X. Yuan, C. Bao, X. Lin, Y. Liu, T. Chan, Y. Gao, X. Li, T. Mu, N. Xiao, A. Gurha, V. N. Rajesh, Y. W. Choi, Y. Chen, Z. Huang, R. Calandra, R. Chen, S. Luo, and H. Su
+(2025)
+ManiSkill3: gpu parallelized robotics simulation and rendering for generalizable embodied ai
+.
+Robotics: Science and Systems
+.
+Cited by:
+§1
+,
+§2
+.
+[46]
+M. Vecerik, T. Hester, J. Scholz, F. Wang, O. Pietquin, B. Piot, N. Heess, T. Rothörl, T. Lampe, and M. Riedmiller
+(2017)
+Leveraging demonstrations for deep reinforcement learning on robotics problems with sparse rewards
+.
+arXiv preprint arXiv:1707.08817
+.
+Cited by:
+§E.1
+,
+§2
+,
+§5.1
+.
+[47]
+A. Wilson, H. Jiang, W. Lian, and W. Yuan
+(2023)
+Cable routing and assembly using tactile-driven motion primitives
+.
+In
+2023 IEEE International Conference on Robotics and Automation (ICRA)
+,
+pp. 10408–10414
+.
+Cited by:
+§1
+,
+§1
+,
+§2
+.
+[48]
+E. Xing, V. Luk, and J. Oh
+(2025)
+Stabilizing reinforcement learning in differentiable multiphysics simulation
+.
+In
+International Conference on Learning Representations
+,
+Vol.
+2025
+,
+pp. 91165–91198
+.
+Cited by:
+§2
+.
+[49]
+M. Yan, Y. Zhu, N. Jin, and J. Bohg
+(2020)
+Self-supervised learning of state estimation for manipulating deformable linear objects
+.
+IEEE robotics and automation letters
+5
+(
+2
+),
+pp. 2372–2379
+.
+Cited by:
+§1
+.
+[50]
+M. Yu, K. Lv, C. Wang, Y. Jiang, M. Tomizuka, and X. Li
+(2025)
+Generalizable whole-body global manipulation of deformable linear objects by dual-arm robot in 3-d constrained environments
+.
+The International Journal of Robotics Research
+44
+(
+4
+),
+pp. 607–639
+.
+Cited by:
+§2
+.
+[51]
+M. Yu, H. Zhong, and X. Li
+(2022)
+Shape control of deformable linear objects with offline and online learning of local linear deformation models
+.
+In
+2022 International Conference on Robotics and Automation (ICRA)
+,
+pp. 1337–1343
+.
+Cited by:
+§1
+.
+[52]
+W. Zhang, K. Schmeckpeper, P. Chaudhari, and K. Daniilidis
+(2021)
+Deformable linear object prediction using locally linear latent dynamics
+.
+In
+2021 IEEE International Conference on Robotics and Automation (ICRA)
+,
+pp. 13503–13509
+.
+Cited by:
+§1
+.
+[53]
+X. Zhang, H. Lin, Y. Zhao, and M. Tomizuka
+(2024)
+Harnessing with twisting: single-arm deformable linear object manipulation for industrial harnessing task
+.
+In
+2024 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)
+,
+pp. 4069–4075
+.
+Cited by:
+§1
+,
+§1
+,
+§2
+.
+[54]
+Y. Zhang, K. S. Luck, F. Verdoja, V. Kyrki, and J. Pajarinen
+(2026)
+MoDeSuite: robot learning task suite for benchmarking mobile manipulation with deformable objects
+.
+IEEE Robotics and Automation Letters
+.
+Cited by:
+§2
+.
+[55]
+T. Z. Zhao, J. Luo, O. Sushkov, R. Pevceviciute, N. Heess, J. Scholz, S. Schaal, and S. Levine
+(2022)
+Offline meta-reinforcement learning for industrial insertion
+.
+In
+2022 IEEE International Conference on Robotics and Automation (ICRA)
+,
+pp. 6386–6393
+.
+Cited by:
+§2
+.
+[56]
+T. Z. Zhao, V. Kumar, S. Levine, and C. Finn
+(2023)
+Learning fine-grained bimanual manipulation with low-cost hardware
+.
+Robotics: Science and Systems (RSS)
+.
+External Links:
+Document
+Cited by:
+§2
+,
+§5.1
+.
+[57]
+H. Zhou, S. Li, Q. Lu, and J. Qian
+(2020)
+A practical solution to deformable linear object manipulation: a case study on cable harness connection
+.
+In
+2020 5th International Conference on Advanced Robotics and Mechatronics (ICARM)
+,
+pp. 329–333
+.
+Cited by:
+§2
+.
+[58]
+J. Zhu, A. Cherubini, C. Dune, D. Navarro-Alarcon, F. Alambeigi, D. Berenson, F. Ficuciello, K. Harada, J. Kober, X. Li,
+et al.
+(2022)
+Challenges and outlook in robotic manipulation of deformable objects
+.
+IEEE Robotics & Automation Magazine
+29
+(
+3
+),
+pp. 67–77
+.
+Cited by:
+§1
+.
+Appendix A
+Related Work
+We expand the related-work discussion from the main paper with a feature-level comparison against prior DLO and deformable-object benchmarks, summarized in Table
+. For each benchmark we mark which of the three industrial task families it covers, what wire physics it uses, which learning baselines it supports, and whether it offers simulated robot evaluation, physical robot validation, and multi-source demonstrations. Most prior benchmarks address only a subset of these dimensions. WireCraft is the only one that spans all three task families with both articulated and deformable wire models, supports RL, IL, and VLA baselines together, and pairs simulated evaluation with physical UR5 validation.
+Appendix B
+DLO Physics and Simulation Details
+This section expands on the DLO physics summarized in Section
+3.1
+. WireCraft is built on Isaac Sim 4.5
+[
+37
+]
+and Isaac Lab v2.2.1
+[
+34
+]
+, and is additionally verified on Isaac Sim 5.1. We first describe the simulation backend, then the two wire models and their material and contact parameters, the DLO–connector interaction, and finally the computational scaling behavior of each model.
+B.1
+Simulation Backend
+WireCraft runs on Isaac Sim for photo-realistic rendering and physics, and on Isaac Lab for GPU-accelerated, multi-instance parallel simulation used in both policy training and trajectory generation. The default RL configuration uses a PhysX physics timestep of
+1
+/
+120
+1/120
+s with a control decimation of
+2
+2
+, giving a
+60
+60
+Hz control rate and an
+8
+8
+s episode horizon. We verified WireCraft across multiple GPUs, namely the NVIDIA GeForce RTX 4080 SUPER, the RTX PRO 4500 Blackwell, and the RTX A4000 and RTX 5070Ti.
+B.2
+DLO Models
+WireCraft provides two complementary wire representations for the same benchmark tasks. They are not intended to be parameter-by-parameter calibrated material matches, since the articulated chain and FEM soft body expose different solver-native parameters. Instead, they are aligned at the task level through shared wire endpoints, connector interfaces, fixtures, observation-action schemas, and success criteria. The articulated wire is a chain of rigid capsule segments connected by 6-DoF joints (PhysX D6 joints) whose angular degrees of freedom are driven by passive implicit spring–damper actuators, simulated under rigid-body dynamics. This representation supports high-throughput trajectory generation but can become unstable under adjacent-segment self-contact or accumulated contact forces. The deformable wire is a PhysX FEM soft body: a slender triangulated cylindrical rod (decagonal cross-section, 10 radial × 40 axial subdivisions; length 0.4 m, radius 3 mm) that PhysX voxelizes into a hexahedral FEM simulation mesh (resolution 40 along the major axis). This captures local bending, compression, and contact deformation at higher fidelity but greater cost. The parameter names reflect each model’s native representation and should not be read as physically equivalent material settings.
+Table 3:
+Representative wire model parameters.
+Values reflect each model’s native representation and should be interpreted as solver-specific benchmark settings rather than physically equivalent material parameters. Articulated wire values correspond to the committed task-environment
+configuration.
+Setting
+FEM-based Deformable Wire
+Articulated Wire
+Representation
+Isaac Sim deformable body volume (PhysX FEM)
+Rigid cylinder chain with D6 joints
+Total length
+0.4 m
+0.4 m
+Segments / resolution
+40 segments; hexahedral resolution 40
+12 rigid segments;
+∼
+\sim
+0.033 m per segment
+Radius / density
+0.003 m; 800.0
+0.004 m; 2000.0
+Friction
+Dynamic 5.0; static does not support deformable body
+Static 1.0; dynamic 1.0
+Material / joint parameters
+Young’s modulus
+5.0
+×
+10
+7
+5.0\times 10^{7}
+; Poisson’s ratio 0.49; vertex-velocity damping 3.0
+Joint stiffness 5.0; damping 5.0; joint limit 0.5 rad
+Solver / contact settings
+32 position iterations; contact offset 0.001; rest offset 0.0
+32 position iterations; 4 velocity iterations; max depenetration velocity 1.0
+Collision / body settings
+Collision simplification enabled; sleep threshold 0.01
+Self-collision enabled; max linear/angular velocity 5.0/60.0
+Contact and material parameters.
+Beyond the per-wire settings in Table
+3
+, contact behavior is governed by the connector, gripper, and table materials. The rigid connectors use a mass of
+0.01
+0.01
+kg and isotropic friction
+2.0
+2.0
+(static and dynamic, with a
+max
+friction-combine mode); the gripper inner-finger pads use friction
+5.0
+5.0
+to provide a firm grasp on the connector and wire; and the table and scene default material uses friction
+1.0
+1.0
+. The articulated wire uses restitution
+0.0
+0.0
+, while the deformable wire exposes no restitution term. These are fixed defaults; the connector-insertion data pipeline additionally randomizes the connector planar position and orientation and the socket clearance for demonstration diversity, as detailed in Appendix
+C.4
+.
+B.3
+DLO–Connector Interaction
+Each connector is coupled to its DLO at the endpoints. For the deformable wire, each rigid connector is bound to the soft body through a PhysX auto-attachment (
+PhysxPhysicsAttachment
+with deformable-vertex attachments enabled and a vertex overlap offset of
+0.015
+0.015
+m), applied at both ends; forces transfer through the attached deformable vertices during grasping, routing, and insertion. For the articulated wire, the endpoint connector is rigidly welded to the adjacent segment with a fixed joint. Figure
+6
+visualizes the resulting DLO–Connector behavior for both representations across representative simulation frames.
+Articulation-based
+Deformable
+Figure 6:
+DLO–Connector Physics Demonstration.
+Visualization of articulated
+and deformable wire concatenated with a DisplayPort connector across
+representative simulation frames.
+B.4
+Computational Scaling and Throughput
+We benchmarked the deformable and articulated wire models in matched DLO-only scenes with ground contact enabled and endpoint connectors disabled. Each run used the
+1
+/
+120
+1/120
+s physics timestep without rendering and applied a
+5
+5
+s warmup followed by a
+60
+60
+s measured rollout per configuration. The sweep covered 64, 128, 256, 512, 1024, 2048, 4096, and 8192 parallel environments, stopping each model after its first failed point; the articulated wire was additionally probed at 16,384, where setup failed. The deformable curve uses the configuration with 32 solver position iterations. Because the two models expose different physical and numerical parameters, we compare their computational scaling under matched external task conditions rather than treating them as material-calibrated equivalents.
+As shown in Figure
+7
+, which is measured on an NVIDIA RTX A4000 GPU, the articulated model scales successfully to
+8192
+8192
+parallel environments, while the deformable model succeeds through
+2048
+2048
+environments and fails at
+4096
+4096
+. The deformable wire is faster at the smallest environment counts, but the articulated wire reaches substantially higher aggregate throughput, whereas the deformable wire shows much weaker throughput scaling before reaching its limit.
+The deformable limit is consistent with the per-scene cap of
+4095
+4095
+deformable-volume actors enforced by the PhysX constant
+PX_MAX_NB_DEFORMABLE_VOLUME
+, which originates from the
+12
+12
+-bit field used to pack the (deformable-volume id, tetrahedron id) pair into a single
+32
+32
+-bit narrow-phase index. In practice, this hard ceiling is not the only constraint: GPU memory for deformable-volume contact buffers and the solver heap (
+PxGpuDynamicsMemoryConfig
+) is statically pre-allocated, does not grow dynamically, and may bind first depending on mesh resolution, contact density, and available device memory
+[
+36
+]
+. Because neither constraint is exposed as a runtime knob in Isaac Sim, we treat the deformable model as our higher-fidelity, lower-throughput representation and use the articulated model for high-throughput RL training and bulk trajectory generation; the deformable model is retained for contact-sensitive evaluation and physically detailed trajectory rollouts. Absolute throughput should be read in the context of each model’s discretization and solver settings.
+Figure 7:
+Scaling behavior of the two WireCraft wire models.
+Both models were evaluated in matched headless DLO-only scenes with a
+1
+/
+120
+1/120
+s physics timestep,
+5
+5
+s warmup,
+60
+60
+s measured rollout. Absolute throughput depends on discretization and solver settings; the comparison is intended to show scaling behavior of the selected benchmark configurations. The articulation model scales to 8192 successful environments, while the deformable solver-32 model succeeds through 2048 environments and fails at 4096 owing to PhysX deformable-volume limits.
+Appendix C
+Task Design
+C.1
+Connector Insertion
+Connector insertion requires the robot to grasp the rigid connector at the end of a deformable wire and insert it into a matching socket. The task combines local peg-in-hole precision with global deformation effects: the trailing wire introduces drag, gravity-induced shape changes, and contact disturbances that perturb the connector during final alignment.
+The task curriculum is set by connector and socket geometry, which is fixed per task rather than randomized across episodes. WireCraft registers five connector/socket geometries that span a range of rotational symmetries and alignment sensitivities. The cylinder connector requires the held connector’s long axis to align with the socket axis but is rotationally symmetric about that axis, making it the easiest variant. The cuboid connector extends the cylinder requirement and additionally requires alignment of the rotation about the long axis. The Ethernet-style connector adds a latch-like geometry and serves as our primary insertion task; the DisplayPort connector has an asymmetric shell and is the most alignment-sensitive; and the USB-A connector provides a reference-standard geometry. Among these, the cylinder, cuboid, Ethernet-style, and DisplayPort connectors are used in the benchmark evaluations (Table 1); the USB-A connector is released as an additional asset but is not included in the reported experiments. A second difficulty axis is the socket clearance, which controls the gap between connector and socket; a smaller clearance yields a tighter, harder insertion.
+C.2
+Clip Routing
+Clip routing requires the robot to route a DLO through one or more structured U-slot clips mounted on the workspace. The task emphasizes fixture interaction and topological constraints: the DLO must be guided into the clip openings while maintaining contact stability and avoiding incomplete seating or slippage.
+The task curriculum is set by the number of clips, fixed per task. Difficulty scales from single-clip routing to multi-clip sequences of up to three clips, where additional clips lengthen the multi-step route and require intermediate re-grasps. Each clip’s
+x
+x
+position is fixed along the routing direction, while its
+y
+y
+position and yaw are randomized per episode. A secondary difficulty axis is the clip opening: the top-gap and lip retention can be adjusted, and a sufficiently wide opening removes the lip and reduces the clip to an unconstrained U-slot.
+C.3
+Channel Seating
+Channel seating requires the robot to lay a DLO into a geometric channel so that the DLO body conforms to the target path. Unlike connector insertion, where success depends on a local terminal pose, channel seating evaluates extended shape control over the entire DLO body.
+The task curriculum is set by channel geometry, fixed per task. Each channel is constructed from five segments, and difficulty is controlled by the random relative rotation applied at each segment-to-segment joint: the straight channel uses zero inter-segment rotation and tests simple alignment along a linear path, while the curved channel applies a per-joint random bend of up to
+±
+20
+∘
+\pm 20^{\circ}
+, producing a non-linear path that requires continuous path-following.
+C.4
+Randomization
+Each task applies per-episode randomization at reset, on top of the fixed per-task curriculum described above. Connector insertion randomizes the wire-attached connector and the socket; clip routing randomizes the clips; and channel seating randomizes the wire-attached connector and, optionally, the channel shape. The full set of ranges is listed in Table
+4
+. The reported insertion ranges correspond to the RL training and evaluation configuration; the scripted and teleoperation data-collection pipelines use a different connector planar range, which we treat as dataset-generation settings rather than the benchmark task randomization.
+Table 4:
+Per-episode randomization for the WireCraft task families, grouped by the
+randomized component. The connector is attached to the DLO terminal and
+randomized before a short free-fall settling drop. Ranges are reported for the
+RL training and evaluation configuration.
+Component
+Parameter
+Default range / description
+Connector
+Spawn height
+6
+6
+–
+11
+11
+cm above the table, then free-fall settling
+Roll / pitch
+Uniform
+[
+−
+18
+∘
+,
+18
+∘
+]
+[-18^{\circ},18^{\circ}]
+Yaw
+Uniform
+[
+−
+36
+∘
+,
+36
+∘
+]
+[-36^{\circ},36^{\circ}]
+X
+X
+offset
+Uniform
+±
+5
+\pm 5
+cm
+Y
+Y
+offset
+Uniform
+±
+15
+\pm 15
+cm
+Socket
+X
+X
+position
+Fixed along the insertion axis
+Y
+Y
+position
+Randomized within a
+28
+28
+cm range
+Z
+Z
+position
+Randomized within a
+15
+15
+cm range
+Clips
+X
+X
+position
+Fixed along the routing line
+Y
+Y
+position
+Uniform within
+±
+6
+\pm 6
+cm of the nominal lane
+Yaw
+Uniform
+[
+−
+15
+∘
+,
+15
+∘
+]
+[-15^{\circ},15^{\circ}]
+Channels
+Position
+Fixed
+Shape
+5
+5
+segments; each adds a signed bend of up to
+±
+20
+∘
+\pm 20^{\circ}
+to the running heading
+C.5
+Control Modes
+WireCraft exposes three end-effector control modes, selectable per task, so that users can match the action space to the task’s requirements.
+Joint control
+commands joint-position targets directly.
+Cartesian control
+commands a
+6
+6
+-DoF end-effector delta pose, resolved to joint targets by a differential-IK controller.
+Cartesian control with fixed orientation
+commands only the
+3
+3
+-DoF translation while holding the end-effector orientation fixed, which suits tasks where a constant tool pose is desired. Connector insertion and clip routing use full Cartesian control, since both require reorienting the held object; channel seating uses the fixed-orientation mode to keep the connector level while laying the DLO into the channel. All three modes share the same gripper command and downstream joint-target interface, so a task can switch modes without changing the policy’s action head.
+Appendix D
+Scripted Policy
+All three task families share a common scripted-policy framework: a per-environment vectorized finite-state machine that, within each phase, reads the current end-effector and fixture poses, expresses a target end-effector pose in the robot base frame, and emits a Cartesian delta-pose action obtained by clamping the pose error toward that target. Each policy selects the control mode best suited to its task (see Appendix
+C.5
+). A phase advances once the end-effector reaches its target within a position and orientation tolerance and dwells for a minimum number of control steps. At the grasp phase the policy snapshots the relevant poses, so that every post-grasp phase servos toward a stable reference that is unaffected by the deformation introduced once the wire is held. The three policies differ in what they grasp, in their task-specific sub-skills, and in the perturbations they inject to diversify demonstrations, as summarized in Table
+5
+.
+Table 5:
+Comparison of the three scripted policies. All share the vectorized
+finite-state-machine framework and a Cartesian delta-pose action; they differ
+in their grasp target, control dimensionality, core sub-skill, and the
+perturbations injected for demonstration diversity.
+Insertion
+Clip routing
+Channel seating
+Grasp target
+Connector tail
+DLO body node near the clip
+Connector
+Action
+7-DoF (pose + gripper)
+7-DoF (pose + gripper)
+7-DoF with fixed end-effector orientation
+Core sub-skill
+Align and drive into the socket
+Over-stretch, then push the DLO into the slot
+Lift and slowly place into the channel
+Reference frame
+Socket pose
+Clip pose with a frozen anchor-to-clip direction
+Channel center and length
+Success
+Connector seated in the socket
+DLO node inside the clip slot
+DLO body laid within the channel over 80%
+Injected perturbation
+Pick-and-drop (
+30
+%
+30\%
+) and failure retry
+Pre-stretch with a frozen target direction
+Delayed grasp and slowed placement
+D.1
+Insertion
+The insertion policy grasps the connector at its tail and seats it into the socket. After grasping and lifting, it moves to a pre-insertion pose, solves for the gripper orientation that aligns the held connector with the socket under a tightened orientation tolerance, drives the connector into the socket, and releases. To produce demonstrations of failure and recovery, with probability
+0.3
+0.3
+the policy injects a pick-and-drop perturbation, lifting and releasing the connector mid-air before re-approaching and regrasping, and a failure-triggered retry returns to the approach phase if the insertion has not succeeded after the hold phase, for up to two attempts. Per-episode randomization of the approach pitch and the tail grasp offset, together with phase-local slowdowns around the pick and insertion, further diversify the demonstrations.
+D.2
+Clip Routing
+The clip-routing policy grasps the deformable wire itself at the node nearest the clip, rather than the connector, since the connector is wider than the clip mouth and cannot enter the slot. The grasp node is located by proximity and the grasp orientation is set to the local wire tangent. After descending to a fixed table-relative height and closing on the wire, the policy lifts and rotates the held wire to the clip’s slot axis. It then over-stretches the wire by translating past the placement target along the anchor-to-clip direction, pulls back to the clip front to release excess tension, and pushes the held wire down past the clip lip so that it seats into the slot under a controlled descent. Success requires a wire node to lie inside the clip slot. The anchor-to-clip direction is frozen at grasp time because the wire’s far endpoint is a dynamic body that drifts under tension, which would otherwise cause the placement target to move every step.
+D.3
+Channel Seating
+The channel-seating policy grasps the connector and lays the wire into the channel so that its body follows the target path. Unlike the other two policies, which use full Cartesian control, it uses the fixed-orientation Cartesian mode with a much finer action scale to keep the connector level and produce smooth, non-snagging motion. It grasps the connector gently, holding the gripper open for a settling delay before closing, then lifts vertically and settles. It then descends along the channel path at a strongly reduced speed, seating the wire at the channel-center height before releasing. Following the path rather than descending at a single waypoint lets the same policy handle both straight and curved channels.
+D.4
+Scripted Demonstrations
+See Figure
+8
+.
+Insertion
+Clip routing
+Channel seating
+Figure 8:
+Scripted demonstration rollouts.
+Each row shows a scripted policy executing one task family across representative phases, progressing from the initial state through grasp and manipulation to task completion.
+Appendix E
+RL Experiment Detail
+E.1
+State-based RL
+We detail the privileged RL configuration on connector insertion, our primary RL setting. On insertion, the two privileged baselines, PPO and SACfD, share the same observation, action, and reward, and differ only in the learning algorithm. Clip routing and channel seating reuse the same PPO algorithm, network, and hyperparameters without per-task tuning, under their own task-specific observations and rewards, and we do not detail them further here. All RL results in Section
+5
+are reported as mean
+±
+\pm
+standard deviation across
+3
+3
+seeds.
+Observation.
+The insertion observation is a
+42
+42
+-dimensional privileged state vector (
+observation_space=42
+) : arm joint positions (
+6
+6
+) and gripper position (
+1
+1
+); arm joint velocities (
+6
+6
+) and gripper velocity (
+1
+1
+); end-effector position (
+3
+3
+) and quaternion (
+4
+4
+); left/right fingertip contact (
+2
+2
+); the connector-to-seated-target vector (
+3
+3
+); connector position (
+3
+3
+) and quaternion (
+4
+4
+); socket position (
+3
+3
+); seated-target position (
+3
+3
+); and the insertion-gate and axial/lateral seating-error scalars (
+3
+3
+).
+Action and control.
+The insertion action is a
+6
+6
+-DoF Cartesian end-effector delta resolved to joint targets by a differential-IK controller, plus one gripper command. Actions are clipped to
+[
+−
+1
+,
+1
+]
+[-1,1]
+and scaled by
+0.01
+0.01
+in RL setting. Simulation runs at
+Δ
+​
+t
+=
+1
+/
+120
+\Delta t=1/120
+s with decimation
+2
+2
+, giving a
+60
+60
+Hz policy rate; episodes last
+8
+8
+s.
+Reward.
+The insertion reward is a shaped sum of reach (
+15
+15
+), grasp (
+25
+25
+), bring (
+40
+40
+), two-point YZ alignment (
+20
+20
+), a roll-gated insertion-depth high-water ratchet (
+6000
+6000
+), socket/roll/EE-orientation terms (
+10
+10
+each), and a sparse seated bonus (
+1000
+1000
+), against action and table/gripper penalties. PPO and SACfD use this identical reward; PPO applies empirical observation normalization, while SACfD normalizes the state with a running standard scaler. Insertion results across connectors are in Table
+1
+.
+Networks.
+PPO
+[
+41
+]
+uses an actor–critic MLP with hidden sizes
+[
+256,128
+,
+64
+]
+[256,128,64]
+and ELU activations for both actor and critic. SACfD
+[
+46
+]
+uses a tanh-squashed Gaussian actor (
+[
+256,256
+]
+[256,256]
+, ELU) with twin
+Q
+Q
+-critics (
+[
+256,256
+]
+[256,256]
+, ELU). PPO hyperparameters are listed in Table
+6
+and SACfD in Table
+7
+.
+Table 6:
+State-based PPO hyperparameters. Vision PPO
+(Sec.
+E.2
+) inherits these except where noted.
+num_envs
+is set at launch with no committed default.
+Parameter
+Value
+Actor / critic MLP
+[
+256,128
+,
+64
+]
+[256,128,64]
+, ELU
+Clip range
+ϵ
+\epsilon
+0.2
+0.2
+Entropy coef.
+0.01
+0.01
+Value-loss coef.
+1.0
+1.0
+GAE
+λ
+\lambda
+0.95
+0.95
+Discount
+γ
+\gamma
+0.99
+0.99
+Learning rate
+5
+×
+10
+−
+4
+5\times 10^{-4}
+, adaptive (
+KL
+∗
+=
+0.01
+\mathrm{KL}^{*}{=}0.01
+)
+Steps per env (rollout)
+128
+128
+Minibatches / epochs
+8
+8
+/
+5
+5
+Max grad norm
+1.0
+1.0
+Max iterations
+20000
+20000
+Obs. normalization
+empirical (on)
+Table 7:
+SACfD hyperparameters on connector insertion tasks.
+Parameter
+Value
+Actor / critic MLP
+[
+256,256
+]
+[256,256]
+, ELU
+Discount
+γ
+\gamma
+0.99
+0.99
+Target smoothing
+τ
+\tau
+0.005
+0.005
+Actor / critic LR
+3
+×
+10
+−
+4
+3\times 10^{-4}
+/
+3
+×
+10
+−
+4
+3\times 10^{-4}
+Batch size
+256
+256
+Gradient steps / env step
+1
+1
+Replay capacity
+8000
+×
+N
+env
+8000\times N_{\text{env}}
+Warmup (learning starts)
+5000
+5000
+Entropy temp.
+α
+\alpha
+learned, target
+−
+7
+-7
+,
+α
+0
+=
+0.1
+\alpha_{0}{=}0.1
+Reward shaping scale
+0.01
+0.01
+State preproc.
+RunningStandardScaler
+Total timesteps
+10
+6
+10^{6}
+Demonstration augmentation (SACfD)
+Demo set
+∼
+\sim
+150k transitions (scripted)
+Demo replay ratio
+0.5
+0.5
+BC weight (anneal)
+→
+0.5
+2.5\!\to\!0.5
+over
+[
+80
+​
+k
+,
+250
+​
+k
+]
+[80\text{k},250\text{k}]
+steps
+E.2
+Vision PPO
+Design rationale.
+Training a visual policy from scratch with online RL is sample-inefficient: the
+encoder must learn useful features purely from the RL reward, which is slow and
+wasteful in interaction. We therefore decouple representation learning from
+control. The visual encoder is first supervised by behavior cloning on the
+corresponding state policy’s rollouts, and only then refined with online PPO,
+which substantially speeds convergence. For the encoder we use a pretrained
+DINOv2 ViT backbone
+[
+38
+,
+22
+]
+with a learned attention-pooling head rather than a CNN
+trained from scratch, since a frozen self-supervised backbone provides
+transferable features and keeps the online phase cheap; the attention pool lets
+the policy aggregate task-relevant regions across the camera views.
+Architecture.
+Vision PPO replaces the privileged actor input with two
+224
+×
+224
+224\times 224
+RGB streams, a wrist camera and a fixed third-person side camera, plus a
+14
+14
+-d proprioceptive vector of arm joint positions and velocities together with the gripper position and velocity. It is an
+asymmetric
+actor–critic
+[
+40
+]
+: the actor sees images and proprioception, while the critic retains the full
+42
+42
+-d privileged state. The visual actor is a DINOv2 ViT-S/14 backbone with a cross-attention pooling head (
+8
+8
+learned queries per camera,
+16
+16
+total; query dimension
+64
+64
+, hidden
+512
+512
+) that produces the
+7
+7
+-d action mean. The encoder is behavior-cloned from the state policy’s rollouts before PPO; during PPO the backbone and attention pool are frozen, and only the final projection head, the action
+log
+⁡
+σ
+\log\sigma
+, and the critic are trained. The critic is warm-started from the converged State-PPO critic and remains trainable.
+Hyperparameters.
+Vision PPO inherits all PPO settings in Table
+6
+except for a tighter trust region (clip
+0.1
+0.1
+, target-KL
+0.005
+0.005
+), no entropy bonus, a down-weighted value loss (
+0.3
+0.3
+), a lower learning rate (
+1
+×
+10
+−
+4
+1\times 10^{-4}
+), a small initial action noise (
+σ
+=
+0.05
+\sigma=0.05
+),
+64
+64
+parallel environments, and
+600
+600
+fine-tuning iterations from the behavior-cloned initialization, with observation normalization disabled. Training was run on an NVIDIA RTX PRO 4500 Blackwell GPU. Per-connector results are in Table
+1
+.
+E.3
+RL Rollout Demonstrations
+See Figure
+9
+.
+Insertion
+Clip routing
+Channel seating
+Figure 9:
+RL rollout demonstrations.
+Each row shows a trained State
+PPO policy rolled out on one task family across representative phases. The
+clip-routing row additionally illustrates an error and subsequent recovery.
+Appendix F
+Connector-Insertion IL/VLA Experimental Details
+F.1
+Dataset
+All four IL/VLA policies are trained on a shared dataset of 1,000 scripted connector-insertion trajectories collected in the same Isaac Lab task used for evaluation. Each trajectory contains two RGB image streams, one from a third-person workspace camera and one from a wrist-mounted camera, together with UR5 joint positions, gripper state, and joint-space actions. The action representation contains six arm commands and one gripper command. The shared dataset and action/state encoding allow all policies to be evaluated under the same observation and control interface.
+F.2
+Policy Training Configurations
+See Table
+8
+.
+Table 8:
+Training configurations for the IL/VLA connector-insertion baselines. All policies use the same dataset and action/state encoding.
+Policy
+Model / conditioning
+Action prediction
+Training
+ACT
+ResNet-18 visual encoder with transformer action-chunking policy
+Chunk size 100; 50 executed actions per inference call
+100k gradient steps; batch size 64; learning rate
+10
+−
+5
+10^{-5}
+Diffusion Policy
+ResNet-18 visual encoders with a temporal U-Net action denoiser
+Horizon 16; 2 observation steps; 8 action steps
+200k gradient steps; batch size 64; learning rate
+10
+−
+4
+10^{-4}
+Diffusion Transformer VLA
+Frozen CLIP ViT-B/16 image and text conditioning with a DiT-style action denoiser
+Horizon 32; 24 action steps
+300k gradient steps; batch size 32; learning rate
+2
+×
+10
+−
+5
+2\times 10^{-5}
+π
+0.5
+\pi_{0.5}
+Initialized from
+lerobot/pi05_base
+; vision tower frozen; action expert and language adapter trainable
+25 action steps
+50k gradient steps; batch size 32; learning rate
+10
+−
+5
+10^{-5}
+F.3
+Checkpoint Selection
+Each policy was checkpointed periodically during training and evaluated using the original reach-success criterion. We retained the top three checkpoints for each policy according to this reach success, rather than selecting checkpoints using insert success after the final evaluation. This avoids choosing checkpoints based on the stricter test metric while still allowing us to report how the best training-time checkpoints behave under both reach and insert success criteria. Because checkpoints are selected by reach success on the evaluation rollouts themselves rather than on a held-out validation set, the reported figures are an optimistic, best-observed estimate under our training budget and should not be read as validation-based model selection; insert success is taken from the same checkpoint and is therefore not separately optimized.
+F.4
+Evaluation Protocol
+For each retained checkpoint (See Table
+9
+), we evaluate four random seeds with 16 rollouts per seed, for a total of 64 rollouts per checkpoint (see Table
+10
+). Each rollout records both reach and insert success from the same trajectory, avoiding separate evaluation runs for the two criteria. Episodes use a fixed horizon of 800 simulator steps. We report mean and standard deviation across seeds.
+Table 9:
+Available and retained checkpoints for the connector-insertion IL/VLA baselines. Retained checkpoints are the top three checkpoints per policy according to online reach success during training.
+Policy
+Number of available checkpoints
+Retained checkpoints
+ACT
+20
+25k, 40k, 100k
+Diffusion Policy
+20
+140k, 190k, 200k
+Diffusion Transformer VLA
+23
+110k, 180k, 200k
+π
+0.5
+\pi_{0.5}
+5
+10k, 20k, 30k
+Table 10:
+Connector-insertion results for the retained checkpoints selected by reach success. Each entry reports mean
+±
+\pm
+standard deviation over four seeds, with 16 rollouts per seed.
+Policy
+Checkpoint
+SR
+reach
+\mathrm{SR}_{\mathrm{reach}}
+(%)
+SR
+insert
+\mathrm{SR}_{\mathrm{insert}}
+(%)
+ACT
+25k
+43.75
+±
+11.69
+43.75\pm 11.69
+3.13
+±
+3.13
+3.13\pm 3.13
+ACT
+40k
+54.69
+±
+17.88
+54.69\pm 17.88
+9.38
+±
+6.99
+9.38\pm 6.99
+ACT
+100k
+60.94
+±
+11.16
+\mathbf{60.94\pm 11.16}
+29.69
+±
+9.24
+\mathbf{29.69\pm 9.24}
+Diffusion Policy
+140k
+29.69
+±
+18.42
+29.69\pm 18.42
+17.19
+±
+13.53
+17.19\pm 13.53
+Diffusion Policy
+190k
+35.94
+±
+9.24
+35.94\pm 9.24
+17.19
+±
+6.81
+17.19\pm 6.81
+Diffusion Policy
+200k
+37.50
+±
+9.88
+\mathbf{37.50\pm 9.88}
+20.31
+±
+6.81
+\mathbf{20.31\pm 6.81}
+Diffusion Transformer VLA
+110k
+9.38
+±
+6.99
+9.38\pm 6.99
+3.13
+±
+3.13
+3.13\pm 3.13
+Diffusion Transformer VLA
+180k
+4.69
+±
+5.18
+4.69\pm 5.18
+1.56
+±
+2.71
+1.56\pm 2.71
+Diffusion Transformer VLA
+200k
+10.94
+±
+2.71
+\mathbf{10.94\pm 2.71}
+3.13
+±
+3.13
+\mathbf{3.13\pm 3.13}
+π
+0.5
+\pi_{0.5}
+10k
+0.00
+±
+0.00
+0.00\pm 0.00
+0.00
+±
+0.00
+0.00\pm 0.00
+π
+0.5
+\pi_{0.5}
+20k
+6.25
+±
+4.42
+\mathbf{6.25\pm 4.42}
+0.00
+±
+0.00
+\mathbf{0.00\pm 0.00}
+π
+0.5
+\pi_{0.5}
+30k
+1.56
+±
+2.71
+1.56\pm 2.71
+0.00
+±
+0.00
+0.00\pm 0.00
+Appendix G
+Clip Routing and Channel Seating Experimental Details
+Datasets.
+ACT and DiT VLA use the same scripted demonstration dataset for each task: 1,600 trajectories for 1-clip routing and 1,000 trajectories for straight-channel seating.
+Training.
+For both tasks, ACT is trained for 100k gradient steps with batch size 64 and learning rate
+10
+−
+5
+10^{-5}
+; DiT VLA is trained for 300k gradient steps with batch size 32 and learning rate
+2
+×
+10
+−
+5
+2\times 10^{-5}
+. All four training runs use seed 1000. ACT uses a ResNet-18 visual encoder, predicts 100-action chunks, and executes 50 actions per inference call. DiT VLA uses CLIP ViT-B/16 image and text conditioning, two observation steps, a 32-step prediction horizon, and 24 executed actions per inference call.
+Checkpoint selection and evaluation.
+We evaluate the final training checkpoint for each task–policy pair, at 100k steps for ACT and 300k steps for DiT VLA. For ACT and DiT VLA, results are reported as mean
+±
+\pm
+standard deviation across three evaluation seeds.
+Appendix H
+Real-World Validation
+We evaluate ACT on a physical UR5 across connector insertion, 1-clip routing, and straight-channel seating. For each task, we compare four training-data combinations: real demonstrations (R), scripted simulation demonstrations (S), and simulation RL rollouts (P), combined as R, R+S, R+P, and R+S+P. Preliminary trials showed poor zero-shot performance for simulation-only policies, so we restrict the full hardware evaluation to data combinations containing real demonstrations. The comparison examines whether simulated trajectories supplement real demonstrations under shared task definitions and policy interfaces.
+H.1
+Setup
+Physical setup.
+The platform uses a UR5 arm with a Robotiq 2F-85 gripper and two RealSense D405 cameras providing side and wrist RGB views. The fixtures include a 3D-printed Ethernet-style connector and socket, a single clip, and a straight channel. Connector insertion and clip routing use a 6 mm-diameter HDMI cable, while channel seating uses a 10 mm-diameter green cord with red and yellow flecks. A force–torque sensor is mounted between the arm flange and gripper, but its readings are not used by ACT. We reproduce its end-effector offset in simulation and match the task-board appearance and camera poses to the physical setup. ACT observes RGB images and robot proprioception, but not depth and force/torque inputs, and executes action commands at 30 Hz.
+Task initialization.
+Hardware trials use narrower initialization ranges than simulation. For insertion, the wire-side connector is placed within a
+3
+×
+3
+3\times 3
+cm region with varying tilt, while the socket remains fixed. For routing, a single clip is placed on either side of the wire,
+2
+2
+–
+5
+5
+cm away. For seating, one wire endpoint is fixed, while the other is placed
+2
+2
+–
+5
+5
+cm from the channel in a direction perpendicular to its longitudinal axis.
+Bridging the sim-to-real visual gap.
+We match the simulated side and wrist views to the physical cameras and augment simulation images during training. Brightness and contrast factors are sampled independently from
+[
+0.85
+,
+1.15
+]
+[0.85,1.15]
+, and Gaussian-noise standard deviation is sampled from
+[
+0
+,
+0.015
+]
+[0,0.015]
+for pixels in
+[
+0
+,
+1
+]
+[0,1]
+. These augmentations apply only to simulation episodes; real images and evaluation inputs are not augmented. Figure
+10
+shows observations from both domains across the three tasks.
+Real (side)
+Real (wrist)
+Sim + noise (side)
+Sim + noise (wrist)
+Connector insertion
+Clip routing
+Channel seating
+Figure 10:
+Real vs. noise-augmented simulation observations across three tasks.
+Rows show connector insertion, clip routing, and channel seating; columns show the side and wrist views from real demonstrations and scripted simulation trajectories.
+Brightness, contrast, and Gaussian-noise augmentation are applied only to the simulated frames using the training preset.
+H.2
+Protocol
+Data sources.
+Real demonstrations are collected on the physical UR5, while scripted demonstrations and RL rollouts are generated in the matched simulation environments. All sources share the same RGB, joint-state, and action schema. Table
+11
+reports the dataset sizes and training/validation episode counts. We hold out every tenth episode within each source, giving approximately 10% validation episodes. The remaining episodes are used for training.
+Table 11:
+Trajectory data for the three hardware tasks by source. Episodes and frames report total dataset sizes; train and validation columns report episode counts. All sources are recorded at
+30
+30
+FPS under the shared schema.
+Task
+Source
+Episodes
+Frames
+Train
+Validation
+Insertion
+Real-world (R)
+50
+50
+30,018
+30{,}018
+45
+45
+5
+5
+Scripted (S)
+200
+200
+121,890
+121{,}890
+180
+180
+20
+20
+RL rollout (P)
+200
+200
+27,394
+27{,}394
+180
+180
+20
+20
+1-clip routing
+Real-world (R)
+51
+51
+30,634
+30{,}634
+46
+46
+5
+5
+Scripted (S)
+200
+200
+125,304
+125{,}304
+180
+180
+20
+20
+RL rollout (P)
+200
+200
+53,226
+53{,}226
+180
+180
+20
+20
+Straight-channel seating
+Real-world (R)
+50
+50
+30,033
+30{,}033
+45
+45
+5
+5
+Scripted (S)
+200
+200
+114,954
+114{,}954
+180
+180
+20
+20
+RL rollout (P)
+200
+200
+56,511
+56{,}511
+180
+180
+20
+20
+Training.
+All configurations train ACT for 80k gradient steps with batch size 16, learning rate
+10
+−
+5
+10^{-5}
+, and training seed 1000. ACT uses an ImageNet-initialized ResNet-18 visual backbone, predicts 100-action chunks, and executes 50 actions per inference call. Inputs comprise two RGB views and a seven-dimensional joint/gripper state; outputs are six arm-joint targets and one gripper target.
+Checkpoint selection.
+Checkpoints are saved every 5k steps and selected by the lowest masked L1 action-prediction loss over the predicted chunks in normalized action space. Selection uses only the five held-out real episodes for each task, including for mixed-source policies. In the order R, R+S, R+P, and R+S+P, selected checkpoints are
+40
+/
+80
+/
+55
+/
+80
+40/80/55/80
+k for insertion,
+55
+/
+80
+/
+80
+/
+70
+55/80/80/70
+k for routing, and
+80
+/
+80
+/
+75
+/
+80
+80/80/75/80
+k for seating. Thus, configurations share the training budget and selection rule, but not the selected training step. Normalization statistics for the real-only datasets include the held-out episodes.
+H.3
+Results and Analysis
+Representative failure modes are shown in Figure
+11
+.
+Connector insertion.
+Observed failures include unsuccessful pickup and reaching without seating. The gripper sometimes closes beside the connector or fails to secure it during lifting. After successful pickup, the connector may reach the socket but remain unseated because of its position or orientation within the grasp. A grasp sufficient for transport may therefore be unsuitable for insertion.
+Clip routing.
+The wire may be released beside the clip opening or rest on the clip rim without entering the slot. In these cases, the gripper reaches the fixture, but the wire remains incorrectly positioned relative to the opening.
+Channel seating.
+Missed grasps leave the free endpoint on the board. After successful pickup, moving the endpoint near the channel can still leave part of the wire outside it; successful seating requires placing the wire body within the channel.
+The characteristics of the three trajectory sources are summarized in Table
+12
+.
+Table 12:
+Characteristics of the three trajectory sources used for hardware policy training.
+Source
+Trajectory characteristics
+R
+Human demonstrations contain pauses and repeated fine adjustments during alignment. Their limited diversity can restrict generalization.
+S
+Scripted trajectories use action noise during generation to broaden motion coverage. Execution is relatively slow and regular, providing varied examples of controlled task completion.
+P
+Task-optimized RL rollouts produce fast, aggressive motions. For this dataset collection, execution speed was reduced to 50% of the original policy speed.
+Connector insertion
+Clip routing
+Channel seating
+(a) Missed grasp
+(b) Wire beside clip
+(c) Missed grasp
+(d) Unseated connector
+(e) Wire on clip rim
+(f) Wire outside channel
+Figure 11:
+Representative hardware failures in insertion (left), clip routing (middle), and channel seating (right).
+Panels show (a,c) missed grasps, (b) wire misplacement beside the clip, (d) reaching without connector seating, (e) wire resting on the clip rim, and (f) wire placement outside the channel.
+Limitations.
+The hardware study covers three tasks on one UR5 with restricted initialization ranges and 20 trials per configuration. Indistinguishable difference in count of successful trials cannot lead to a definitive ranking of data mixtures. Source composition and dataset size vary together, so these comparisons measure data supplementation without isolating source diversity from data quantity.
+Appendix I
+Teleoperation Data Collection
+WireCraft teleoperation collects demonstrations by having a human operator drive
+the UR5 end-effector in Isaac Sim through a 6-DoF input device, with episodes
+recorded as supervised trajectories for IL and VLA training. Operator input is
+mapped to an end-effector delta pose plus a binary gripper command,
+a
+cart
+=
+[
+Δ
+​
+x
+,
+Δ
+​
+y
+,
+Δ
+​
+z
+,
+Δ
+​
+r
+x
+,
+Δ
+​
+r
+y
+,
+Δ
+​
+r
+z
+,
+g
+]
+,
+a_{\mathrm{cart}}=[\Delta x,\Delta y,\Delta z,\Delta r_{x},\Delta r_{y},\Delta r_{z},g],
+which is resolved by differential IK into a UR5 joint-position target. Trajectories
+are stored under the same observation–action schema as scripted demonstrations,
+so the two sources can be mixed without modifying the policy interface. The key
+behavioral difference is that scripted policies produce smooth, phase-structured
+rollouts from privileged simulation state, whereas teleoperation produces
+visually conditioned rollouts that include pauses, corrections, and re-grasps
+useful for contact-rich DLO manipulation.
+Control interfaces.
+We support three input modes, all sharing the same Cartesian-delta action
+interface: (i) a 3Dconnexion SpaceMouse with on-screen camera views (default);
+(ii) Meta Quest VR with retargeted wrist motion and a pinch-to-grip gesture,
+useful when fixed cameras provide poor depth cues; and (iii) a combined mode
+using the SpaceMouse for control and the VR headset for visualization. All
+modes record only simulator observations and IK-resolved joint targets; raw
+button events and hand-tracking signals are not stored.
+Recorded schema.
+The teleoperation pipeline follows the shared WireCraft trajectory schema, storing synchronized third-person and wrist RGB streams (
+observation.images.cam_side2
+,
+observation.images.cam_color
+), UR5 joint and gripper state (
+observation.state
+), end-effector pose (
+observation.cartesian_state
+), the applied joint-position target (
+action
+),
+timestamp
+,
+episode_index
+, and a
+task
+label. The recorded
+action
+is the IK-resolved joint target rather than the raw operator Cartesian delta, allowing teleoperated trajectories to use the same action representation as scripted and policy-generated data. In this paper, we release the teleoperation interface and recording pipeline, but do not include simulated teleoperation trajectories in the reported training datasets. Systematic teleoperation-data collection, filtering, and use for policy training are left to future work.
+(1) Initialize
+(2) Approach
+(3) Align grasp
+(4) Grasp
+(5) Lift
+(6) Move to socket
+(7) Align
+(8) Insert
+Figure 12:
+A teleoperated connector-insertion trajectory in simulation.
+A human operator drives the UR5 end-effector through eight representative stages: (1) initialization with the connector resting on the table; (2) approaching the connector; (3) aligning the gripper above it; (4) grasping the connector, typically after several attempts, since the operator must re-position and re-close the gripper to secure a firm grasp; (5) lifting the connector clear of the surface; (6) moving toward the socket while pulling the trailing wire taut to reduce its disturbance during insertion; (7) aligning the connector with the socket opening; and (8) seating it, often requiring repeated insertion attempts to correct small misalignments. Because the operator has no haptic feedback and only limited visual cues for fine alignment, both grasping and insertion rely on trial-and-error retries, making teleoperated episodes substantially longer than scripted or policy rollouts.
+Experimental support, please
+view the build logs
+for errors. Generated by
+L
+A
+T
+E
+xml
+.
+Instructions for reporting errors
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+      support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+      methods listed below:
+Click the "Report Issue"
+(
+)
+button, located in the page header.
+Tip:
+You can select the relevant text first, to include it in your report.
+Our team has already identified
+the following issues
+. We appreciate your time reviewing and reporting rendering errors we
+      may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+      should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+      all.
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a
+list of packages that need conversion
+, and welcome
+developer contributions
+.
+We gratefully acknowledge support from our
+major funders
+,
+member institutions
+,
+,
+        and all contributors.
+About
+·
+Help
+·
+Contact
+·
+Subscribe
+·
+Copyright
+·
+Privacy
+·
+Accessibility
+·
+Operational Status
+(opens in new tab)

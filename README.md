@@ -1,8 +1,8 @@
 # Robotics benchmarks overview
 
-A sourced HTML guide and searchable task catalog for comparing proposed robotics benchmark tasks with published tasks. Includes LIBERO, RoboCasa, SIMPLER, BEHAVIOR, DataCenterBench, and RoboDojo.
+A sourced HTML guide and searchable task catalog for comparing proposed robotics benchmark tasks with published tasks. Includes the original six benchmark families, eight additional manipulation/assembly benchmarks, and three task catalogs selected from the CoRL 2026 accepted program.
 
-The November 10, 2026 snapshot contains 1,818 versioned entries. Entries include source links, setup descriptions, available robot observations, grading summaries, exact task definitions or scoring checks, and official media where published. Some observations apply at benchmark or suite level. Each record labels that scope.
+The November 11, 2026 snapshot contains 2,338 entries across 17 benchmark families. The expansion is described in [coverage.json](coverage.json), with task counts available through the guide and `/api/catalog`. Entries include source links, setup descriptions, available robot observations, grading summaries, exact task definitions or scoring checks, and official media where published. Some observations apply at benchmark or suite level. Each record labels that scope.
 
 ## Open the guide
 
@@ -43,6 +43,10 @@ Versioned entries include older catalogs, aliases, and auxiliary material, so th
 
 Task definitions, source excerpts, figures, and media retain their respective authorship and applicable upstream terms. This repository does not grant additional rights to third-party materials. Source citations appear in the guide and individual task records.
 
-## Candidate additions
+## Expansion and CoRL review
 
-Priorities for expanding coverage include [NIST assembly task boards](https://www.nist.gov/el/intelligent-systems-division-73500/robotic-grasping-and-manipulation-assembly/assembly), [FurnitureBench](https://clvrai.github.io/furniture-bench/), [ManiSkill](https://maniskill.readthedocs.io/en/latest/tasks/index.html), [RLBench](https://github.com/stepjam/RLBench), [RoboTwin](https://robotwin-platform.github.io/doc/tasks/), [CALVIN](https://github.com/mees/calvin), [RoboChallenge](https://robochallenge.ai/challenges), and [Adroit](https://github.com/Farama-Foundation/d4rl/wiki/Tasks). These are suggestions and have not been ingested into the catalog.
+The added established suites are RLBench, ManiSkill, CALVIN, RoboTwin 2.0, NIST Assembly, FurnitureBench, RoboChallenge, and Adroit. Their catalog units differ. NIST includes operation groups and competencies; ManiSkill includes registered supporting environments; RoboChallenge keeps Table30 and Table30 V2 separate; Adroit keeps dense/sparse reward variants.
+
+[corl_review.json](corl_review.json) records screening of 687 public accepted CoRL 2026 papers, including 33 title candidates concerning benchmarks or evaluation. Selected titles were verified in the official accepted program. Task ingestion uses authors’ papers and catalogs. The added suites are WireCraft (industrial flexible-wire manipulation), IMBench (physical reasoning and execution), and ATOM-Bench (atomic/compositional manipulation on paired physical tracks).
+
+The review covers the public accepted program. HARP-Bench, LiquidLab, MESA, RMMBench and H2RBench remain candidates for later task-level ingestion. The review ledger preserves their paper links. The full-catalog expansion can be rebuilt from retained snapshots with `python3 fetch_corl_benchmarks.py`, then `python3 build_data.py` and `python3 build_report.py`. The two additional fetch scripts acquire the standard and physical benchmark source snapshots and emit their component catalogs.

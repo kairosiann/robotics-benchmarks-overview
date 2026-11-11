@@ -1,0 +1,165 @@
+Robotic Grasping and Manipulation Competition – Task 1: Task Board Assembly | NIST
+Skip to main content
+An official website of the United States government
+Here’s how you know
+Here’s how you know
+Official websites use .gov
+A
+.gov
+website belongs to an official government organization in the United States.
+Secure .gov websites use HTTPS
+A
+lock
+(
+Lock
+A locked padlock
+) or
+https://
+means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
+https://www.nist.gov/video/robotic-grasping-and-manipulation-competition-task-1-task-board-assembly
+Search NIST
+Menu
+Close
+Publications
+What We Do
+All Topics
+Advanced communications
+Bioscience
+Buildings and construction
+Chemistry
+Cybersecurity and Privacy
+Electronics
+Energy
+Environment
+Fire
+Forensic science
+Health
+Information technology
+Infrastructure
+Manufacturing
+Materials
+Mathematics and statistics
+Metrology
+Nanotechnology
+Neutron research
+Performance excellence
+Physics
+Public safety
+Quantum information science
+Resilience
+Standards
+Super intelligence
+Transportation
+Labs & Major Programs
+Laboratories
+Communications Technology Laboratory
+Engineering Laboratory
+Information Technology Laboratory
+Material Measurement Laboratory
+Physical Measurement Laboratory
+User Facilities
+NIST Center for Neutron Research
+CNST NanoFab
+Research Test Beds
+Research Projects
+Tools & Instruments
+Major Programs
+CHIPS for America Initiative
+Congressionally Identified Project Program (CIPP)
+Manufacturing Extension Partnership (MEP)
+Manufacturing USA
+Office of Advanced Manufacturing
+Technology Partnerships Office
+Services & Resources
+Measurements and Standards
+Calibration Services
+Laboratory Accreditation (NVLAP)
+Quality System
+Standard Reference Materials (SRMs)
+Standard Reference Instruments (SRIs)
+Standards.gov
+Time Services
+Office of Weights and Measures
+Software
+Data
+Chemistry WebBook
+National Vulnerability Database
+Physical Reference Data
+Standard Reference Data (SRD)
+Storefront
+License & Patents
+Computer Security Resource Center (CSRC)
+NIST Research Library
+News & Events
+News
+Events
+Blogs
+NIST In Focus
+Feature Stories
+Awards
+Video Gallery
+Image Gallery
+Media Contacts
+About NIST
+About Us
+Leadership
+Organization Structure
+Budget & Planning
+Contact Us
+Visit
+Careers
+Student programs
+Work with NIST
+History
+NIST Digital Archives
+NIST Museum
+NIST and the Nobel
+Educational Resources
+VIDEOS
+Robotic Grasping and Manipulation Competition – Task 1: Task Board Assembly
+Share
+Facebook
+Linkedin
+X.com
+Email
+Appears In
+IROS 2017Robotic Grasping and Manipulation Competition: Manufacturing Track
+No Audio - Task 1 of the manufacturing track of the IROS 2017 Robotic Grasping and Manipulation Competition will be comprised of an assembly subtask and a disassembly subtask using a task board.  The task board  was developed as part of a NIST project to develop tools for benchmarking the performance of assembly robotics.  During the assembly subtask, the manufacturing task board and kit layout is placed on the table.  Location can be predefined by the team or arbitrarily placed within a defined region by the competition staff to test perception solutions.  Perception solutions qualify for bonus.  Nuts, gears, pegs, and male electrical connectors are placed on their respective locations on the kit layout, with optional randomized layout. The goal is to pick all nuts, gears, pegs, and male connectors from the kit layout, and assemble them into their defined locations on task board within the allotted competition time.  Points are assessed on a per part basis.  This video shows a person performing the assembly subtask to demonstrate the steps needed to be performed by a robot system.
+Uploaded On
+August 7, 2017
+Collection
+Manufacturing
+Was this page helpful?
+HEADQUARTERS
+100 Bureau Drive
+Gaithersburg, MD 20899
+301-975-2000
+Webmaster
+|
+Contact Us
+|
+Our Other Offices
+X.com
+Facebook
+LinkedIn
+Instagram
+YouTube
+Giphy
+RSS Feed
+Mailing List
+How are we doing?
+Feedback
+Site Privacy
+Accessibility
+Privacy Program
+Copyright & Disclaimers
+Vulnerability Disclosure
+No Fear Act Policy
+FOIA
+Environmental Policy
+Scientific Integrity
+Information Quality Standards
+Commerce.gov
+Science.gov
+USA.gov
+Vote.gov

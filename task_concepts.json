@@ -39,7 +39,7 @@
   {"term":"Fastener","kind":"Object","aliases":["fastener","fasteners","screw","screws","bolt","bolts","nut","nuts"]},
   {"term":"Cloth","kind":"Object","aliases":["cloth","cloths","towel","towels","fabric","textile"]},
   {"term":"Appliance","kind":"Object","aliases":["appliance","appliances"]},
-  {"term":"Continuity or connectivity","kind":"Outcome","aliases":["verify connection","verify the connection","check connection","check connectivity","test connection","test connectivity","check continuity","test continuity","continuity","connectivity","electrical contact","link light"]},
+  {"term":"Continuity or connectivity","kind":"Outcome","aliases":["verify connection","verify the connection","check connection","check connectivity","test connection","test connectivity","check continuity","test continuity","continuity","connectivity","electrical contact","electrical connection","electrical continuity","connector led is lit","wired correctly","link light"]},
   {"term":"Verification","kind":"Outcome","aliases":["verify","verifies","verified","verification","confirm","confirmation","inspect","validate"]},
   {"term":"Containment","kind":"Outcome","aliases":["inside","contained","containment","enclosed","obj in receptacle","obj inside of"]},
   {"term":"Seated","kind":"Outcome","aliases":["fully seated","seated","fully inserted","inserted all the way","flush fit"]},

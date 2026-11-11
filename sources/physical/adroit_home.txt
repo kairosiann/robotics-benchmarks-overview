@@ -1,0 +1,164 @@
+Adroit Hand - Gymnasium-Robotics Documentation
+Toggle site navigation sidebar
+Gymnasium-Robotics Documentation
+Farama Foundation
+Contents
+Menu
+Expand
+Light mode
+Dark mode
+Auto light/dark mode
+Hide navigation sidebar
+Hide table of contents sidebar
+Gymnasium-Robotics Documentation
+Introduction
+Installation
+Multi-goal API
+Environments
+Fetch
+Toggle navigation of Fetch
+Pick And Place
+Push
+Reach
+Slide
+Shadow Dexterous Hand
+Toggle navigation of Shadow Dexterous Hand
+Manipulate Block
+Manipulate Block Touch Sensors
+Manipulate Egg
+Manipulate Egg Touch Sensors
+Manipulate Pen
+Manipulate Pen Touch Sensors
+Reach
+Maze
+Toggle navigation of Maze
+Ant Maze
+Point Maze
+Adroit Hand
+Toggle navigation of Adroit Hand
+Adroit Door
+Adroit Hammer
+Adroit Pen
+Adroit Relocate
+Franka Kitchen
+Toggle navigation of Franka Kitchen
+Franka Kitchen
+MaMuJoCo (Multi-Agent MuJoCo)
+Toggle navigation of MaMuJoCo (Multi-Agent MuJoCo)
+Ant
+Coupled Half Cheetah
+Half Cheetah
+Hopper
+Humanoid Standup
+Humanoid
+ManySegmentSwimmer
+Reacher
+Swimmer
+Pusher
+Walker2d
+Single Action Environments
+Development
+Github
+Release Notes
+Back to top
+Edit this page
+Toggle Light / Dark / Auto color theme
+Toggle table of contents sidebar
+Adroit Hand
+¶
+This environments consists of a
+Shadow Dexterous Hand
+attached to a free arm. The system can have up to 30 actuated degrees of freedom. There are 4 possible
+environments that can be initialized depending on the task to be solved:
+AdroitHandDoor-v1
+: The hand has to open a door with a latch.
+AdroitHandHammer-v1
+: The hand has to hammer a nail inside a board.
+AdroitHandPen-v1
+: The hand has to manipulate a pen until it achieves a desired goal position and rotation.
+AdroitHandRelocate-v1
+: The hand has to pick up a ball and move it to a target location.
+A sparse reward variant of each environment is also provided.
+These environments have a reward of 10.0 for achieving the target goal, and -0.1 otherwise.
+They can be initialized via:
+AdroitHandDoorSparse-v1
+AdroitHandHammerSparse-v1
+AdroitHandPenSparse-v1
+AdroitHandRelocateSparse-v1
+Adroit Door
+Adroit Hammer
+Adroit Pen
+Adroit Relocate
+Reference
+¶
+These environments were first introduced in
+“Learning Complex Dexterous Manipulation with Deep Reinforcement Learning and Demonstrations”
+by Aravind Rajeswaran, Vikash Kumar, Abhishek Gupta, Giulia Vezzani, John Schulman, Emanuel Todorov, and Sergey Levine. Which can be cited as follows:
+@article
+{
+rajeswaran2017learning
+,
+title
+=
+{
+Learning
+complex
+dexterous
+manipulation
+with
+deep
+reinforcement
+learning
+and
+demonstrations
+},
+author
+=
+{
+Rajeswaran
+,
+Aravind
+and
+Kumar
+,
+Vikash
+and
+Gupta
+,
+Abhishek
+and
+Vezzani
+,
+Giulia
+and
+Schulman
+,
+John
+and
+Todorov
+,
+Emanuel
+and
+Levine
+,
+Sergey
+},
+journal
+=
+{
+arXiv
+preprint
+arXiv
+:
+1709.10087
+},
+year
+=
+{
+2017
+}
+}
+Copyright © 2026 Farama Foundation
+On this page
+Adroit Hand
+Reference
