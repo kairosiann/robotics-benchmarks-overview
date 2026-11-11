@@ -1,0 +1,3247 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+    <link rel="icon" href="/assets/images/Robocasa_web_logo.svg" type="image/svg+xml">
+
+    <title>RoboCasa</title>
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="RoboCasa" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="https://robocasa.ai/" />
+<meta property="og:url" content="https://robocasa.ai/" />
+<meta property="og:site_name" content="RoboCasa" />
+<meta property="og:image" content="https://robocasa.ai/assets/images/og-image.png" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://robocasa.ai/assets/images/og-image.png" />
+<meta property="twitter:title" content="RoboCasa" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","headline":"RoboCasa","image":"https://robocasa.ai/assets/images/og-image.png","name":"RoboCasa","url":"https://robocasa.ai/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=b31098324fb4f605b11879ed99f0504f5b645f6b">
+  </head>
+  
+  <body>
+    
+    <header class="page-header" role="banner">
+      <h1 class="project-name">RoboCasa</h1>
+      <h1 class="project-subtitle"></h1>
+      <h2 class="project-tagline">Large-Scale Simulation Framework for Training and Benchmarking Generalist Robots</h2>
+      <a href="https://arxiv.org/pdf/2406.02523" class="btn">Paper (RoboCasa)</a>
+      <a href="https://arxiv.org/pdf/2603.04356" class="btn">Paper (RoboCasa365)</a>
+      <a href="https://github.com/robocasa/robocasa" class="btn">Code</a>
+      <a href="/docs/build/html/introduction/overview.html" class="btn">Documentation</a>
+      <a href="/leaderboard.html" class="btn">Leaderboard</a>
+    </header>
+    
+
+    <main id="content" class="main-content" role="main">
+      <div id="robocasa365-release"></div>
+
+<aside class="rc-home-updates" aria-label="Updates">
+  <h2 class="rc-home-updates__title">Updates</h2>
+  <ul class="rc-home-updates__list">
+    <li><span class="rc-home-updates__date">[10/28/2026]</span> The leaderboard now accepts <a href="/leaderboard.html#rc365-agentic"><strong>agentic submissions</strong></a>: new models or novel agentic harnesses built around a base policy.</li>
+    <li><span class="rc-home-updates__date">[10/14/2026]</span> Released the <a href="https://robocasa.ai/docs/build/html/use_cases/subtask_annotations.html" target="_blank" rel="noopener noreferrer"><strong>subtask annotation pipeline</strong></a>, with labelers covering all 300 composite tasks. It generates per-frame subtask labels directly from each demo's simulation state.</li>
+    <li><span class="rc-home-updates__date">[7/7/2026]</span> Our target composite task datasets have been updated to include per-frame <strong>subtask annotations</strong>. Every timestep is labeled with a subtask index, atomic-skill name, stage (i.e. pick / place / navigate), and a natural-language instruction, to support hierarchical policy learning.</li>
+    <li><span class="rc-home-updates__date">[5/12/2026]</span> <strong>v1.0.1:</strong> Updated horizon lengths (1.5x increase) across all tasks for consistency. Please update to the latest version for running evals.</li>
+    <li><span class="rc-home-updates__date">[4/6/2026]</span> <a href="/leaderboard.html"><strong>RoboCasa365 Leaderboard</strong></a> published, comparing generalist robot policies on the multi-task learning benchmark and open to community model submissions.</li>
+    <li><span class="rc-home-updates__date">[2/18/2026]</span> <strong>v1.0:</strong> RoboCasa365 release, with 365 tasks, 2500+ kitchen scenes, 2200+ hours of robot demonstration data, and benchmarking support.</li>
+  </ul>
+</aside>
+
+<figure class="figure rc-release-figure">
+  <div class="figure__main">
+    <video controls="" autoplay="" loop="" muted="" playsinline="" preload="metadata" class="rc-release-video">
+      <source src="/assets/videos/release.mp4" type="video/mp4" />
+    </video>
+  </div>
+</figure>
+
+<p><strong>RoboCasa</strong> is a large-scale simulation framework for training generally capable robots to perform everyday tasks. It features realistic and diverse human-centered environments with a focus on kitchen scenes. We create these environments with the aid of generative AI tools, such as large language models (LLMs) and text-to-image/3D generative models. Together with the simulated tasks, we offer a dataset of high-quality human demonstrations and leverage automated trajectory generation techniques to significantly expand the amount of training data with little additional cost.</p>
+
+<p>We’re excited to announce <strong>RoboCasa365</strong>, the latest release built on the RoboCasa platform: 365 everyday tasks across 2,500 diverse kitchen environments, with 600+ hours of human demonstration data and 1,600+ hours of synthetically generated demonstrations. RoboCasa365 is designed for systematic benchmarking across key settings, including multi-task learning, foundation model training, and lifelong learning. It supports popular policy learning models, such as Diffusion Policy, π₀, and GR00T.</p>
+
+<hr />
+
+<h2 id="realistic-and-diverse-scenes">Realistic and Diverse Scenes</h2>
+
+<figure class="figure rc-scene-collage">
+  <div class="figure__main">
+    <video autoplay="" loop="" muted="" playsinline="" class="postimagefullwidth">
+      <source src="/assets/videos/scene_collage.mp4" type="video/mp4" />
+    </video>
+  </div>
+</figure>
+
+<p>To capture the complexity and diversity of real-world environments, we consult numerous architecture and home design magazines and compile a collection of kitchen layouts and styles reflecting the vast diversity of kitchens in homes around the world. We model these kitchens according to standard size and spatial specifications and fit them with a large repository of interactable furniture and appliances spanning cabinets, stoves, sinks, microwaves, and more.</p>
+
+<p><strong>RoboCasa365</strong> significantly expands this foundation: from the original 120 scenes we scale to <strong>2,500</strong> unique kitchen environments for large-scale training. We introduce 50 new layouts based on real-world homes, paired with 50 additional styles that vary fixtures, appliances, and textures.</p>
+
+<h2 id="cross-embodiment-support">Cross-Embodiment Support</h2>
+
+<p>The simulator supports mobile manipulators of diverse form factors, such as single-arm mobile platforms, humanoid robots, and quadruped robots with arms.</p>
+
+<div class="video-grid-2x2">
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <div class="video-item">
+        <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+          <source data-src="/assets/videos/robot_grid/media15.mp4" type="video/mp4" />
+        </video>
+      </div>
+    
+  
+    
+      <div class="video-item">
+        <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+          <source data-src="/assets/videos/robot_grid/media16.mp4" type="video/mp4" />
+        </video>
+      </div>
+    
+  
+    
+      <div class="video-item">
+        <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+          <source data-src="/assets/videos/robot_grid/media17.mp4" type="video/mp4" />
+        </video>
+      </div>
+    
+  
+    
+      <div class="video-item">
+        <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+          <source data-src="/assets/videos/robot_grid/media18.mp4" type="video/mp4" />
+        </video>
+      </div>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</div>
+
+<h2 id="interactable-furniture-and-appliances">Interactable Furniture and Appliances</h2>
+
+<div class="video-grid-2x2">
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <div class="video-item">
+        <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+          <source data-src="/assets/videos/appliance_grid/media11.mp4" type="video/mp4" />
+        </video>
+      </div>
+    
+  
+    
+      <div class="video-item">
+        <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+          <source data-src="/assets/videos/appliance_grid/media12.mp4" type="video/mp4" />
+        </video>
+      </div>
+    
+  
+    
+      <div class="video-item">
+        <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+          <source data-src="/assets/videos/appliance_grid/media13.mp4" type="video/mp4" />
+        </video>
+      </div>
+    
+  
+    
+      <div class="video-item">
+        <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+          <source data-src="/assets/videos/appliance_grid/media14.mp4" type="video/mp4" />
+        </video>
+      </div>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</div>
+
+<p>Each kitchen scene is equipped with a selection of interactable furniture and appliances. Several types of interactable objects are articulated; for example, a robot can open and close doors on microwaves and twist knobs on stoves. Other types of interactable objects can undergo state changes; for example, when a knob on the stove is turned, the corresponding burner turns on.</p>
+
+<p><br /></p>
+
+<hr />
+
+<h2 id="augmenting-scene-diversity-with-text-to-image-models">Augmenting Scene Diversity with Text-to-Image Models</h2>
+
+<figure class="figure">
+  <div class="figure__main">
+    <video autoplay="" loop="" muted="" playsinline="" class="postimagefullwidth">
+      <source src="/assets/videos/ai_textures.mp4" type="video/mp4" />
+    </video>
+  </div>
+</figure>
+
+<p>Each scene can be customized by replacing textures from a large selection of high-quality AI-generated textures created using the popular text-to-image models from <a href="https://docs.midjourney.com/docs/model-versions">MidJourney</a>. We provide 100 textures for walls, 100 for the floor, 100 for counters, and 100 for cabinet panels, respectively. These textures can be used as a form of realistic domain randomization to increase the visual diversity of our training datasets substantially.</p>
+
+<h2 id="creating-diverse-object-assets-with-text-to-3d-models">Creating Diverse Object Assets with Text-to-3D Models</h2>
+
+<p>We curate a repository of 3,200+ objects across more than 150 categories, spanning a variety of fruits, vegetables, packaged foods, and receptacles. They are sourced from <a href="https://objaverse.allenai.org/">Objaverse</a> 1.0, <a href="https://www.lightwheel.ai/">LightWheel AI</a>, and the remaining are AI-generated from <a href="https://lumalabs.ai/">Luma AI</a>.</p>
+
+<figure class="figure">
+  <div class="figure__main">
+    <video autoplay="" loop="" muted="" playsinline="" class="postimagefullwidth">
+      <source src="/assets/videos/objects.mp4" type="video/mp4" />
+    </video>
+  </div>
+</figure>
+
+<h2 id="training-foundational-robot-skills">Training Foundational Robot Skills</h2>
+
+<p>We focus on ten foundational skills as the basic building blocks to scaffold long-horizon manipulation behaviors for the majority of household activities: (1) Pick and place, (2) Opening and closing doors, (3) Opening and closing drawers, (4) Twisting knobs, (5) Turning levers, (6) Pressing buttons, (7) Insertion, (8) Navigation, (9) Sliding Racks, and (10) Closing/Opening Lids. RoboCasa365 includes 65 atomic tasks for systematically training and benchmarking these skills.</p>
+
+<div class="video-slide-wrapper">
+  <div class="slide-button-left"></div>
+  <div class="slide-button-right"></div>
+  <div class="video-slide">
+    <div>
+      <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+        <source data-src="/assets/videos/basic_skills/pnp.mp4" type="video/mp4" />
+      </video>
+      <div class="video-caption">
+        <h3>Pick and Place</h3>
+      </div>
+    </div>
+    <div>
+      <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+        <source data-src="/assets/videos/basic_skills/door.mp4" type="video/mp4" />
+      </video>
+      <div class="video-caption">
+        <h3>Opening and Closing Doors</h3>
+      </div>
+    </div>
+    <div>
+      <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+        <source data-src="/assets/videos/basic_skills/lever.mp4" type="video/mp4" />
+      </video>
+      <div class="video-caption">
+        <h3>Turning Levers</h3>
+      </div>
+    </div>
+    <div>
+      <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+        <source data-src="/assets/videos/basic_skills/knob.mp4" type="video/mp4" />
+      </video>
+      <div class="video-caption">
+        <h3>Twisting Knobs</h3>
+      </div>
+    </div>
+    <div>
+      <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+        <source data-src="/assets/videos/basic_skills/button.mp4" type="video/mp4" />
+      </video>
+      <div class="video-caption">
+        <h3>Pressing Buttons</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 id="generating-composite-tasks-with-llm-guidance">Generating Composite Tasks with LLM Guidance</h2>
+
+<p>Composite tasks involve sequencing skills to solve semantically meaningful activities, from restocking kitchen supplies to brewing coffee. Our goal in creating these tasks is to capture realistic and diverse tasks that reflect the ecological statistics of real-world household activities in the human-centered world. We use the guidance of large language models (LLMs), <a href="https://openai.com/index/gpt-4-research/">GPT-4</a> particularly, to define our tasks, as they encapsulate a vast amount of common sense and world knowledge of the human world and can thus effectively provide task candidates based on the environments and the robot’s skills.</p>
+
+<div class="video-slide-wrapper">
+  <div class="slide-button-left"></div>
+  <div class="slide-button-right"></div>
+  <div class="video-slide">
+    <div>
+      <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+        <source data-src="/assets/videos/composite_tasks/steaming_veg.mp4" type="video/mp4" />
+      </video>
+      <div class="video-caption">
+        <h3>Steaming Vegetables</h3>
+      </div>
+    </div>
+    <div>
+      <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+        <source data-src="/assets/videos/composite_tasks/restock.mp4" type="video/mp4" />
+      </video>
+      <div class="video-caption">
+        <h3>Restocking Kitchen Supplies</h3>
+      </div>
+    </div>
+    <div>
+      <video class="lazy" autoplay="" loop="" muted="" playsinline="">
+        <source data-src="/assets/videos/composite_tasks/brewing_coffee.mp4" type="video/mp4" />
+      </video>
+      <div class="video-caption">
+        <h3>Brewing Coffee</h3>
+      </div>
+    </div>
+  </div>
+  <br />
+</div>
+
+<p><br /></p>
+<hr />
+
+<h1 id="team">Team</h1>
+
+<h3>Core Team</h3>
+
+<div class="col-lg-12">
+  <div class="col-xs-2 authornames">
+    <a href="https://snasiriany.me" align="middle">
+      <img src="assets/images/soroush_nasiriany.png" class="img-circle img-responsive" />
+      Soroush Nasiriany
+    </a>
+  </div>
+
+  <div class="col-xs-2 authornames">
+    <a href="https://sepnasiriany.github.io/" align="middle">
+      <img src="assets/images/sep_nasiriany.png" class="img-circle img-responsive" />
+      Sep Nasiriany
+    </a>
+  </div>
+
+  <div class="col-xs-2 authornames">
+    <a href="https://abhiram824.github.io/" align="middle">
+      <img src="assets/images/abhi_maddukuri.jpeg" class="img-circle img-responsive" />
+      Abhiram Maddukuri
+    </a>
+  </div>
+
+  <div class="col-xs-2 authornames">
+    <a href="https://yukezhu.me/" align="middle">
+      <img src="assets/images/yuke_zhu.jpeg" class="img-circle img-responsive" />
+      Yuke Zhu
+    </a>
+  </div>
+</div>
+
+<h3>Alumni</h3>
+
+<div class="col-lg-12">
+  <div class="col-xs-2 authornames">
+    <a href="https://www.linkedin.com/in/lancezhang04/" align="middle">
+      <img src="assets/images/lance_zhang.png" class="img-circle img-responsive" />
+      Lance Zhang
+    </a>
+  </div>
+
+  <div class="col-xs-2 authornames">
+    <a href="https://www.linkedin.com/in/adeet-parikh/" align="middle">
+      <img src="assets/images/adeet_parikh.jpeg" class="img-circle img-responsive" />
+      Adeet Parikh
+    </a>
+  </div>
+
+  <div class="col-xs-2 authornames">
+    <a href="https://www.linkedin.com/in/aaron-lo-18a6871b3/" align="middle">
+      <img src="assets/images/aaron_lo.jpeg" class="img-circle img-responsive" />
+      Aaron Lo
+    </a>
+  </div>
+
+  <div class="col-xs-2 authornames">
+    <a href="https://www.linkedin.com/in/abhishek-joshi-4ab469180/" align="middle">
+      <img src="assets/images/abhishek_joshi.jpeg" class="img-circle img-responsive" />
+      Abhishek Joshi
+    </a>
+  </div>
+
+  <div class="col-xs-2 authornames">
+    <a href="https://ai.stanford.edu/~amandlek/" align="middle">
+      <img src="assets/images/ajay_mandlekar.jpeg" class="img-circle img-responsive" />
+      Ajay Mandlekar
+    </a>
+  </div>
+</div>
+
+<h1 id="citation">Citation</h1>
+
+<p><strong>RoboCasa365:</strong></p>
+
+<div class="language-bibtex highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">@inproceedings</span><span class="p">{</span><span class="nl">robocasa365</span><span class="p">,</span>
+  <span class="na">title</span><span class="p">=</span><span class="s">{RoboCasa365: A Large-Scale Simulation Framework for Training and Benchmarking Generalist Robots}</span><span class="p">,</span>
+  <span class="na">author</span><span class="p">=</span><span class="s">{Soroush Nasiriany and Sepehr Nasiriany and Abhiram Maddukuri and Yuke Zhu}</span><span class="p">,</span>
+  <span class="na">booktitle</span><span class="p">=</span><span class="s">{International Conference on Learning Representations (ICLR)}</span><span class="p">,</span>
+  <span class="na">year</span><span class="p">=</span><span class="s">{2026}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>RoboCasa (Original Release):</strong></p>
+
+<div class="language-bibtex highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">@inproceedings</span><span class="p">{</span><span class="nl">robocasa2024</span><span class="p">,</span>
+  <span class="na">title</span><span class="p">=</span><span class="s">{RoboCasa: Large-Scale Simulation of Everyday Tasks for Generalist Robots}</span><span class="p">,</span>
+  <span class="na">author</span><span class="p">=</span><span class="s">{Soroush Nasiriany and Abhiram Maddukuri and Lance Zhang and Adeet Parikh and Aaron Lo and Abhishek Joshi and Ajay Mandlekar and Yuke Zhu}</span><span class="p">,</span>
+  <span class="na">booktitle</span><span class="p">=</span><span class="s">{Robotics: Science and Systems (RSS)}</span><span class="p">,</span>
+  <span class="na">year</span><span class="p">=</span><span class="s">{2024}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<script>
+  var video_slides = document.getElementsByClassName("video-slide-wrapper");
+  var buttons = [null, null];
+  var disabled = [false, false];
+  var first = true;
+  for (let slide_wrapper of video_slides) {
+    let slide = slide_wrapper.getElementsByClassName("video-slide").item(0);
+    buttons[0] = slide_wrapper.getElementsByClassName("slide-button-left").item(0);
+    buttons[1] = slide_wrapper.getElementsByClassName("slide-button-right").item(0);
+    for (let i = 0; i < 2; i++) {
+      buttons[i].addEventListener("click", function (e) {
+        if (disabled[i] === true) return;
+        var width = slide.children[0].offsetWidth;
+
+        // Fix for mobile - not sure why but it allows an extra scroll to the right without this
+        if (i == 1 && slide.scrollLeft > width * (slide.children.length - 1)) return;
+
+        disabled[i] = true;
+
+        slide.scrollBy({
+          left: width * (i === 0 ? -1 : 1),
+          behavior: 'smooth'
+        });
+
+        let position = null
+        const checkIfScrollIsStatic = setInterval(() => {
+          if (position === slide.scrollLeft) {
+            clearInterval(checkIfScrollIsStatic)
+            disabled[i] = false;
+          }
+          position = slide.scrollLeft
+        }, 20);
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy"));
+
+    if ("IntersectionObserver" in window) {
+      var lazyVideoObserver = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(function(video) {
+          if (video.isIntersecting) {
+            for (var source in video.target.children) {
+              var videoSource = video.target.children[source];
+              if (typeof videoSource.tagName === "string" && videoSource.tagName === "SOURCE") {
+                videoSource.src = videoSource.dataset.src;
+              }
+            }
+
+            video.target.load();
+            video.target.classList.remove("lazy");
+            lazyVideoObserver.unobserve(video.target);
+          }
+        });
+      });
+
+      lazyVideos.forEach(function(lazyVideo) {
+        lazyVideoObserver.observe(lazyVideo);
+      });
+    }
+  });
+</script>
+
+
+
+      <footer class="site-footer">
+        <span class="site-footer-owner">
+            &copy; Copyright the RoboCasa Team 2026
+        </span>
+      </footer>
+    </main>
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var main = document.querySelector("main#content");
+        if (!main) return;
+        main.querySelectorAll("pre").forEach(function(pre) {
+          if (!pre.textContent || pre.textContent.indexOf("@inproceedings") === -1) return;
+          var wrapper = pre.closest(".highlight") || pre.closest("figure") || pre.parentElement;
+          if (!wrapper || wrapper.querySelector(".rc-citation-copy-btn")) return;
+          wrapper.style.position = "relative";
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "rc-citation-copy-btn";
+          btn.setAttribute("aria-label", "Copy citation");
+          btn.title = "Copy to clipboard";
+          btn.innerHTML = "<svg class=\"rc-citation-copy-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"/><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"/></svg>";
+          btn.addEventListener("click", function() {
+            var text = pre.textContent || "";
+            navigator.clipboard.writeText(text).then(function() {
+              btn.setAttribute("aria-label", "Copied!");
+              btn.classList.add("rc-copied");
+              btn.innerHTML = "<svg class=\"rc-citation-copy-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg>";
+              setTimeout(function() {
+                btn.setAttribute("aria-label", "Copy citation");
+                btn.classList.remove("rc-copied");
+                btn.innerHTML = "<svg class=\"rc-citation-copy-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"/><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"/></svg>";
+              }, 1500);
+            });
+          });
+          wrapper.appendChild(btn);
+        });
+      });
+    </script>
+    
+  </body>
+</html>

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataCenterBench Tier 1 | Robocurve</title>
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="description" content="In DataCenterBench Tier 1, nine frontier AI models controlled robot arms on ten steps from data-center maintenance procedures. GPT-6 Astra scored highest at 40%. No model plugged in a charger, joined an Ethernet connector or pressed a cable into a clip.">
+<link rel="canonical" href="https://robocurve.org/datacenterbench/">
+<link rel="icon" href="/assets/logo/robocurve-mark-v2.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Robocurve">
+<meta property="og:title" content="DataCenterBench Tier 1: AI models operate data-center controls">
+<meta property="og:description" content="In DataCenterBench Tier 1, nine frontier AI models controlled robot arms on ten steps from data-center maintenance procedures. GPT-6 Astra scored highest at 40%. No model plugged in a charger, joined an Ethernet connector or pressed a cable into a clip.">
+<meta property="og:url" content="https://robocurve.org/datacenterbench/">
+<meta property="og:image" content="https://robocurve.org/datacenterbench/og-8882c5e98f.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The ten DataCenterBench Tier 1 tasks on Robocurve's robot rigs">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DataCenterBench Tier 1: AI models operate data-center controls">
+<meta name="twitter:description" content="In DataCenterBench Tier 1, nine frontier AI models controlled robot arms on ten steps from data-center maintenance procedures. GPT-6 Astra scored highest at 40%. No model plugged in a charger, joined an Ethernet connector or pressed a cable into a clip.">
+<meta name="twitter:image" content="https://robocurve.org/datacenterbench/og-8882c5e98f.jpg">
+<meta name="twitter:image:alt" content="The ten DataCenterBench Tier 1 tasks on Robocurve's robot rigs">
+<meta name="citation_title" content="DataCenterBench Tier 1: AI models operate data-center controls">
+<meta name="citation_author" content="Anton de la Fuente">
+<meta name="citation_author" content="Achu Menon">
+<meta name="citation_author" content="Christopher Leet">
+<meta name="citation_author" content="Tzu Kit Chan">
+<meta name="citation_author" content="Jay Chooi">
+<meta name="citation_publication_date" content="2026/10/28">
+<meta name="citation_public_url" content="https://robocurve.org/datacenterbench/">
+<link rel="stylesheet" href="report.b2430c134b.css">
+</head>
+<body class="v2 v3" data-vid="DC-knob">
+<!-- The page since Oct 27 (Jay: "a clean looking webpage like machineplaying.org"): an opening screen, one reading
+     column, numbered sections with one centerpiece each, the detail behind an expander and in a quieter appendix.
+     index-a.html is the earlier layout, kept for reference and not published. -->
+<header class="hero">
+  <video class="hero-bg" autoplay muted loop playsinline preload="auto" poster="media/hero.jpg" src="media/hero.mp4"
+    aria-hidden="true"></video><span class="speed hero-speed">2× speed</span>
+  <a class="logo" href="./" aria-label="Robocurve"><img src="img/robocurve-wordmark.svg" alt="Robocurve"></a>
+  <div class="hero-text">
+    <h1 id="headline">DataCenterBench Tier 1</h1>
+    <p class="hero-sub">We tested frontier AI models on ten simple data-center tasks.</p>
+    <p class="hero-meta">Anton de la Fuente, Achu Menon, Christopher Leet, Tzu Kit Chan, Jay Chooi · <span id="date" data-published="October 28, 2026">October 28, 2026</span>
+      <span id="status"></span></p>
+  </div>
+</header>
+
+<main>
+
+  <section id="how-it-works">
+    <h2>How DataCenterBench works</h2>
+    <ol class="hiw">
+      <li><img class="drawing" src="media/equipment/micropod-selector.png" alt="Manual drawing of the Vertiv Liebert MicroPOD rotary bypass selector between two indicator lamps" loading="lazy">
+        <b><span class="n">1.</span> A step is taken from user manuals for data-center power and server equipment.</b></li>
+      <li><img src="media/setup/DC-knob.jpg" alt="Knob on a white box on the rig" loading="lazy">
+        <b><span class="n">2.</span> The step is rebuilt as a tabletop task.</b></li>
+      <li><div class="says"><img src="media/draft/model-view.jpg" alt="The left wrist camera mid-turn: the gripper holds the knob and the view is rotated about 45 degrees" loading="lazy"><div class="saywrap"><div class="bubble">I’m continuing clockwise toward the mark…<code>move_to(left_yaw: -0.9)</code></div><span class="avatar"><img src="img/logos/openai.svg" alt="GPT-6.1 Sol"></span></div></div>
+        <b><span class="n">3.</span> Frontier models watch through cameras and move robot arms to complete the task.</b></li>
+      <li><div class="ba"><img src="media/draft/knob-before.jpg" alt="Knob before the try" loading="lazy"><img src="media/draft/knob-after.jpg" alt="Knob turned to the mark after the try" loading="lazy"><i class="s1">Score 1</i></div>
+        <b><span class="n">4.</span> Outcomes are scored from visual confirmation by LLM judges.</b></li>
+    </ol>
+  </section>
+
+  <section id="results">
+    <h2>Results</h2>
+    <div class="bleed">
+      <figure class="card">
+        <figcaption class="ctitle" id="lead-title">Average score by model</figcaption>
+        <p class="csub" id="lead-sub"></p>
+        <div class="chart" id="avg-chart"></div>
+        <p class="figcap" id="avg-cap"></p>
+      </figure>
+      <figure class="card gridcard"><figcaption class="ctitle" id="grid-title">Score by task and model</figcaption>
+        <p class="csub">Each cell is the mean of three tries. Each row's best score is green, dark green at 100%. <span id="trial-summary" hidden></span></p>
+        <div class="tscroll"><table class="grid" id="grid"></table></div><p class="swipe">Swipe the grid sideways for every model →</p>
+        <p class="figcap" id="grid-cap"></p></figure>
+      <div class="pair">
+        <figure class="card scatter"><figcaption class="ctitle">Gemini 4 Argon nearly matches GPT-6 Astra at a tenth of the cost</figcaption>
+          <p class="csub">Score vs. estimated API cost per task</p><div id="cost-chart"></div></figure>
+        <figure class="card scatter"><figcaption class="ctitle">The GPT models were also the fastest, on OpenAI's ultrafast tier</figcaption>
+          <p class="csub">Score vs. minutes per task</p><div id="time-chart"></div></figure>
+      </div>
+      <p class="figcap" id="cost-note">Estimated API cost at list prices, including the faster serving these runs used: OpenAI's
+        ultrafast tier for the GPT models (6× standard) and Anthropic's fast mode for Claude Opus 5.5 (2×).</p>
+      <figure class="card" id="dcb3d"><figcaption class="ctitle">Cost, speed and score frontier</figcaption>
+        <p class="csub">Click or tap the chart, then drag to rotate.</p>
+        <div class="stage"><img class="still" src="media/draft/dcb-3d.png" alt="3D chart of all nine models by cost per task, tasks per hour and score, with a stepped blue Pareto surface through the seven Pareto-optimal ones and Claude Opus 5.5 and Kimi K3 under it. GPT-6 Astra and GPT-6.1 Sol sit at the top, fast and costly. Gemini 4 Argon scores near them for far less but is the slowest. GLM 5.3 Flash is the cheapest." loading="lazy"><div class="plot"></div></div></figure>
+    </div>
+  </section>
+
+  <section id="videos">
+    <h2>Watch the attempts</h2>
+    <div class="bleed">
+      <div class="chips" id="vid-tasks" role="tablist" aria-label="Task"></div>
+      <div id="players"></div>
+    </div>
+  </section>
+
+  <section id="tasks">
+    <h2>The ten tasks</h2>
+    <p class="sub">UPS stands for uninterruptible power supply, the battery backup that keeps servers running through a power cut.</p>
+    <figure class="setups bleed" id="setups" aria-label="The ten tasks on our rigs"></figure>
+    <details class="more" id="why">
+      <summary>Explanation of each step in data-center manuals</summary>
+      <div class="steps" id="steps"></div>
+    </details>
+  </section>
+
+  <section id="heat">
+    <h2>Why slow models overheat</h2>
+    <p>While a model thinks, the robot holds its arms in place, and holding still heats the motors. When a motor reaches 65 °C, our thermal guard trips and returns the arms to rest pose for cooling.</p>
+    <div class="bleed">
+      <figure class="card heat"><figcaption class="ctitle">The longer a model thinks per move, the more tries overheat</figcaption>
+        <div id="heat-chart"></div></figure>
+    </div>
+  </section>
+  <div class="appendix">
+    <section id="choice">
+      <h2>How we chose the tasks</h2>
+      <ul class="limits">
+        <li>We drafted 19 candidate tasks, each matched to a step quoted from a manufacturer manual or standard (Vertiv,
+          Eaton, Dell, OSHA, WAGO and StarTech). They fell into four groups: operating controls, connecting equipment,
+          servicing equipment, and the skills electricians are examined on.</li>
+        <li>We kept ten single physical steps that a tabletop rig can reset and score from photos. That is six control tasks, one of them turning a key in an interlock, and four connection tasks.</li>
+      </ul>
+      <details class="more" id="choice-detail">
+        <summary>All 19 tasks that we considered</summary>
+        <div class="tscroll"><table class="cands"><thead><tr><th>Task</th><th>How it compares with the real step</th></tr></thead><tbody><tr class="cgroup"><th colspan="2">Kept (10)</th></tr><tr class="kept"><td class="cname"><span class="pill k">Kept</span> Flip a switch<span class="cgrp">Operate equipment controls</span></td><td class="cnote">Same motion as a breaker handle. Real breakers are larger and stiffer.</td></tr><tr class="kept"><td class="cname"><span class="pill k">Kept</span> Lift a protective cover<span class="cgrp">Operate equipment controls</span></td><td class="cnote">Real step lifts a cover over an emergency power-off button.</td></tr><tr class="kept"><td class="cname"><span class="pill k">Kept</span> Turn a knob<span class="cgrp">Operate equipment controls</span></td><td class="cnote">Real rotary selector with two positions. Ours has no click stops.</td></tr><tr class="kept"><td class="cname"><span class="pill k">Kept</span> Type a code<span class="cgrp">Operate equipment controls</span></td><td class="cnote">Physical keypad with an exact key sequence. Ours is a generic number pad instead of a UPS panel.</td></tr><tr class="kept"><td class="cname"><span class="pill k">Kept</span> Move a slider<span class="cgrp">Operate equipment controls</span></td><td class="cnote">Real UPS mode selector has two fixed positions. Our dimmer copies only the sliding motion.</td></tr><tr class="kept"><td class="cname"><span class="pill k">Kept</span> Plug in a charger<span class="cgrp">Connect equipment</span></td><td class="cnote">Same pick, align and push as a power cord or network cable.</td></tr><tr class="kept"><td class="cname"><span class="pill k">Kept</span> Unplug a charger<span class="cgrp">Connect equipment</span></td><td class="cnote">Same as disconnecting a server&#39;s power cord. Our USB plug has no latch.</td></tr><tr class="kept"><td class="cname"><span class="pill k">Kept</span> Join Ethernet connectors<span class="cgrp">Connect equipment</span></td><td class="cnote">Real step joins a UPS cable connector to a distribution box connector. Ours joins an Ethernet plug and coupler.</td></tr><tr class="kept"><td class="cname"><span class="pill k">Kept</span> Press a cable into a clip<span class="cgrp">Connect equipment</span></td><td class="cnote">Real step routes cables along a switch tray. Ours uses one clip.</td></tr><tr class="kept"><td class="cname"><span class="pill k">Kept</span> Turn a key<span class="cgrp">Service equipment</span></td><td class="cnote">Real step unlocks a bypass breaker&#39;s key interlock before switching. Our key switch matches the motion.</td></tr><tr class="cgroup"><th colspan="2">Left out (9)</th></tr><tr class="out"><td class="cname"><span class="pill o">Left out</span> Plug and unplug a network cable<span class="cgrp">Connect equipment</span></td><td class="cnote">Core data-center technician work. Unplugging also tests the latch.</td></tr><tr class="out"><td class="cname"><span class="pill o">Left out</span> Hold something aside while the other hand works<span class="cgrp">Connect equipment</span></td><td class="cnote">The manual says to lift a cable arm out of the way, not to hold it while the other hand works.</td></tr><tr class="out"><td class="cname"><span class="pill o">Left out</span> Tighten a thumbscrew<span class="cgrp">Service equipment</span></td><td class="cnote">Real step secures a server&#39;s card riser. Ours fastens nothing.</td></tr><tr class="out"><td class="cname"><span class="pill o">Left out</span> Fasten a nut down onto a washer<span class="cgrp">Service equipment</span></td><td class="cnote">Real step clamps a part with a bolted joint. Ours keeps the clamping, drops the torque wrench.</td></tr><tr class="out"><td class="cname"><span class="pill o">Left out</span> Insert a battery the right way round<span class="cgrp">Service equipment</span></td><td class="cnote">Real polarity-dependent step. Our AA holder stands in for the coin-cell holder.</td></tr><tr class="out"><td class="cname"><span class="pill o">Left out</span> Safe isolation (lockout/tagout)<span class="cgrp">What electricians are examined on</span></td><td class="cnote">The core safety procedure. Our version is a toy breaker, a tag and a tester.</td></tr><tr class="out"><td class="cname"><span class="pill o">Left out</span> Terminate a wire<span class="cgrp">What electricians are examined on</span></td><td class="cnote">Real step pushes a stripped wire into a lever connector, as ours does. Real UPS terminals also need a torque wrench.</td></tr><tr class="out"><td class="cname"><span class="pill o">Left out</span> Test with an instrument<span class="cgrp">What electricians are examined on</span></td><td class="cnote">Real step probes two points and reads a value.</td></tr><tr class="out"><td class="cname"><span class="pill o">Left out</span> Find and fix a fault<span class="cgrp">What electricians are examined on</span></td><td class="cnote">Real step finds a tripped breaker and resets it. Ours plants a single fault.</td></tr></tbody></table></div>
+      </details>
+    </section>
+
+    <section id="how">
+      <h2>How we ran it</h2>
+      <ul class="limits" id="how-list"></ul>
+      <p class="sub"><a href="methods.html">Full methodology and disclosures →</a></p>
+      <p class="sub"><a href="setups.html">Each task's setup, reset, instruction and rubric, with photos →</a></p>
+      <p class="sub"><a href="/all-runs/?leaderboard=datacenterbench">All 270 trials, with each one's transcript and video →</a></p>
+    </section>
+
+    <section id="limits">
+      <h2>Limitations</h2>
+      <ul class="limits">
+        <li>The benchmark tests individual physical steps, not complete maintenance jobs. It does not cover electrical
+          isolation, termination, testing or fault-finding.</li>
+        <li>The props simplify the equipment, forces and access constraints. We have not validated performance on these setups against the real equipment.</li>
+        <li>Each task ran on one rig. Differences between rigs (camera angles, how firmly a prop was fixed down) are part
+          of each task's difficulty and are not averaged out.</li>
+        <li>Three tries per model per task is a small sample. Scores a few points apart aren't a reliable ranking.</li>
+        <li>Some failures, like misreading a knob's angle, may come from the 224 × 224 camera resolution.</li>
+      </ul>
+    </section>
+
+    <section id="detail">
+      <h2>Results by model</h2>
+      <div class="bleed results-bleed"><div class="card tscroll"><table class="wide" id="table"></table></div></div><p class="swipe">Swipe the table sideways for every column →</p>
+      <p class="figcap">The average score (avg@3) is the mean of three runs. A run is one try at each of the ten tasks.
+        Estimated cost uses token
+        counts at list prices, including the OpenAI ultrafast (6×) and Anthropic fast-mode (2×) surcharges these runs used.
+        Minutes are the mean time per task, from the first model call to when the arms start parking.
+        Overheats are tries the robot stopped because a motor passed 65 °C. They are scored on where the arms were when it stopped.</p>
+    </section>
+
+    <section id="about">
+      <h2>About Robocurve</h2>
+      <p>Robocurve is a Public Benefit Corporation helping society understand the state of robot intelligence. We build
+        open-source tools and independent benchmarks to evaluate how capable AI models and embodiments are in the real,
+        physical world. These runs used <a href="https://github.com/robocurve/inspect-robots">Inspect Robots</a>, one of those tools.</p>
+      <p>The ten tasks, rubrics and results are public. We're also building a private task set, so we can keep measuring
+        progress on tasks models can't have trained on.</p>
+      <p><a class="cta" href="https://robocurve.org/#contact">Want your model on DataCenterBench? Talk to us →</a></p>
+    </section>
+
+    <footer>
+      <p class="byline-end">By Anton de la Fuente, Achu Menon, Christopher Leet, Tzu Kit Chan and Jay Chooi, Robocurve.</p>
+      <p id="data-links">Data: <a href="data/export-results.json">results.json</a> (per model and run: scores, cost, tokens, duration) ·
+        <a href="data/trials.csv">trials.csv</a> (every counted trial) · <a href="data/model_summary.csv">model_summary.csv</a> ·
+        <a href="data/model_task_matrix.csv">model_task_matrix.csv</a></p>
+      <p class="muted" id="generated" hidden></p>
+    </footer>
+  </div>
+</main>
+<script src="report.a3984c1134.js"></script>
+<script src="dcb3d.js" defer></script>
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0f5547da40df4f08b7fd384497300caa"}'></script><!-- Cloudflare Pages Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3e4d6044cbde464d809dc5a536e723cb","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

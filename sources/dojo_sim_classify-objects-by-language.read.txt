@@ -1,0 +1,136 @@
+Classify Objects By Language | RoboDojo Wiki
+Skip to content
+RoboDojo Wiki
+Search
+Ctrl
+K
+Cancel
+GitHub
+Home
+RoboDojo
+Usage
+Overview
+Install & Download
+XPolicyLab
+Configurations
+Quick Evaluation
+RoboDojo Submission
+Common Issues
+Overview
+Installation Issues
+Evaluation Issues
+Simulation Tasks
+Overview
+Domain Randomization
+Parallel Environments
+Generalization
+Stack Bowls
+Push T
+Pack Objects Into Box
+Fold Clothes
+Hang Mugs
+Sweep Blocks
+Pour Liquid Into Cup
+Make Toast
+Arrange Largest Number
+Sort Nesting Dolls By Size
+Store Laptop And Headphones
+Stack Blocks
+Memory
+Cover Blocks
+Match And Pick From Conveyor
+Swap Blocks
+Swap T
+Press By Number
+Imitate Sorting Sequence
+Precision
+Fasten Screws
+Plug In Charger
+Insert Tubes
+Pour Balls Into Vase
+Play Xylophone
+Deposit Coin
+Insert Key
+Build Tower
+Long-Horizon
+Fill Pen Holder
+Classify Objects
+Put Bottles Into Dustbin
+Play Tic-Tac-Toe
+Fill Egg Holder
+Organize Table
+Make Kong
+Play Stacking Toy
+Open
+Align Blocks
+General Pickup
+Solve Equation
+Stack Blocks By Language
+Classify Objects By Language
+Pick From Conveyor By Image
+Store Tools In Toolbox
+Pour By Language
+DLC
+Real Robot Tasks
+Overview
+Piper X
+Disassemble LEGO
+Cap Pen
+Classify Objects
+Hang Mugs
+Sweep Blocks
+Pack Objects Into Backpack
+Piper
+Fill Pen Holder
+Put Objects Into Basket
+Stack And Cover Blocks
+Stack Bowls
+Stand Up Bottles
+Insert Charger
+ARX X5
+Insert Tubes
+Make Bread
+Make Food
+Pack And Pour Fruit
+Cover Blocks
+Store In Safe
+Community
+Community
+Leaderboard
+Leaderboard
+GitHub
+On this page
+Overview
+Scoring
+On this page
+Overview
+Scoring
+Classify Objects By Language
+Your browser does not support the video tag.
+Simulation demo
+Instruction
+Put category₁ objects into the left basket, category₂ objects into the middle basket, and category₃ objects into the right basket, then reset the robot arm.
+Description
+There are three baskets and three categories of unseen objects. The robot needs to understand the language instruction, identify the category of each object, and place the objects into the specified baskets from left to right.
+Platform
+Simulation
+Category
+Open
+Data Source
+null (eval-only)
+Usage
+Eval
+Scoring
+Section titled “Scoring”
+Score
+Condition
+0
+No specified category is placed into its assigned basket.
+10
+One specified category is placed into its assigned basket, no other objects are in that basket, and the gripper is open.
+40
+Two specified categories are placed into their assigned baskets, with no extra objects in those baskets.
+100
+All three specified categories are placed into the left, middle, and right baskets as instructed, no basket contains objects from another category, and the robot returns to origin.
+Stack Blocks By Language
+Pick From Conveyor By Image

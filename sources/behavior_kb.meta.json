@@ -1,0 +1,26 @@
+{
+  "url": "https://behavior.stanford.edu/knowledgebase/",
+  "links": [
+    "https://behavior.stanford.edu/knowledgebase/index.html",
+    "https://behavior.stanford.edu/knowledgebase/tasks/index.html",
+    "https://behavior.stanford.edu/knowledgebase/synsets/index.html",
+    "https://behavior.stanford.edu/knowledgebase/objects/index.html",
+    "https://behavior.stanford.edu/knowledgebase/categories/index.html",
+    "https://behavior.stanford.edu/knowledgebase/scenes/index.html",
+    "https://behavior.stanford.edu/knowledgebase/transition_rules/index.html",
+    "https://behavior.stanford.edu/knowledgebase/attachment_pairs/index.html",
+    "https://behavior.stanford.edu/knowledgebase/#",
+    "https://behavior.stanford.edu/knowledgebase/challenge_tasks/index.html",
+    "https://behavior.stanford.edu/knowledgebase/tasks/index.html",
+    "https://behavior.stanford.edu/knowledgebase/objects/index.html",
+    "https://behavior.stanford.edu/knowledgebase/synsets/index.html",
+    "https://behavior.stanford.edu/knowledgebase/scenes/index.html"
+  ],
+  "media": [
+    {
+      "src": "https://behavior.stanford.edu/assets/behavior_logo3.png",
+      "height": "30",
+      "alt": "BEHAVIOR Logo"
+    }
+  ]
+}

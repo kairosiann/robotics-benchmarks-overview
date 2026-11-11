@@ -1,0 +1,488 @@
+{
+  "url": "https://simpler-env.github.io/",
+  "links": [
+    "https://xuanlinli17.github.io/",
+    "https://www.kylehsu.org/",
+    "https://cseweb.ucsd.edu/~jigu/",
+    "https://kpertsch.github.io/",
+    "https://www.oiermees.com",
+    "https://homerwalke.com/",
+    "https://www.google.com",
+    "https://ishikaalunawat.github.io/",
+    "https://profiles.stanford.edu/isabel-sieh",
+    "https://kirmani.ai/",
+    "https://people.eecs.berkeley.edu/~svlevine/",
+    "https://jiajunwu.com/",
+    "https://ai.stanford.edu/~cbfinn/",
+    "https://cseweb.ucsd.edu/~haosu/",
+    "https://quanvuong.github.io/",
+    "https://tedxiao.me/",
+    "https://arxiv.org/pdf/2405.05941",
+    "https://www.youtube.com/watch?v=SIcPxapIgBI",
+    "https://github.com/simpler-env/SimplerEnv",
+    "https://colab.research.google.com/github/simpler-env/SimplerEnv/blob/main/example.ipynb",
+    "https://arxiv.org/pdf/2210.05714.pdf",
+    "https://github.com/nerfies/nerfies.github.io",
+    "https://creativecommons.org/licenses/by-sa/4.0/"
+  ],
+  "media": [
+    {
+      "src": "https://www.googletagmanager.com/ns.html?id=GTM-T898ZNQZ",
+      "height": "0",
+      "width": "0",
+      "style": "display:none;visibility:hidden"
+    },
+    {
+      "src": "static/images/colab_icon.png"
+    },
+    {
+      "src": "static/images/teaser.png"
+    },
+    {
+      "poster": "",
+      "id": "steve video",
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/rt2x_place_apple_into_top_drawer.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "poster": "",
+      "id": "chair-tp video",
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/octo_base_put_eggplant_in_basket.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "poster": "",
+      "id": "chair-tp video",
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/octo_small_put_spoon_on_towel.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "poster": "",
+      "id": "fullbody video",
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/rt1x_close_bottom_drawer.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "poster": "",
+      "id": "shiba video",
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/octo_small_stack_green_block_on_yellow_block.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "poster": "",
+      "id": "fullbody video",
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/rt1_move_redbull_can_near_orange.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "width": "100%"
+    },
+    {
+      "src": "static/images/simpler.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "src": "static/images/fig2.png"
+    },
+    {
+      "src": "static/images/metrics.png"
+    },
+    {
+      "src": "static/images/visual_matching.png",
+      "style": "width: 70%; height: auto; display: block; margin: 0 auto;"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/sysid/real_rollout.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/sysid/bad_control.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/sysid/good_control.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/rt2x_place_apple_into_top_drawer.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/rt1x_close_bottom_drawer.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/rt1_move_redbull_can_near_orange.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/octo_base_pick_coke_can.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/octo_small_put_spoon_on_towel.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/octo_base_put_eggplant_in_basket.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/octo_small_stack_green_block_on_yellow_block.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/rt1x_put_carrot_on_plate.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "width": "45%",
+      "src": "static/images/results_google_robot.png"
+    },
+    {
+      "width": "54%",
+      "src": "static/images/results_bridge.png"
+    },
+    {
+      "width": "40%",
+      "src": "static/images/results_dist_shifts.png"
+    },
+    {
+      "width": "50%",
+      "src": "static/images/results_arm_texture.png"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/close_bottom_drawer_real.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/move_pepsi_can_near_blue_plastic_bottle_real.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/open_middle_drawer_real_2.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/pick_coke_can_real_standing_2.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/close_bottom_drawer_sim.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/move_pepsi_can_near_blue_plastic_bottle_sim.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/open_middle_drawer_sim.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/pick_coke_can_sim_standing_2.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/put_carrot_on_plate_real_1.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/put_eggplant_in_basket_real_1.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/put_spoon_on_towel_real_3.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/stack_green_cube_on_yellow_cube_real_2.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/put_carrot_on_plate_sim_1.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/put_eggplant_in_basket_sim_1.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/put_spoon_on_towel_sim_3.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": null,
+      "controls": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "height": "100%"
+    },
+    {
+      "src": "static/videos/paired_videos/stack_green_cube_on_yellow_cube_sim_2.mp4",
+      "type": "video/mp4"
+    }
+  ]
+}

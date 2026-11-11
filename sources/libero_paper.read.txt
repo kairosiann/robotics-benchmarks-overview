@@ -1,0 +1,5212 @@
+LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning
+Report GitHub Issue
+×
+Title:
+Content selection saved. Describe the issue below:
+Description:
+Submit without GitHub
+Submit in GitHub
+arXiv is now an independent nonprofit!
+Learn more
+×
+Back to arXiv
+Why HTML?
+Report Issue
+Back to Abstract
+Download PDF
+Abstract
+1
+Introduction
+2
+Background
+2.1
+Markov Decision Process for Robot Learning
+2.2
+Lifelong Robot Learning Problem
+3
+Research Topics in
+LLDM
+4
+LIBERO
+4.1
+Procedural Generation of Tasks
+4.2
+Task Suites
+4.3
+Lifelong Learning Algorithms
+4.4
+Neural Network Architectures
+5
+Experiments
+5.1
+Evaluation Metrics
+5.2
+Experimental Results
+6
+Related Work
+7
+Conclusion and Limitations
+References
+A
+Implemented Neural Architectures and Lifelong Learning Algorithms
+A.1
+Neural Architectures
+B
+Computation
+B.1
+Lifelong Learning Algorithms
+ER
+EWC
+PackNet
+C
+LIBERO Task Suite Designs
+C.1
+Task Suites
+C.2
+PDDL-based Scene Description File
+D
+Experimental Setup
+E
+Additional Experiment Results
+E.1
+Full Results
+E.2
+Loss v.s. Success Rates
+E.3
+Multitask Success Rate
+E.4
+Attention Visualization
+Perturbation-based attention visualization:
+License: CC BY 4.0
+arXiv:2306.03310v2 [cs.AI] 14 Oct 2023
+LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning
+†
+Bo Liu,
+†
+Yifeng Zhu
+*
+,
+‡
+Chongkai Gao
+*
+,
+†
+Yihao Feng
+†
+†
+thanks:
+Equal contribution.
+Email:
+bliu@cs.utexas.edu
+†
+Qiang Liu
+Email:
+yifengz@cs.utexas.edu
+†
+Yuke Zhu
+Email:
+lqiang@cs.utexas.edu
+Peter Stone
+Email:
+yukez@cs.utexas.edu
+†
+The University of Texas at Austin
+Email:
+pstone@cs.utexas.edu
+Sony AI
+Email:
+yihao.ac@gmail.com
+‡
+Tsinghua University
+Email:
+gck20@mails.tsinghua.edu.cn
+Abstract
+Lifelong learning offers a promising paradigm of building a generalist agent that learns and adapts over its lifespan.
+Unlike traditional lifelong learning problems in image and text domains, which primarily involve the transfer of declarative knowledge of entities and concepts, lifelong learning in decision-making (
+LLDM
+) also necessitates the transfer of procedural knowledge, such as actions and behaviors.
+To advance research in
+LLDM
+, we introduce
+LIBERO
+, a novel benchmark of lifelong learning for robot manipulation. Specifically,
+LIBERO
+highlights five key research topics in
+LLDM
+:
+1)
+how to efficiently transfer declarative knowledge, procedural knowledge, or the mixture of both;
+2)
+how to design effective policy architectures and
+3)
+effective algorithms for
+LLDM
+;
+4)
+the robustness of a lifelong learner with respect to task ordering; and
+5)
+the effect of model pretraining for
+LLDM
+.
+We develop an extendible
+procedural generation
+pipeline that can in principle generate infinitely many tasks. For benchmarking purpose, we create four task suites (130 tasks in total) that we use to investigate the above-mentioned research topics. To support sample-efficient learning, we provide high-quality human-teleoperated demonstration data for all tasks.
+Our extensive experiments present several insightful or even
+unexpected
+discoveries: sequential finetuning outperforms existing lifelong learning methods in forward transfer, no single visual encoder architecture excels at all types of knowledge transfer, and naive supervised pretraining can hinder agents’ performance in the subsequent
+LLDM
+.
+1
+1
+1
+Check the website at
+https://libero-project.github.io
+for the code and the datasets.
+1
+Introduction
+A longstanding goal in machine learning is to develop a generalist agent that can perform a wide range of tasks. While multitask learning
+[
+10
+]
+is one approach, it is computationally demanding and not adaptable to ongoing changes. Lifelong learning
+[
+65
+]
+, however, offers a practical solution by amortizing the learning process over the agent’s lifespan. Its goal is to leverage prior knowledge to facilitate learning new tasks (forward transfer) and use the newly acquired knowledge to enhance performance on prior tasks (backward transfer).
+Figure 1:
+Top
+:
+LIBERO
+has four procedurally-generated task suites:
+LIBERO-Spatial
+,
+LIBERO-Object
+, and
+LIBERO-Goal
+have 10 tasks each and require transferring knowledge about spatial relationships, objects, and task goals;
+LIBERO-100
+has 100 tasks and requires the transfer of entangled knowledge.
+Bottom
+: we investigate five key research topics in
+LLDM
+on
+LIBERO
+.
+The main body of the lifelong learning literature has focused on how agents transfer
+declarative
+knowledge in visual or language tasks, which pertains to
+declarative knowledge
+about entities and concepts
+[
+7
+,
+40
+]
+. Yet it is understudied how agents transfer knowledge in decision-making tasks, which involves a mixture of both
+declarative
+and
+procedural
+knowledge (knowledge about how to
+do
+something). Consider a scenario where a robot, initially trained to retrieve juice from a fridge, fails after learning new tasks. This could be due to forgetting the juice or fridge’s location (declarative knowledge) or how to open the fridge or grasp the juice (procedural knowledge). So far, we lack methods to systematically and quantitatively analyze this complex knowledge transfer.
+To bridge this research gap, this paper introduces a new simulation benchmark, LIfelong learning BEchmark on RObot manipulation tasks,
+LIBERO
+, to facilitate the systematic study of lifelong learning in decision making (
+LLDM
+). An ideal
+LLDM
+testbed should enable continuous learning across an expanding set of diverse tasks that share concepts and actions.
+LIBERO
+supports this through a procedural generation pipeline for endless task creation, based on robot manipulation tasks with shared visual concepts (declarative knowledge) and interactions (procedural knowledge).
+For benchmarking purpose,
+LIBERO
+generates 130 language-conditioned robot manipulation tasks inspired by human activities
+[
+22
+]
+and, grouped into four suites. The four task suites are designed to examine distribution shifts in the object types, the spatial arrangement of objects, the task goals, or the mixture of the previous three (top row of Figure
+1
+).
+LIBERO
+is scalable, extendable, and designed explicitly for studying lifelong learning in robot manipulation. To support efficient learning, we provide high-quality, human-teleoperated demonstration data for all 130 tasks.
+We present an initial study using
+LIBERO
+to investigate five major research topics in
+LLDM
+(Figure
+1
+):
+1)
+knowledge transfer with different types of distribution shift;
+2)
+neural architecture design;
+3)
+lifelong learning algorithm design;
+4)
+robustness of the learner to task ordering; and
+5)
+how to leverage pre-trained models in
+LLDM
+(bottom row of Figure
+1
+). We perform extensive experiments across different policy architectures and different lifelong learning algorithms. Based on our experiments, we make several insightful or even
+unexpected
+observations:
+1.
+Policy architecture design is as crucial as lifelong learning algorithms. The transformer architecture is better at abstracting temporal information than a recurrent neural network. Vision transformers work well on tasks with rich visual information (e.g., a variety of objects). Convolution networks work well when tasks primarily need procedural knowledge.
+2.
+While the lifelong learning algorithms we evaluated are effective at preventing forgetting, they generally perform
+worse
+than sequential finetuning in terms of forward transfer.
+3.
+Our experiment shows that using pretrained language embeddings of semantically-rich task descriptions yields performance
+no better
+than using those of the task IDs.
+4.
+Basic supervised pretraining on a large-scale offline dataset can have a
+negative
+impact on the learner’s downstream performance in
+LLDM
+.
+2
+Background
+This section introduces the problem formulation and defines key terms used throughout the paper.
+2.1
+Markov Decision Process for Robot Learning
+A robot learning problem can be formulated as a finite-horizon Markov Decision Process:
+ℳ
+=
+(
+𝒮
+,
+𝒜
+,
+𝒯
+,
+H
+,
+μ
+0
+,
+R
+)
+.
+\mathcal{M}=(\mathcal{S},\mathcal{A},\mathcal{T},H,~{\color[rgb]{0.75,0,0.25}{\mu_{0},R}}).
+Here,
+𝒮
+\mathcal{S}
+and
+𝒜
+\mathcal{A}
+are the state and action spaces of the robot.
+μ
+0
+\mu_{0}
+is the initial state distribution,
+R
+:
+𝒮
+×
+𝒜
+→
+ℝ
+R:\mathcal{S}\times\mathcal{A}\rightarrow\mathbb{R}
+is the reward function, and
+𝒯
+:
+𝒮
+×
+𝒜
+→
+𝒮
+\mathcal{T}:\mathcal{S}\times\mathcal{A}\rightarrow\mathcal{S}
+is the transition function. In this work, we assume a sparse-reward setting and replace
+R
+R
+with a goal predicate
+g
+:
+𝒮
+→
+{
+0
+,
+1
+}
+g:\mathcal{S}\rightarrow\{0,1\}
+. The robot’s objective is to learn a policy
+π
+\pi
+that maximizes the expected return:
+max
+π
+⁡
+J
+⁡
+(
+π
+)
+=
+𝔼
+s
+t
+,
+a
+t
+∼
+π
+,
+μ
+0
+​
+[
+∑
+t
+=
+1
+H
+g
+⁡
+(
+s
+t
+)
+]
+.
+\max_{\pi}J(\pi)=\mathbb{E}_{s_{t},a_{t}\sim\pi,\mu_{0}}[\sum_{t=1}^{H}g(s_{t})].
+2.2
+Lifelong Robot Learning Problem
+In a
+lifelong robot learning problem
+, a robot sequentially learns over
+K
+K
+tasks
+{
+T
+1
+,
+…
+,
+T
+K
+}
+\{T^{1},\dots,T^{K}\}
+with a single policy
+π
+\pi
+. We assume
+π
+\pi
+is conditioned on the task, i.e.,
+π
+(
+⋅
+∣
+s
+;
+T
+)
+\pi(\cdot\mid s;T)
+. For each task,
+T
+k
+≡
+(
+μ
+0
+k
+,
+g
+k
+)
+T^{k}\equiv(\mu_{0}^{k},g^{k})
+is defined by the initial state distribution
+μ
+0
+k
+\mu_{0}^{k}
+and the goal predicate
+g
+k
+g^{k}
+.
+2
+2
+2
+Throughout the paper, a superscript/subscript is used to index the task/time step.
+We assume
+𝒮
+,
+𝒜
+,
+𝒯
+,
+H
+\mathcal{S},\mathcal{A},\mathcal{T},H
+are the same for all tasks. Up to the
+k
+k
+-th task
+T
+k
+T^{k}
+, the robot aims to optimize
+max
+π
+⁡
+J
+LRL
+​
+(
+π
+)
+=
+1
+k
+​
+∑
+p
+=
+1
+k
+[
+𝔼
+s
+t
+p
+,
+a
+t
+p
+∼
+π
+⁡
+(
+⋅
+,
+T
+p
+)
+,
+μ
+0
+p
+[
+∑
+t
+=
+1
+L
+g
+p
+​
+(
+s
+t
+p
+)
+]
+]
+.
+\max_{\pi}~J_{\text{LRL}}(\pi)=\frac{1}{k}\sum_{p=1}^{k}\bigg[\mathop{\mathbb{E}}\limits_{s^{p}_{t},a^{p}_{t}\sim\pi(\cdot;T^{p}),~\mu_{0}^{p}}\bigg[\sum_{t=1}^{L}g^{p}(s_{t}^{p})\bigg]\bigg].
+(1)
+An important feature of the lifelong setting is that the agent loses access to the previous
+k
+−
+1
+k-1
+tasks when it learns on task
+T
+k
+T^{k}
+.
+Lifelong Imitation Learning
+Due to the challenge of sparse-reward reinforcement learning,
+we consider a practical alternative setting where a user would provide a small demonstration dataset for each task in the sequence. Denote
+D
+k
+=
+{
+τ
+i
+k
+}
+i
+=
+1
+N
+D^{k}=\{\tau^{k}_{i}\}_{i=1}^{N}
+as
+N
+N
+demonstrations for task
+T
+k
+T^{k}
+. Each
+τ
+i
+k
+=
+(
+o
+0
+,
+a
+0
+,
+o
+1
+,
+a
+1
+,
+…
+,
+o
+l
+k
+)
+\tau^{k}_{i}=(o_{0},a_{0},o_{1},a_{1},\dots,o_{l^{k}})
+where
+l
+k
+≤
+H
+l^{k}\leq H
+. Here,
+o
+t
+o_{t}
+is the robot’s sensory input, including the perceptual observation and the information about the robot’s joints and gripper. In practice, the observation
+o
+t
+o_{t}
+is often non-Markovian. Therefore, following works in partially observable MDPs
+[
+25
+]
+, we represent
+s
+t
+s_{t}
+by the aggregated history of observations, i.e.
+s
+t
+≡
+o
+≤
+t
+≜
+(
+o
+0
+,
+o
+1
+,
+…
+,
+o
+t
+)
+s_{t}\equiv o_{\leq t}\triangleq(o_{0},o_{1},\dots,o_{t})
+.
+This results in the
+lifelong imitation learning problem
+with the same objective as in Eq. (
+1
+). But during training, we perform behavioral cloning
+[
+4
+]
+with the following surrogate objective function:
+min
+π
+⁡
+J
+BC
+​
+(
+π
+)
+=
+1
+k
+​
+∑
+p
+=
+1
+k
+𝔼
+o
+t
+,
+a
+t
+∼
+D
+p
+[
+∑
+t
+=
+0
+l
+p
+ℒ
+⁡
+(
+π
+⁡
+(
+o
+≤
+t
+,
+T
+p
+)
+,
+a
+t
+p
+)
+]
+,
+\min_{\pi}~J_{\text{BC}}(\pi)=\frac{1}{k}\sum_{p=1}^{k}\mathop{\mathbb{E}}\limits_{o_{t},a_{t}\sim D^{p}}\bigg[\sum_{t=0}^{l^{p}}\mathcal{L}\big(\pi(o_{\leq t};T^{p}),a^{p}_{t}\big)\bigg]\,,
+(2)
+where
+ℒ
+\mathcal{L}
+is a supervised learning loss, e.g., the negative log-likelihood loss, and
+π
+\pi
+is a Gaussian mixture model. Similarly, we assume
+{
+D
+p
+:
+p
+<
+k
+}
+\{D^{p}:p<k\}
+are not fully available when learning
+T
+k
+T^{k}
+.
+3
+Research Topics in
+LLDM
+We outline five major research topics in
+LLDM
+that motivate the design of
+LIBERO
+and our study.
+(T1)
+Transfer of Different Types of Knowledge
+In order to accomplish a task such as
+put the ketchup next to the plate in the basket
+, a robot must understand the concept
+ketchup
+, the location of the
+plate/basket
+, and how to
+put
+the ketchup in the basket.
+Indeed, robot manipulation tasks in general necessitate different types of knowledge, making it hard to determine the cause of failure. We present four task suites in Section
+4.2
+: three task suites for studying the transfer of knowledge about spatial relationships, object concepts, and task goals in a disentangled manner, and one suite for studying the transfer of mixed types of knowledge.
+(T2)
+Neural Architecture Design
+An important research question in
+LLDM
+is how to design effective neural architectures to abstract the multi-modal observations (images, language descriptions, and robot states) and transfer only relevant knowledge when learning new tasks.
+(T3)
+Lifelong Learning Algorithm Design
+Given a policy architecture, it is crucial to determine what learning algorithms to apply for
+LLDM
+. Specifically, the sequential nature of
+LLDM
+suggests that even minor forgetting over successive steps can potentially lead to a total failure in execution. As such, we consider the design of lifelong learning algorithms to be an open area of research in
+LLDM
+.
+(T4)
+Robustness to Task Ordering
+It is well-known that task curriculum influences policy learning
+[
+6
+,
+48
+]
+. A robot in the real world, however, often cannot choose which task to encounter first. Therefore, a good lifelong learning algorithm should be robust to different task orderings.
+(T5)
+Usage of Pretrained Models
+In practice, robots will be most likely pretrained on large datasets in factories before deployment
+[
+28
+]
+. However, it is not well-understood whether or how pretraining could benefit subsequent
+LLDM
+.
+4
+LIBERO
+This section introduces the components in
+LIBERO
+: the procedural generation pipeline that allows the never-ending creation of tasks (Section
+4.1
+), the four task suites we generate for benchmarking (Section
+4.2
+), five algorithms (Section
+4.3
+), and three neural architectures (Section
+4.4
+).
+Figure 2:
+LIBERO
+’s procedural generation pipeline: Extracting behavioral templates from a large-scale human activity dataset
+(1)
+, Ego4D, for generating task instructions
+(2)
+; Based on the task description, selecting the scene and generating the PDDL description file
+(3)
+that specifies the objects and layouts
+(A)
+, the initial object configurations
+(B)
+, and the task goal
+(C)
+.
+4.1
+Procedural Generation of Tasks
+Research in
+LLDM
+requires a systematic way to create new tasks while maintaining task diversity and relevance to existing tasks.
+LIBERO
+procedurally generates new tasks in three steps:
+1)
+extract behavioral templates from language annotations of human activities and generate sampled tasks described in natural language based on such templates;
+2)
+specify an initial object distribution given a task description; and
+3)
+specify task goals using a propositional formula that aligns with the language instructions.
+Our generation pipeline is built on top of
+Robosuite
+[
+76
+]
+, a modular manipulation simulator that offers seamless integration. Figure
+2
+illustrates an example of task creation using this pipeline, and each component is expanded upon below.
+Behavioral Templates and Instruction Generation
+Human activities serve as a fertile source of tasks that can inspire and generate a vast number of manipulation tasks.
+We choose a large-scale activity dataset, Ego4D
+[
+22
+]
+, which includes a large variety of everyday activities with language annotations. We pre-process the dataset by extracting the language descriptions and then summarize them into a large set of commonly used language templates. After this pre-processing step, we use the templates and select objects available in the simulator to generate a set of task descriptions in the form of language instructions. For example, we can generate an instruction “Open the drawer of the cabinet” from the template “Open …”.
+Initial State Distribution (
+μ
+0
+\mu_{0}
+)
+To specify
+μ
+0
+\mu_{0}
+, we first sample a scene layout that matches the objects/behaviors in a provided instruction. For instance, a kitchen scene is selected for an instruction
+Open the top drawer of the cabinet and put the bowl in it
+. Then, the details about
+μ
+0
+\mu_{0}
+are generated in the PDDL language
+[
+43
+,
+63
+]
+.
+Concretely,
+μ
+0
+\mu_{0}
+contains information about object categories and their placement (Figure
+2
+-
+(A)
+), and their initial status (Figure
+2
+-
+(B)
+).
+Goal Specifications
+(
+g
+)
+(g)
+Based on
+μ
+0
+\mu_{0}
+and the language instruction, we specify the task goal using a conjunction of predicates. Predicates include
+unary predicates
+that describe the properties of an object, such as
+Open
+(X) or
+TurnOff
+(X), and
+binary predicates
+that describe spatial relations between objects, such as
+On
+(A, B) or
+In
+(A, B). An example of the goal specification using PDDL language can be found in Figure
+2
+-
+(C)
+. The simulation terminates when all predicates are verified true.
+4.2
+Task Suites
+While the pipeline in Section
+4.1
+supports the generation of an unlimited number of tasks, we offer fixed sets of tasks for benchmarking purposes.
+LIBERO
+has four task suites:
+LIBERO-Spatial
+,
+LIBERO-Object
+,
+LIBERO-Goal
+, and
+LIBERO-100
+. The first three task suites are curated to disentangle the transfer of
+declarative
+and
+procedural
+knowledge (as mentioned in
+(T1)
+), while
+LIBERO-100
+is a suite of 100 tasks with entangled knowledge transfer.
+LIBERO-X
+LIBERO-Spatial
+,
+LIBERO-Object
+, and
+LIBERO-Goal
+all have 10 tasks
+3
+3
+3
+A suite of 10 tasks is enough to observe catastrophic forgetting while maintaining computation efficiency.
+and are designed to investigate the controlled transfer of knowledge about spatial information (declarative), objects (declarative), and task goals (procedural).
+Specifically, all tasks in
+LIBERO-Spatial
+request the robot to place a bowl, among the same set of objects, on a plate. But there are two identical bowls that differ only in their location or spatial relationship to other objects. Hence, to successfully complete
+LIBERO-Spatial
+, the robot needs to continually learn and memorize new spatial relationships.
+All tasks in
+LIBERO-Object
+request the robot to pick-place a unique object.
+Hence, to accomplish
+LIBERO-Object
+, the robot needs to continually learn and memorize new object types.
+All tasks in
+LIBERO-Goal
+share the same objects with fixed spatial relationships but differ only in the task goal. Hence, to accomplish
+LIBERO-Goal
+, the robot needs to continually learn new knowledge about motions and behaviors.
+More details are in Appendix
+C
+.
+LIBERO-100
+LIBERO-100
+contains 100 tasks that entail diverse object interactions and versatile motor skills.
+In this paper, we split
+LIBERO-100
+into 90 short-horizon tasks (
+LIBERO-90
+) and 10 long-horizon tasks (
+LIBERO-Long
+).
+LIBERO-90
+serves as the data source for pretraining
+(T5)
+and
+LIBERO-Long
+for downstream evaluation of lifelong learning algorithms.
+4.3
+Lifelong Learning Algorithms
+We implement three representative lifelong learning algorithms to facilitate research in algorithmic design for
+LLDM
+. Specifically, we implement Experience Replay (
+ER
+)
+[
+13
+]
+, Elastic Weight Consolidation (
+EWC
+)
+[
+33
+]
+, and
+PackNet
+[
+41
+]
+. We pick
+ER
+,
+EWC
+, and
+PackNet
+because they correspond to the memory-based, regularization-based, and dynamic-architecture-based methods for lifelong learning. In addition, prior research
+[
+69
+]
+has discovered that they are state-of-the-art methods. Besides these three methods, we also implement sequential finetuning (
+SeqL
+) and multitask learning (
+MTL
+), which serve as a lower bound and upper bound for lifelong learning algorithms, respectively. More details about the algorithms are in Appendix
+B.1
+.
+4.4
+Neural Network Architectures
+We implement three vision-language policy networks,
+ResNet-RNN
+,
+ResNet-T
+, and
+ViT-T
+, that integrate visual, temporal, and linguistic information for
+LLDM
+.
+Language instructions of tasks are encoded using pretrained BERT embeddings
+[
+19
+]
+.
+The
+ResNet-RNN
+[
+42
+]
+uses a ResNet as the visual backbone that encodes per-step visual observations and an LSTM as the temporal backbone to process a sequence of encoded visual information. The language instruction is incorporated into the ResNet features using the FiLM method
+[
+50
+]
+and added to the LSTM inputs, respectively.
+ResNet-T
+architecture
+[
+75
+]
+uses a similar ResNet-based visual backbone, but a transformer decoder
+[
+66
+]
+as the temporal backbone to process outputs from ResNet, which are a temporal sequence of visual tokens. The language embedding is treated as a separate token in inputs to the transformer alongside the visual tokens.
+The
+ViT-T
+architecture
+[
+31
+]
+, which is widely used in visual-language tasks, uses a Vision Transformer (ViT) as the visual backbone and a transformer decoder as the temporal backbone. The language embedding is treated as a separate token in inputs of both ViT and the transformer decoder. All the temporal backbones output a latent vector for every decision-making step. We compute the multi-modal distribution over manipulation actions using a Gaussian-Mixture-Model (GMM) based output head
+[
+8
+,
+42
+,
+68
+]
+. In the end, a robot executes a policy by sampling a continuous value for end-effector action from the output distribution. Figure
+6
+visualizes the three architectures.
+For all the lifelong learning algorithms and neural architectures, we use behavioral cloning (BC)
+[
+4
+]
+to train policies for individual tasks (See (
+2
+)). BC allows for efficient policy learning such that we can study lifelong learning algorithms with limited computational resources.
+To train BC, we provide 50 trajectories of high-quality demonstrations for every single task in the generated task suites. The demonstrations are collected by human experts through teleoperation with 3Dconnexion Spacemouse.
+5
+Experiments
+Experiments are conducted as an initial study for the five research topics mentioned in Section
+3
+. We first introduce the evaluation metric used in experiments, and present analysis of empirical results in
+LIBERO
+. The detailed experimental setup is in Appendix
+D
+. Our experiments focus on addressing the following research questions:
+Q1
+: How do different architectures/LL algorithms perform under specific distribution shifts?
+Q2
+: To what extent does neural architecture impact knowledge transfer in
+LLDM
+, and are there any discernible patterns in the specialized capabilities of each architecture?
+Q3
+: How do existing algorithms from lifelong supervised learning perform on
+LLDM
+tasks?
+Q4
+: To what extent does language embedding affect knowledge transfer in
+LLDM
+?
+Q5
+: How robust are different LL algorithms to task ordering in
+LLDM
+?
+Q6
+: Can supervised pretraining improve downstream lifelong learning performance in
+LLDM
+?
+5.1
+Evaluation Metrics
+We report three metrics: FWT (forward transfer)
+[
+20
+]
+, NBT (negative backward transfer), and AUC (area under the success rate curve). All metrics are computed in terms of success rate, as previous literature has shown that the success rate is a more reliable metric than training loss for manipulation policies
+[
+42
+]
+(Detailed explanation in Appendix
+E.2
+). Lower NBT means a policy has better performance in the previously seen tasks, higher FWT means a policy learns faster on a new task, and higher AUC means an overall better performance considering both NBT and FWT. Specifically, denote
+c
+i
+,
+j
+,
+e
+c_{i,j,e}
+as the agent’s success rate on task
+j
+j
+when it learned over
+i
+−
+1
+i-1
+previous tasks and has just learned
+e
+e
+epochs (
+e
+∈
+{
+0
+,
+5
+,
+…
+,
+50
+}
+e\in\{0,5,\dots,50\}
+) on task
+i
+i
+. Let
+c
+i
+,
+i
+c_{i,i}
+be the best success rate over all evaluated epochs
+e
+e
+for the current task
+i
+i
+(i.e.,
+c
+i
+,
+i
+=
+max
+e
+⁡
+c
+i
+,
+i
+,
+e
+c_{i,i}=\max_{e}c_{i,i,e}
+). Then, we find the earliest epoch
+e
+i
+∗
+e^{*}_{i}
+in which the agent achieves the best performance on task
+i
+i
+(i.e.,
+e
+i
+∗
+=
+arg
+​
+min
+e
+⁡
+c
+i
+,
+i
+,
+e
+i
+=
+c
+i
+,
+i
+e^{*}_{i}=\argmin_{e}c_{i,i,e_{i}}=c_{i,i}
+), and assume for all
+e
+≥
+e
+i
+∗
+e\geq e^{*}_{i}
+,
+c
+i
+,
+i
+,
+e
+=
+c
+i
+,
+i
+c_{i,i,e}=c_{i,i}
+.
+4
+4
+4
+In practice, it’s possible that the agent’s performance on task
+i
+i
+is not monotonically increasing due to the variance of learning. But we keep the best checkpoint among those saved at epochs
+{
+e
+}
+\{e\}
+as if the agent stops learning after
+e
+i
+∗
+e^{*}_{i}
+.
+Given a different task
+j
+≠
+i
+j\neq i
+, we define
+c
+i
+,
+j
+=
+c
+i
+,
+j
+,
+e
+i
+∗
+c_{i,j}=c_{i,j,e^{*}_{i}}
+. Then the three metrics are defined:
+FWT
+=
+∑
+k
+∈
+[
+K
+]
+FWT
+k
+K
+,
+FWT
+k
+=
+1
+11
+​
+∑
+e
+∈
+{
+0
+​
+…
+​
+50
+}
+c
+k
+,
+k
+,
+e
+NBT
+=
+∑
+k
+∈
+[
+K
+]
+NBT
+k
+K
+,
+NBT
+k
+=
+1
+K
+−
+k
+​
+∑
+τ
+=
+k
++
+1
+K
+(
+c
+k
+,
+k
+−
+c
+τ
+,
+k
+)
+AUC
+=
+∑
+k
+∈
+[
+K
+]
+AUC
+k
+K
+,
+AUC
+k
+=
+1
+K
+−
+k
++
+1
+​
+(
+FWT
+k
++
+∑
+τ
+=
+k
++
+1
+K
+c
+τ
+,
+k
+)
+\begin{split}&\text{FWT}=\sum_{k\in[K]}\frac{\text{FWT}_{k}}{K},~~~\text{FWT}_{k}=\frac{1}{11}\sum_{e\in\{0\dots 50\}}c_{k,k,e}\\
+&\text{NBT}=\sum_{k\in[K]}\frac{\text{NBT}_{k}}{K},~~~~\text{NBT}_{k}=\frac{1}{K-k}\sum_{\tau=k+1}^{K}\big(c_{k,k}-c_{\tau,k}\big)\\
+&\text{AUC}=\sum_{k\in[K]}\frac{\text{AUC}_{k}}{K},~~~\text{AUC}_{k}=\frac{1}{K-k+1}\big(\text{FWT}_{k}+\sum_{\tau=k+1}^{K}c_{\tau,k}\big)\\
+\end{split}
+(3)
+A visualization of these metrics is provided in Figure
+3
+.
+Figure 3:
+Metrics for
+LLDM
+.
+5.2
+Experimental Results
+We present empirical results to address the research questions. Please refer to Appendix
+E.1
+for the full results across all algorithms, policy architectures, and task suites.
+Study on the Policy’s Neural Architectures (Q1, Q2)
+Table
+1
+reports the agent’s lifelong learning performance using the three different neural architectures on the four task suites. Results are reported when
+ER
+and
+PackNet
+are used as they demonstrate the best lifelong learning performance across all task suites.
+Policy Arch.
+ER
+PackNet
+FWT(
+↑
+\uparrow
+)
+NBT(
+↓
+\downarrow
+)
+AUC(
+↑
+\uparrow
+)
+FWT(
+↑
+\uparrow
+)
+NBT(
+↓
+\downarrow
+)
+AUC(
+↑
+\uparrow
+)
+LIBERO-Long
+ResNet-RNN
+0.16
+±
+\pm
+0.02
+0.16
+±
+\pm
+0.02
+0.08
+±
+\pm
+0.01
+0.13
+±
+\pm
+0.00
+0.21
+±
+\pm
+0.01
+0.03
+±
+\pm
+0.00
+ResNet-T
+0.48
+±
+\pm
+0.02
+0.32
+±
+\pm
+0.04
+0.32
+±
+\pm
+0.01
+0.22
+±
+\pm
+0.01
+0.08
+±
+\pm
+0.01
+0.25
+±
+\pm
+0.00
+ViT-T
+0.38
+±
+\pm
+0.05
+0.29
+±
+\pm
+0.06
+0.25
+±
+\pm
+0.02
+0.36
+±
+\pm
+0.01
+0.14
+±
+\pm
+0.01
+0.34
+±
+\pm
+0.01
+LIBERO-Spatial
+ResNet-RNN
+0.40
+±
+\pm
+0.02
+0.29
+±
+\pm
+0.02
+0.29
+±
+\pm
+0.01
+0.27
+±
+\pm
+0.03
+0.38
+±
+\pm
+0.03
+0.06
+±
+\pm
+0.01
+ResNet-T
+0.65
+±
+\pm
+0.03
+0.27
+±
+\pm
+0.03
+0.56
+±
+\pm
+0.01
+0.55
+±
+\pm
+0.01
+0.07
+±
+\pm
+0.02
+0.63
+±
+\pm
+0.00
+ViT-T
+0.63
+±
+\pm
+0.01
+0.29
+±
+\pm
+0.02
+0.50
+±
+\pm
+0.02
+0.57
+±
+\pm
+0.04
+0.15
+±
+\pm
+0.00
+0.59
+±
+\pm
+0.03
+LIBERO-Object
+ResNet-RNN
+0.30
+±
+\pm
+0.01
+0.27
+±
+\pm
+0.05
+0.17
+±
+\pm
+0.05
+0.29
+±
+\pm
+0.02
+0.35
+±
+\pm
+0.02
+0.13
+±
+\pm
+0.01
+ResNet-T
+0.67
+±
+\pm
+0.07
+0.43
+±
+\pm
+0.04
+0.44
+±
+\pm
+0.06
+0.60
+±
+\pm
+0.07
+0.17
+±
+\pm
+0.05
+0.60
+±
+\pm
+0.05
+ViT-T
+0.70
+±
+\pm
+0.02
+0.28
+±
+\pm
+0.01
+0.57
+±
+\pm
+0.01
+0.58
+±
+\pm
+0.03
+0.18
+±
+\pm
+0.02
+0.56
+±
+\pm
+0.04
+LIBERO-Goal
+ResNet-RNN
+0.41
+±
+\pm
+0.00
+0.35
+±
+\pm
+0.01
+0.26
+±
+\pm
+0.01
+0.32
+±
+\pm
+0.03
+0.37
+±
+\pm
+0.04
+0.11
+±
+\pm
+0.01
+ResNet-T
+0.64
+±
+\pm
+0.01
+0.34
+±
+\pm
+0.02
+0.49
+±
+\pm
+0.02
+0.63
+±
+\pm
+0.02
+0.06
+±
+\pm
+0.01
+0.75
+±
+\pm
+0.01
+ViT-T
+0.57
+±
+\pm
+0.00
+0.40
+±
+\pm
+0.02
+0.38
+±
+\pm
+0.01
+0.69
+±
+\pm
+0.02
+0.08
+±
+\pm
+0.01
+0.76
+±
+\pm
+0.02
+Table 1:
+Performance of the three neural architectures using
+ER
+and
+PackNet
+on the four task suites. Results are averaged over three seeds and we report the mean and standard error. The best performance is
+bolded
+, and colored in
+purple
+if the improvement is statistically significant over other neural architectures, when a two-tailed, Student’s
+t-test under equal sample sizes and unequal variance is applied with a
+p
+p
+-value of 0.05.
+Findings:
+First, we observe that
+ResNet-T
+and
+ViT-T
+work much better than
+ResNet-RNN
+on average, indicating that using a transformer on the “temporal" level could be a better option than using an RNN model. Second, the performance difference among different architectures depends on the underlying lifelong learning algorithm. If
+PackNet
+(a dynamic architecture approach) is used, we observe no significant performance difference between
+ResNet-T
+and
+ViT-T
+except on the
+LIBERO-Long
+task suite where
+ViT-T
+performs much better than
+ResNet-T
+. In contrast, if
+ER
+is used, we observe that
+ResNet-T
+performs better than
+ViT-T
+on all task suites except
+LIBERO-Object
+. This potentially indicates that the ViT architecture is better at processing visual information with more object varieties than the ResNet architecture when the network capacity is sufficiently large (See the
+MTL
+results in Table
+8
+on
+LIBERO-Object
+as the supporting evidence). The above findings shed light on how one can improve architecture design for better processing of spatial and temporal information in
+LLDM
+.
+Study on Lifelong Learning Algorithms (Q1, Q3)
+Table
+2
+reports the lifelong learning performance of the three lifelong learning algorithms, together with the
+SeqL
+and
+MTL
+baselines. All experiments use the same
+ResNet-T
+architecture as it performs the best across all policy architectures.
+Lifelong Algo.
+FWT(
+↑
+\uparrow
+)
+NBT(
+↓
+\downarrow
+)
+AUC(
+↑
+\uparrow
+)
+FWT(
+↑
+\uparrow
+)
+NBT(
+↓
+\downarrow
+)
+AUC(
+↑
+\uparrow
+)
+LIBERO-Long
+LIBERO-Spatial
+SeqL
+0.54
+±
+\pm
+0.01
+0.63
+±
+\pm
+0.01
+0.15
+±
+\pm
+0.00
+0.72
+±
+\pm
+0.01
+0.81
+±
+\pm
+0.01
+0.20
+±
+\pm
+0.01
+ER
+0.48
+±
+\pm
+0.02
+0.32
+±
+\pm
+0.04
+0.32
+±
+\pm
+0.01
+0.65
+±
+\pm
+0.03
+0.27
+±
+\pm
+0.03
+0.56
+±
+\pm
+0.01
+EWC
+0.13
+±
+\pm
+0.02
+0.22
+±
+\pm
+0.03
+0.02
+±
+\pm
+0.00
+0.23
+±
+\pm
+0.01
+0.33
+±
+\pm
+0.01
+0.06
+±
+\pm
+0.01
+PackNet
+0.22
+±
+\pm
+0.01
+0.08
+±
+\pm
+0.01
+0.25
+±
+\pm
+0.00
+0.55
+±
+\pm
+0.01
+0.07
+±
+\pm
+0.02
+0.63
+±
+\pm
+0.00
+MTL
+0.48
+±
+\pm
+0.01
+0.83
+±
+\pm
+0.00
+LIBERO-Object
+LIBERO-Goal
+SeqL
+0.78
+±
+\pm
+0.04
+0.76
+±
+\pm
+0.04
+0.26
+±
+\pm
+0.02
+0.77
+±
+\pm
+0.01
+0.82
+±
+\pm
+0.01
+0.22
+±
+\pm
+0.00
+ER
+0.67
+±
+\pm
+0.07
+0.43
+±
+\pm
+0.04
+0.44
+±
+\pm
+0.06
+0.64
+±
+\pm
+0.01
+0.34
+±
+\pm
+0.02
+0.49
+±
+\pm
+0.02
+EWC
+0.56
+±
+\pm
+0.03
+0.69
+±
+\pm
+0.02
+0.16
+±
+\pm
+0.02
+0.32
+±
+\pm
+0.02
+0.48
+±
+\pm
+0.03
+0.06
+±
+\pm
+0.00
+PackNet
+0.60
+±
+\pm
+0.07
+0.17
+±
+\pm
+0.05
+0.60
+±
+\pm
+0.05
+0.63
+±
+\pm
+0.02
+0.06
+±
+\pm
+0.01
+0.75
+±
+\pm
+0.01
+MTL
+0.54
+±
+\pm
+0.02
+0.80
+±
+\pm
+0.01
+Table 2:
+Performance of three lifelong algorithms and the
+SeqL
+and
+MTL
+baselines on the four task suites, where the policy is fixed to be
+ResNet-T
+. Results are averaged over three seeds and we report the mean and standard error. The best performance is
+bolded
+, and colored in
+purple
+if the improvement is statistically significant over other algorithms, when a two-tailed, Student’s
+t-test under equal sample sizes and unequal variance is applied with a
+p
+p
+-value of 0.05.
+Findings:
+We observed a series of interesting findings that could potentially benefit future research on algorithm design for
+LLDM
+:
+1)
+SeqL
+shows the best FWT over all task suites. This is surprising since it indicates all lifelong learning algorithms we consider actually hurt forward transfer;
+2)
+PackNet
+outperforms other lifelong learning algorithms on
+LIBERO-X
+but is outperformed by
+ER
+significantly on
+LIBERO-Long
+, mainly because of low forward transfer. This confirms that the dynamic architecture approach is good at preventing forgetting. But since
+PackNet
+splits the network into different sub-networks, the essential capacity of the network for learning any individual task is smaller. Therefore, we conjecture that
+PackNet
+is not rich enough to learn on
+LIBERO-Long
+;
+3)
+EWC
+works worse than
+SeqL
+, showing that the regularization on the loss term can actually impede the agent’s performance on
+LLDM
+problems (See Appendix
+E.2
+); and
+4)
+ER
+, the rehearsal method, is robust across all task suites.
+Study on Language Embeddings as the Task Identifier (Q4)
+To investigate to what extent language embedding play a role in
+LLDM
+, we compare the performance of the same lifelong learner using four different pretrained language embeddings. Namely, we choose BERT
+[
+19
+]
+, CLIP
+[
+52
+]
+, GPT-2
+[
+53
+]
+and the Task-ID embedding. Task-ID embeddings are produced by feeding a string such as “Task 5” into a pretrained BERT model.
+Embedding Type
+Dimension
+FWT(
+↑
+\uparrow
+)
+NBT(
+↓
+\downarrow
+)
+AUC(
+↑
+\uparrow
+)
+BERT
+768
+0.48
+±
+\pm
+0.02
+0.32
+±
+\pm
+0.04
+0.32
+±
+\pm
+0.01
+CLIP
+512
+0.52
+±
+\pm
+0.00
+0.34
+±
+\pm
+0.01
+0.35
+±
+\pm
+0.01
+GPT-2
+768
+0.46
+±
+\pm
+0.01
+0.34
+±
+\pm
+0.02
+0.30
+±
+\pm
+0.01
+Task-ID
+768
+0.50
+±
+\pm
+0.01
+0.37
+±
+\pm
+0.01
+0.33
+±
+\pm
+0.01
+Table 3:
+Performance of a lifelong learner using four different language embeddings on
+LIBERO-Long
+, where we fix the policy architecture to
+ResNet-T
+and the lifelong learning algorithm to
+ER
+. The Task-ID embeddings are retrieved by feeding “Task + ID" into a pretrained BERT model. Results are averaged over three seeds and we report the mean and standard error. The best performance is
+bolded
+. No statistically significant difference is observed among the different language embeddings.
+Findings:
+From Table
+3
+,
+we observe
+no
+statistically significant difference among various language embeddings, including the Task-ID embedding. This, we believe, is due to sentence embeddings functioning as bag-of-words that differentiates different tasks.
+This insight calls for better language encoding to harness the semantic information in task descriptions. Despite the similar performance, we opt for BERT embeddings as our default task embedding.
+Study on task ordering (Q5)
+Figure
+4
+shows the result of the study on
+Q4
+. For all experiments in this study, we used
+ResNet-T
+as the neural architecture and evaluated both
+ER
+and
+PackNet
+. As the figure illustrates, the performance of both algorithms varies across different task orderings. This finding highlights an important direction for future research: developing algorithms or architectures that are robust to varying task orderings.
+Figure 4:
+Performance of
+ER
+and
+PackNet
+using
+ResNet-T
+on five different task orderings. An error bar shows the performance standard deviation for a fixed ordering.
+Findings:
+From Figure
+4
+, we observe that indeed different task ordering could result in very different performances for the same algorithm. Specifically, such difference is statistically significant for
+PackNet
+.
+Study on How Pretraining Affects Downstream
+LLDM
+(Q6)
+Fig
+5
+reports the results on
+LIBERO-Long
+of five combinations of algorithms and policy architectures, when the underlying model is pretrained on the 90 short-horizion tasks in
+LIBERO-100
+or learned from scratch. For pretraining, we apply behavioral cloning on the 90 tasks using the three policy architectures for 50 epochs. We save a checkpoint every 5 epochs of training and then pick the checkpoint for each architecture that has the best performance as the pretrained model for downstream
+LLDM
+.
+Figure 5:
+Performance of different combinations of algorithms and architectures without pretraining or with pretraining. The multi-task learning performance is also included for reference.
+Findings:
+We observe that the basic supervised pretraining can
+hurt
+the model’s downstream lifelong learning performance. This, together with the results seen in Table
+2
+(e.g., naive sequential fine-tuning has better forward transfer than when lifelong learning algorithms are applied), indicates that better pretraining techniques are needed.
+Attention Visualization:
+To better understand what type of knowledge the agent forgets during the lifelong learning process, we visualize the agent’s attention map on each observed image input. The visualized saliency maps and the discussion can be found in Appendix
+E.4
+.
+6
+Related Work
+This section provides an overview of existing benchmarks for lifelong learning and robot learning. We refer the reader to Appendix
+B.1
+for a detailed review of lifelong learning algorithms.
+Lifelong Learning Benchmarks
+Pioneering work has adapted standard vision or language datasets for studying LL. This line of work includes image classification datasets like MNIST
+[
+18
+]
+, CIFAR
+[
+34
+]
+, and ImageNet
+[
+17
+]
+; segmentation datasets like Core50
+[
+38
+]
+; and natural language understanding datasets like GLUE
+[
+67
+]
+and SuperGLUE
+[
+59
+]
+. Besides supervised learning datasets, video game benchmarks (e.g., Atari
+[
+46
+]
+, XLand
+[
+64
+]
+, and VisDoom
+[
+30
+]
+) in reinforcement learning (RL) have also been used for studying LL. However, LL in standard supervised learning does not involve procedural knowledge transfer, while RL problems in games do not represent human activities. ContinualWorld
+[
+69
+]
+modifies the 50 manipulation tasks in MetaWorld for LL. CORA
+[
+51
+]
+builds four lifelong RL benchmarks based on Atari, Procgen
+[
+15
+]
+, MiniHack
+[
+58
+]
+, and ALFRED
+[
+62
+]
+.
+F-SIOL-310
+[
+3
+]
+and OpenLORIS
+[
+61
+]
+are challenging real-world lifelong object learning datasets that are captured from robotic vision systems. Prior works have also analyzed different components in a LL agent
+[
+45
+,
+70
+,
+21
+]
+, but they do not focus on robot manipulation problems.
+Robot Learning Benchmarks
+A variety of robot learning benchmarks have been proposed to address challenges in meta learning (MetaWorld
+[
+73
+]
+), causality learning (CausalWorld
+[
+1
+]
+), multi-task learning
+[
+27
+,
+35
+]
+, policy generalization to unseen objects
+[
+47
+,
+24
+]
+, and compositional learning
+[
+44
+]
+. Compared to existing benchmarks in lifelong learning and robot learning, the task suites in
+LIBERO
+are curated to address the research topics of
+LLDM
+. The benchmark includes a large number of tasks based on everyday human activities that feature rich interactive behaviors with a diverse range of objects. Additionally, the tasks in
+LIBERO
+are procedurally generated, making the benchmark scalable and adaptable. Moreover, the provided high-quality human demonstration dataset in
+LIBERO
+supports and encourages learning efficiency.
+7
+Conclusion and Limitations
+This paper introduces
+LIBERO
+, a new benchmark in the robot manipulation domain for supporting research in
+LLDM
+.
+LIBERO
+includes a procedural generation pipeline that can create an infinite number of manipulation tasks in the simulator. We use this pipeline to create 130 standardized tasks and conduct a comprehensive set of experiments on policy and algorithm designs. The empirical results suggest several future research directions: 1) how to design a better neural architecture to better process spatial information or temporal information; 2) how to design a better algorithm to improve forward transfer ability; and 3) how to use pretraining to help improve lifelong learning performance.
+In the short term, we do not envision any negative societal impacts triggered by
+LIBERO
+. But as the lifelong learner mainly learns from humans, studying how to preserve user privacy within
+LLDM
+[
+36
+]
+is crucial in the long run.
+References
+[1]
+Ossama Ahmed, Frederik Träuble, Anirudh Goyal, Alexander Neitz, Yoshua
+Bengio, Bernhard Schölkopf, Manuel Wüthrich, and Stefan Bauer.
+Causalworld: A robotic manipulation benchmark for causal structure
+and transfer learning.
+arXiv preprint arXiv:2010.04296
+, 2020.
+[2]
+Ali Ayub and Carter Fendley.
+Few-shot continual active learning by a robot.
+arXiv preprint arXiv:2210.04137
+, 2022.
+[3]
+Ali Ayub and Alan R Wagner.
+F-siol-310: A robotic dataset and benchmark for few-shot incremental
+object learning.
+In
+2021 IEEE International Conference on Robotics and Automation
+(ICRA)
+, pages 13496–13502. IEEE, 2021.
+[4]
+Michael Bain and Claude Sammut.
+A framework for behavioural cloning.
+In
+Machine Intelligence 15
+, pages 103–129, 1995.
+[5]
+Eseoghene Ben-Iwhiwhu, Saptarshi Nath, Praveen K Pilly, Soheil Kolouri, and
+Andrea Soltoggio.
+Lifelong reinforcement learning with modulating masks.
+arXiv preprint arXiv:2212.11110
+, 2022.
+[6]
+Yoshua Bengio, Jérôme Louradour, Ronan Collobert, and Jason Weston.
+Curriculum learning.
+In
+Proceedings of the 26th annual international conference on
+machine learning
+, pages 41–48, 2009.
+[7]
+Magdalena Biesialska, Katarzyna Biesialska, and Marta R Costa-Jussa.
+Continual lifelong learning in natural language processing: A survey.
+arXiv preprint arXiv:2012.09823
+, 2020.
+[8]
+Christopher M Bishop.
+Mixture density networks.
+1994.
+[9]
+Pietro Buzzega, Matteo Boschini, Angelo Porrello, Davide Abati, and Simone
+Calderara.
+Dark experience for general continual learning: a strong, simple
+baseline.
+Advances in neural information processing systems
+,
+33:15920–15930, 2020.
+[10]
+Rich Caruana.
+Multitask learning.
+Machine learning
+, 28(1):41–75, 1997.
+[11]
+Arslan Chaudhry, Puneet K Dokania, Thalaiyasingam Ajanthan, and Philip HS Torr.
+Riemannian walk for incremental learning: Understanding forgetting
+and intransigence.
+In
+Proceedings of the European Conference on Computer Vision
+(ECCV)
+, pages 532–547, 2018.
+[12]
+Arslan Chaudhry, Marc’Aurelio Ranzato, Marcus Rohrbach, and Mohamed Elhoseiny.
+Efficient lifelong learning with a-gem.
+arXiv preprint arXiv:1812.00420
+, 2018.
+[13]
+Arslan Chaudhry, Marcus Rohrbach, Mohamed Elhoseiny, Thalaiyasingam Ajanthan,
+Puneet K Dokania, Philip HS Torr, and Marc’Aurelio Ranzato.
+On tiny episodic memories in continual learning.
+arXiv preprint arXiv:1902.10486
+, 2019.
+[14]
+Brian Cheung, Alexander Terekhov, Yubei Chen, Pulkit Agrawal, and Bruno
+Olshausen.
+Superposition of many models into one.
+Advances in neural information processing systems
+, 32, 2019.
+[15]
+Karl Cobbe, Chris Hesse, Jacob Hilton, and John Schulman.
+Leveraging procedural generation to benchmark reinforcement learning.
+In
+International conference on machine learning
+, pages
+2048–2056. PMLR, 2020.
+[16]
+Matthias De Lange, Rahaf Aljundi, Marc Masana, Sarah Parisot, Xu Jia,
+Aleš Leonardis, Gregory Slabaugh, and Tinne Tuytelaars.
+A continual learning survey: Defying forgetting in classification
+tasks.
+IEEE transactions on pattern analysis and machine intelligence
+,
+44(7):3366–3385, 2021.
+[17]
+Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li, and Li Fei-Fei.
+Imagenet: A large-scale hierarchical image database.
+In
+2009 IEEE conference on computer vision and pattern
+recognition
+, pages 248–255. Ieee, 2009.
+[18]
+Li Deng.
+The mnist database of handwritten digit images for machine learning
+research.
+IEEE Signal Processing Magazine
+, 29(6):141–142, 2012.
+[19]
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova.
+Bert: Pre-training of deep bidirectional transformers for language
+understanding.
+arXiv preprint arXiv:1810.04805
+, 2018.
+[20]
+Natalia Díaz-Rodríguez, Vincenzo Lomonaco, David Filliat, and Davide
+Maltoni.
+Don’t forget, there is more than forgetting: new metrics for
+continual learning.
+arXiv preprint arXiv:1810.13166
+, 2018.
+[21]
+Beyza Ermis, Giovanni Zappella, Martin Wistuba, and Cédric Archambeau.
+Memory efficient continual learning with transformers.
+2022.
+[22]
+Kristen Grauman, Andrew Westbury, Eugene Byrne, Zachary Chavis, Antonino
+Furnari, Rohit Girdhar, Jackson Hamburger, Hao Jiang, Miao Liu, Xingyu Liu,
+et al.
+Ego4d: Around the world in 3,000 hours of egocentric video.
+In
+Proceedings of the IEEE/CVF Conference on Computer Vision and
+Pattern Recognition
+, pages 18995–19012, 2022.
+[23]
+Sam Greydanus, Anurag Koul, Jonathan Dodge, and Alan Fern.
+Visualizing and understanding atari agents.
+ArXiv
+, abs/1711.00138, 2017.
+[24]
+Jiayuan Gu, Fanbo Xiang, Xuanlin Li, Zhan Ling, Xiqiang Liu, Tongzhou Mu, Yihe
+Tang, Stone Tao, Xinyue Wei, Yunchao Yao, et al.
+Maniskill2: A unified benchmark for generalizable manipulation
+skills.
+arXiv preprint arXiv:2302.04659
+, 2023.
+[25]
+Matthew Hausknecht and Peter Stone.
+Deep recurrent q-learning for partially observable mdps.
+In
+2015 aaai fall symposium series
+, 2015.
+[26]
+Ching-Yi Hung, Cheng-Hao Tu, Cheng-En Wu, Chien-Hung Chen, Yi-Ming Chan, and
+Chu-Song Chen.
+Compacting, picking and growing for unforgetting continual learning.
+Advances in Neural Information Processing Systems
+, 32, 2019.
+[27]
+Stephen James, Zicong Ma, David Rovick Arrojo, and Andrew J Davison.
+Rlbench: The robot learning benchmark & learning environment.
+IEEE Robotics and Automation Letters
+, 5(2):3019–3026, 2020.
+[28]
+Leslie Pack Kaelbling.
+The foundation of efficient robot learning.
+Science
+, 369(6506):915–916, 2020.
+[29]
+Minsoo Kang, Jaeyoo Park, and Bohyung Han.
+Class-incremental learning by knowledge distillation with adaptive
+feature consolidation.
+In
+Proceedings of the IEEE/CVF conference on computer vision and
+pattern recognition
+, pages 16071–16080, 2022.
+[30]
+Michał Kempka, Marek Wydmuch, Grzegorz Runc, Jakub Toczek, and Wojciech
+Jaśkowski.
+Vizdoom: A doom-based ai research platform for visual reinforcement
+learning.
+In
+2016 IEEE conference on computational intelligence and games
+(CIG)
+, pages 1–8. IEEE, 2016.
+[31]
+Wonjae Kim, Bokyung Son, and Ildoo Kim.
+Vilt: Vision-and-language transformer without convolution or region
+supervision.
+In
+International Conference on Machine Learning
+, pages
+5583–5594. PMLR, 2021.
+[32]
+Diederik P Kingma and Jimmy Ba.
+Adam: A method for stochastic optimization.
+arXiv preprint arXiv:1412.6980
+, 2014.
+[33]
+James Kirkpatrick, Razvan Pascanu, Neil Rabinowitz, Joel Veness, Guillaume
+Desjardins, Andrei A Rusu, Kieran Milan, John Quan, Tiago Ramalho, Agnieszka
+Grabska-Barwinska, et al.
+Overcoming catastrophic forgetting in neural networks.
+Proceedings of the national academy of sciences
+,
+114(13):3521–3526, 2017.
+[34]
+Alex Krizhevsky, Geoffrey Hinton, et al.
+Learning multiple layers of features from tiny images.
+2009.
+[35]
+Chengshu Li, Ruohan Zhang, Josiah Wong, Cem Gokmen, Sanjana Srivastava, Roberto
+Martín-Martín, Chen Wang, Gabrael Levine, Michael Lingelbach,
+Jiankai Sun, et al.
+Behavior-1k: A benchmark for embodied ai with 1,000 everyday
+activities and realistic simulation.
+In
+Conference on Robot Learning
+, pages 80–93. PMLR, 2023.
+[36]
+B. Liu, Qian Liu, and Peter Stone.
+Continual learning and private unlearning.
+In
+CoLLAs
+, 2022.
+[37]
+Hao Liu and Huaping Liu.
+Continual learning with recursive gradient optimization.
+arXiv preprint arXiv:2201.12522
+, 2022.
+[38]
+Vincenzo Lomonaco and Davide Maltoni.
+Core50: a new dataset and benchmark for continuous object
+recognition.
+In
+Conference on Robot Learning
+, pages 17–26. PMLR, 2017.
+[39]
+David Lopez-Paz and Marc’Aurelio Ranzato.
+Gradient episodic memory for continual learning.
+Advances in neural information processing systems
+, 30, 2017.
+[40]
+Zheda Mai, Ruiwen Li, Jihwan Jeong, David Quispe, Hyunwoo Kim, and Scott
+Sanner.
+Online continual learning in image classification: An empirical
+survey.
+Neurocomputing
+, 469:28–51, 2022.
+[41]
+Arun Mallya and Svetlana Lazebnik.
+Packnet: Adding multiple tasks to a single network by iterative
+pruning.
+In
+Proceedings of the IEEE conference on Computer Vision and
+Pattern Recognition
+, pages 7765–7773, 2018.
+[42]
+Ajay Mandlekar, Danfei Xu, Josiah Wong, Soroush Nasiriany, Chen Wang, Rohun
+Kulkarni, Li Fei-Fei, Silvio Savarese, Yuke Zhu, and Roberto
+Martín-Martín.
+What matters in learning from offline human demonstrations for robot
+manipulation.
+arXiv preprint arXiv:2108.03298
+, 2021.
+[43]
+Drew McDermott, Malik Ghallab, Adele Howe, Craig Knoblock, Ashwin Ram, Manuela
+Veloso, Daniel Weld, and David Wilkins.
+Pddl-the planning domain definition language.
+1998.
+[44]
+Jorge A Mendez, Marcel Hussing, Meghna Gummadi, and Eric Eaton.
+Composuite: A compositional reinforcement learning benchmark.
+arXiv preprint arXiv:2207.04136
+, 2022.
+[45]
+Seyed Iman Mirzadeh, Arslan Chaudhry, Dong Yin, Timothy Nguyen, Razvan Pascanu,
+Dilan Gorur, and Mehrdad Farajtabar.
+Architecture matters in continual learning.
+arXiv preprint arXiv:2202.00275
+, 2022.
+[46]
+Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis
+Antonoglou, Daan Wierstra, and Martin Riedmiller.
+Playing atari with deep reinforcement learning.
+arXiv preprint arXiv:1312.5602
+, 2013.
+[47]
+Tongzhou Mu, Zhan Ling, Fanbo Xiang, Derek Yang, Xuanlin Li, Stone Tao, Zhiao
+Huang, Zhiwei Jia, and Hao Su.
+Maniskill: Generalizable manipulation skill benchmark with
+large-scale demonstrations.
+arXiv preprint arXiv:2107.14483
+, 2021.
+[48]
+Sanmit Narvekar, Bei Peng, Matteo Leonetti, Jivko Sinapov, Matthew E Taylor,
+and Peter Stone.
+Curriculum learning for reinforcement learning domains: A framework
+and survey.
+arXiv preprint arXiv:2003.04960
+, 2020.
+[49]
+German I Parisi, Ronald Kemker, Jose L Part, Christopher Kanan, and Stefan
+Wermter.
+Continual lifelong learning with neural networks: A review.
+Neural Networks
+, 113:54–71, 2019.
+[50]
+Ethan Perez, Florian Strub, Harm De Vries, Vincent Dumoulin, and Aaron
+Courville.
+Film: Visual reasoning with a general conditioning layer.
+In
+Proceedings of the AAAI Conference on Artificial
+Intelligence
+, volume 32, 2018.
+[51]
+Sam Powers, Eliot Xing, Eric Kolve, Roozbeh Mottaghi, and Abhinav Gupta.
+Cora: Benchmarks, baselines, and metrics as a platform for continual
+reinforcement learning agents.
+arXiv preprint arXiv:2110.10067
+, 2021.
+[52]
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh,
+Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark,
+et al.
+Learning transferable visual models from natural language
+supervision.
+In
+International conference on machine learning
+, pages
+8748–8763. PMLR, 2021.
+[53]
+Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya
+Sutskever, et al.
+Language models are unsupervised multitask learners.
+OpenAI blog
+, 1(8):9, 2019.
+[54]
+Amanda Rios and Laurent Itti.
+Lifelong learning without a task oracle.
+In
+2020 IEEE 32nd International Conference on Tools with
+Artificial Intelligence (ICTAI)
+, pages 255–263. IEEE, 2020.
+[55]
+Stéphane Ross, Geoffrey Gordon, and Drew Bagnell.
+A reduction of imitation learning and structured prediction to
+no-regret online learning.
+In
+Proceedings of the fourteenth international conference on
+artificial intelligence and statistics
+, pages 627–635. JMLR Workshop and
+Conference Proceedings, 2011.
+[56]
+Andrei A Rusu, Neil C Rabinowitz, Guillaume Desjardins, Hubert Soyer, James
+Kirkpatrick, Koray Kavukcuoglu, Razvan Pascanu, and Raia Hadsell.
+Progressive neural networks.
+arXiv preprint arXiv:1606.04671
+, 2016.
+[57]
+Gobinda Saha, Isha Garg, Aayush Ankit, and Kaushik Roy.
+Space: Structured compression and sharing of representational space
+for continual learning.
+IEEE Access
+, 9:150480–150494, 2021.
+[58]
+Mikayel Samvelyan, Robert Kirk, Vitaly Kurin, Jack Parker-Holder, Minqi Jiang,
+Eric Hambro, Fabio Petroni, Heinrich Küttler, Edward Grefenstette, and
+Tim Rocktäschel.
+Minihack the planet: A sandbox for open-ended reinforcement learning
+research.
+arXiv preprint arXiv:2109.13202
+, 2021.
+[59]
+Paul-Edouard Sarlin, Daniel DeTone, Tomasz Malisiewicz, and Andrew Rabinovich.
+Superglue: Learning feature matching with graph neural networks.
+In
+Proceedings of the IEEE/CVF conference on computer vision and
+pattern recognition
+, pages 4938–4947, 2020.
+[60]
+Jonathan Schwarz, Wojciech Czarnecki, Jelena Luketina, Agnieszka
+Grabska-Barwinska, Yee Whye Teh, Razvan Pascanu, and Raia Hadsell.
+Progress & compress: A scalable framework for continual learning.
+In
+International Conference on Machine Learning
+, pages
+4528–4537. PMLR, 2018.
+[61]
+Qi She, Fan Feng, Xinyue Hao, Qihan Yang, Chuanlin Lan, Vincenzo Lomonaco,
+Xuesong Shi, Zhengwei Wang, Yao Guo, Yimin Zhang, et al.
+Openloris-object: A robotic vision dataset and benchmark for lifelong
+deep learning.
+In
+2020 IEEE international conference on robotics and automation
+(ICRA)
+, pages 4767–4773. IEEE, 2020.
+[62]
+Mohit Shridhar, Jesse Thomason, Daniel Gordon, Yonatan Bisk, Winson Han,
+Roozbeh Mottaghi, Luke Zettlemoyer, and Dieter Fox.
+Alfred: A benchmark for interpreting grounded instructions for
+everyday tasks.
+In
+Proceedings of the IEEE/CVF conference on computer vision and
+pattern recognition
+, pages 10740–10749, 2020.
+[63]
+Sanjana Srivastava, Chengshu Li, Michael Lingelbach, Roberto
+Martín-Martín, Fei Xia, Kent Elliott Vainio, Zheng Lian, Cem
+Gokmen, Shyamal Buch, Karen Liu, et al.
+Behavior: Benchmark for everyday household activities in virtual,
+interactive, and ecological environments.
+In
+Conference on Robot Learning
+, pages 477–490. PMLR, 2022.
+[64]
+Open Ended Learning Team, Adam Stooke, Anuj Mahajan, Catarina Barros, Charlie
+Deck, Jakob Bauer, Jakub Sygnowski, Maja Trebacz, Max Jaderberg, Michael
+Mathieu, et al.
+Open-ended learning leads to generally capable agents.
+arXiv preprint arXiv:2107.12808
+, 2021.
+[65]
+Sebastian Thrun and Tom M Mitchell.
+Lifelong robot learning.
+Robotics and autonomous systems
+, 15(1-2):25–46, 1995.
+[66]
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin.
+Attention is all you need.
+Advances in neural information processing systems
+, 30, 2017.
+[67]
+Alex Wang, Amanpreet Singh, Julian Michael, Felix Hill, Omer Levy, and Samuel R
+Bowman.
+Glue: A multi-task benchmark and analysis platform for natural
+language understanding.
+arXiv preprint arXiv:1804.07461
+, 2018.
+[68]
+Chen Wang, Linxi Fan, Jiankai Sun, Ruohan Zhang, Li Fei-Fei, Danfei Xu, Yuke
+Zhu, and Anima Anandkumar.
+Mimicplay: Long-horizon imitation learning by watching human play.
+arXiv preprint arXiv:2302.12422
+, 2023.
+[69]
+Maciej Wołczyk, Michal Zajkac, Razvan Pascanu, Lukasz Kuci’nski, and Piotr
+Milo’s.
+Continual world: A robotic benchmark for continual reinforcement
+learning.
+In
+Neural Information Processing Systems
+, 2021.
+[70]
+Maciej Wołczyk, Michal Zajkac, Razvan Pascanu, Lukasz Kuci’nski, and Piotr
+Milo’s.
+Disentangling transfer in continual reinforcement learning.
+ArXiv
+, abs/2209.13900, 2022.
+[71]
+Lemeng Wu, Bo Liu, Peter Stone, and Qiang Liu.
+Firefly neural architecture descent: a general approach for growing
+neural networks.
+Advances in Neural Information Processing Systems
+,
+33:22373–22383, 2020.
+[72]
+Jaehong Yoon, Eunho Yang, Jeongtae Lee, and Sung Ju Hwang.
+Lifelong learning with dynamically expandable networks.
+arXiv preprint arXiv:1708.01547
+, 2017.
+[73]
+Tianhe Yu, Deirdre Quillen, Zhanpeng He, Ryan Julian, Karol Hausman, Chelsea
+Finn, and Sergey Levine.
+Meta-world: A benchmark and evaluation for multi-task and meta
+reinforcement learning.
+In
+Conference on robot learning
+, pages 1094–1100. PMLR, 2020.
+[74]
+Da-Wei Zhou, Fu-Yun Wang, Han-Jia Ye, Liang Ma, Shiliang Pu, and De-Chuan Zhan.
+Forward compatible few-shot class-incremental learning.
+In
+Proceedings of the IEEE/CVF Conference on Computer Vision and
+Pattern Recognition
+, pages 9046–9056, 2022.
+[75]
+Yifeng Zhu, Abhishek Joshi, Peter Stone, and Yuke Zhu.
+Viola: Imitation learning for vision-based manipulation with object
+proposal priors.
+arXiv preprint arXiv:2210.11339
+, 2022.
+[76]
+Yuke Zhu, Josiah Wong, Ajay Mandlekar, and Roberto Martín-Martín.
+robosuite: A modular simulation framework and benchmark for robot
+learning.
+arXiv preprint arXiv:2009.12293
+, 2020.
+Checklist
+1.
+For all authors…
+(a)
+Do the main claims made in the abstract and introduction accurately reflect the paper’s contributions and scope?
+[Yes]
+(b)
+Did you describe the limitations of your work?
+[Yes]
+(c)
+Did you discuss any potential negative societal impacts of your work?
+[Yes]
+(d)
+Have you read the ethics review guidelines and ensured that your paper conforms to them?
+[Yes]
+2.
+If you are including theoretical results…
+(a)
+Did you state the full set of assumptions of all theoretical results?
+[N/A]
+(b)
+Did you include complete proofs of all theoretical results?
+[N/A]
+3.
+If you ran experiments (e.g. for benchmarks)…
+(a)
+Did you include the code, data, and instructions needed to reproduce the main experimental results (either in the supplemental material or as a URL)?
+[Yes]
+(b)
+Did you specify all the training details (e.g., data splits, hyperparameters, how they were chosen)?
+[Yes]
+(c)
+Did you report error bars (e.g., with respect to the random seed after running experiments multiple times)?
+[Yes]
+(d)
+Did you include the total amount of compute and the type of resources used (e.g., type of GPUs, internal cluster, or cloud provider)?
+[Yes]
+4.
+If you are using existing assets (e.g., code, data, models) or curating/releasing new assets…
+(a)
+If your work uses existing assets, did you cite the creators?
+[Yes]
+(b)
+Did you mention the license of the assets?
+[N/A]
+(c)
+Did you include any new assets either in the supplemental material or as a URL?
+[Yes]
+(d)
+Did you discuss whether and how consent was obtained from people whose data you’re using/curating?
+[N/A]
+(e)
+Did you discuss whether the data you are using/curating contains personally identifiable information or offensive content?
+[N/A]
+5.
+If you used crowdsourcing or conducted research with human subjects…
+(a)
+Did you include the full text of instructions given to participants and screenshots, if applicable?
+[N/A]
+(b)
+Did you describe any potential participant risks, with links to Institutional Review Board (IRB) approvals, if applicable?
+[N/A]
+(c)
+Did you include the estimated hourly wage paid to participants and the total amount spent on participant compensation?
+[N/A]
+Appendix A
+Implemented Neural Architectures and Lifelong Learning Algorithms
+Neural Policy Arch.
+ResNet-RNN
+ResNet-T
+ViT-T
+Lifelong Learning Algo.
+SeqL
+EWC
+[
+33
+]
+ER
+[
+13
+]
+PackNet
+[
+41
+]
+MTL
+Table 4:
+The implemented neural policy architectures and the lifelong learning algorithms in
+LIBERO
+.
+A.1
+Neural Architectures
+In Section
+4.4
+, we outlined the neural network architectures utilized in our experiments, namely
+ResNet-RNN
+,
+ResNet-T
+, and
+ViT-T
+. The specifics of each architecture are illustrated in Figure
+6
+. Furthermore, Table
+B
+,
+B
+, and
+7
+display the hyperparameters for the architectures used throughout all of our experiments.
+Figure 6:
+We provide visualizations of the architectures for
+ResNet-RNN
+,
+ResNet-T
+, and
+ViT-T
+, respectively. It is worth noting that each model architecture incorporates language embedding in distinct ways.
+Figure 7:
+The image encoders: ResNet-based encoder and the vision transformer-based encoder.
+Appendix B
+Computation
+For all experiments, we use a single Nvidia A100 GPU or a single Nvidia A40 GPU (CUDA 11.7) with 8 16 CPUs for training and evaluation.
+Variable
+Value
+resnet_image_embed_size
+64
+text_embed_size
+32
+rnn_hidden_size
+1024
+rnn_layer_num
+2
+rnn_dropout
+0.0
+Table 5:
+Hyper parameters of
+ResNet-RNN
+.
+Variable
+Value
+extra_info_hidden_size
+128
+img_embed_size
+64
+transformer_num_layers
+4
+transformer_num_heads
+6
+transformer_head_output_size
+64
+transformer_mlp_hidden_size
+256
+transformer_dropout
+0.1
+transformer_max_seq_len
+10
+Table 6:
+Hyper parameters of
+ResNet-T
+.
+Variable
+Value
+extra_info_hidden_size
+128
+img_embed_size
+128
+spatial_transformer_num_layers
+7
+spatial_transformer_num_heads
+8
+spatial_transformer_head_output_size
+120
+spatial_transformer_mlp_hidden_size
+256
+spatial_transformer_dropout
+0.1
+spatial_down_sample_embed_size
+64
+temporal_transformer_input_size
+null
+temporal_transformer_num_layers
+4
+temporal_transformer_num_heads
+6
+temporal_transformer_head_output_size
+64
+temporal_transformer_mlp_hidden_size
+256
+temporal_transformer_dropout
+0.1
+temporal_transformer_max_seq_len
+10
+Table 7:
+Hyper parameters of
+ViT-T
+.
+B.1
+Lifelong Learning Algorithms
+Lifelong learning (LL) is a field of study that aims to understand how an agent can continually acquire and retain knowledge over an infinite sequence of tasks without catastrophically forgetting previous knowledge. Recent literature proposes three main approaches to address the problem of catastrophic forgetting in deep learning: Dynamic Architecture approaches, Regularization-Based approaches, and Rehearsal approaches. Although some recent works explore the combination of different approaches
+[
+2
+,
+29
+,
+54
+]
+or new strategies
+[
+74
+,
+57
+,
+14
+]
+, our benchmark aims to provide an in-depth analysis of these three basic lifelong learning directions to reveal their pros and cons on robot learning tasks.
+The dynamic architecture approach gradually expands the learning model to incorporate new knowledge
+[
+56
+,
+72
+,
+41
+,
+26
+,
+71
+,
+5
+]
+. Regularization-based methods, on the other hand, regularize the learner to a previous checkpoint when it learns a new task
+[
+33
+,
+11
+,
+60
+,
+37
+]
+. Rehearsal methods save exemplar data from prior tasks and replay them with new data to consolidate the agent’s memory
+[
+13
+,
+39
+,
+12
+,
+9
+]
+. For a comprehensive review of LL methods, we refer readers to surveys
+[
+16
+,
+49
+]
+.
+The following paragraphs provide details on the three lifelong learning algorithms that we have implemented.
+ER
+Experience Replay (
+ER
+)
+[
+13
+]
+is a
+rehearsal-based
+approach that maintains a memory buffer of samples from previous tasks and leverages it to learn new tasks. After the completion of policy learning for a task,
+ER
+stores a portion of the data into a storage memory. When training a new task,
+ER
+samples data from the memory and combines it with the training data from the current task so that the training data approximately represents the empirical distribution of all-task data. In our implementation, we use a replay buffer to store a portion of the training data (up to 1000 trajectories) after training each task. For every training iteration during the training of a new task, we uniformly sample a fixed number of replay data from the memory (32 trajectories) along with each batch of training data from the new task.
+EWC
+Elastic Weight Consolidation(
+EWC
+)
+[
+33
+]
+is a
+regularization-based
+approach that add a regularization term that constraints neural network update to the original single-task learning objective. Specifically,
+EWC
+uses the Fisher information matrix that quantify the importance of every neural netwrk parameter. The loss function for task
+k
+k
+is:
+ℒ
+k
+E
+​
+W
+​
+C
+​
+(
+θ
+)
+=
+ℒ
+K
+B
+​
+C
+​
+(
+θ
+)
++
+∑
+i
+λ
+2
+​
+F
+i
+​
+(
+θ
+i
+−
+θ
+k
+−
+1
+,
+i
+∗
+)
+2
+,
+\mathcal{L}_{k}^{EWC}(\theta)=\mathcal{L}_{K}^{BC}(\theta)+\sum_{i}\frac{\lambda}{2}F_{i}\left(\theta_{i}-\theta_{{k-1},i}^{*}\right)^{2},
+where
+λ
+\lambda
+is a penalty hyperparameter, and the coefficient
+F
+i
+F_{i}
+is the diagonal of the Fisher information matrix:
+F
+k
+=
+𝔼
+s
+∼
+𝒟
+k
+𝔼
+a
+∼
+p
+θ
+(
+⋅
+∣
+s
+)
+(
+∇
+θ
+k
+log
+p
+θ
+k
+(
+a
+|
+s
+)
+)
+2
+F_{k}=\mathbb{E}_{s\sim\mathcal{D}_{k}}\mathbb{E}_{a\sim p_{\theta}(\cdot\mid s)}\left(\nabla_{\theta_{k}}\log p_{\theta_{k}}(a|s)\right)^{2}
+. In this work, we use the online update version of
+EWC
+that updates the Fisher information matrix using exponential moving average along the lifelong learning process, and use the empirical estimation of above Fisher information matrix to stabilize the estimation. Formally, the actually used estimation of Fisher Information Matrix is
+F
+k
+~
+=
+γ
+​
+F
+k
+−
+1
++
+(
+1
+−
+γ
+)
+​
+F
+k
+\tilde{F_{k}}=\gamma F_{k-1}+(1-\gamma)F_{k}
+, where
+F
+k
+=
+𝔼
+(
+s
+,
+a
+)
+∼
+𝒟
+k
+​
+(
+∇
+θ
+k
+​
+log
+​
+p
+θ
+k
+​
+(
+a
+|
+s
+)
+)
+2
+F_{k}=\mathbb{E}_{(s,a)\sim\mathcal{D}_{k}}\left(\nabla_{\theta_{k}}\log p_{\theta_{k}}(a|s)\right)^{2}
+and
+k
+k
+is the task number. We set
+γ
+=
+0.9
+\gamma=0.9
+and
+λ
+=
+5
+⋅
+10
+4
+\lambda=5\cdot 10^{4}
+.
+PackNet
+PackNet
+[
+41
+]
+is a
+dynamic architecture-based
+approach that aims to prevent changes to parameters that are important for previous tasks in lifelong learning. To achieve this,
+PackNet
+iteratively trains, prunes, fine-tunes, and freezes parts of the network. The method theoretically completely avoids catastrophic forgetting, but for each new task, the number of available parameters shrinks. The pruning process in
+PackNet
+involves two stages. First, the network is trained, and at the end of the training, a fixed proportion of the most important parameters (25% in our implementation) are chosen, and the rest are pruned. Second, the selected part of the network is fine-tuned and then frozen. In our implementation, we follow the original paper
+[
+41
+]
+and do not train all biases and normalization layers. We perform the same number of fine-tuning epochs as for training (50 epochs in our implementation). Note that all evaluation metrics are calculated
+before
+the fine-tuning stage.
+Appendix C
+LIBERO Task Suite Designs
+C.1
+Task Suites
+We visualize all the tasks from the four task suites in Figure
+8
+-
+11
+. Figure
+8
+visualizes the initial states since the task goals are always the same. All the figures visualize the goal states of tasks except for Figure
+8
+, which visualizes the initial states since the task goals are always the same.
+Figure 8:
+LIBERO-Spatial
+Figure 9:
+LIBERO-Object
+Figure 10:
+LIBERO-Goal
+Figure 11:
+LIBERO-100
+C.2
+PDDL-based Scene Description File
+Here we visualize the whole content of an example scene description file based on PDDL. This file corresponds to the task shown in Figure
+2
+.
+Example task:
+Open the top drawer of the cabinet and put the bowl in it
+.
+⬇
+(
+define
+(
+problem
+LIBERO_Kitchen_Tabletop_Manipulation
+)
+(:
+domain
+robosuite
+)
+(:
+language
+open
+the
+top
+drawer
+of
+the
+cabinet
+and
+put
+the
+bowl
+in
+it
+)
+(:
+regions
+(
+wooden_cabinet_init_region
+(:
+target
+kitchen_table
+)
+(:
+ranges
+(
+(-0.01
+-0.31
+0.01
+-0.29)
+)
+)
+(:
+yaw_rotation
+(
+(3.141592653589793
+3.141592653589793)
+)
+)
+)
+(
+akita_black_bowl_init_region
+(:
+target
+kitchen_table
+)
+(:
+ranges
+(
+(-0.025
+-0.025
+0.025
+0.025)
+)
+)
+(:
+yaw_rotation
+(
+(0.0
+0.0)
+)
+)
+)
+(
+plate_init_region
+(:
+target
+kitchen_table
+)
+(:
+ranges
+(
+(-0.025
+0.225
+0.025
+0.275)
+)
+)
+(:
+yaw_rotation
+(
+(0.0
+0.0)
+)
+)
+)
+(
+top_side
+(:
+target
+wooden_cabinet_1
+)
+)
+(
+top_region
+(:
+target
+wooden_cabinet_1
+)
+)
+(
+middle_region
+(:
+target
+wooden_cabinet_1
+)
+)
+(
+bottom_region
+(:
+target
+wooden_cabinet_1
+)
+)
+)
+(:
+fixtures
+kitchen_table
+-
+kitchen_table
+wooden_cabinet_1
+-
+wooden_cabinet
+)
+(:
+objects
+akita_black_bowl_1
+-
+akita_black_bowl
+plate_1
+-
+plate
+)
+(:
+obj_of_interest
+wooden_cabinet_1
+akita_black_bowl_1
+)
+(:
+init
+(
+On
+akita_black_bowl_1
+kitchen_table_akita_black_bowl_init_region
+)
+(
+On
+plate_1
+kitchen_table_plate_init_region
+)
+(
+On
+wooden_cabinet_1
+kitchen_table_wooden_cabinet_init_region
+)
+)
+(:
+goal
+(
+And
+(
+Open
+wooden_cabinet_1_top_region
+)
+(
+In
+akita_black_bowl_1
+wooden_cabinet_1_top_region
+)
+)
+)
+)
+Appendix D
+Experimental Setup
+We consider five lifelong learning algorithms:
+SeqL
+the sequential learning baseline where the agent learns each task in the sequence directly without any further consideration,
+MTL
+the multitask learning baseline where the agent learns all tasks in the sequence simultaneously, the regularization-based method
+EWC
+[
+33
+]
+, the replay-based method
+ER
+[
+13
+]
+, and the dynamic architecture-based method
+PackNet
+[
+41
+]
+.
+SeqL
+and
+MTL
+can be seen as approximations of the lower and upper bounds respectively for any lifelong learning algorithm. The other three methods represent the three primary categories of lifelong learning algorithms.
+For the neural architectures, we consider three vision-language policy architectures:
+ResNet-RNN
+,
+ResNet-T
+,
+ViT-T
+, which differ in how spatial or temporal information is aggregated (See Appendix
+A.1
+for more details).
+For each task, the agent is trained over 50 epochs on the 50 demonstration trajectories. We evaluate the agent’s average success rate over 20 test rollout trajectories of a maximum length of 600 every 5 epochs. We use Adam optimizer
+[
+32
+]
+with a batch size of
+32
+32
+, and a cosine scheduled learning rate from
+0.0001
+0.0001
+to
+0.00001
+0.00001
+for each task.
+Following the convention of
+Robomimic
+[
+42
+]
+, we pick the model checkpoint that achieves the best success rate as the final policy for a given task.
+After 50 epochs of training, the agent with the best checkpoint is then evaluated on all previously learned tasks, with 20 test rollout trajectories for each task. All policy networks are matched in Floating Point Operations Per Second (FLOPS): all policy architectures have
+∼
+\sim
+13.5G FLOPS. For each combination of algorithm, policy architecture, and task suite, we run the lifelong learning method 3 times with random seeds
+{
+100,200,300
+}
+\{100,200,300\}
+(180 experiments in total). See Table
+4
+for the implemented algorithms and architectures.
+Appendix E
+Additional Experiment Results
+E.1
+Full Results
+We provide the full results across three different lifelong learning algorithms (e.g.,
+EWC
+,
+ER
+,
+PackNet
+) and three different policy architectures (e.g.,
+ResNet-RNN
+,
+ResNet-T
+,
+ViT-T
+) on the four task suites in Table
+8
+.
+Algo.
+Policy Arch.
+FWT(
+↑
+\uparrow
+)
+NBT(
+↓
+\downarrow
+)
+AUC(
+↑
+\uparrow
+)
+FWT(
+↑
+\uparrow
+)
+NBT(
+↓
+\downarrow
+)
+AUC(
+↑
+\uparrow
+)
+LIBERO-Long
+LIBERO-Spatial
+SeqL
+ResNet-RNN
+0.24
+±
+\pm
+0.02
+0.28
+±
+\pm
+0.01
+0.07
+±
+\pm
+0.01
+0.50
+±
+\pm
+0.01
+0.61
+±
+\pm
+0.01
+0.14
+±
+\pm
+0.01
+ResNet-T
+0.54
+±
+\pm
+0.01
+0.63
+±
+\pm
+0.01
+0.15
+±
+\pm
+0.00
+0.72
+±
+\pm
+0.01
+0.81
+±
+\pm
+0.01
+0.20
+±
+\pm
+0.01
+ViT-T
+0.44
+±
+\pm
+0.04
+0.50
+±
+\pm
+0.05
+0.13
+±
+\pm
+0.01
+0.63
+±
+\pm
+0.02
+0.76
+±
+\pm
+0.01
+0.16
+±
+\pm
+0.01
+ER
+ResNet-RNN
+0.16
+±
+\pm
+0.02
+0.16
+±
+\pm
+0.02
+0.08
+±
+\pm
+0.01
+0.40
+±
+\pm
+0.02
+0.29
+±
+\pm
+0.02
+0.29
+±
+\pm
+0.01
+ResNet-T
+0.48
+±
+\pm
+0.02
+0.32
+±
+\pm
+0.04
+0.32
+±
+\pm
+0.01
+0.65
+±
+\pm
+0.03
+0.27
+±
+\pm
+0.03
+0.56
+±
+\pm
+0.01
+ViT-T
+0.38
+±
+\pm
+0.05
+0.29
+±
+\pm
+0.06
+0.25
+±
+\pm
+0.02
+0.63
+±
+\pm
+0.01
+0.29
+±
+\pm
+0.02
+0.50
+±
+\pm
+0.02
+EWC
+ResNet-RNN
+0.02
+±
+\pm
+0.00
+0.04
+±
+\pm
+0.01
+0.00
+±
+\pm
+0.00
+0.14
+±
+\pm
+0.02
+0.23
+±
+\pm
+0.02
+0.03
+±
+\pm
+0.00
+ResNet-T
+0.13
+±
+\pm
+0.02
+0.22
+±
+\pm
+0.03
+0.02
+±
+\pm
+0.00
+0.23
+±
+\pm
+0.01
+0.33
+±
+\pm
+0.01
+0.06
+±
+\pm
+0.01
+ViT-T
+0.05
+±
+\pm
+0.02
+0.09
+±
+\pm
+0.03
+0.01
+±
+\pm
+0.00
+0.32
+±
+\pm
+0.03
+0.48
+±
+\pm
+0.03
+0.06
+±
+\pm
+0.01
+PackNet
+ResNet-RNN
+0.13
+±
+\pm
+0.00
+0.21
+±
+\pm
+0.01
+0.03
+±
+\pm
+0.00
+0.27
+±
+\pm
+0.03
+0.38
+±
+\pm
+0.03
+0.06
+±
+\pm
+0.01
+ResNet-T
+0.22
+±
+\pm
+0.01
+0.08
+±
+\pm
+0.01
+0.25
+±
+\pm
+0.00
+0.55
+±
+\pm
+0.01
+0.07
+±
+\pm
+0.02
+0.63
+±
+\pm
+0.00
+ViT-T
+0.36
+±
+\pm
+0.01
+0.14
+±
+\pm
+0.01
+0.34
+±
+\pm
+0.01
+0.57
+±
+\pm
+0.04
+0.15
+±
+\pm
+0.00
+0.59
+±
+\pm
+0.03
+MTL
+ResNet-RNN
+0.20
+±
+\pm
+0.01
+0.61
+±
+\pm
+0.00
+ResNet-T
+0.48
+±
+\pm
+0.01
+0.83
+±
+\pm
+0.00
+ViT-T
+0.46
+±
+\pm
+0.00
+0.79
+±
+\pm
+0.01
+LIBERO-Object
+LIBERO-Goal
+SeqL
+ResNet-RNN
+0.48
+±
+\pm
+0.03
+0.53
+±
+\pm
+0.04
+0.15
+±
+\pm
+0.01
+0.61
+±
+\pm
+0.01
+0.73
+±
+\pm
+0.01
+0.16
+±
+\pm
+0.00
+ResNet-T
+0.78
+±
+\pm
+0.04
+0.76
+±
+\pm
+0.04
+0.26
+±
+\pm
+0.02
+0.77
+±
+\pm
+0.01
+0.82
+±
+\pm
+0.01
+0.22
+±
+\pm
+0.00
+ViT-T
+0.76
+±
+\pm
+0.03
+0.73
+±
+\pm
+0.03
+0.27
+±
+\pm
+0.02
+0.75
+±
+\pm
+0.01
+0.85
+±
+\pm
+0.01
+0.20
+±
+\pm
+0.01
+ER
+ResNet-RNN
+0.30
+±
+\pm
+0.01
+0.27
+±
+\pm
+0.05
+0.17
+±
+\pm
+0.05
+0.41
+±
+\pm
+0.00
+0.35
+±
+\pm
+0.01
+0.26
+±
+\pm
+0.01
+ResNet-T
+0.67
+±
+\pm
+0.07
+0.43
+±
+\pm
+0.04
+0.44
+±
+\pm
+0.06
+0.64
+±
+\pm
+0.01
+0.34
+±
+\pm
+0.02
+0.49
+±
+\pm
+0.02
+ViT-T
+0.70
+±
+\pm
+0.02
+0.28
+±
+\pm
+0.01
+0.57
+±
+\pm
+0.01
+0.57
+±
+\pm
+0.00
+0.40
+±
+\pm
+0.02
+0.38
+±
+\pm
+0.01
+EWC
+ResNet-RNN
+0.17
+±
+\pm
+0.04
+0.23
+±
+\pm
+0.04
+0.06
+±
+\pm
+0.01
+0.16
+±
+\pm
+0.01
+0.22
+±
+\pm
+0.01
+0.06
+±
+\pm
+0.01
+ResNet-T
+0.56
+±
+\pm
+0.03
+0.69
+±
+\pm
+0.02
+0.16
+±
+\pm
+0.02
+0.32
+±
+\pm
+0.02
+0.48
+±
+\pm
+0.03
+0.06
+±
+\pm
+0.00
+ViT-T
+0.57
+±
+\pm
+0.03
+0.64
+±
+\pm
+0.03
+0.23
+±
+\pm
+0.00
+0.32
+±
+\pm
+0.04
+0.45
+±
+\pm
+0.04
+0.07
+±
+\pm
+0.01
+PackNet
+ResNet-RNN
+0.29
+±
+\pm
+0.02
+0.35
+±
+\pm
+0.02
+0.13
+±
+\pm
+0.01
+0.32
+±
+\pm
+0.03
+0.37
+±
+\pm
+0.04
+0.11
+±
+\pm
+0.01
+ResNet-T
+0.60
+±
+\pm
+0.07
+0.17
+±
+\pm
+0.05
+0.60
+±
+\pm
+0.05
+0.63
+±
+\pm
+0.02
+0.06
+±
+\pm
+0.01
+0.75
+±
+\pm
+0.01
+ViT-T
+0.58
+±
+\pm
+0.03
+0.18
+±
+\pm
+0.02
+0.56
+±
+\pm
+0.04
+0.69
+±
+\pm
+0.02
+0.08
+±
+\pm
+0.01
+0.76
+±
+\pm
+0.02
+MTL
+ResNet-RNN
+0.10
+±
+\pm
+0.03
+0.59
+±
+\pm
+0.00
+ResNet-T
+0.54
+±
+\pm
+0.02
+0.80
+±
+\pm
+0.01
+ViT-T
+0.78
+±
+\pm
+0.02
+0.82
+±
+\pm
+0.01
+Table 8:
+We present the full results of all networks and algorithms on all four task suites. For each task suite, we highlight the top three AUC scores among the combinations of the three lifelong learning algorithms and the three neural architectures. The best three results are highlighted in
+magenta
+(the best),
+light magenta
+(the second best), and
+super light magenta
+(the third best), respectively.
+To better illustrate the performance of each lifelong learning agent throughout the learning process, we present plots that show how the agent’s performance evolves over the stream of tasks. Firstly, we provide plots that compare the performance of the agent using different lifelong learning algorithms while fixing the policy architecture (refer to Figure
+12
+,
+13
+, and
+14
+). Next, we provide plots that compare the performance of the agent using different policy architectures while fixing the lifelong learning algorithm (refer to Figure
+15
+,
+16
+, and
+17
+)
+Figure 12:
+We compare the performance of different algorithms using the
+ResNet-RNN
+policy architecture in Figure
+12
+. The
+y
+y
+-axis represents the success rate, and the
+x
+x
+-axis shows the agent’s performance on each of the 10 tasks in a specific task suite over the course of learning. For example, the upper-left plot in the figure displays the agent’s performance on the first task as it learns the 10 tasks sequentially.
+Figure 13:
+Comparison of different algorithms using the
+ResNet-T
+policy architecture. The
+y
+y
+-axis represents the success rate, while the
+x
+x
+-axis shows the agent’s performance on each of the 10 tasks in a given task suite during the course of learning. For example, the plot in the upper-left corner depicts the agent’s performance on the first task as it learns the 10 tasks sequentially.
+Figure 14:
+Comparison of different algorithms using the
+ViT-T
+policy architecture. The success rate is represented on the
+y
+y
+-axis, while the
+x
+x
+-axis shows the agent’s performance on the 10 tasks in a given task suite over the course of learning. For instance, the plot in the upper-left corner illustrates the agent’s performance on the first task when learning the 10 tasks sequentially.
+Figure 15:
+Comparison of different architectures with the
+EWC
+algorithm. The
+y
+y
+-axis is the success rate, while the
+x
+x
+-axis shows the agent’s performance on the 10 tasks in a given task suite over the course of learning. For instance, the upper-left plot shows the agent’s performance on the first task when learning the 10 tasks sequentially.
+Figure 16:
+Comparison of different architectures with the
+ER
+algorithm. The
+y
+y
+-axis is the success rate, while the
+x
+x
+-axis shows the agent’s performance on the 10 tasks in a given task suite ver the course of learning. For instance, the upper-left plot shows the agent’s performance on the first task when learning the 10 tasks sequentially.
+Figure 17:
+Comparison of different architectures with the
+PackNet
+algorithm. The
+y
+y
+-axis is the success rate, while the
+x
+x
+-axis shows the agent’s performance on the 10 tasks in a given task suite over the course of learning. For instance, the upper-left plot shows the agent’s performance on the first task when learning the 10 tasks sequentially.
+E.2
+Loss v.s. Success Rates
+We demonstrate that behavioral cloning loss can be a misleading indicator of task success rate in this section. In supervised learning tasks like image classifications, lower loss often indicates better prediction accuracy. However, this is not, in general, true for decision-making tasks. This is because errors can compound until failures during executing a robot
+[
+55
+]
+. Figure
+18
+,
+13
+and
+14
+plots the training loss and success rates of three lifelong learning methods (
+ER
+,
+EWC
+, and
+PackNet
+) for comparison. We evaluate the three algorithms on four task suites using three different neural architectures.
+Findings:
+We observe that though sometimes
+EWC
+has the
+lowest
+loss, it did not achieve good success rate.
+ER
+, on the other hand, can have the highest loss but perform better than
+EWC
+. In conclusion, success rates, instead of behavioral cloning loss, should be the right metric to evaluate whether a model checkpoint is good or not.
+Figure 18:
+Losses and success rates of
+ER
+(violet),
+EWC
+(grey), and
+PackNet
+(blue) on four task suites with
+ResNet-RNN
+policy. The first (second) row shows the loss (success rate) of the agent on task
+i
+i
+throughout the
+LLDM
+procedure.
+Figure 19:
+Losses and success rates of
+ER
+(violet),
+EWC
+(grey), and
+PackNet
+(blue) on four task suites with
+ResNet-T
+policy. The first (second) row shows the loss (success rate) of the agent on task
+i
+i
+throughout the
+LLDM
+procedure.
+Figure 20:
+Losses and success rates of
+ER
+(violet),
+EWC
+(grey), and
+PackNet
+(blue) on four task suites with
+ViT-T
+policy. The first (second) row shows the loss (success rate) of the agent on task
+i
+i
+throughout the
+LLDM
+procedure.
+E.3
+Multitask Success Rate
+Env Name
+ResNet-RNN
+ResNet-T
+ViT-T
+KITCHEN SCENE10 close the top drawer of the cabinet
+0.45
+0.45
+0.6
+KITCHEN SCENE10 close the top drawer of the cabinet and put the black bowl on top of it
+0.1
+0.1
+0.0
+KITCHEN SCENE10 put the black bowl in the top drawer of the cabinet
+0.0
+0.25
+0.05
+KITCHEN SCENE10 put the butter at the back in the top drawer of the cabinet and close it
+0.15
+0.0
+0.0
+KITCHEN SCENE10 put the butter at the front in the top drawer of the cabinet and close it
+0.2
+0.0
+0.0
+KITCHEN SCENE10 put the chocolate pudding in the top drawer of the cabinet and close it
+0.25
+0.0
+0.0
+KITCHEN SCENE1 open the bottom drawer of the cabinet
+0.05
+0.0
+0.15
+KITCHEN SCENE1 open the top drawer of the cabinet
+0.3
+0.45
+0.25
+KITCHEN SCENE1 open the top drawer of the cabinet and put the bowl in it
+0.05
+0.0
+0.0
+KITCHEN SCENE1 put the black bowl on the plate
+0.35
+0.3
+0.0
+KITCHEN SCENE1 put the black bowl on top of the cabinet
+0.2
+0.7
+0.15
+KITCHEN SCENE2 open the top drawer of the cabinet
+0.45
+0.4
+0.65
+KITCHEN SCENE2 put the black bowl at the back on the plate
+0.2
+0.05
+0.35
+KITCHEN SCENE2 put the black bowl at the front on the plate
+0.1
+0.35
+0.0
+KITCHEN SCENE2 put the middle black bowl on the plate
+0.35
+0.1
+0.0
+KITCHEN SCENE2 put the middle black bowl on top of the cabinet
+0.5
+0.1
+0.6
+KITCHEN SCENE2 stack the black bowl at the front on the black bowl in the middle
+0.25
+0.05
+0.25
+KITCHEN SCENE2 stack the middle black bowl on the back black bowl
+0.05
+0.05
+0.0
+KITCHEN SCENE3 put the frying pan on the stove
+0.4
+0.3
+0.35
+KITCHEN SCENE3 put the moka pot on the stove
+0.15
+0.0
+0.4
+KITCHEN SCENE3 turn on the stove
+0.6
+0.7
+1.0
+KITCHEN SCENE3 turn on the stove and put the frying pan on it
+0.15
+0.0
+0.35
+KITCHEN SCENE4 close the bottom drawer of the cabinet
+0.75
+0.4
+0.55
+KITCHEN SCENE4 close the bottom drawer of the cabinet and open the top drawer
+0.2
+0.0
+0.05
+KITCHEN SCENE4 put the black bowl in the bottom drawer of the cabinet
+0.25
+0.3
+0.25
+KITCHEN SCENE4 put the black bowl on top of the cabinet
+0.8
+0.6
+0.85
+KITCHEN SCENE4 put the wine bottle in the bottom drawer of the cabinet
+0.0
+0.0
+0.35
+KITCHEN SCENE4 put the wine bottle on the wine rack
+0.05
+0.0
+0.2
+KITCHEN SCENE5 close the top drawer of the cabinet
+0.05
+0.8
+0.9
+KITCHEN SCENE5 put the black bowl in the top drawer of the cabinet
+0.2
+0.1
+0.15
+KITCHEN SCENE5 put the black bowl on the plate
+0.05
+0.05
+0.1
+KITCHEN SCENE5 put the black bowl on top of the cabinet
+0.5
+0.25
+0.2
+KITCHEN SCENE5 put the ketchup in the top drawer of the cabinet
+0.0
+0.0
+0.05
+KITCHEN SCENE6 close the microwave
+0.1
+0.1
+0.2
+KITCHEN SCENE6 put the yellow and white mug to the front of the white mug
+0.2
+0.05
+0.1
+KITCHEN SCENE7 open the microwave
+0.7
+0.1
+0.45
+KITCHEN SCENE7 put the white bowl on the plate
+0.05
+0.0
+0.05
+KITCHEN SCENE7 put the white bowl to the right of the plate
+0.05
+0.05
+0.15
+KITCHEN SCENE8 put the right moka pot on the stove
+0.15
+0.0
+0.1
+KITCHEN SCENE8 turn off the stove
+0.2
+0.25
+0.75
+KITCHEN SCENE9 put the frying pan on the cabinet shelf
+0.45
+0.15
+0.05
+KITCHEN SCENE9 put the frying pan on top of the cabinet
+0.25
+0.4
+0.3
+KITCHEN SCENE9 put the frying pan under the cabinet shelf
+0.15
+0.45
+0.15
+KITCHEN SCENE9 put the white bowl on top of the cabinet
+0.1
+0.1
+0.15
+KITCHEN SCENE9 turn on the stove
+0.5
+0.4
+0.95
+KITCHEN SCENE9 turn on the stove and put the frying pan on it
+0.0
+0.0
+0.0
+Env Name
+ResNet-RNN
+ResNet-T
+ViT-T
+LIVING ROOM SCENE1 pick up the alphabet soup and put it in the basket
+0.0
+0.0
+0.0
+LIVING ROOM SCENE1 pick up the cream cheese box and put it in the basket
+0.0
+0.0
+0.0
+LIVING ROOM SCENE1 pick up the ketchup and put it in the basket
+0.0
+0.0
+0.0
+LIVING ROOM SCENE1 pick up the tomato sauce and put it in the basket
+0.0
+0.0
+0.0
+LIVING ROOM SCENE2 pick up the alphabet soup and put it in the basket
+0.0
+0.0
+0.0
+LIVING ROOM SCENE2 pick up the butter and put it in the basket
+0.0
+0.0
+0.0
+LIVING ROOM SCENE2 pick up the milk and put it in the basket
+0.0
+0.05
+0.0
+LIVING ROOM SCENE2 pick up the orange juice and put it in the basket
+0.0
+0.0
+0.0
+LIVING ROOM SCENE2 pick up the tomato sauce and put it in the basket
+0.0
+0.05
+0.0
+LIVING ROOM SCENE3 pick up the alphabet soup and put it in the tray
+0.0
+0.05
+0.0
+LIVING ROOM SCENE3 pick up the butter and put it in the tray
+0.0
+0.3
+0.0
+LIVING ROOM SCENE3 pick up the cream cheese and put it in the tray
+0.0
+0.25
+0.0
+LIVING ROOM SCENE3 pick up the ketchup and put it in the tray
+0.0
+0.0
+0.0
+LIVING ROOM SCENE3 pick up the tomato sauce and put it in the tray
+0.0
+0.25
+0.0
+LIVING ROOM SCENE4 pick up the black bowl on the left and put it in the tray
+0.0
+0.4
+0.2
+LIVING ROOM SCENE4 pick up the chocolate pudding and put it in the tray
+0.0
+0.2
+0.25
+LIVING ROOM SCENE4 pick up the salad dressing and put it in the tray
+0.0
+0.0
+0.1
+LIVING ROOM SCENE4 stack the left bowl on the right bowl and place them in the tray
+0.0
+0.0
+0.0
+LIVING ROOM SCENE4 stack the right bowl on the left bowl and place them in the tray
+0.0
+0.0
+0.05
+LIVING ROOM SCENE5 put the red mug on the left plate
+0.0
+0.0
+0.05
+LIVING ROOM SCENE5 put the red mug on the right plate
+0.15
+0.0
+0.0
+LIVING ROOM SCENE5 put the white mug on the left plate
+0.1
+0.15
+0.05
+LIVING ROOM SCENE5 put the yellow and white mug on the right plate
+0.35
+0.05
+0.05
+LIVING ROOM SCENE6 put the chocolate pudding to the left of the plate
+0.1
+0.65
+0.0
+LIVING ROOM SCENE6 put the chocolate pudding to the right of the plate
+0.05
+0.55
+0.0
+LIVING ROOM SCENE6 put the red mug on the plate
+0.0
+0.2
+0.0
+LIVING ROOM SCENE6 put the white mug on the plate
+0.0
+0.2
+0.0
+STUDY SCENE1 pick up the book and place it in the front compartment of the caddy
+0.0
+0.0
+0.05
+STUDY SCENE1 pick up the book and place it in the left compartment of the caddy
+0.2
+0.05
+0.0
+STUDY SCENE1 pick up the book and place it in the right compartment of the caddy
+0.0
+0.1
+0.0
+STUDY SCENE1 pick up the yellow and white mug and place it to the right of the caddy
+0.0
+0.3
+0.35
+STUDY SCENE2 pick up the book and place it in the back compartment of the caddy
+0.35
+0.3
+0.0
+STUDY SCENE2 pick up the book and place it in the front compartment of the caddy
+0.25
+0.1
+0.0
+STUDY SCENE2 pick up the book and place it in the left compartment of the caddy
+0.25
+0.45
+0.05
+STUDY SCENE2 pick up the book and place it in the right compartment of the caddy
+0.0
+0.2
+0.0
+STUDY SCENE3 pick up the book and place it in the front compartment of the caddy
+0.2
+0.0
+0.0
+STUDY SCENE3 pick up the book and place it in the left compartment of the caddy
+0.4
+0.45
+0.15
+STUDY SCENE3 pick up the book and place it in the right compartment of the caddy
+0.0
+0.05
+0.05
+STUDY SCENE3 pick up the red mug and place it to the right of the caddy
+0.0
+0.2
+0.05
+STUDY SCENE3 pick up the white mug and place it to the right of the caddy
+0.0
+0.0
+0.05
+STUDY SCENE4 pick up the book in the middle and place it on the cabinet shelf
+0.05
+0.2
+0.05
+STUDY SCENE4 pick up the book on the left and place it on top of the shelf
+0.2
+0.1
+0.15
+STUDY SCENE4 pick up the book on the right and place it on the cabinet shelf
+0.0
+0.25
+0.05
+STUDY SCENE4 pick up the book on the right and place it under the cabinet shelf
+0.15
+0.1
+0.05
+E.4
+Attention Visualization
+It is also important to visualize the behavior of the robot and its attention maps during the completion of tasks in the lifelong learning process to give us intuition and qualitative feedback on the performance of different algorithms and architectures. We visualize the attention maps of learned policies with
+23
+and compare them in different studies as in
+5.2
+to see if the robot correctly pays attention to the right regions of interest in each task.
+Perturbation-based attention visualization:
+We use a perturbation-based method
+[
+23
+]
+to extract attention maps from agents. Given an input image
+I
+I
+, the method applies a Gaussian filter to a pixel location
+(
+i
+,
+j
+)
+(i,j)
+to blur the image partially, and produces the perturbed image
+Φ
+⁡
+(
+I
+,
+i
+,
+j
+)
+\Phi(I,i,j)
+. Denote the learned policy as
+π
+\pi
+and the inputs to the spatial module (e.g., the last latent representation of resnet or ViT encoder)
+π
+u
+​
+(
+I
+)
+\pi_{u}(I)
+for image
+I
+I
+. Then we define the saliency score as the Euclidean distance between the latent representations of the original and the blurred images:
+S
+π
+​
+(
+i
+,
+j
+)
+=
+1
+2
+​
+‖
+π
+u
+​
+(
+I
+)
+−
+π
+u
+​
+(
+Φ
+⁡
+(
+I
+,
+i
+,
+j
+)
+)
+‖
+2
+.
+S_{\pi}(i,j)=\frac{1}{2}\bigg|\bigg|\pi_{u}(I)-\pi_{u}(\Phi(I,i,j))\bigg|\bigg|^{2}.
+(4)
+Intuitively,
+S
+π
+​
+(
+i
+,
+j
+)
+S_{\pi}(i,j)
+describes
+how much removing information from the region around location
+(
+i
+,
+j
+)
+(i,j)
+changes the policy
+. In other words, a large
+S
+π
+​
+(
+i
+,
+j
+)
+S_{\pi}(i,j)
+indicates that the information around pixel
+(
+i
+,
+j
+)
+(i,j)
+is important for the learning agent’s decision-making. Instead of calculating the score for every pixel,
+[
+23
+]
+found that computing a saliency score for pixel
+i
+i
+mod 5 and
+j
+j
+mod 5 produced good saliency maps at lower computational costs for Atari games. The final saliency map
+P
+P
+is normalized as
+P
+⁡
+(
+i
+,
+j
+)
+=
+S
+π
+​
+(
+i
+,
+j
+)
+∑
+i
+,
+j
+S
+π
+​
+(
+i
+,
+j
+)
+P(i,j)=\frac{S_{\pi}(i,j)}{\sum_{i,j}S_{\pi}(i,j)}
+.
+We provide the visualization and our analysis on the following pages.
+Different Task Suites
+Figure 21:
+Attention map comparison among different task suites with
+ER
+and
+ResNet-T
+. Each row corresponds to a task suite.
+Findings:
+Figure
+21
+shows attention visualization for 12 tasks across 4 task suites (e.g., 3 tasks per suite). We observe that:
+1.
+policies pay more attention to the robot arm and the target placement area than the target object.
+2.
+sometimes the policy pays attention to task-irrelevant areas, such as the blank area on the table.
+These observations demonstrate that the learned policy use perceptual data for decision-making in a very different way from how humans do. The robot policies tends to spuriously correlate task-irrelevant features with actions, a major reason why the policies overfit to the tasks and do not generalize well across tasks.
+The Same Task over the Course of Lifelong Learning
+Figure 22:
+Attention map of the same state of the task
+put both the alphabet soup and the tomato sauce in the basket
+from
+LIBERO-Long
+during lifelong learning. Each row visualizes how the attention maps change on the first task with one of the LL algorithms (
+ER
+and
+PackNet
+) and one of the neural architectures (
+ResNet-T
+and
+ViT-T
+). Initial policy is the policy that is trained on the first task. And all the following attention maps correspond to policies after training on the third, fifth, and the tenth tasks.
+Findings:
+Figure
+22
+shows attention visualizations from policies trained with
+ER
+and
+PackNet
+using the architectures
+ResNet-T
+and
+ViT-T
+respectively. We observe that:
+1.
+The ViT visual encoder’s attention is more consistent over time, while the ResNet encoder’s attention map gradually dilutes.
+2.
+PackNet, as it splits the model capacity for different tasks, shows a more consistent attention map over the course of learning.
+Different Lifelong Learning Algorithms
+Figure 23:
+Comparison of attention maps of different lifelong learning algorithms with
+ResNet-T
+on
+LIBERO-Long
+. Each row shows the same state of a task with different neural architectures. “Task 5” refers to the task
+put the white mug on the left plate and put the yellow and white mug on the right plate
+. “Task 10” refers to the task
+put the yellow and white mug in the microwave and close it
+. The second row shows the policy that is trained on task 10 and gets evaluated on task 5, showing the attention map differences in backward transfer.
+Findings:
+Figure
+23
+shows the attention visualization of three lifelong learning algorithms on
+LIBERO-Long
+with
+ResNet-T
+on two tasks (task 5 and task 10). The first and third rows show the attention of the policy on the same task it has just learned. While the second row shows the attention of the policy on the task it learned in the past. We observe that:
+1.
+PackNet
+shows more concentrated attention compared against
+ER
+and
+EWC
+(usually just a single mode).
+2.
+ER
+shares similar attention map with
+EWC
+, but
+EWC
+performs much worse than
+ER
+. Therefore, attention can only assist the analysis but cannot be treated as a criterion for performance prediction.
+Different Neural Architectures
+Figure 24:
+Comparison of attention maps of different neural architectures with
+ER
+on
+LIBERO-Long
+. Each row shows the same state of a task with different neural architectures. “Task 5” refers to the task
+put the white mug on the left plate and put the yellow and white mug on the right plate
+. “Task 10” refers to the task
+put the yellow and white mug in the microwave and close it
+. The second row shows the policy that is trained on task 10 and gets evaluated on task 5, showing the attention map differences in backward transfer.
+Findings:
+Figure
+24
+shows attention map comparisons of the three neural architectures on
+LIBERO-Long
+with
+ER
+on two tasks (task 5 and task 10). We observe that:
+1.
+ViT has more concentrated attention than policies using ResNet.
+2.
+When ResNet forgets, the attention is changing smoothly (more diluted). But for ViT, when it forgets, the attention can completely shift to a different location.
+3.
+When ResNet is combined with LSTM or a temporal transformer, the attention hints at the "course of future trajectory". But we do not observe that when ViT is used as the encoder.
+Different Task Ordering
+Figure 25:
+Attention map comparison among different orderings with
+ER
+and
+ResNet-T
+on three selected tasks from
+LIBERO-Long
+:
+put both the alphabet soup and the tomato sauce in the basket
+,
+put the white mug on the left plate and put the yellow and white mug on the right plate
+, and
+put the yellow and white mug in the microwave and close it
+. Each row corresponds to a specific sequence of task ordering, and the caption of each attention map indicates the order of the task in that sequence.
+Findings:
+Figure
+25
+shows attention map comparisons of three different task orderings. We show two immediately learned tasks from
+LIBERO-Long
+trained with
+ER
+and
+ResNet-T
+. We observe that:
+1.
+As expected, learning the same task at different positions in the task stream results in different attention visualization.
+2.
+There seems to be a trend that the policy has a more spread-out attention when it learns on tasks that are later in the sequence.
+With or Without Pretraining
+Figure 26:
+Attention map comparison between models without/with pretrained models using
+ResNet-T
+and different lifelong learning algorithms on three selected tasks from
+LIBERO-Long
+.
+Findings:
+Figure
+26
+shows attention map comparisons between models with/without pretrained models on
+LIBERO-Long
+with
+ResNet-T
+and all three LL algorithms. We observe that:
+1.
+With pretraining, the policies attend to task-irrelevant regions more easily than those without pretraining.
+2.
+Some of the policies with pretraining have better attention to the task-relevant features than their counterparts without pertaining, but their performance remains lower (the last in the second row and the second in the fourth row). This observation, again, shows that there is no positive correlation between semantically meaningful attention maps and the policy’s performance.
+Experimental support, please
+view the build logs
+for errors. Generated by
+L
+A
+T
+E
+xml
+.
+Instructions for reporting errors
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+      support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+      methods listed below:
+Click the "Report Issue"
+(
+)
+button, located in the page header.
+Tip:
+You can select the relevant text first, to include it in your report.
+Our team has already identified
+the following issues
+. We appreciate your time reviewing and reporting rendering errors we
+      may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+      should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+      all.
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a
+list of packages that need conversion
+, and welcome
+developer contributions
+.
+We gratefully acknowledge support from
+        our
+major funders
+,
+member institutions
+,
+,
+        and all contributors.
+About
+·
+Help
+·
+Contact
+·
+Subscribe
+·
+Copyright
+·
+Privacy
+·
+Accessibility
+·
+Operational Status
+(opens in new tab)
+Major funding support from

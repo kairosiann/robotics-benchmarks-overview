@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Evaluating Real-World Robot Manipulation Policies
+in Simulation</title>
+  <meta name="description" content="Evaluating Real-World Robot Manipulation Policies
+in Simulation">
+  <meta name="keywords" content="SIMPLER">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="Evaluating Real-World Robot Manipulation Policies
+in Simulation">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Evaluating Real-World Robot Manipulation Policies
+in Simulation">
+  <meta property="og:image" content="https://simpler-env.github.io/static/images/teaser.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1939" />
+  <meta property="og:image:height" content="772" />
+  <meta property="og:url" content="https://simpler-env.github.io/" />
+  <meta property="og:description" content="Project page for Evaluating Real-World Robot Manipulation Policies
+in Simulation" />
+  <meta name="twitter:title" content="Evaluating Real-World Robot Manipulation Policies
+in Simulation" />
+  <meta name="twitter:description" content="Project page for Evaluating Real-World Robot Manipulation Policies
+in Simulation" />
+  <meta name="twitter:image" content="https://simpler-env.github.io/static/images/teaser.png" />
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-T898ZNQZ');</script>
+  <!-- End Google Tag Manager -->
+  <!-- <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script> -->
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/icon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T898ZNQZ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Evaluating Real-World Robot Manipulation Policies
+in Simulation</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://xuanlinli17.github.io/">Xuanlin Li*</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://www.kylehsu.org/">Kyle Hsu*</a><sup>2</sup>,</span>
+              <span class="author-block">
+                <a href="https://cseweb.ucsd.edu/~jigu/">Jiayuan Gu*</a><sup>1</sup>,
+              </span>
+               <span class="author-block">
+                <a href="https://kpertsch.github.io/">Karl Pertsch†</a><sup>2,3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://www.oiermees.com">Oier Mees†</a><sup>3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://homerwalke.com/">Homer Rich Walke</a><sup>3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://www.google.com">Chuyuan Fu</a><sup>4</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://ishikaalunawat.github.io/">Ishikaa Lunawat</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://profiles.stanford.edu/isabel-sieh">Isabel Sieh</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://kirmani.ai/">Sean Kirmani</a><sup>4</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://people.eecs.berkeley.edu/~svlevine/">Sergey Levine</a><sup>3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://jiajunwu.com/">Jiajun Wu</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://ai.stanford.edu/~cbfinn/">Chelsea Finn</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://cseweb.ucsd.edu/~haosu/">Hao Su‡</a><sup>1</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://quanvuong.github.io/">Quan Vuong‡</a><sup>4</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://tedxiao.me/">Ted Xiao‡</a><sup>4</sup>
+              </span>
+            </div>
+
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup><font size="-0.4">*</sup>Equal contribution †Core contributors ‡Equal advising</font></span><br>
+              <span class="author-block"><sup>1</sup>UC San Diego,</span>
+              <span class="author-block"><sup>2</sup>Stanford University,</span>
+              <span class="author-block"><sup>3</sup>UC Berkeley,</span>
+              <span class="author-block"><sup>4</sup>Google DeepMind</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/pdf/2405.05941"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <!-- Video Link. -->
+                <span class="link-block">
+                  <a href="https://www.youtube.com/watch?v=SIcPxapIgBI" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                    </span>
+                    <span>Video</span>
+                  </a>
+                </span>
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href="https://github.com/simpler-env/SimplerEnv"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <!-- CoLab Link. -->
+                <span class="link-block">
+                  <a href="https://colab.research.google.com/github/simpler-env/SimplerEnv/blob/main/example.ipynb"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <!-- <i class="fab fa-github"></i> -->
+                      <img src="static/images/colab_icon.png" />
+                    </span>
+                    <span>CoLab</span>
+                  </a>
+                </span>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <!-- <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src=""
+                type="video/mp4">
+      </video> -->
+
+        <img src="static/images/teaser.png" />
+
+        <h2 class="subtitle has-text-centered">
+          Characterizing generalist robot manipulation policies typically involves evaluating them on many tasks across many scenarios, a laborious undertaking in the real world (top left). We propose SIMPLER,  a collection of simulated
+          environments for manipulation policy evaluation on common real robot setups that shows strong correlation with real-world performance (top right).
+        </h2>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="hero is-light is-small">
+    <div class="hero-body">
+      <div class="container">
+        <div id="results-carousel" class="carousel results-carousel">
+          <div class="item item-steve has-text-centered">
+            <video poster="" id="steve video" autoplay controls muted loop playsinline height="100%">
+              <source src="static/videos/rt2x_place_apple_into_top_drawer.mp4" type="video/mp4">
+            </video>
+            <p id="overlay">RT2-X place apple into top drawer</p>
+
+          </div>
+          <div class="item item-chair-tp has-text-centered">
+            <video poster="" id="chair-tp video" autoplay controls muted loop playsinline height="100%">
+              <source src="static/videos/octo_base_put_eggplant_in_basket.mp4" type="video/mp4">
+            </video>
+            <p id="overlay">Octo-Base put eggplant in basket</p>
+          </div>
+          <div class="item item-chair-tp has-text-centered">
+            <video poster="" id="chair-tp video" autoplay controls muted loop playsinline height="100%">
+              <source src="static/videos/octo_small_put_spoon_on_towel.mp4" type="video/mp4">
+            </video>
+            <p id="overlay">Octo-Small put spoon on towel</p>
+          </div>
+          <div class="item item-fullbody has-text-centered">
+            <video poster="" id="fullbody video" autoplay controls muted loop playsinline height="100%">
+              <source src="static/videos/rt1x_close_bottom_drawer.mp4" type="video/mp4">
+            </video>
+            <p id="overlay">RT1-X close bottom drawer</p>
+          </div>
+          <div class="item item-shiba has-text-centered">
+            <video poster="" id="shiba video" autoplay controls muted loop playsinline height="100%">
+              <source src="static/videos/octo_small_stack_green_block_on_yellow_block.mp4" type="video/mp4">
+            </video>
+            <p id="overlay">Octo-Small stack green block on yellow block</p>
+          </div>
+          <div class="item item-fullbody has-text-centered">
+            <video poster="" id="fullbody video" autoplay controls muted loop playsinline height="100%">
+              <source src="static/videos/rt1_move_redbull_can_near_orange.mp4" type="video/mp4">
+            </video>
+            <p id="overlay">RT1 move redbull can near orange</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              The field of robotics has made significant advances towards generalist robot manipulation policies. However, real-world evaluation of such policies is not scalable and 
+              faces reproducibility challenges, which are likely to worsen as policies broaden the spectrum of tasks they can perform.
+              In this work, we demonstrate that simulation-based evaluation can be a scalable, reproducible, and reliable proxy for real-world evaluation.
+              We identify control and visual disparities between real and simulated environments as key challenges for reliable simulated evaluation and propose approaches 
+              for mitigating these gaps without needing to craft full-fidelity digital twins of real-world environments.
+              We then employ these approaches to create SIMPLER, a collection of simulated environments for manipulation policy evaluation on common real robot setups. 
+              Through paired sim-and-real evaluations of manipulation policies, we demonstrate strong correlation between policy performance in SIMPLER environments and in the real world. 
+              Additionally, we find that SIMPLER evaluations accurately reflect real-world policy behavior modes such as sensitivity to various distribution shifts. 
+              We open-source all SIMPLER environments along with our workflow for creating new environment
+              to facilitate research on general-purpose manipulation policies and simulated evaluation frameworks.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+
+      <!-- Paper video. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Video</h2>
+          <div class="publication-video">
+            <video autoplay controls muted loop playsinline width="100%">
+              <source src="static/images/simpler.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Approach</h2>
+          <div class="content has-text-justified has-text-centered">
+            <img src="static/images/fig2.png" />
+            <p>
+              We introduce SIMPLER, a suite of open-source simulated evaluation environments for common real robot manipulation setups.
+              All environments expose a uniform Gym API. Additionally, we open-source policy inference code (e.g.,
+              RT-1, RT-1-X, Octo) for real-to-sim evaluation, and we provide a detailed guide for evaluating new policies and creating new evaluation
+              environments.  All environments  can be imported with a single line of code and can be interacted with through a standard Gym interface.
+            </p>
+            <h3 class="title is-4">Metrics for Real-to-Sim Evaluation</h3>
+            <img src="static/images/metrics.png" />
+            <p>
+              An effective & useful simulation-based evaluation should demonstrate <strong>good correlations in policy ranking & performance</strong> with real evaluations.
+            </p>
+            <p>
+              To measure such correlations, one can apply the traditional <strong>Pearson correlation metric ("r")</strong>, but it has the following limitations: (1) Pearson correlation only assess 
+              the linear fit between real-and-sim performances, while for simulated evaluation we don't necessarily need linear correlations,
+              as long as sim eval reflects real-world performance improvements between different policies (middle-right); (2) Pearson correlation does not reflect the range of values it is computed over.
+              For policy sets that perform closely in real (far-right), Pearson r may change drastically based on small real-world performance differences, 
+              which can often be attributed to the inherent noise in real-world evaluations.
+            </p>
+            <p>             
+              Thus, we introduce the <strong>Mean Maximum Rank Violation (MMRV)</strong> metric (lower the better)
+              to better assess the real-and-sim policy ranking consistency.
+              The key underlying quantity is the rank violation between two policies, which weighs the significance of the
+              simulator incorrectly ranking the policies by the corresponding margin in real-world performance.
+              MMRV then aggregates the N^2 rank violations by averaging the worst-case rank violation for each policy.
+            </p>
+            <h3 class="title is-4">Visual Matching Mitigates the Real-to-Sim Visual Gap</h3>
+            <img src="static/images/visual_matching.png" style="width: 70%; height: auto; display: block; margin: 0 auto;"/>
+            <p>
+              Visual discrepancies between real-world and simulated environments can comprise a distribution shift that adversely
+              affects a learned policy’s behavior, rendering simulated evaluation unreliable. Our goal is to match the simulator
+              visuals to those of the real-world environment with only a modest amount of manual effort. Our proposed Visual Matching
+              consists of (1) <strong>green screening</strong>, i.e. segmenting out interactive simulated assets and overlaying them onto real-world
+              backgrounds; and (2) <strong>texture matching</strong>, which involves projecting real object textures onto simulation assets and tuning
+              robot arm colors using real videos.
+            </p>
+            <h3 class="title is-4">System Identification Mitigates the Real-to-Sim Control Gap</h3>
+<!--            <img src="static/images/control_gap.png" />-->
+            <p>
+              The goal of mitigating the control gap between simulated and real-world environments is to ensure that policy actions
+              executed in simulation yields comparable effects on the robot’s end-effector as those observed when executed on the real
+              robot. We perform system identification (SysID) for closing the control gap between real and simulated environments on a small sample of trajectories from the real world dataset.
+            </p>
+            <div class="columns is-vcentered interpolation-panel">
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/sysid/real_rollout.mp4" type="video/mp4">
+                    </video>
+                    <p >Real World Rollout</p>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/sysid/bad_control.mp4" type="video/mp4">
+                    </video>
+                    <p >Control without SysID</p>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/sysid/good_control.mp4" type="video/mp4">
+                    </video>
+                    <p >Control with SysID</p>
+                  </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="container is-max-desktop">
+
+          <div class="columns is-centered">
+
+
+            <!-- Animation. -->
+            <div class="columns is-centered">
+              <div class="column is-full-width">
+                <h2 class="title is-3">Applications</h2>
+
+                <h3 class="title is-4">Evaluating and Comparing Policies</h3>
+                <div class="content has-text-justified">
+                  <p>
+                    SIMPLER can be used to evaluate diverse sets of rigid-body tasks (non-articulated / articulated objects, tabletop / non-tabletop tasks, shorter / longer horizon tasks), 
+                    with many intra-task variations (e.g., different object combinations; different object / robot positions and orientations), 
+                    for each of two robot embodiments (Google Robot and WidowX).
+                  </p>
+                  <p>
+                    SIMPLER can also compare the performance of different policies and perform checkpoint selection. Policy performances evaluated in SIMPLER have strong
+                    correlation with those in the real world (illustrated by low MMRV and high Pearson r in the figures below).
+                  </p>
+                </div>
+                <div class="columns is-vcentered interpolation-panel">
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/rt2x_place_apple_into_top_drawer.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/rt1x_close_bottom_drawer.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                     <source src="static/videos/rt1_move_redbull_can_near_orange.mp4" type="video/mp4">
+                    </video>
+                   </div>
+                   <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                     <source src="static/videos/octo_base_pick_coke_can.mp4" type="video/mp4">
+                    </video>
+                   </div>
+                </div>
+
+                <div class="columns is-vcentered interpolation-panel">
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/octo_small_put_spoon_on_towel.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/octo_base_put_eggplant_in_basket.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                  <video autoplay controls muted loop playsinline height="100%">
+                   <source src="static/videos/octo_small_stack_green_block_on_yellow_block.mp4" type="video/mp4">
+                  </video>
+                  </div>
+                    <div class="column  has-text-centered">
+                  <video autoplay controls muted loop playsinline height="100%">
+                   <source src="static/videos/rt1x_put_carrot_on_plate.mp4" type="video/mp4">
+                  </video>
+                  </div>
+                </div>
+
+                <div style="text-align: center;">
+                  <img width=45% src="static/images/results_google_robot.png" />
+                  <!-- <div style="display: inline-block; width: 5%;"></div> -->
+                  <img width=54% src="static/images/results_bridge.png" />
+                </div>
+
+              <br>
+              <h3 class="title is-4">Analyzing and Predicting Policy Behaviors under Distribution Shifts</h3>
+                <div class="content has-text-justified">
+                  <p>
+                    SIMPLER can be used to analyze the policies' finegrained behaviors, such as their robustness to common distribution shifts like lightings, backgrounds, camera poses, 
+                    distractor objects, and table textures (fig: left). The findings from SIMPLER are highly correlated with those in the real-world (illustrated by low MMRV and high Pearson r).
+                    Additionally, SIMPLER can predict policy behaviors under novel distribution shifts, such as changes in arm textures (fig: right).
+                  </p>
+                  <div style="text-align: center;">
+                    <img width=40% src="static/images/results_dist_shifts.png" />
+                    <div style="display: inline-block; width: 5%;"></div>
+                    <img width=50% src="static/images/results_arm_texture.png" />
+                  </div>
+                </div>
+
+              <br>
+              <h3 class="title is-4">Gallery: Paired Evaluations in Real and Sim</h2>
+                <div class="content has-text-justified">
+                  <p>
+                    SIMPLER yields a strong correlation between real-world and simulated performance across ∼1500 evaluation episodes (from each of real and sim). 
+                    Here we illustrate a few paired evaluations in real and sim.<br>
+                    (Google Robot control frequency: 3Hz; WidowX control frequency: 5Hz; Each video frame corresponds to a control step)
+                  </p>
+                </div>
+                <h4 class="title is-6">Real World Rollouts for Google Robot</h4>
+                <div class="columns is-vcentered interpolation-panel">
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/close_bottom_drawer_real.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/move_pepsi_can_near_blue_plastic_bottle_real.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/open_middle_drawer_real_2.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/pick_coke_can_real_standing_2.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  </div>
+
+                <h4 class="title is-6">Simulation Rollouts for Google Robot</h4>
+                     <div class="columns is-vcentered interpolation-panel">
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/close_bottom_drawer_sim.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/move_pepsi_can_near_blue_plastic_bottle_sim.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                  <video autoplay controls muted loop playsinline height="100%">
+                   <source src="static/videos/paired_videos/open_middle_drawer_sim.mp4" type="video/mp4">
+                  </video>
+                  </div>
+                    <div class="column  has-text-centered">
+                  <video autoplay controls muted loop playsinline height="100%">
+                   <source src="static/videos/paired_videos/pick_coke_can_sim_standing_2.mp4" type="video/mp4">
+                  </video>
+                  </div>
+                </div>
+
+                <h4 class="title is-6">Real World Rollouts for WidowX</h4>
+                <div class="columns is-vcentered interpolation-panel">
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/put_carrot_on_plate_real_1.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/put_eggplant_in_basket_real_1.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/put_spoon_on_towel_real_3.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/stack_green_cube_on_yellow_cube_real_2.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  </div>
+
+                 <h4 class="title is-6"> Simulation Rollouts for WidowX</h4>
+                     <div class="columns is-vcentered interpolation-panel">
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/put_carrot_on_plate_sim_1.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                    <video autoplay controls muted loop playsinline height="100%">
+                      <source src="static/videos/paired_videos/put_eggplant_in_basket_sim_1.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column  has-text-centered">
+                  <video autoplay controls muted loop playsinline height="100%">
+                   <source src="static/videos/paired_videos/put_spoon_on_towel_sim_3.mp4" type="video/mp4">
+                  </video>
+                  </div>
+                    <div class="column  has-text-centered">
+                  <video autoplay controls muted loop playsinline height="100%">
+                   <source src="static/videos/paired_videos/stack_green_cube_on_yellow_cube_sim_2.mp4" type="video/mp4">
+                  </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </section>
+
+
+      <section class="section" id="BibTeX">
+        <div class="container is-max-desktop content">
+          <h2 class="title">BibTeX</h2>
+          <pre><code> @article{li24simpler,
+          title={Evaluating Real-World Robot Manipulation Policies in Simulation},
+          author={Xuanlin Li and Kyle Hsu and Jiayuan Gu and Karl Pertsch and Oier Mees and Homer Rich Walke and Chuyuan Fu and Ishikaa Lunawat and Isabel Sieh and Sean Kirmani and Sergey Levine and Jiajun Wu and Chelsea Finn and Hao Su and Quan Vuong and Ted Xiao},
+          journal = {arXiv preprint arXiv:2405.05941},
+          year={2024},
+          } </code></pre>
+        </div>
+      </section>
+
+
+      <footer class="footer">
+        <div class="container">
+          <div class="content has-text-centered">
+            <a class="icon-link" href="https://arxiv.org/pdf/2210.05714.pdf">
+              <i class="fas fa-file-pdf"></i>
+            </a>
+            <a class="icon-link" href="" class="external-link" disabled>
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+          <div class="columns is-centered">
+            <div class="column is-8">
+              <div class="content">
+                <p> Website borrowed from <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a> under a <a
+                    href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0
+                    International</a>
+                </p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+</body>
+
+</html>

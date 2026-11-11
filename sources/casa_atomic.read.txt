@@ -1,0 +1,57 @@
+Atomic Tasks — RoboCasa 1.0.1 documentation
+Skip to main content
+Back to top
+Ctrl
++
+K
+Introduction
+Overview
+Installation
+Basic Usage
+Codebase Overview
+Tasks
+Atomic Tasks
+Composite Tasks
+Datasets
+Overview of Datasets
+Using Datasets
+Benchmarking
+Overview of Benchmarking
+Policy Learning Algorithms
+Multi-Task Learning
+Foundation Model Learning
+Lifelong Learning
+Assets
+Scenes
+Objects
+Fixtures
+Use Cases
+Creating Datasets
+Subtask Annotations
+Source API
+robocasa package
+robocasa.environments package
+robocasa.environments.kitchen package
+robocasa.environments.kitchen.multi_stage package
+robocasa.environments.kitchen.single_stage package
+robocasa.models package
+robocasa.models.fixtures package
+robocasa.models.objects package
+robocasa.models.scenes package
+robocasa.utils package
+robocasa.utils.model_zoo package
+robocasa.utils.usd package
+Previous Versions
+v0.2
+.md
+.pdf
+Atomic Tasks
+Atomic Tasks
+#
+The current release includes 65 atomic tasks for systematically training policies across 10 macro skill sets and 14 unique fixtures.
+previous
+Codebase Overview
+next
+Composite Tasks
+By the RoboCasa core team
+© Copyright the RoboCasa core team, 2026.

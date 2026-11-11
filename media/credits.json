@@ -1,0 +1,23 @@
+{
+  "libero": "https://arxiv.org/html/2306.03310v2/libero_fig1.png",
+  "libero_suites": "https://arxiv.org/html/2306.03310v2/figures/libero_fig2.png",
+  "libero_metrics": "https://arxiv.org/html/2306.03310v2/figures/metric.png",
+  "casa": "https://arxiv.org/html/2603.04356v1/Figure1.png",
+  "casa_scenes": "https://arxiv.org/html/2603.04356v1/Robocasa365_Scenes_v6.png",
+  "simpler": "https://simpler-env.github.io/static/images/teaser.png",
+  "behavior": "https://arxiv.org/html/2403.09227v1/pull-new.png",
+  "behavior_physics": "https://arxiv.org/html/2403.09227v1/scene_features.png",
+  "dojo": "https://arxiv.org/html/2607.04434v3/teaser.png",
+  "dojo_tasks": "https://arxiv.org/html/2607.04434v3/tasks.png",
+  "dojo_real": "https://arxiv.org/html/2607.04434v3/real_highlight.png",
+  "DC-knob": "https://robocurve.org/datacenterbench/media/setups/DC-knob-top.jpg",
+  "DC-key": "https://robocurve.org/datacenterbench/media/setups/DC-key-top.jpg",
+  "DC-toggle": "https://robocurve.org/datacenterbench/media/setups/DC-toggle-top.jpg",
+  "DC-cover": "https://robocurve.org/datacenterbench/media/setups/DC-cover-top.jpg",
+  "DC-keypad": "https://robocurve.org/datacenterbench/media/setups/DC-keypad-top.jpg",
+  "DC-slider": "https://robocurve.org/datacenterbench/media/setups/DC-slider-top.jpg",
+  "DC-plug": "https://robocurve.org/datacenterbench/media/setups/DC-plug-top.jpg",
+  "DC-unplug": "https://robocurve.org/datacenterbench/media/setups/DC-unplug-top.jpg",
+  "DC-join": "https://robocurve.org/datacenterbench/media/setups/DC-join-top.jpg",
+  "DC-clip": "https://robocurve.org/datacenterbench/media/setups/DC-clip-top.jpg"
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataCenterBench Tier 1 task setups | Robocurve</title>
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="description" content="Each DataCenterBench Tier 1 task's props, start state, reset, instruction, rubric and photos.">
+<link rel="canonical" href="https://robocurve.org/datacenterbench/setups.html">
+<link rel="icon" href="/assets/logo/robocurve-mark-v2.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Robocurve">
+<meta property="og:title" content="DataCenterBench Tier 1 task setups">
+<meta property="og:description" content="Each DataCenterBench Tier 1 task's props, start state, reset, instruction, rubric and photos.">
+<meta property="og:url" content="https://robocurve.org/datacenterbench/setups.html">
+<meta property="og:image" content="https://robocurve.org/datacenterbench/og-8882c5e98f.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The ten DataCenterBench Tier 1 tasks on Robocurve's robot rigs">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DataCenterBench Tier 1 task setups">
+<meta name="twitter:description" content="Each DataCenterBench Tier 1 task's props, start state, reset, instruction, rubric and photos.">
+<meta name="twitter:image" content="https://robocurve.org/datacenterbench/og-8882c5e98f.jpg">
+<meta name="twitter:image:alt" content="The ten DataCenterBench Tier 1 tasks on Robocurve's robot rigs">
+<meta name="citation_title" content="DataCenterBench Tier 1 task setups">
+<meta name="citation_author" content="Anton de la Fuente">
+<meta name="citation_author" content="Achu Menon">
+<meta name="citation_author" content="Christopher Leet">
+<meta name="citation_author" content="Tzu Kit Chan">
+<meta name="citation_author" content="Jay Chooi">
+<meta name="citation_publication_date" content="2026/10/28">
+<meta name="citation_public_url" content="https://robocurve.org/datacenterbench/setups.html">
+<link rel="stylesheet" href="report.b2430c134b.css">
+</head>
+<body>
+<main>
+  <a class="logo" href="./" aria-label="Robocurve"><img src="img/robocurve-wordmark.svg" alt="Robocurve"></a>
+  <p class="kicker"><a href="./">DataCenterBench Tier 1 results</a> · task setups</p>
+  <h1>How each task is set up, reset and scored</h1>
+  <p class="lede">One card per task: the props, the start state, how it is reset between trials, the exact instruction
+    the model gets, the scoring rubric, and the photos. The large photo is the overhead camera at full resolution, as
+    the judges see it; the three small ones are what the model gets after every step.</p>
+
+  <section class="shared">
+    <h3>Same for every task</h3>
+    <ul class="limits">
+      <li>Two I2RT YAM arms, end-effector position control at a quarter of full speed, homed to the same start pose.</li>
+      <li>Three cameras: overhead and one on each wrist. The model gets all three at 224 × 224 after every step and keeps
+        the last two steps' images; the judges get full-resolution photos from all three, before the trial and after the
+        arms park.</li>
+      <li>At most 40 model calls per trial, no time limit, 65 °C motor-temperature cutoff.</li>
+      <li>The props start in the same place and state every trial; the helper resets each rig against its reference photo
+        from the phone page.</li>
+      <li>Three trials per model per task, nine models, with the models taking turns.</li>
+    </ul>
+    <h3>What the model gets</h3>
+    <p class="sub">The same system prompt and tools for every task and model. Only the goal changes: each card's
+      instruction, sent once as the goal and again with every observation.</p>
+    <details class="prompt"><summary>System prompt</summary><pre id="p-system"></pre></details>
+    <details class="prompt"><summary id="p-tools-sum">Tools</summary><dl id="p-tools"></dl></details>
+    <details class="prompt"><summary>First messages, keypad example</summary><pre id="p-first"></pre></details>
+  </section>
+
+  <nav class="setup-index" id="index" aria-label="Tasks"></nav>
+  <div id="cards"></div>
+
+  <footer><p class="muted">Instructions and rubrics are exactly the ones used for scoring. Photos were taken with each
+    task's scored setup.</p></footer>
+</main>
+<script src="setups.c67e16b622.js" defer></script>
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0f5547da40df4f08b7fd384497300caa"}'></script><!-- Cloudflare Pages Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3e4d6044cbde464d809dc5a536e723cb","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

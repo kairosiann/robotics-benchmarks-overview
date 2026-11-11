@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataCenterBench Tier 1 methodology | Robocurve</title>
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="description" content="How DataCenterBench Tier 1 was run and scored: harness, models, grading, failures, cost and time.">
+<link rel="canonical" href="https://robocurve.org/datacenterbench/methods.html">
+<link rel="icon" href="/assets/logo/robocurve-mark-v2.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Robocurve">
+<meta property="og:title" content="DataCenterBench Tier 1 methodology">
+<meta property="og:description" content="How DataCenterBench Tier 1 was run and scored: harness, models, grading, failures, cost and time.">
+<meta property="og:url" content="https://robocurve.org/datacenterbench/methods.html">
+<meta property="og:image" content="https://robocurve.org/datacenterbench/og-8882c5e98f.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The ten DataCenterBench Tier 1 tasks on Robocurve's robot rigs">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DataCenterBench Tier 1 methodology">
+<meta name="twitter:description" content="How DataCenterBench Tier 1 was run and scored: harness, models, grading, failures, cost and time.">
+<meta name="twitter:image" content="https://robocurve.org/datacenterbench/og-8882c5e98f.jpg">
+<meta name="twitter:image:alt" content="The ten DataCenterBench Tier 1 tasks on Robocurve's robot rigs">
+<meta name="citation_title" content="DataCenterBench Tier 1 methodology">
+<meta name="citation_author" content="Anton de la Fuente">
+<meta name="citation_author" content="Achu Menon">
+<meta name="citation_author" content="Christopher Leet">
+<meta name="citation_author" content="Tzu Kit Chan">
+<meta name="citation_author" content="Jay Chooi">
+<meta name="citation_publication_date" content="2026/10/28">
+<meta name="citation_public_url" content="https://robocurve.org/datacenterbench/methods.html">
+<link rel="stylesheet" href="report.b2430c134b.css">
+</head>
+<body>
+<main>
+  <a class="logo" href="./" aria-label="Robocurve"><img src="img/robocurve-wordmark.svg" alt="Robocurve"></a>
+  <p class="kicker"><a href="./">DataCenterBench Tier 1 results</a> · methodology</p>
+  <h1>How DataCenterBench Tier 1 was run, and what to know when reading it</h1>
+  <p class="date" id="date"></p>
+
+  <section>
+    <h3>Tasks</h3>
+    <ul class="limits">
+      <li>Ten tabletop physical tasks based on steps in data-center equipment procedures: bypassing an uninterruptible
+        power supply (UPS), replacing a server power supply, emergency power-off and cable routing. The
+        mapping and the verbatim manual steps are on the <a href="./#why">results page</a>.</li>
+      <li>Each task has a fixed instruction and a fixed scoring rubric with levels 0/1 (five tasks) or 0/½/1 (five tasks,
+        partial credit for getting part of the way). The instructions and rubrics did not change during the run.</li>
+      <li>Each task ran on one rig with the same props, reset to the same start position before every try (checked
+        against a reference photo). The <a href="setups.html">task setups page</a> has each task's props, start state,
+        reset, instruction, rubric and photos.</li>
+    </ul>
+
+    <h3>Robot and harness</h3>
+    <ul class="limits">
+      <li>Two I2RT YAM arms per rig, controlled by end-effector position at a quarter of full speed.</li>
+      <li>Three cameras (overhead and one on each wrist). The model gets all three at 224 × 224 pixels after every step and
+        keeps the last two steps' images.</li>
+      <li id="harness">Robocurve's Inspect Robots LLM agent.</li>
+      <li>At most 40 model calls per try and no time limit (the team's standard). A try ends when the model says it is done,
+        reaches 40 calls, or the robot stops it.</li>
+      <li>A motor-temperature cutoff of 65 °C stops a try to protect the arms.</li>
+    </ul>
+
+    <h3>Models</h3>
+    <ul class="limits" id="models"></ul>
+
+    <h3>Grading</h3>
+    <ul class="limits">
+      <li>Two LLM judges, GPT-6 Astra and Claude Opus 5.5 (both at high effort), score each try from full-resolution
+        photos from all three cameras, taken before the try and after the arms parked. They get the instruction and the
+        rubric, and may answer "unsure".</li>
+      <li>If both judges give the same score, that is the score. If they disagree or either is unsure, a person scores it
+        from the same photos.</li>
+      <li>The keypad task is scored from the keypad display's own log of key presses: 1 for exactly the code, ½ for one
+        keypress away (one character missing, extra or wrong), 0 otherwise. The judges cross-check it.</li>
+      <li>The model's own claim to be done is never used.</li>
+    </ul>
+
+    <h3>Scoring and aggregation</h3>
+    <ul class="limits">
+      <li>Three tries per model per task. Run k is each model's k-th counted try on every task; a run's score is its mean
+        over the ten tasks; avg@3 is the mean of the three runs.</li>
+      <li>The interval shown is a 95% bootstrap interval from resampling tasks. The export also gives the standard error
+        across the three runs.</li>
+    </ul>
+
+    <h3>What counts, and what was rerun</h3>
+    <ul class="limits">
+      <li>Every try counts and is scored from where things ended: giving up, the 40-call limit, refusals and content-filter
+        blocks, malformed tool calls, a model knocking a prop off its mount, and a motor overheating during the model's
+        own try.</li>
+      <li>Tries interrupted by something outside the model's control were set aside and rerun with the same model: a
+        camera, motor-bus or power fault, an API or network outage, an OpenRouter host returning broken tool calls or
+        garbled text, a person bumping the setup, or an arm still hot from the previous try. Four tries found after
+        collection ended (three Ethernet-join tries whose overhead camera pointed at the room, and one cable-clip overheat
+        from before the 45 °C cool-down wait existed) were set aside and rerun on October 27.</li>
+      <li>A rig started its next try only after every motor had cooled to 45 °C or less (from the first afternoon of the
+        run). We count an overheat only when that held, so a model is never stopped by heat left by the try before.</li>
+      <li>When a task's physical setup was changed (for example to take tape out of the camera view), its batch restarted
+        from the first try and earlier tries do not count.</li>
+    </ul>
+
+    <h3>Duration and cost</h3>
+    <ul class="limits">
+      <li>Duration is the time from the model's first call to the arms starting to park; robot start-up and parking are
+        excluded.</li>
+      <li id="cost">Cost is our estimate from each try's token counts at one dated list-price table. Token counts are
+        exported per try so the cost can be recomputed.</li>
+    </ul>
+
+    <h3>Disclosures</h3>
+    <ul class="limits">
+      <li>GPT-6 Astra and GPT-6.1 Sol ran on OpenAI's ultrafast service tier, and Claude Opus 5.5 in Anthropic's fast
+        mode. Both serve the same model faster at a higher price. Our cost estimates include it: each API call is priced at
+        the tier it ran on, 6× the standard rates for ultrafast and 2× for fast mode.</li>
+      <li>Claude Opus 5.5 ran with its maximum output of 128,000 tokens. Three early tries ran with 64,000; none came near
+        that limit.</li>
+      <li>Model changes from Fireworks' list, agreed with Fireworks: Gemini 4 Argon instead of Gemini 3.8 Flash, and GLM
+        5.3 Flash instead of GLM 5.3, which does not take images. Muse Spark 1.3 was replaced by Muse Wonder: Fireworks
+        approved Muse Wonder Full, and we ran muse-wonder-1.0, the version Meta's API serves.</li>
+      <li>Gemini 4 Argon can think for minutes before it answers. Until about 1 PM PT on October 22 the agent waited up
+        to 5 minutes for each reply; a try where one call timed out three times in a row was set aside and rerun. From
+        then on, Argon's wait was 10 minutes. No other model was affected.</li>
+      <li id="hosts">Open models ran through OpenRouter. GLM 5.3 Flash and Kimi K3 were pinned to preferred hosts after
+        other hosts returned broken tool calls or garbled text.</li>
+      <li id="heat">The arms hold their pose with the motors on while a model thinks, so the 65 °C cutoff falls hardest
+        on models that think longest.</li>
+      <li id="versions">The six rigs ran on two computers with slightly different versions of the core Inspect Robots package;
+        the agent version was the same on both.</li>
+    </ul>
+  </section>
+
+  <footer><p class="muted" id="generated"></p></footer>
+</main>
+<script src="methods.73e1011094.js" defer></script>
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0f5547da40df4f08b7fd384497300caa"}'></script><!-- Cloudflare Pages Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3e4d6044cbde464d809dc5a536e723cb","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

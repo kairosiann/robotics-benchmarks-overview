@@ -1,0 +1,42 @@
+BEHAVIOR-1K Knowledgebase
+Tasks
+Synsets
+Objects
+Categories
+Scenes
+Transitions
+Attachments
+Misc
+Chl. Task List
+BEHAVIOR-1K Knowledgebase Dashboard
+Tasks
+Sampleable (Challenge):
+66
+Total (Challenge):
+100
+Sampleable (All):
+491
+Total (All):
+1016
+Objects
+Ready:
+7718
+In Progress:
+1871
+Total:
+9589
+Categories:
+1829
+Particle Systems:
+813
+Synsets
+Leaf Synsets:
+2557
+Total:
+3484
+Scenes
+Challenge Scenes:
+3
+Total:
+51
+Errors

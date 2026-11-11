@@ -1,0 +1,287 @@
+{
+  "url": "https://robocasa.ai/",
+  "links": [
+    "https://arxiv.org/pdf/2406.02523",
+    "https://arxiv.org/pdf/2603.04356",
+    "https://github.com/robocasa/robocasa",
+    "https://robocasa.ai/docs/build/html/introduction/overview.html",
+    "https://robocasa.ai/leaderboard.html",
+    "https://robocasa.ai/leaderboard.html#rc365-agentic",
+    "https://robocasa.ai/docs/build/html/use_cases/subtask_annotations.html",
+    "https://robocasa.ai/leaderboard.html",
+    "https://docs.midjourney.com/docs/model-versions",
+    "https://objaverse.allenai.org/",
+    "https://www.lightwheel.ai/",
+    "https://lumalabs.ai/",
+    "https://openai.com/index/gpt-4-research/",
+    "https://snasiriany.me",
+    "https://sepnasiriany.github.io/",
+    "https://abhiram824.github.io/",
+    "https://yukezhu.me/",
+    "https://www.linkedin.com/in/lancezhang04/",
+    "https://www.linkedin.com/in/adeet-parikh/",
+    "https://www.linkedin.com/in/aaron-lo-18a6871b3/",
+    "https://www.linkedin.com/in/abhishek-joshi-4ab469180/",
+    "https://ai.stanford.edu/~amandlek/"
+  ],
+  "media": [
+    {
+      "controls": "",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": "",
+      "preload": "metadata",
+      "class": "rc-release-video"
+    },
+    {
+      "src": "/assets/videos/release.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": "",
+      "class": "postimagefullwidth"
+    },
+    {
+      "src": "/assets/videos/scene_collage.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/robot_grid/media15.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/robot_grid/media16.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/robot_grid/media17.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/robot_grid/media18.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/appliance_grid/media11.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/appliance_grid/media12.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/appliance_grid/media13.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/appliance_grid/media14.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": "",
+      "class": "postimagefullwidth"
+    },
+    {
+      "src": "/assets/videos/ai_textures.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": "",
+      "class": "postimagefullwidth"
+    },
+    {
+      "src": "/assets/videos/objects.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/basic_skills/pnp.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/basic_skills/door.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/basic_skills/lever.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/basic_skills/knob.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/basic_skills/button.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/composite_tasks/steaming_veg.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/composite_tasks/restock.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "class": "lazy",
+      "autoplay": "",
+      "loop": "",
+      "muted": "",
+      "playsinline": ""
+    },
+    {
+      "data-src": "/assets/videos/composite_tasks/brewing_coffee.mp4",
+      "type": "video/mp4"
+    },
+    {
+      "src": "assets/images/soroush_nasiriany.png",
+      "class": "img-circle img-responsive"
+    },
+    {
+      "src": "assets/images/sep_nasiriany.png",
+      "class": "img-circle img-responsive"
+    },
+    {
+      "src": "assets/images/abhi_maddukuri.jpeg",
+      "class": "img-circle img-responsive"
+    },
+    {
+      "src": "assets/images/yuke_zhu.jpeg",
+      "class": "img-circle img-responsive"
+    },
+    {
+      "src": "assets/images/lance_zhang.png",
+      "class": "img-circle img-responsive"
+    },
+    {
+      "src": "assets/images/adeet_parikh.jpeg",
+      "class": "img-circle img-responsive"
+    },
+    {
+      "src": "assets/images/aaron_lo.jpeg",
+      "class": "img-circle img-responsive"
+    },
+    {
+      "src": "assets/images/abhishek_joshi.jpeg",
+      "class": "img-circle img-responsive"
+    },
+    {
+      "src": "assets/images/ajay_mandlekar.jpeg",
+      "class": "img-circle img-responsive"
+    }
+  ]
+}

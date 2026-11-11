@@ -1,0 +1,418 @@
+Multi-Task Learning — RoboCasa 1.0.1 documentation
+Skip to main content
+Back to top
+Ctrl
++
+K
+Introduction
+Overview
+Installation
+Basic Usage
+Codebase Overview
+Tasks
+Atomic Tasks
+Composite Tasks
+Datasets
+Overview of Datasets
+Using Datasets
+Benchmarking
+Overview of Benchmarking
+Policy Learning Algorithms
+Multi-Task Learning
+Foundation Model Learning
+Lifelong Learning
+Assets
+Scenes
+Objects
+Fixtures
+Use Cases
+Creating Datasets
+Subtask Annotations
+Source API
+robocasa package
+robocasa.environments package
+robocasa.environments.kitchen package
+robocasa.environments.kitchen.multi_stage package
+robocasa.environments.kitchen.single_stage package
+robocasa.models package
+robocasa.models.fixtures package
+robocasa.models.objects package
+robocasa.models.scenes package
+robocasa.utils package
+robocasa.utils.model_zoo package
+robocasa.utils.usd package
+Previous Versions
+v0.2
+.md
+.pdf
+Multi-Task Learning
+Contents
+Benchmark results and checkpoints
+Benchmark instructions
+Diffusion Policy
+Guidelines
+Train model
+Evaluate model
+Report evaluation results
+Openpi
+Guidelines
+Train model
+Evaluate model
+Report evaluation results
+GR00T
+Guidelines
+Train model
+Evaluate model
+Report evaluation results
+Multi-Task Learning
+#
+In the multi-task learning benchmark, we study training on multi-task pretraining datasets.
+We do policy learning on the
+Human Pretraining Datasets
+, which data across 300 tasks, comprising 65 atomic tasks and 235 composite tasks.
+For each task, we provide 100 task demonstrations per task, resulting in
+482 hours of total data
+.
+Benchmark results and checkpoints
+#
+We provide support for benchmarking across Diffusion Policy, Openpi, and GR00T N1.5. Here is a summary of our benchmarking results
+(average task success rate, in %)
+. We share the model checkpoints for reference.
+We rank additional policies on our
+leaderboard
+page and give users the option to
+submit
+their policies and results to our leaderboard.
+Task Split
+Diffusion Policy
+π
+0
+π
+0.5
+GR00T N1.5
+Atomic-Seen
+15.7%
+34.6%
+39.6%
+43.0%
+Composite-Seen
+0.2%
+6.1%
+7.1%
+9.6%
+Composite-Unseen
+1.25%
+1.1%
+1.2%
+4.4%
+Average
+6.1%
+14.8%
+16.9%
+20.0%
+Model Checkpoint
+Link
+Link
+Link
+Link
+Benchmark instructions
+#
+Diffusion Policy
+#
+Guidelines
+#
+We use a batch size of 192 and train for 250k steps
+We evaluate the model in
+pretrain
+scenes
+Train model
+#
+python
+train
+.
+py
+\
+--
+config
+-
+name
+=
+train_diffusion_transformer_bs192
+\
+task
+=
+robocasa
+/
+pretrain_human300
+Evaluate model
+#
+python
+eval_robocasa
+.
+py
+\
+--
+checkpoint
+<
+checkpoint
+-
+path
+>
+\
+--
+task_set
+atomic_seen
+composite_seen
+composite_unseen
+\
+--
+split
+pretrain
+Report evaluation results
+#
+python
+diffusion_policy
+/
+scripts
+/
+get_eval_stats
+.
+py
+\
+--
+dir
+<
+outputs
+-
+dir
+>
+Openpi
+#
+Guidelines
+#
+We use a batch size of 64 and train for 75k steps
+We evaluate the model in
+pretrain
+scenes
+Train model
+#
+XLA_PYTHON_CLIENT_MEM_FRACTION
+=
+1.0
+python
+scripts
+/
+train
+.
+py
+\
+pi0_robocasa_pretrain_human300
+\
+--
+exp
+-
+name
+=
+multitask_learning
+Evaluate model
+#
+# part a: start inference server
+python
+scripts
+/
+serve_policy
+.
+py
+\
+--
+port
+=
+8000
+policy
+:
+checkpoint
+\
+--
+policy
+.
+config
+=
+pi0_robocasa_pretrain_human300
+\
+--
+policy
+.
+dir
+=
+expdata
+/
+pi0_robocasa_pretrain_human300
+/
+multitask_learning
+/
+75000
+# part b: run evals on server
+python
+examples
+/
+robocasa
+/
+main
+.
+py
+\
+--
+args
+.
+port
+8000
+\
+--
+args
+.
+task_set
+atomic_seen
+composite_seen
+composite_unseen
+\
+--
+args
+.
+split
+pretrain
+\
+--
+args
+.
+log_dir
+expdata
+/
+pi0_robocasa_pretrain_human300
+/
+multitask_learning
+/
+75000
+Report evaluation results
+#
+python
+examples
+/
+robocasa
+/
+get_eval_stats
+.
+py
+\
+--
+dir
+expdata
+/
+pi0_robocasa_pretrain_human300
+/
+multitask_learning
+/
+75000
+GR00T
+#
+Guidelines
+#
+We use a batch size of 128 and train for 120k steps
+We evaluate the model in
+pretrain
+scenes
+Train model
+#
+python
+scripts
+/
+gr00t_finetune
+.
+py
+\
+--
+output
+-
+dir
+expdata
+/
+multitask_learning
+\
+--
+dataset_soup
+pretrain_human300
+\
+--
+max_steps
+120000
+Evaluate model
+#
+python
+scripts
+/
+run_eval
+.
+py
+\
+--
+model_path
+expdata
+/
+multitask_learning
+/
+checkpoint
+-
+120000
+\
+--
+task_set
+atomic_seen
+composite_seen
+composite_unseen
+\
+--
+split
+pretrain
+Report evaluation results
+#
+python
+gr00t
+/
+eval
+/
+get_eval_stats
+.
+py
+\
+--
+dir
+expdata
+/
+multitask_learning
+/
+checkpoint
+-
+120000
+previous
+Policy Learning Algorithms
+next
+Foundation Model Learning
+Contents
+Benchmark results and checkpoints
+Benchmark instructions
+Diffusion Policy
+Guidelines
+Train model
+Evaluate model
+Report evaluation results
+Openpi
+Guidelines
+Train model
+Evaluate model
+Report evaluation results
+GR00T
+Guidelines
+Train model
+Evaluate model
+Report evaluation results
+By the RoboCasa core team
+© Copyright the RoboCasa core team, 2026.

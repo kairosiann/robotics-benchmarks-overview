@@ -1,0 +1,49 @@
+{
+  "url": "https://robocasa.ai/docs/build/html/tasks/composite_tasks.html",
+  "links": [
+    "https://robocasa.ai/docs/build/html/tasks/composite_tasks.html#main-content",
+    "https://robocasa.ai/docs/build/html/index.html",
+    "https://robocasa.ai/docs/build/html/introduction/overview.html",
+    "https://robocasa.ai/docs/build/html/introduction/installation.html",
+    "https://robocasa.ai/docs/build/html/introduction/basic_usage.html",
+    "https://robocasa.ai/docs/build/html/introduction/codebase_overview.html",
+    "https://robocasa.ai/docs/build/html/tasks/atomic_tasks.html",
+    "https://robocasa.ai/docs/build/html/tasks/composite_tasks.html#",
+    "https://robocasa.ai/docs/build/html/datasets/datasets_overview.html",
+    "https://robocasa.ai/docs/build/html/datasets/using_datasets.html",
+    "https://robocasa.ai/docs/build/html/benchmarking/benchmarking_overview.html",
+    "https://robocasa.ai/docs/build/html/benchmarking/policy_learning_algorithms.html",
+    "https://robocasa.ai/docs/build/html/benchmarking/multitask_learning.html",
+    "https://robocasa.ai/docs/build/html/benchmarking/foundation_model_learning.html",
+    "https://robocasa.ai/docs/build/html/benchmarking/lifelong_learning.html",
+    "https://robocasa.ai/docs/build/html/assets/scenes.html",
+    "https://robocasa.ai/docs/build/html/assets/objects.html",
+    "https://robocasa.ai/docs/build/html/assets/fixtures.html",
+    "https://robocasa.ai/docs/build/html/use_cases/creating_datasets.html",
+    "https://robocasa.ai/docs/build/html/use_cases/subtask_annotations.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.environments.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.environments.kitchen.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.environments.kitchen.multi_stage.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.environments.kitchen.single_stage.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.models.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.models.fixtures.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.models.objects.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.models.scenes.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.utils.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.utils.model_zoo.html",
+    "https://robocasa.ai/docs/build/html/api/robocasa.utils.usd.html",
+    "https://robocasa.ai/docs/build/html/v0_2.html",
+    "https://robocasa.ai/docs/build/html/_sources/tasks/composite_tasks.md",
+    "https://robocasa.ai/docs/build/html/tasks/composite_tasks.html#composite-tasks",
+    "https://robocasa.ai/docs/build/html/tasks/atomic_tasks.html",
+    "https://robocasa.ai/docs/build/html/datasets/datasets_overview.html"
+  ],
+  "media": [
+    {
+      "src": "../static/robocasa_logo.svg",
+      "class": "logo__image only-light",
+      "alt": "RoboCasa 1.0.1 documentation - Home"
+    }
+  ]
+}

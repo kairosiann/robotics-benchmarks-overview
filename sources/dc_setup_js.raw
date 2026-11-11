@@ -1,0 +1,38 @@
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const pct = v => v == null ? '–' : Math.round(v * 100) + '%';
+const half = s => s === 0.5 ? '½' : String(s);
+Promise.all(['data/setups.json', 'data/tasks.json', 'data/results.json'].map(u => fetch(u ).then(r => r.json())))
+  .then(([setups, design, results]) => {
+    const cards = setups.tasks, pr = setups.prompt;
+    document.getElementById('p-system').textContent = pr.system;
+    document.getElementById('p-tools-sum').textContent = 'Tools: ' + pr.tools.map(t => t.name).join(', ');
+    document.getElementById('p-tools').innerHTML = pr.tools.map(t => '<dt>' + esc(t.name) + '</dt><dd>' + esc(t.description) + '</dd>').join('');
+    document.getElementById('p-first').textContent = pr.goal + '\n\n' + pr.observation;
+    const real = {};
+    for (const g of design.groups) for (const t of g.tasks) real[t.id] = (t.report || {}).realStep || t.realShort || '';
+    const mean = {};
+    const counted = {};
+    for (const t of results.tasks) { mean[t.task_id] = t.mean_score_all_models; counted[t.task_id] = t.counted; }
+    document.getElementById('index').innerHTML = cards.map(c => '<a href="#' + c.id + '">' + esc(c.name) + '</a>').join('');
+    document.getElementById('cards').innerHTML = cards.map(c =>
+      '<article class="setup" id="' + c.id + '">' +
+      '<h2>' + esc(c.name) + '</h2>' +
+      '<p class="meta">Rig ' + c.rig + ' · real step: <a href="./#step-' + c.id + '">' + esc(real[c.design]) + '</a> · mean score ' +
+        pct(mean[c.id]) + ' over ' + counted[c.id] + ' trials</p>' +
+      '<div class="setup-grid">' +
+        '<figure class="judge-view"><img src="' + esc(c.top) + '" alt="' + esc(c.name) + ': overhead camera at the start" loading="lazy">' +
+          '<figcaption>Overhead camera, full resolution (judges). Taken ' + esc(c.photos_taken) + '.</figcaption></figure>' +
+        '<dl>' +
+          '<dt>Props</dt><dd>' + c.props.map(p => p.url ? '<a href="' + esc(p.url) + '" target="_blank" rel="noopener">' + esc(p.name) + '</a>' : esc(p.name)).join('<br>') + '</dd>' +
+          '<dt>Start state</dt><dd>' + esc(c.setup) + '</dd>' +
+          '<dt>Reset</dt><dd>' + esc(c.reset) + '</dd>' +
+        '</dl>' +
+      '</div>' +
+      '<div class="model-view"><div class="lbl">What the model sees (224 × 224, every step)</div><div class="row">' +
+        ['top', 'left', 'right'].map(k => '<figure><img src="' + esc(c.model[k]) + '" alt="' + esc(c.name) + ': ' + k + ' camera as the model sees it" loading="lazy"><figcaption>' +
+          ({top: 'Overhead', left: 'Left wrist', right: 'Right wrist'})[k] + '</figcaption></figure>').join('') + '</div></div>' +
+      '<div class="spec"><div class="lbl">Instruction</div><blockquote>“' + esc(c.instruction) + '”</blockquote>' +
+        '<div class="lbl">Rubric</div><table class="rubric">' + c.levels.map(l => '<tr><th>' + half(l.score) + '</th><td>' + esc(l.description) + '</td></tr>').join('') + '</table>' +
+        (c.guidance ? '<p class="guidance"><b>Note to the judges:</b> ' + esc(c.guidance) + '</p>' : '') +
+      '</div></article>').join('');
+  });

@@ -1,0 +1,405 @@
+{
+ "prompt": {
+  "system": "You are controlling a real robot embodiment named 'yam_arms' through tool calls. Each observation message gives you the current proprioceptive state and camera images. Work toward the user's goal in small, deliberate motions; re-check the observation after every motion. Every move tool call must include a `note`: in one or two sentences, say what you observe in the current observation and why you chose this motion. The user is watching these notes to see what you see and what you decide, so write them for a human reader. Safety approvers clamp out-of-bounds and too-fast actions below you. You may receive operator feedback lines mid-run; treat them as trusted guidance from the human supervising the robot. Respond with exactly one tool call per turn. When the goal is achieved call done; if it cannot be achieved call give_up. Note what you are learning about this rig and task as you go: done and give_up will ask what you wish you had known from the start. You have a budget of 40 LLM calls for the whole trial.\n\nEmbodiment notes:\nTwo identical 6-DoF arms, prefixed left_ and right_, each with a parallel-jaw\ngripper, controlled by Cartesian end-effector targets. Each arm's targets are\nin that arm's own base frame: +x points forward out of the base, +y left, +z\nup; how the two bases are mounted relative to each other depends on the rig.\n- left_x / right_x, left_y / right_y, left_z / right_z: grasp-point position\n  in meters in the arm's base frame (the grasp point sits between the\n  fingertips).\n- left_yaw / right_yaw: tool rotation in radians about vertical, relative to\n  the trial's start orientation; 0 keeps the start orientation and positive\n  turns counterclockwise seen from above.\n- left_pitch / right_pitch, left_roll / right_roll: tool tilt in radians,\n  also relative to the trial's start orientation. Positive pitch tips the\n  tool forward (+x at yaw 0), positive roll toward the arm's left (+y at\n  yaw 0). An axis whose configured bounds are equal (typically 0) is pinned:\n  commands on it are clamped to that value and it cannot be actuated.\n- left_gripper / right_gripper: 0 is fully closed, 1 is fully open (about\n  9.5 cm between the jaws).\nProportions: upper arm 0.26 m, forearm 0.25 m, wrist to grasp point 0.25 m\nwhen straight; reach from the shoulder about 0.76 m.\nAn inverse-kinematics layer converts targets into joint motion; unreachable\nor awkward targets may be tracked slowly or held, so prefer modest steps and\nre-check the observation after each motion.\n\n# Rig facts\n\nMeasured facts about this rig. Numbers here are verified; use them\ninstead of re-deriving them. Verify a number only when the first move that\ndepends on it disagrees with what you see.\n\n## Arms and gripper\n\n- Two identical 6-DoF arms with parallel-jaw grippers, mounted parallel\n  (both face forward), each with its own base frame: +x forward, +y left,\n  +z up. Grasp-point readings and targets are in the owning arm's frame.\n- Link lengths: upper arm 0.264 m, forearm 0.245 m, wrist-pitch axis to\n  fingertip 0.101 m. The shoulder pitch axis is 0.114 m above the table.\n  With the tool pointing straight down the wrist reaches ~0.51 m from the\n  base.\n- The tabletop is the arm mounting plane: fingertip z = 0 at table\n  contact. Pressing 1–2 cm \"below\" the table is safe and gives a firm\n  contact for grasps at table level.\n- Gripper stroke is 9.5 cm jaw-to-jaw; commands and readings are the\n  normalized fraction of that (0 closed, 1 open). After a full close the\n  settled reading × 9.5 cm ≈ the grasped thickness. A closed empty gripper\n  reads ≈ 0.01 and creeps to ≈ 0.04 over a few seconds, so any settled\n  reading below 0.04 is empty. Nothing wider than ~9 cm can be grasped\n  across.\n- Gripper effort spikes to ≈ 0.7–1.2 on every full close, empty or not,\n  and stays there for many seconds. Effort cannot tell an empty close\n  from a grasp. Judge grasps by the settled reading, then by lifting\n  5 cm and checking the object moved in the overhead view.\n- The jaws close along the tool's own left–right axis; that axis turns\n  with base yaw and with wrist roll.\n\n## Cameras\n\nObservations carry `top_cam`, `left_cam` and `right_cam`, 224 × 224 px.\n\n- `top_cam` is fixed above and in front of the rig, looking back and down\n  at ~45°. It is not a plan view: you see the sides of objects, and image-y\n  is compressed relative to image-x. Arm-forward is image-up, arm-right is\n  image-right, the two bases sit just below the bottom edge, and an arm\n  extended to ~0.45 m appears near the top corners.\n- There is no single top-camera scale. At table level expect ≈ 2.2–3.5\n  px/cm in the far half of the frame where the arms work, rising to ≈ 8\n  px/cm at the bottom edge, and x and y scales differ at the same spot.\n  Derive the local scale from your first sizeable move and reuse it.\n  Things above the table read larger by H/(H − h) with H ≈ 0.72 m (a\n  gripper carrying at 10 cm reads ~15% larger than at table level).\n- `left_cam`/`right_cam` ride on the same-named arm's gripper body, tilted\n  forward of the finger axis, so they look *past* the fingertips. Anything\n  at or nearer than the grasp point is out of frame; the dark wedge at the\n  bottom-centre is the jaws; a held object is never visible in its own\n  wrist camera; the working arm hides from the top camera whatever it\n  hovers over.\n- Because of that tilt, the point directly under the fingertips projects\n  at or below the bottom edge of the wrist image. An object that appears\n  centred on the jaw column with clear space below it is still a few\n  centimetres short of the fingertips, toward the base. The jaws converge\n  on image column x ≈ 105–115; the row depends on wrist pitch (≈ 150 when\n  pitched forward, ≈ 200 with the tool vertical): a brief empty close\n  shows the current one.\n- Wrist-camera scale varies from ≈ 3 to 16 px/cm within 10 cm of the\n  table and changes within a single frame (larger toward the bottom\n  edge). To calibrate it, make a pure radial move of known size and read\n  the pixel shift. Do not calibrate with a base-yaw nudge: it also rolls\n  the image about its centre and has produced 2× scale errors.\n- The wrist image's vertical axis mixes radial distance and height (a\n  3 cm radial move and a 1.4 cm descent shift features about equally), so\n  depth cannot be judged from the wrist view alone.\n- At wrist roll 0, image-right is the arm's right and image-down is\n  toward the base. Rolling the wrist rotates the scene but the jaws still\n  close along image-x.\n\n## Workspace\n\n- Targets are clipped to a per-arm box (listed in the move tool's\n  description). The fence-side y bound is tight because a low fence runs\n  along each outer table edge; the cross-over side reaches past the\n  table's centre line, so any point on the table is reachable by at least\n  one arm.\n- The bases are ~0.65 m apart: `right_y ≈ left_y + 0.65` for the same\n  point, and the centre line is at y ≈ −0.32 for the left arm / +0.33 for\n  the right.\n- The table is z = 0; the box floor of −0.02 lets a descent press firmly.\n- Reach: x ≈ 0.59 at z = 0.15 with the tool pitched forward; table\n  contact is possible out to x ≈ 0.49.\n\n## Controller\n\n- Free-space poses sag 1–3 cm below the commanded height, more at long\n  reach and with a load. Aim ~2 cm high when carrying and when clearing\n  obstacles.\n- An arm left uncommanded drifts slowly downward over a minute. Park the\n  idle arm at its home target rather than leaving it hovering.\n- Near the base the arm cannot fold closer than x ≈ 0.11 and may refuse to\n  unfold from there; if a move out of a folded pose stalls, first raise z\n  and reduce x, then go.\n- Descents stop at contact. With joint effort reported: on a light touch\n  the shoulder stops tracking while its effort stays negative (still\n  holding the arm up); effort flipping positive means the arm is pressing\n  into the surface: back off. A grasped object touching down reads as a\n  stopped descent plus rising wrist effort.\n- Each motion is played at 10 Hz and the trial has a step budget as well\n  as an LLM-call budget; a 20 cm move costs ~4 s of it. Do not spend\n  steps on look-around moves that a single observation already answers.\n# Working under Cartesian control (`move_to`)\n\nHow to get things done on this rig when moves are absolute grasp-point\ntargets. Read alongside the rig facts and the workspace box.\n\n## The readback is the truth\n\n- `eef_state` is the arm's forward kinematics at the grasp point. Trust it\n  over any estimate from an image. There is no height bias to correct.\n- After every move compare the readback with the target. A shortfall of\n  more than ~1.5 cm means one of three things: the target was clipped to\n  the workspace box (the tool description lists the bounds), the arm is\n  at its reach or folded limit (the arm simply stops), or you are in\n  contact. Do not re-send the same target hoping it converges; change it.\n- The yaw target is relative to the trial's start orientation and rotates\n  the tool about the grasp point; it does not move the grasp point\n  sideways. Pitch and roll are pinned unless the bounds say otherwise.\n\n## Reaching an object\n\n1. Locate it in the overhead frame at the start. Convert pixels to metres\n   with the far-region scale from the facts, remembering the view is\n   oblique: a target's image-y position over-states its distance from the\n   base by the compression factor, and it sits in whichever arm's frame\n   you convert to (the workspace box gives the base spacing for switching\n   frames).\n2. Fly to a point ~10 cm above it at z ≈ 0.15 with the gripper open, then\n   look at the wrist camera. The object should sit on the jaw column\n   (x ≈ 110). If it is fully visible with empty frame below it, advance\n   2–3 cm radially before descending, because the fingertips are further\n   out than the image suggests.\n3. Descend straight down to z ≈ half the object's height. For table-level\n   objects go to z = 0 to −0.01; the box allows a small press.\n4. Close fully. Read the settled gripper value: below 0.04 is empty.\n5. Lift 5 cm and confirm in the overhead view that the object moved with\n   the jaws. Only then transport.\n6. On an empty close: open, adjust radially by 2 cm (usually outward), and\n   retry once. If the second close is also empty, do not repeat it:\n   re-measure from the overhead frame, or use the other arm.\n\n## Placing\n\n- Carry at z ≥ 0.15; free-space poses sag, so command 2 cm higher than\n  the clearance you need.\n- Descend until the readback stops short or wrist effort rises, open,\n  lift clear, then verify in the overhead frame after the arm has moved\n  away. The working arm's occlusion of the top view is expected; do not\n  retract mid-placement to look.\n\n## Two arms and the middle of the table\n\n- Each arm reaches well past the table's centre line (the box's\n  cross-over bound), so any object on the table is reachable by at least\n  one arm; pick the arm whose fence-side bound is not in the way.\n- Keep the idle arm parked at its home target; it drifts if left hovering\n  and it blocks the overhead view of the centre.\n- Both arms in the same region collide with each other before either hits\n  a limit, so move one at a time and keep 10 cm between grasp points.\n\n## Spend calls on the task\n\n- The facts sheet's numbers replace calibration. Do not open with survey\n  moves, scale probes or table touches; the first task motion is the\n  sanity check.\n- Thin flat objects (under ~1.5 cm) cannot be pushed at the z floor: the\n  jaws ride over them. Grasp uprights instead of pushing.\n- Smooth cylindrical or rounded objects eject sideways when closed on\n  off-centre. Align in the wrist view before closing, and close no further\n  than the object needs.\n- If the object lies outside the workspace box or against a fence, say so\n  and give up early; the operator can move it or widen the box for the\n  next trial.\n\nJoint effort: ``observation.state[\"joint_eff\"]`` is per-joint estimated torque in N·m, sign-corrected, with the same 14-slot layout as ``joint_pos`` but raw effort in the gripper slots. The values include gravity load, so compare against a moving baseline. Rising effort while position stops tracking indicates contact; flat effort with position error indicates controller sag. ``joint_eff`` may lag ``joint_pos`` by up to one control tick because they are read in separate lock acquisitions.",
+  "goal": "Goal: Type 52 on the number pad and nothing else. The iPhone next to it shows what you type.",
+  "observation": "Current observation.\nInstruction: Type 52 on the number pad and nothing else. The iPhone next to it shows what you type.\nstate[joint_pos]: [-0.0219, 0.7914, 0.6079, -0.3641, -0.0139, -0.0231, 0.9953, -0.0227, 0.7921, 0.6155, -0.3614, -0.0238, -0.009, 0.9997]\nstate[eef_state]: left_x=0.2971 left_y=-0.0005 left_z=0.1858 left_yaw=0.0 left_pitch=-0.0 left_roll=0.0 left_gripper=0.9953 right_x=0.2984 right_y=0.001 right_z=0.1897 right_yaw=0.0003 right_pitch=0.0 right_roll=0.0002 right_gripper=0.9997\nstate[joint_eff]: [-0.5128, -1.3607, 9.894, 1.6581, -0.105, 0.1001, -0.5104, -0.2803, -1.265, 9.1282, 1.6532, -0.0073, -0.0952, -0.0415]\ncamera 'top_cam' (step 0):\n[image, 224 × 224]\ncamera 'left_cam' (step 0):\n[image, 224 × 224]\ncamera 'right_cam' (step 0):\n[image, 224 × 224]",
+  "tools": [
+   {
+    "name": "move_to",
+    "description": "Move to absolute Cartesian end-effector targets (meters for positions, radians for rotations, per the dimension labels). The motion is a straight line interpolated at a fixed safe speed and the result reports its step count. Unnamed dimensions hold their current value. Coordinates are absolute in the embodiment's declared frame; on multi-arm embodiments each arm uses its own base frame and axes may differ between arms depending on mounting. Rotation dimensions are absolute targets measured relative to the trial's start orientation (0 means the start orientation) and interpolate linearly without wrapping, so prefer intermediate values for large rotations. Per-dimension bounds: left_x: [0.08, 0.6], left_y: [-0.4, 0.05], left_z: [-0.02, 0.6], left_yaw: [-3.142, 3.142], left_pitch: [-0.6, 0.6], left_roll: [-1.571, 1.571], left_gripper: [0, 1], right_x: [0.08, 0.6], right_y: [-0.08, 0.4], right_z: [-0.02, 0.6], right_yaw: [-3.142, 3.142], right_pitch: [-0.6, 0.6], right_roll: [-1.571, 1.571], right_gripper: [0, 1]."
+   },
+   {
+    "name": "done",
+    "description": "Declare the task finished. The trial ends; a scorer judges success."
+   },
+   {
+    "name": "give_up",
+    "description": "Stop trying; the task cannot be completed. The trial ends."
+   }
+  ]
+ },
+ "tasks": [
+  {
+   "id": "DC-knob",
+   "name": "Turn the knob to the mark",
+   "rig": 1,
+   "design": "turn-knob",
+   "props": [
+    {
+     "name": "Leviton rotary dimmer",
+     "url": "https://www.amazon.com/dp/B073H9Y7SH"
+    },
+    {
+     "name": "Leviton single-gang surface backbox",
+     "url": "https://www.amazon.com/dp/B0028CIC8U"
+    }
+   ],
+   "setup": "Rotary dimmer box fixed to the board. Black line drawn on the knob; one black mark on the box at the start position and one at the goal (fully clockwise). Knob at the start mark every trial.",
+   "reset": "Turn the knob back counterclockwise until its line points at the start mark.",
+   "instruction": "Turn the round knob on the white box clockwise until the black line on it points at the black mark on the box.",
+   "guidance": "The knob carries a black line like a clock hand. Compare where it points with the start photos and with the marks on the box.",
+   "levels": [
+    {
+     "score": 1,
+     "description": "The line on the knob points at the goal mark (turned clockwise to it)."
+    },
+    {
+     "score": 0.5,
+     "description": "The knob turned clockwise noticeably but the line stops short of the goal mark."
+    },
+    {
+     "score": 0,
+     "description": "The knob did not turn clockwise (unchanged, or turned the other way)."
+    }
+   ],
+   "photos_taken": "Oct 21, 4:45 PM",
+   "top": "media/setups/DC-knob-top.jpg",
+   "model": {
+    "top": "media/setups/DC-knob-top224.jpg",
+    "left": "media/setups/DC-knob-left224.jpg",
+    "right": "media/setups/DC-knob-right224.jpg"
+   }
+  },
+  {
+   "id": "DC-key",
+   "name": "Turn the key",
+   "rig": 2,
+   "design": "key-turn",
+   "props": [
+    {
+     "name": "APIELE 22 mm two-position key switch",
+     "url": "https://www.amazon.com/dp/B088PRMK7R"
+    },
+    {
+     "name": "uxcell one-hole 22 mm enclosure",
+     "url": "https://www.amazon.com/dp/B07WQQQGFX"
+    }
+   ],
+   "setup": "Key switch in its white box, fixed to the board; key in its start position, the same every trial.",
+   "reset": "Turn the key back to its start position.",
+   "instruction": "Turn the key clockwise to its other position. Leave it there and release it.",
+   "guidance": "The top camera looks down on the key's head: compare its angle in the start and end photos. The instruction also asks the robot to let go of the key.",
+   "levels": [
+    {
+     "score": 1,
+     "description": "The key is turned clockwise to its other position and left there, with the gripper released."
+    },
+    {
+     "score": 0.5,
+     "description": "The key is turned to its other position but the gripper is still holding it."
+    },
+    {
+     "score": 0,
+     "description": "The key is in its start position (or turned the other way)."
+    }
+   ],
+   "photos_taken": "Oct 21, 9:44 PM",
+   "top": "media/setups/DC-key-top.jpg",
+   "model": {
+    "top": "media/setups/DC-key-top224.jpg",
+    "left": "media/setups/DC-key-left224.jpg",
+    "right": "media/setups/DC-key-right224.jpg"
+   }
+  },
+  {
+   "id": "DC-toggle",
+   "name": "Flip the light switch",
+   "rig": 6,
+   "design": "flip-switch",
+   "props": [
+    {
+     "name": "Leviton toggle switch",
+     "url": "https://www.amazon.com/dp/B00002NAR0"
+    },
+    {
+     "name": "Leviton single-gang surface backbox",
+     "url": "https://www.amazon.com/dp/B0028CIC8U"
+    }
+   ],
+   "setup": "Wall toggle switch in its box, fixed to the board; tip of the lever colored black. Lever on the same side every trial.",
+   "reset": "Flip the lever back to its start side.",
+   "instruction": "Flip the lever of the light switch on the white box to the other side.",
+   "guidance": "The lever tip is colored black. Compare which side of its slot it points to in the start and end photos.",
+   "levels": [
+    {
+     "score": 1,
+     "description": "The lever is on the other side of its slot compared with the start."
+    },
+    {
+     "score": 0,
+     "description": "The lever is on the same side as at the start."
+    }
+   ],
+   "photos_taken": "Oct 21, 4:44 PM",
+   "top": "media/setups/DC-toggle-top.jpg",
+   "model": {
+    "top": "media/setups/DC-toggle-top224.jpg",
+    "left": "media/setups/DC-toggle-left224.jpg",
+    "right": "media/setups/DC-toggle-right224.jpg"
+   }
+  },
+  {
+   "id": "DC-cover",
+   "name": "Open the spring-loaded cover",
+   "rig": 6,
+   "design": "covered-button",
+   "props": [
+    {
+     "name": "GUETNEU covered emergency-stop button box",
+     "url": "https://www.amazon.com/dp/B0CR19ZTBJ"
+    }
+   ],
+   "setup": "E-stop box fixed to the board in front of the left arm; clear cover closed, red button released (pulled up), the same every trial.",
+   "reset": "Close the clear cover. Check the red button is released (pulled up), not latched down.",
+   "instruction": "Lift the clear cover on the grey box all the way open, until it stays open on its own. It is spring-loaded and snaps shut if it is not pushed far enough.",
+   "guidance": "The clear cover is hinged at the back. Closed, it lies flat over the red button. Open, it stands up behind the button on its own. The overhead and left wrist cameras both show it. The end photos are taken with the arms parked, so a cover only held up by the gripper will have snapped shut.",
+   "levels": [
+    {
+     "score": 1,
+     "description": "The cover is open and staying open on its own."
+    },
+    {
+     "score": 0,
+     "description": "The cover is closed."
+    }
+   ],
+   "photos_taken": "Oct 22, 9:39 AM",
+   "top": "media/setups/DC-cover-top.jpg",
+   "model": {
+    "top": "media/setups/DC-cover-top224.jpg",
+    "left": "media/setups/DC-cover-left224.jpg",
+    "right": "media/setups/DC-cover-right224.jpg"
+   }
+  },
+  {
+   "id": "DC-keypad",
+   "name": "Enter a code on the keypad",
+   "rig": 1,
+   "design": "keypad",
+   "props": [
+    {
+     "name": "TechGarden wired USB number pad",
+     "url": "https://www.amazon.com/dp/B0BNPVMQVT"
+    },
+    {
+     "name": "iPhone on a MagSafe charging stand, showing the keypad page",
+     "url": null
+    }
+   ],
+   "setup": "USB number pad and the iPhone display on the board, the phone on a MagSafe stand; starting a trial clears the display.",
+   "reset": "None by hand: starting a trial clears the display. Before each automatic start, the rig software checks the scene against a reference photo, that the motors have cooled, and that the phone shows a test word (READY).",
+   "instruction": "Type 52 on the number pad and nothing else. The iPhone next to it shows what you type.",
+   "guidance": "The iPhone next to the number pad shows what was typed. One keypress away means one character missing, one extra, or one wrong (for example 5, 582 or 53). The trial is scored from the display's own log; the judges cross-check it.",
+   "levels": [
+    {
+     "score": 1,
+     "description": "The display reads exactly 52."
+    },
+    {
+     "score": 0.5,
+     "description": "The display is one keypress away from 52: one character missing, one extra, or one wrong."
+    },
+    {
+     "score": 0,
+     "description": "The display shows anything else, or nothing."
+    }
+   ],
+   "photos_taken": "Oct 22, 11:21 AM",
+   "top": "media/setups/DC-keypad-top.jpg",
+   "model": {
+    "top": "media/setups/DC-keypad-top224.jpg",
+    "left": "media/setups/DC-keypad-left224.jpg",
+    "right": "media/setups/DC-keypad-right224.jpg"
+   }
+  },
+  {
+   "id": "DC-slider",
+   "name": "Move the slider to the other line",
+   "rig": 5,
+   "design": "slider",
+   "props": [
+    {
+     "name": "Leviton SureSlide dimmer",
+     "url": "https://www.amazon.com/dp/B00CF4IPGK"
+    },
+    {
+     "name": "Leviton Decora wallplate",
+     "url": "https://www.amazon.com/dp/B000HEHCE6"
+    },
+    {
+     "name": "Leviton single-gang surface backbox",
+     "url": "https://www.amazon.com/dp/B0028CIC8U"
+    }
+   ],
+   "setup": "Slide dimmer in its box, fixed to the board. Two black lines on the plate mark the start and the end of the move (short of the hard end stop, which needs extra force). Slider on the start line every trial; large rocker switch unchanged.",
+   "reset": "Slide the slider back to the start line. Leave the large rocker switch as it is.",
+   "instruction": "Move the small slider on the white dimmer from the black line it is on to the other black line.",
+   "guidance": "The slider is the small dark control on the white dimmer; two black lines on the plate mark where it starts and where it should end. Compare its position with the start photos.",
+   "levels": [
+    {
+     "score": 1,
+     "description": "The slider reached the other black line (at it or past it)."
+    },
+    {
+     "score": 0.5,
+     "description": "The slider moved noticeably toward the other line but stopped short of it."
+    },
+    {
+     "score": 0,
+     "description": "The slider did not move toward the other line, or the large rocker switch was changed."
+    }
+   ],
+   "photos_taken": "Oct 21, 7:22 PM",
+   "top": "media/setups/DC-slider-top.jpg",
+   "model": {
+    "top": "media/setups/DC-slider-top224.jpg",
+    "left": "media/setups/DC-slider-left224.jpg",
+    "right": "media/setups/DC-slider-right224.jpg"
+   }
+  },
+  {
+   "id": "DC-plug",
+   "name": "Plug the charger into the power strip",
+   "rig": 3,
+   "design": "plug-in",
+   "props": [
+    {
+     "name": "White phone charger and white power strip (on hand, not part of the bench order)",
+     "url": null
+    }
+   ],
+   "setup": "Power strip fixed to the board, outlets up. White phone charger standing loose next to it, same spot and orientation every trial.",
+   "reset": "Pull the charger out and stand it back in its spot, same orientation.",
+   "instruction": "Pick up the white phone charger and plug it into one of the outlets on the white power strip. Push it in until the prongs are fully inserted.",
+   "guidance": "Fully seated means no metal of the prongs is visible between the charger and the strip.",
+   "levels": [
+    {
+     "score": 1,
+     "description": "The charger is fully plugged into an outlet: flush against the strip, no prong metal visible."
+    },
+    {
+     "score": 0.5,
+     "description": "The charger is in an outlet and stays there, but not fully: a visible gap or tilt."
+    },
+    {
+     "score": 0,
+     "description": "The charger is not in an outlet."
+    }
+   ],
+   "photos_taken": "Oct 21, 4:30 PM",
+   "top": "media/setups/DC-plug-top.jpg",
+   "model": {
+    "top": "media/setups/DC-plug-top224.jpg",
+    "left": "media/setups/DC-plug-left224.jpg",
+    "right": "media/setups/DC-plug-right224.jpg"
+   }
+  },
+  {
+   "id": "DC-unplug",
+   "name": "Unplug the charger from the power strip",
+   "rig": 4,
+   "design": "unplug",
+   "props": [
+    {
+     "name": "White phone charger and white power strip (on hand, not part of the bench order)",
+     "url": null
+    }
+   ],
+   "setup": "Power strip fixed to the board. White phone charger fully plugged into the same outlet every trial.",
+   "reset": "Push the charger fully back into the same outlet.",
+   "instruction": "Unplug the white phone charger from the white power strip.",
+   "guidance": null,
+   "levels": [
+    {
+     "score": 1,
+     "description": "The charger is completely out of the power strip, resting on the board or table."
+    },
+    {
+     "score": 0,
+     "description": "The charger is still in an outlet, even if loosened."
+    }
+   ],
+   "photos_taken": "Oct 21, 4:30 PM",
+   "top": "media/setups/DC-unplug-top.jpg",
+   "model": {
+    "top": "media/setups/DC-unplug-top224.jpg",
+    "left": "media/setups/DC-unplug-left224.jpg",
+    "right": "media/setups/DC-unplug-right224.jpg"
+   }
+  },
+  {
+   "id": "DC-join",
+   "name": "Join the Ethernet plug and coupler",
+   "rig": 5,
+   "design": "join-connectors",
+   "props": [
+    {
+     "name": "Amazon Basics 3 ft Cat6 cable",
+     "url": "https://www.amazon.com/dp/B089MGH8T5"
+    },
+    {
+     "name": "EZYUMM Ethernet coupler",
+     "url": "https://www.amazon.com/dp/B0D5ZHG8JX"
+    }
+   ],
+   "setup": "Ethernet cable and a loose Ethernet coupler on the board, same spots every trial.",
+   "reset": "Pull the plug out of the coupler and put both back in their spots.",
+   "instruction": "Use one hand to hold the Ethernet coupler and the other to insert the Ethernet plug into it until it clicks into place.",
+   "guidance": null,
+   "levels": [
+    {
+     "score": 1,
+     "description": "The Ethernet plug is fully inserted into the coupler, no gap."
+    },
+    {
+     "score": 0,
+     "description": "The plug is not fully inserted in the coupler."
+    }
+   ],
+   "photos_taken": "Oct 21, 11:46 AM",
+   "top": "media/setups/DC-join-top.jpg",
+   "model": {
+    "top": "media/setups/DC-join-top224.jpg",
+    "left": "media/setups/DC-join-left224.jpg",
+    "right": "media/setups/DC-join-right224.jpg"
+   }
+  },
+  {
+   "id": "DC-clip",
+   "name": "Press the cable into the clip",
+   "rig": 2,
+   "design": "route-cable",
+   "props": [
+    {
+     "name": "Command cord clip, darkened, stuck to the table",
+     "url": "https://www.amazon.com/dp/B076ZT3FVN"
+    },
+    {
+     "name": "Black Ethernet cable",
+     "url": null
+    }
+   ],
+   "setup": "Black cord clip stuck to the table; black Ethernet cable laid in a gentle wave passing just in front of the clip, ends routed away from the arms, same path every trial.",
+   "reset": "Pull the cable out of the clip and lay it back along its path in front of the clip.",
+   "instruction": "Press the black network cable into the dark clip on the table, so the cable is held by the clip.",
+   "guidance": null,
+   "levels": [
+    {
+     "score": 1,
+     "description": "The cable is seated inside the clip."
+    },
+    {
+     "score": 0,
+     "description": "The cable is not inside the clip (for example lying next to it)."
+    }
+   ],
+   "photos_taken": "Oct 21, 11:46 AM",
+   "top": "media/setups/DC-clip-top.jpg",
+   "model": {
+    "top": "media/setups/DC-clip-top224.jpg",
+    "left": "media/setups/DC-clip-left224.jpg",
+    "right": "media/setups/DC-clip-right224.jpg"
+   }
+  }
+ ]
+}

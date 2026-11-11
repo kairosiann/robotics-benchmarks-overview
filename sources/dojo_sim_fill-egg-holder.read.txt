@@ -1,0 +1,140 @@
+Fill Egg Holder | RoboDojo Wiki
+Skip to content
+RoboDojo Wiki
+Search
+Ctrl
+K
+Cancel
+GitHub
+Home
+RoboDojo
+Usage
+Overview
+Install & Download
+XPolicyLab
+Configurations
+Quick Evaluation
+RoboDojo Submission
+Common Issues
+Overview
+Installation Issues
+Evaluation Issues
+Simulation Tasks
+Overview
+Domain Randomization
+Parallel Environments
+Generalization
+Stack Bowls
+Push T
+Pack Objects Into Box
+Fold Clothes
+Hang Mugs
+Sweep Blocks
+Pour Liquid Into Cup
+Make Toast
+Arrange Largest Number
+Sort Nesting Dolls By Size
+Store Laptop And Headphones
+Stack Blocks
+Memory
+Cover Blocks
+Match And Pick From Conveyor
+Swap Blocks
+Swap T
+Press By Number
+Imitate Sorting Sequence
+Precision
+Fasten Screws
+Plug In Charger
+Insert Tubes
+Pour Balls Into Vase
+Play Xylophone
+Deposit Coin
+Insert Key
+Build Tower
+Long-Horizon
+Fill Pen Holder
+Classify Objects
+Put Bottles Into Dustbin
+Play Tic-Tac-Toe
+Fill Egg Holder
+Organize Table
+Make Kong
+Play Stacking Toy
+Open
+Align Blocks
+General Pickup
+Solve Equation
+Stack Blocks By Language
+Classify Objects By Language
+Pick From Conveyor By Image
+Store Tools In Toolbox
+Pour By Language
+DLC
+Real Robot Tasks
+Overview
+Piper X
+Disassemble LEGO
+Cap Pen
+Classify Objects
+Hang Mugs
+Sweep Blocks
+Pack Objects Into Backpack
+Piper
+Fill Pen Holder
+Put Objects Into Basket
+Stack And Cover Blocks
+Stack Bowls
+Stand Up Bottles
+Insert Charger
+ARX X5
+Insert Tubes
+Make Bread
+Make Food
+Pack And Pour Fruit
+Cover Blocks
+Store In Safe
+Community
+Community
+Leaderboard
+Leaderboard
+GitHub
+On this page
+Overview
+Scoring
+On this page
+Overview
+Scoring
+Fill Egg Holder
+Your browser does not support the video tag.
+Simulation demo
+Instruction
+Place the four eggs from the basket into the egg holder, then close the lid.
+Description
+There is a woven basket containing four eggs and an egg holder. The robot needs to pick up the eggs one by one, place all four into the egg holder, and then close the lid.
+Platform
+Simulation
+Category
+Long-Horizon
+Data Source
+Teleop
+Usage
+Train & Eval
+Scoring
+Section titled “Scoring”
+Score
+Condition
+0
+No egg is placed into the egg holder.
+10
+Any one egg is inside the egg holder and close to the holder bottom, with the gripper open.
+25
+Any two eggs are placed correctly into the egg holder.
+40
+Any three eggs are placed correctly into the egg holder.
+90
+All four eggs are placed in the holder, but the lid is not fully closed yet.
+100
+All four eggs are in the holder, the holder lid is correctly and fully closed, and the robot returns to origin.
+Play Tic-Tac-Toe
+Organize Table

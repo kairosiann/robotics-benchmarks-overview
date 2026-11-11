@@ -1,0 +1,161 @@
+DataCenterBench Tier 1 | Robocurve
+2× speed
+DataCenterBench Tier 1
+We tested frontier AI models on ten simple data-center tasks.
+Anton de la Fuente, Achu Menon, Christopher Leet, Tzu Kit Chan, Jay Chooi ·
+October 28, 2026
+How DataCenterBench works
+1.
+A step is taken from user manuals for data-center power and server equipment.
+2.
+The step is rebuilt as a tabletop task.
+I’m continuing clockwise toward the mark…
+move_to(left_yaw: -0.9)
+3.
+Frontier models watch through cameras and move robot arms to complete the task.
+Score 1
+4.
+Outcomes are scored from visual confirmation by LLM judges.
+Results
+Average score by model
+Score by task and model
+Each cell is the mean of three tries. Each row's best score is green, dark green at 100%.
+Swipe the grid sideways for every model →
+Gemini 4 Argon nearly matches GPT-6 Astra at a tenth of the cost
+Score vs. estimated API cost per task
+The GPT models were also the fastest, on OpenAI's ultrafast tier
+Score vs. minutes per task
+Estimated API cost at list prices, including the faster serving these runs used: OpenAI's
+        ultrafast tier for the GPT models (6× standard) and Anthropic's fast mode for Claude Opus 5.5 (2×).
+Cost, speed and score frontier
+Click or tap the chart, then drag to rotate.
+Watch the attempts
+The ten tasks
+UPS stands for uninterruptible power supply, the battery backup that keeps servers running through a power cut.
+Explanation of each step in data-center manuals
+Why slow models overheat
+While a model thinks, the robot holds its arms in place, and holding still heats the motors. When a motor reaches 65 °C, our thermal guard trips and returns the arms to rest pose for cooling.
+The longer a model thinks per move, the more tries overheat
+How we chose the tasks
+We drafted 19 candidate tasks, each matched to a step quoted from a manufacturer manual or standard (Vertiv,
+          Eaton, Dell, OSHA, WAGO and StarTech). They fell into four groups: operating controls, connecting equipment,
+          servicing equipment, and the skills electricians are examined on.
+We kept ten single physical steps that a tabletop rig can reset and score from photos. That is six control tasks, one of them turning a key in an interlock, and four connection tasks.
+All 19 tasks that we considered
+Task
+How it compares with the real step
+Kept (10)
+Kept
+Flip a switch
+Operate equipment controls
+Same motion as a breaker handle. Real breakers are larger and stiffer.
+Kept
+Lift a protective cover
+Operate equipment controls
+Real step lifts a cover over an emergency power-off button.
+Kept
+Turn a knob
+Operate equipment controls
+Real rotary selector with two positions. Ours has no click stops.
+Kept
+Type a code
+Operate equipment controls
+Physical keypad with an exact key sequence. Ours is a generic number pad instead of a UPS panel.
+Kept
+Move a slider
+Operate equipment controls
+Real UPS mode selector has two fixed positions. Our dimmer copies only the sliding motion.
+Kept
+Plug in a charger
+Connect equipment
+Same pick, align and push as a power cord or network cable.
+Kept
+Unplug a charger
+Connect equipment
+Same as disconnecting a server's power cord. Our USB plug has no latch.
+Kept
+Join Ethernet connectors
+Connect equipment
+Real step joins a UPS cable connector to a distribution box connector. Ours joins an Ethernet plug and coupler.
+Kept
+Press a cable into a clip
+Connect equipment
+Real step routes cables along a switch tray. Ours uses one clip.
+Kept
+Turn a key
+Service equipment
+Real step unlocks a bypass breaker's key interlock before switching. Our key switch matches the motion.
+Left out (9)
+Left out
+Plug and unplug a network cable
+Connect equipment
+Core data-center technician work. Unplugging also tests the latch.
+Left out
+Hold something aside while the other hand works
+Connect equipment
+The manual says to lift a cable arm out of the way, not to hold it while the other hand works.
+Left out
+Tighten a thumbscrew
+Service equipment
+Real step secures a server's card riser. Ours fastens nothing.
+Left out
+Fasten a nut down onto a washer
+Service equipment
+Real step clamps a part with a bolted joint. Ours keeps the clamping, drops the torque wrench.
+Left out
+Insert a battery the right way round
+Service equipment
+Real polarity-dependent step. Our AA holder stands in for the coin-cell holder.
+Left out
+Safe isolation (lockout/tagout)
+What electricians are examined on
+The core safety procedure. Our version is a toy breaker, a tag and a tester.
+Left out
+Terminate a wire
+What electricians are examined on
+Real step pushes a stripped wire into a lever connector, as ours does. Real UPS terminals also need a torque wrench.
+Left out
+Test with an instrument
+What electricians are examined on
+Real step probes two points and reads a value.
+Left out
+Find and fix a fault
+What electricians are examined on
+Real step finds a tripped breaker and resets it. Ours plants a single fault.
+How we ran it
+Full methodology and disclosures →
+Each task's setup, reset, instruction and rubric, with photos →
+All 270 trials, with each one's transcript and video →
+Limitations
+The benchmark tests individual physical steps, not complete maintenance jobs. It does not cover electrical
+          isolation, termination, testing or fault-finding.
+The props simplify the equipment, forces and access constraints. We have not validated performance on these setups against the real equipment.
+Each task ran on one rig. Differences between rigs (camera angles, how firmly a prop was fixed down) are part
+          of each task's difficulty and are not averaged out.
+Three tries per model per task is a small sample. Scores a few points apart aren't a reliable ranking.
+Some failures, like misreading a knob's angle, may come from the 224 × 224 camera resolution.
+Results by model
+Swipe the table sideways for every column →
+The average score (avg@3) is the mean of three runs. A run is one try at each of the ten tasks.
+        Estimated cost uses token
+        counts at list prices, including the OpenAI ultrafast (6×) and Anthropic fast-mode (2×) surcharges these runs used.
+        Minutes are the mean time per task, from the first model call to when the arms start parking.
+        Overheats are tries the robot stopped because a motor passed 65 °C. They are scored on where the arms were when it stopped.
+About Robocurve
+Robocurve is a Public Benefit Corporation helping society understand the state of robot intelligence. We build
+        open-source tools and independent benchmarks to evaluate how capable AI models and embodiments are in the real,
+        physical world. These runs used
+Inspect Robots
+, one of those tools.
+The ten tasks, rubrics and results are public. We're also building a private task set, so we can keep measuring
+        progress on tasks models can't have trained on.
+Want your model on DataCenterBench? Talk to us →
+By Anton de la Fuente, Achu Menon, Christopher Leet, Tzu Kit Chan and Jay Chooi, Robocurve.
+Data:
+results.json
+(per model and run: scores, cost, tokens, duration) ·
+trials.csv
+(every counted trial) ·
+model_summary.csv
+·
+model_task_matrix.csv

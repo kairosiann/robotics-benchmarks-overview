@@ -1,0 +1,1772 @@
+Quick Evaluation | RoboDojo Wiki
+Skip to content
+RoboDojo Wiki
+Search
+Ctrl
+K
+Cancel
+GitHub
+Home
+RoboDojo
+Usage
+Overview
+Install & Download
+XPolicyLab
+Configurations
+Quick Evaluation
+RoboDojo Submission
+Common Issues
+Overview
+Installation Issues
+Evaluation Issues
+Simulation Tasks
+Overview
+Domain Randomization
+Parallel Environments
+Generalization
+Stack Bowls
+Push T
+Pack Objects Into Box
+Fold Clothes
+Hang Mugs
+Sweep Blocks
+Pour Liquid Into Cup
+Make Toast
+Arrange Largest Number
+Sort Nesting Dolls By Size
+Store Laptop And Headphones
+Stack Blocks
+Memory
+Cover Blocks
+Match And Pick From Conveyor
+Swap Blocks
+Swap T
+Press By Number
+Imitate Sorting Sequence
+Precision
+Fasten Screws
+Plug In Charger
+Insert Tubes
+Pour Balls Into Vase
+Play Xylophone
+Deposit Coin
+Insert Key
+Build Tower
+Long-Horizon
+Fill Pen Holder
+Classify Objects
+Put Bottles Into Dustbin
+Play Tic-Tac-Toe
+Fill Egg Holder
+Organize Table
+Make Kong
+Play Stacking Toy
+Open
+Align Blocks
+General Pickup
+Solve Equation
+Stack Blocks By Language
+Classify Objects By Language
+Pick From Conveyor By Image
+Store Tools In Toolbox
+Pour By Language
+DLC
+Real Robot Tasks
+Overview
+Piper X
+Disassemble LEGO
+Cap Pen
+Classify Objects
+Hang Mugs
+Sweep Blocks
+Pack Objects Into Backpack
+Piper
+Fill Pen Holder
+Put Objects Into Basket
+Stack And Cover Blocks
+Stack Bowls
+Stand Up Bottles
+Insert Charger
+ARX X5
+Insert Tubes
+Make Bread
+Make Food
+Pack And Pour Fruit
+Cover Blocks
+Store In Safe
+Community
+Community
+Leaderboard
+Leaderboard
+GitHub
+On this page
+Overview
+Smoke test
+Task-filter order
+Balanced multi-GPU sweeps
+Single-task eval
+Complete evaluation
+Evaluate by capability dimension
+Task groups
+Benchmark sweep
+Benchmark rules
+Split eval
+Batch client (multi-task / multi-GPU)
+Docker client
+Output
+Lightweight checks
+On this page
+Overview
+Smoke test
+Task-filter order
+Balanced multi-GPU sweeps
+Single-task eval
+Complete evaluation
+Evaluate by capability dimension
+Task groups
+Benchmark sweep
+Benchmark rules
+Split eval
+Batch client (multi-task / multi-GPU)
+Docker client
+Output
+Lightweight checks
+Quick Evaluation
+RoboDojo evaluation is launched through XPolicyLab policies. The public entry point is:
+bash
+scripts/robodojo.sh
+<
+comman
+d
+>
+[options]
+Before running evaluation, finish
+Install & Download
+and choose an environment config from
+Configurations
+. The default config is
+arx_x5
+, which loads
+env_cfg/arx_x5.yml
+.
+Smoke test
+Section titled “Smoke test”
+Use
+smoke
+first when validating a new install, policy integration, or script change. It runs selected tasks sequentially with
+EVAL_NUM=1
+by default and passes only when each selected task exits successfully, writes
+_result.json
+, and records
+eval_time >= 1
+.
+bash
+scripts/robodojo.sh
+smoke
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--fail-fast
+Run a subset while debugging:
+bash
+scripts/robodojo.sh
+smoke
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--only
+stack_bowls,push_T
+You can also smoke-test one or more capability dimensions. Omit
+--dimension
+to run all 54 runnable tasks (
+all
+). Pass one or more official dimension names, comma-separated values, or repeat
+--dimension
+:
+bash
+scripts/robodojo.sh
+smoke
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--dimension
+memory
+Task-filter order
+Section titled “Task-filter order”
+smoke
+,
+benchmark
+, and batch
+client
+apply task filters in this order:
+--dimension
+restricts the canonical runnable-task inventory.
+Tasks from
+--only
+and
+--tasks-file
+are combined as a
+union
+, not an intersection. Duplicate names are removed.
+Every requested task must belong to the selected dimension set. A task outside that set is reported as
+unknown task
+instead of being silently ignored.
+--limit
+is applied last, after the selected tasks have been restored to canonical RoboDojo task order. The order written in
+--only
+or
+--tasks-file
+does not control execution order.
+For example,
+--dimension memory --only cover_blocks,swap_T --tasks-file tasks.txt --limit 3
+first selects Memory tasks, combines both explicit task sources, then runs the first three matches in canonical order.
+Resume from an existing smoke summary:
+bash
+scripts/robodojo.sh
+smoke
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--resume
+\
+--summary
+smoke_results/
+<
+run_i
+d
+>
+.json
+Balanced multi-GPU sweeps
+Section titled “Balanced multi-GPU sweeps”
+By default,
+smoke
+and
+benchmark
+run tasks sequentially on one GPU pair (
+--policy-gpu
+/
+--env-gpu
+, both default to
+0
+). Pass
+--gpu-ids
+to launch a balanced multi-GPU sweep: RoboDojo partitions the selected tasks across workers using embedded per-task runtime weights (the same weight table as
+optimal_8group.txt
+in the RoboDojo repo) instead of hard-coded
+--only
+shards.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+1
+\
+--gpu-ids
+0,2,5,7
+\
+--dry-run
+Run a subset with the same balancer:
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--only
+imitate_sorting_sequence,pour_by_language,play_tic_tac_toe
+\
+--gpu-ids
+0,1,3
+Flag
+Meaning
+--gpu-ids
+Comma-separated GPU ids reused for both policy server and Isaac Sim client on each worker.
+--policy-gpu-ids
+Optional per-worker policy GPU list. Defaults to
+--gpu-ids
+.
+--env-gpu-ids
+Optional per-worker simulator GPU list. Defaults to
+--gpu-ids
+.
+The policy and env GPU lists must have the same length. In multi-GPU mode, the selected task count must be
+greater than or equal to
+the worker count; otherwise RoboDojo exits early with a validation error.
+Both
+smoke
+and
+benchmark
+accept
+--only
+,
+--tasks-file
+,
+--dimension
+, and
+--limit
+; the
+task-filter order
+is applied before multi-GPU partitioning.
+Single-task eval
+Section titled “Single-task eval”
+For same-machine evaluation, use
+eval
+. It starts the policy server and Isaac Sim client together on
+localhost
+:
+robodojo.sh eval
+-> scripts/internal/run_policy_eval.sh
+-> policy server on localhost + Isaac Sim client
+bash
+scripts/robodojo.sh
+eval
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--task
+stack_bowls
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+1
+Required policy arguments:
+Argument
+Meaning
+--policy-dir
+XPolicyLab policy directory. Same-machine
+eval
+uses
+eval.sh
+plus the policy
+setup_eval_policy_server.sh
+and
+setup_eval_env_client.sh
+launchers.
+--ckpt
+Checkpoint name passed to the policy-side eval/server script.
+--policy-env
+Conda env,
+uv
+, or env path used by the policy server.
+Common benchmark arguments:
+Argument
+Default
+--env-cfg
+arx_x5
+--seed
+0
+--eval-env
+RoboDojo
+--action-type
+ee
+--expert-num
+100
+Use
+--dry-run
+to inspect the resolved command without launching the policy server or Isaac Sim:
+bash
+scripts/robodojo.sh
+eval
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--task
+stack_bowls
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+1
+\
+--dry-run
+Complete evaluation
+Section titled “Complete evaluation”
+Publication-style evaluation uses 54 runnable simulation tasks, three eval seeds, and native per-task episode counts from
+task/RoboDojo/config/_task.yml
+.
+Run one seed with native counts:
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+0
+Repeat for
+--seed 1
+and
+--seed 2
+, or launch the three seeds on separate GPUs.
+For each seed, you can either use the manual task shards below or a single balanced multi-GPU command with
+--gpu-ids
+(see
+Balanced multi-GPU sweeps
+).
+Evaluate by capability dimension
+Section titled “Evaluate by capability dimension”
+List the official capability dimensions, canonical base-task counts, and runnable task configs (including Generalization
+_random
+variants):
+bash
+scripts/robodojo.sh
+dimensions
+The inventory comes from
+scripts/internal/task_inventory.py
+. Each runnable task carries
+dimension
+and
+variant
+metadata (
+standard
+or
+random
+). Random Generalization configs inherit the dimension of their base task.
+Canonical name
+Aliases (normalized to canonical)
+generalization
+gen
+,
+generalisation
+memory
+mem
+precision
+—
+long-horizon
+long
+,
+long_horizon
+,
+longhorizon
+open
+open-ended
+,
+open_ended
+,
+openended
+Rules:
+Omit
+--dimension
+on
+smoke
+,
+benchmark
+, or batch
+client
+to evaluate
+all
+dimensions (54 runnable configs).
+Pass
+--dimension all
+explicitly, or combine multiple names:
+--dimension memory,long-horizon
+or repeated
+--dimension memory --dimension open
+.
+Invalid dimension names are rejected. Do not mix unknown names with
+all
+.
+generalization
+includes the 12 standard tasks
+and
+their 12 runnable
+_random
+layout variants (24 configs total for that dimension).
+Run a native-count benchmark sweep on selected dimensions:
+bash
+scripts/robodojo.sh
+benchmark
+\
+--dimension
+generalization
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+Narrow within a dimension:
+bash
+scripts/robodojo.sh
+benchmark
+\
+--dimension
+memory
+\
+--only
+cover_blocks,swap_T
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+For lower-level inspection,
+bash scripts/robodojo.sh tasks --dimension memory
+and
+python3 scripts/internal/task_inventory.py --list-dimensions
+use the same dimension metadata.
+Task groups
+Section titled “Task groups”
+Use one command per terminal/GPU. Change
+<SEED>
+to
+0
+,
+1
+, or
+2
+for the three benchmark seeds. Tasks listed in
+--only "..."
+are used as a subset filter; RoboDojo runs the matched tasks sequentially in its canonical runnable-task order.
+These manual shards remain valid when you want fixed groupings. For automatic load balancing from runtime weights, omit the shards and pass
+--gpu-ids
+on one
+benchmark
+command instead.
+4-GPU run scripts
+Group 0: 15 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"build_tower,fill_pen_holder,cover_blocks,make_toast,pick_from_conveyor_by_image,fill_egg_holder,pour_liquid_into_cup,sweep_blocks_random,arrange_largest_number,insert_tubes,sweep_blocks,stack_bowls_random,hang_mugs_random,pour_liquid_into_cup_random,stack_blocks"
+Group 1: 10 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"play_tic_tac_toe,fasten_screws,classify_objects_by_language,classify_objects,store_tools_in_toolbox,make_toast_random,play_Xylophone,store_laptop_and_headphones_random,stack_bowls,store_laptop_and_headphones"
+Group 2: 15 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"imitate_sorting_sequence,organize_table,sort_nesting_dolls_by_size_random,pack_objects_into_box_random,match_and_pick_from_conveyor,pack_objects_into_box,pour_balls_into_vase,sort_nesting_dolls_by_size,align_blocks,solve_equation,swap_T,push_T_random,deposit_coin,push_T,general_pickup"
+Group 3: 14 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"pour_by_language,play_stacking_toy,make_kong,arrange_largest_number_random,press_by_number,swap_blocks,put_bottles_into_dustbin,fold_clothes_random,plug_in_charger,stack_blocks_random,hang_mugs,stack_blocks_by_language,fold_clothes,insert_key"
+8-GPU run scripts
+Group 0: 6 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"imitate_sorting_sequence,press_by_number,sweep_blocks_random,align_blocks,plug_in_charger,fold_clothes"
+Group 1: 6 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"pour_by_language,fill_egg_holder,pack_objects_into_box,pour_balls_into_vase,solve_equation,insert_key"
+Group 2: 6 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"play_tic_tac_toe,arrange_largest_number_random,match_and_pick_from_conveyor,sort_nesting_dolls_by_size,stack_blocks_by_language,store_laptop_and_headphones"
+Group 3: 7 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"fasten_screws,make_toast_random,swap_blocks,stack_bowls,pour_liquid_into_cup_random,hang_mugs,general_pickup"
+Group 4: 7 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"play_stacking_toy,make_kong,pick_from_conveyor_by_image,pack_objects_into_box_random,play_Xylophone,hang_mugs_random,push_T_random"
+Group 5: 7 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"classify_objects_by_language,cover_blocks,make_toast,pour_liquid_into_cup,arrange_largest_number,store_laptop_and_headphones_random,swap_T"
+Group 6: 8 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"classify_objects,organize_table,store_tools_in_toolbox,sweep_blocks,fold_clothes_random,stack_blocks_random,deposit_coin,stack_blocks"
+Group 7: 7 tasks.
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+native
+\
+--seed
+<
+SEE
+D
+>
+\
+--policy-gpu
+<
+GPU_I
+D
+>
+\
+--env-gpu
+<
+GPU_I
+D
+>
+\
+--only
+"build_tower,fill_pen_holder,sort_nesting_dolls_by_size_random,put_bottles_into_dustbin,insert_tubes,stack_bowls_random,push_T"
+After all seeds finish, aggregate results:
+bash
+scripts/robodojo.sh
+summarize
+Benchmark sweep
+Section titled “Benchmark sweep”
+Use
+benchmark
+with a fixed
+--eval-num
+for local scored sweeps:
+bash
+scripts/robodojo.sh
+benchmark
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--eval-num
+5
+Use
+--eval-num native
+when
+_task.yml
+should control each task’s 25/50 episode count. That mode is the correct entry point for full benchmark sweeps.
+Both
+smoke
+and
+benchmark
+accept
+--dimension
+,
+--gpu-ids
+, and the related per-worker GPU flags. The generated JSON and Markdown smoke summaries record the resolved dimension selection, making partial capability runs distinguishable from full-suite runs. Per-task logs are written under
+smoke_results/<run_id>/logs/<task>.log
+.
+Benchmark rules
+Section titled “Benchmark rules”
+task_name
+connects the task implementation, config, and result path:
+task/RoboDojo/tasks/<task_name>.py
+task/RoboDojo/config/<task_name>.yml
+eval_result/RoboDojo/<task_name>/
+Most tasks use lowercase
+snake_case
+. Four tasks keep uppercase letters in their canonical task names:
+play_Xylophone
+,
+swap_T
+,
+push_T
+, and
+push_T_random
+.
+RoboDojo evaluates 42 base simulation tasks across five capability dimensions. Twelve Generalization tasks also have a
+_random
+variant, for 54 runnable tasks total.
+Dimension
+Base tasks
+Generalization
+_random
+variants
+Generalization
+12
+12
+Memory
+6
+0
+Precision
+8
+0
+Long-Horizon
+8
+0
+Open
+8
+0
+Total
+42
+12
+See
+Simulation Tasks
+for the full Generalization task list. Each Generalization base task has a sibling task with the
+_random
+suffix, for example
+push_T_random
+.
+Runnable task counts with
+--eval-num native
+:
+Runnable task type
+Trials per seed
+Non-Generalization tasks
+50
+Generalization base tasks
+25
+Generalization random tasks
+25
+The summary script reads the latest
+_result.json
+files, merges each Generalization base task with its
+_random
+sibling, and writes the final table to
+eval_result/RoboDojo/_summary.md
+.
+Split eval
+Section titled “Split eval”
+Use
+server
+and
+client
+when the policy server and Isaac Sim client run on separate machines, separate processes, or across a host/container boundary.
+eval
+,
+smoke
+, and
+benchmark
+co-locate the server and client on
+localhost
+; use split mode for remote policies or Docker simulator clients.
+Policy machine                          Sim machine
+robodojo.sh server                      robodojo.sh client
+-> setup_eval_policy_server.sh          -> eval_policy.sh -> main.py
+bind 0.0.0.0:PORT  <- ws://IP:PORT ->  WsModelClient
+Start the policy server:
+bash
+scripts/robodojo.sh
+server
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--task
+stack_bowls
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--policy-port
+9999
+\
+--bind-host
+0.0.0.0
+Start the simulator client (single task):
+bash
+scripts/robodojo.sh
+client
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--task
+stack_bowls
+\
+--policy-host
+<
+POLICY_MACHINE_I
+P
+>
+\
+--policy-port
+9999
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--action-type
+ee
+\
+--eval-num
+1
+Batch client (multi-task / multi-GPU)
+Section titled “Batch client (multi-task / multi-GPU)”
+Omit
+--task
+to run
+batch client
+mode. RoboDojo defaults to all runnable simulation tasks unless you narrow the set with
+--only
+,
+--tasks-file
+,
+--dimension
+, or
+--limit
+. The runner uses the same task inventory and balancing logic as
+smoke
+/
+benchmark
+, but launches Isaac Sim clients against external policy servers (
+--mode client
+in
+scripts/internal/smoke_all_tasks.sh
+).
+bash
+scripts/robodojo.sh
+client
+\
+--policy-name
+<
+POLICY_NAM
+E
+>
+\
+--policy-host
+127.0.0.1
+\
+--policy-port
+9000,9001
+\
+--only
+stack_bowls,make_toast
+\
+--gpu-ids
+0,1
+\
+--eval-num
+1
+\
+--dry-run
+Mode
+Required flags
+Single-task
+--task
+,
+--policy-host
+,
+--policy-port
+, and either
+--policy-dir
+or
+--policy-name
+Batch
+--policy-host
+,
+--policy-port
+, task filters optional, and either
+--policy-dir
+or
+--policy-name
+Batch-only options mirror
+smoke
+/
+benchmark
+:
+--only
+,
+--tasks-file
+,
+--dimension
+,
+--limit
+,
+--eval-num
+, and
+--dry-run
+, using the same
+task-filter order
+. Use
+--gpu-ids
+or
+--env-gpu-ids
+to spread client workers across GPUs. Comma-separated
+--policy-host
+/
+--policy-port
+values are supported
+only
+in batch mode:
+One host, multiple ports
+: pass one
+--policy-host
+and as many
+--policy-port
+entries as worker groups; the host is reused.
+Multiple hosts
+:
+--policy-host
+and
+--policy-port
+counts must both equal the worker group count.
+In multi-GPU batch mode, the filtered task count must be
+≥
+the worker count. Single-task mode rejects comma-separated hosts or ports.
+Keep
+--task
+,
+--env-cfg
+,
+--seed
+, and
+--action-type
+aligned between server and client when you run one task per server process. On the client side,
+--ckpt
+and
+--action-type
+also label result paths.
+Batch inference mode is declared in
+XPolicyLab/policy/<POLICY_NAME>/deploy.yml
+with
+eval_batch
+. Do not pass a separate batch flag on
+client
+. If
+eval_batch: false
+, RoboDojo forces
+num_envs=1
+even when the sim config requests a larger value.
+Docker client
+Section titled “Docker client”
+The Docker image is simulator-side only. Start the policy server outside the container, then run
+robodojo.sh client
+inside the container. See
+Optional: Install with Docker
+for the full mount and networking command.
+Policy server
+Container networking
+--policy-host
+Same host
+--network host
+127.0.0.1
+Same host, bridge
+--add-host=host.docker.internal:host-gateway
+host.docker.internal
+Remote machine
+routed network
+policy machine IP
+Inside a bridge container,
+localhost
+is the container itself, not the host.
+Output
+Section titled “Output”
+Per-task eval artifacts:
+eval_result/RoboDojo/<task>/<policy>/<env_cfg>/<seed>_<additional_info>/<run_id>/
+Important files:
+File
+Meaning
+_result.json
+Success count, failure count, score,
+eval_time
+, and per-episode details.
+episode_*.mp4
+Saved camera videos.
+_stream/
+Temporary stream files for in-progress videos.
+_resume_<run_id>.json
+Resume manifest written one directory above the run folder.
+Smoke summaries:
+smoke_results/<run_id>.json
+smoke_results/<run_id>.md
+smoke_results/<run_id>/logs/<task>.log
+The JSON summary includes a
+dimensions
+array with canonical dimension names (or
+all
+when no filter was applied). The Markdown summary lists the same selection under
+dimensions:
+so partial capability runs are easy to distinguish from full-suite sweeps.
+Aggregated benchmark table:
+eval_result/RoboDojo/_summary.md
+Lightweight checks
+Section titled “Lightweight checks”
+For quick repository and command checks without launching Isaac Sim:
+bash
+scripts/robodojo.sh
+doctor
+--skip-isaac
+--skip-conda
+--skip-policy
+bash
+scripts/robodojo.sh
+dimensions
+bash
+scripts/robodojo.sh
+eval
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--task
+stack_bowls
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--dry-run
+bash
+scripts/robodojo.sh
+smoke
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--only
+stack_bowls,push_T
+\
+--dry-run
+For runtime acceptance on a machine with Isaac Sim and the selected policy ready:
+bash
+scripts/robodojo.sh
+smoke
+\
+--policy-dir
+XPolicyLab/policy/
+<
+POLICY_NAM
+E
+>
+\
+--ckpt
+<
+CKPT_NAM
+E
+>
+\
+--policy-env
+<
+POLICY_EN
+V
+>
+\
+--fail-fast
+Configurations
+RoboDojo Submission

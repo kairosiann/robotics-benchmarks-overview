@@ -1,0 +1,68 @@
+{
+  "url": "https://robocurve.org/datacenterbench/",
+  "links": [
+    "https://robocurve.org/datacenterbench/",
+    "https://robocurve.org/datacenterbench/methods.html",
+    "https://robocurve.org/datacenterbench/setups.html",
+    "https://robocurve.org/all-runs/?leaderboard=datacenterbench",
+    "https://github.com/robocurve/inspect-robots",
+    "https://robocurve.org/#contact",
+    "https://robocurve.org/datacenterbench/data/export-results.json",
+    "https://robocurve.org/datacenterbench/data/trials.csv",
+    "https://robocurve.org/datacenterbench/data/model_summary.csv",
+    "https://robocurve.org/datacenterbench/data/model_task_matrix.csv"
+  ],
+  "media": [
+    {
+      "class": "hero-bg",
+      "autoplay": null,
+      "muted": null,
+      "loop": null,
+      "playsinline": null,
+      "preload": "auto",
+      "poster": "media/hero.jpg",
+      "src": "media/hero.mp4",
+      "aria-hidden": "true"
+    },
+    {
+      "src": "img/robocurve-wordmark.svg",
+      "alt": "Robocurve"
+    },
+    {
+      "class": "drawing",
+      "src": "media/equipment/micropod-selector.png",
+      "alt": "Manual drawing of the Vertiv Liebert MicroPOD rotary bypass selector between two indicator lamps",
+      "loading": "lazy"
+    },
+    {
+      "src": "media/setup/DC-knob.jpg",
+      "alt": "Knob on a white box on the rig",
+      "loading": "lazy"
+    },
+    {
+      "src": "media/draft/model-view.jpg",
+      "alt": "The left wrist camera mid-turn: the gripper holds the knob and the view is rotated about 45 degrees",
+      "loading": "lazy"
+    },
+    {
+      "src": "img/logos/openai.svg",
+      "alt": "GPT-6.1 Sol"
+    },
+    {
+      "src": "media/draft/knob-before.jpg",
+      "alt": "Knob before the try",
+      "loading": "lazy"
+    },
+    {
+      "src": "media/draft/knob-after.jpg",
+      "alt": "Knob turned to the mark after the try",
+      "loading": "lazy"
+    },
+    {
+      "class": "still",
+      "src": "media/draft/dcb-3d.png",
+      "alt": "3D chart of all nine models by cost per task, tasks per hour and score, with a stepped blue Pareto surface through the seven Pareto-optimal ones and Claude Opus 5.5 and Kimi K3 under it. GPT-6 Astra and GPT-6.1 Sol sit at the top, fast and costly. Gemini 4 Argon scores near them for far less but is the slowest. GLM 5.3 Flash is the cheapest.",
+      "loading": "lazy"
+    }
+  ]
+}
