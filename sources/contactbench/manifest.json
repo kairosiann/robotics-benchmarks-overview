@@ -1,0 +1,186 @@
+{
+  "home": "https://jingyi-xiang.github.io/contactbench/",
+  "paper": "https://arxiv.org/html/2610.24512",
+  "files": [
+    {
+      "path": "config/tasks/01-grasp-target-key-from-keychain.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/01-grasp-target-key-from-keychain.js",
+      "sha256": "00b4548395fd2607072ba1c82e7729594a712b7ac92c0f7c6c99259f366f158d"
+    },
+    {
+      "path": "config/tasks/02-retrieve-single-utensil-from-bin.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/02-retrieve-single-utensil-from-bin.js",
+      "sha256": "267541205c0f4e36173e21a73cf752bf19cc49591d9e7023ddf2d8022debf0c3"
+    },
+    {
+      "path": "config/tasks/03-retrieve-single-fastener-from-bin.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/03-retrieve-single-fastener-from-bin.js",
+      "sha256": "245bbb8bcb9f2587bd20c99fb59cf721de03c148ee1e2d96e0af51b530385e5a"
+    },
+    {
+      "path": "config/tasks/04-retrieve-top-cup-from-stack.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/04-retrieve-top-cup-from-stack.js",
+      "sha256": "32422c24ef38d9de9913feab29e66066943254d5a96f6574fa39156fb7b0bea1"
+    },
+    {
+      "path": "config/tasks/05-retrieve-single-card-from-deck.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/05-retrieve-single-card-from-deck.js",
+      "sha256": "cb02c5818e29cc9704a8e63a6f12ecffcc41125db30468ddd715ef26b13b3b2e"
+    },
+    {
+      "path": "config/tasks/06-pick-up-object-from-platform.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/06-pick-up-object-from-platform.js",
+      "sha256": "ae8604dc357212db27da95bb098236ab0223f14eb5b765822562976e5b75c1f9"
+    },
+    {
+      "path": "config/tasks/07-collect-utensils.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/07-collect-utensils.js",
+      "sha256": "1163809d714c831af131135314baffe200c746c0a35d2380327e5ad9bee9c9fe"
+    },
+    {
+      "path": "config/tasks/08-collect-fasteners.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/08-collect-fasteners.js",
+      "sha256": "6dfed6e50900880c418a28686f7fc0ec321c4c2f8040430040592bf63797b2d6"
+    },
+    {
+      "path": "config/tasks/09-hang-object.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/09-hang-object.js",
+      "sha256": "a3d4457e786ddc2e2d35d758faa5a62d5ef1e8356d2505b666323c7711e560c2"
+    },
+    {
+      "path": "config/tasks/10-place-utensil-into-bin.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/10-place-utensil-into-bin.js",
+      "sha256": "5ddd5c24775a456e232c921938cc9f2083d52b2e57906cc79bff5a84281927ed"
+    },
+    {
+      "path": "config/tasks/11-in-hand-repose.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/11-in-hand-repose.js",
+      "sha256": "ed63202202185a3036bdbe32f3886fa12034136636f6f365765a7fe4c65a692d"
+    },
+    {
+      "path": "config/tasks/12-in-hand-grasp-transition.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/12-in-hand-grasp-transition.js",
+      "sha256": "d251a1098449f91beeb633a99aadeec870db400a7da26cdbc8f25f09dc73cd4c"
+    },
+    {
+      "path": "config/tasks/13-tighten-screw-with-allen-key.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/13-tighten-screw-with-allen-key.js",
+      "sha256": "0a073f2666ab94822cfdf86e0c50b43a600dd4cc6cd3cdc3b4ba36a3ec426879"
+    },
+    {
+      "path": "config/tasks/14-loosen-screw-with-allen-key.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/14-loosen-screw-with-allen-key.js",
+      "sha256": "afe4545184e23f780edba1f501a22db15b6e0513967bfe008b8cdcf07023b1ae"
+    },
+    {
+      "path": "config/tasks/15-tighten-screw-with-screwdriver.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/15-tighten-screw-with-screwdriver.js",
+      "sha256": "6741cc745a458678c3ebd59357445ebd2c1a5db33c93bf1a33378eb36b2e8f6c"
+    },
+    {
+      "path": "config/tasks/16-loosen-screw-with-screwdriver.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/16-loosen-screw-with-screwdriver.js",
+      "sha256": "1a9ce0319e4f0bee8a822103c212c0142e96eb2bc6c8c24495ddb11e824181a8"
+    },
+    {
+      "path": "config/tasks/17-tighten-nut-with-wrench.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/17-tighten-nut-with-wrench.js",
+      "sha256": "2962bd49c96f9ba5be0b856db16d6ec410087f87261160d52b9f862bf47bf61f"
+    },
+    {
+      "path": "config/tasks/18-loosen-nut-with-wrench.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/18-loosen-nut-with-wrench.js",
+      "sha256": "1e2faf0fa64a7f204a092cddcb972f5063c8ced3e5433a88ca68b79f74585be6"
+    },
+    {
+      "path": "config/tasks/19-put-bottle-cap-onto-bottle.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/19-put-bottle-cap-onto-bottle.js",
+      "sha256": "fa18b08e443556a240d9e6439f20d34cab442320fa4510f2205e31b209a10348"
+    },
+    {
+      "path": "config/tasks/21-thread-nut-onto-screw.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/21-thread-nut-onto-screw.js",
+      "sha256": "f8e3269a3bd2f0c74742cce0c763be0442ac82404c10a2b66f3c5e2636cbab3a"
+    },
+    {
+      "path": "config/tasks/22-insert-key-into-lock.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/22-insert-key-into-lock.js",
+      "sha256": "511d562f8863aa80f98916547182ade0ddbc24b603aab64047fc0bb5f476b9a7"
+    },
+    {
+      "path": "config/tasks/23-plug-in-charger.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/23-plug-in-charger.js",
+      "sha256": "705cb9f1fbdf694c2fb3ab97d6cd17a91265dc005da2232c29eece73a1ccca09"
+    },
+    {
+      "path": "config/tasks/24-place-card-into-holder.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/24-place-card-into-holder.js",
+      "sha256": "034eb4a32b66e0b282fa4ff80d3260703b3b8a31861402ca9166eefe3cdce66c"
+    },
+    {
+      "path": "config/tasks/25-stack-cups.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/25-stack-cups.js",
+      "sha256": "59720d30be21bf18c7a554b629f21ead65a1bb936f47bbb21ca4f5ef1f94d7c3"
+    },
+    {
+      "path": "config/tasks/26-plug-in-ethernet.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/26-plug-in-ethernet.js",
+      "sha256": "dd7dfa6e069141a0b341e12f0b418834a5df716fdbe5a825e2cd1a758026ca98"
+    },
+    {
+      "path": "config/tasks/27-plug-in-usb.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/27-plug-in-usb.js",
+      "sha256": "fbb3a14af2111b3cc531a168c2a422b0bdc2f3ba33aef5d5ea5d20ac1c19e1e1"
+    },
+    {
+      "path": "config/tasks/28-turn-key-to-unlock-door.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/28-turn-key-to-unlock-door.js",
+      "sha256": "c2634485a5e6a5cec41fabce62efe040455234b7e08c955e3052641b0d902329"
+    },
+    {
+      "path": "config/tasks/29-turn-doorknob-to-open-door.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/29-turn-doorknob-to-open-door.js",
+      "sha256": "e66515a2d3bdee6b23b76ed460a9bad26ee68945ba62524a116d7c19c7ff4a01"
+    },
+    {
+      "path": "config/tasks/30-turn-door-handle-to-open-door.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/30-turn-door-handle-to-open-door.js",
+      "sha256": "c3d77f80c05041951b3e5992ca3abd3084f9af1000029840ef17841cceb8cbbf"
+    },
+    {
+      "path": "config/tasks/31-turn-dial-to-target-position.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/31-turn-dial-to-target-position.js",
+      "sha256": "738361a01829296f989b62a8d423a5e243e40bb4cc7865c48216b6c3dc4769fc"
+    },
+    {
+      "path": "config/tasks/32-install-light-bulb.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/32-install-light-bulb.js",
+      "sha256": "09e9c993be6db4ec2ccdf468fc7c20a009ee00c722b336140ab1a2a1a46d2957"
+    },
+    {
+      "path": "config/tasks/c01-assemble-toy-block.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/c01-assemble-toy-block.js",
+      "sha256": "6e4c04b8c22bb9fd7a2481342e129b2eea78d6b251cfa0a8760df601a9facb91"
+    },
+    {
+      "path": "config/tasks/c02-add-keys-to-keyring.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/c02-add-keys-to-keyring.js",
+      "sha256": "c6495b1cf294da29ec1a8c401839b6680727d01936c06d8eecd55f9ccbb01936"
+    },
+    {
+      "path": "config/tasks/c03-unlock-and-open-door.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/c03-unlock-and-open-door.js",
+      "sha256": "bb0038dd7eee7aafeba1f4777a3f80d2eab51a1353dbe1aaa0db02877533a7fa"
+    },
+    {
+      "path": "config/tasks/c04-sort-utensils.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/c04-sort-utensils.js",
+      "sha256": "8941b9f0ea04365007de31667171b9471d16ad8742f32f482ddc086ad1610835"
+    },
+    {
+      "path": "config/tasks/c05-sort-fasteners.js",
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/c05-sort-fasteners.js",
+      "sha256": "185d537dc2f59b436dfbc7c5cdbaf6b92213431c866f7efda2b2eddca7787f06"
+    }
+  ]
+}

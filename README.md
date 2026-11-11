@@ -2,7 +2,7 @@
 
 A sourced HTML guide and searchable task catalog for comparing proposed robotics benchmark tasks with published tasks. Includes the original six benchmark families, eight additional manipulation/assembly benchmarks, and three task catalogs selected from the CoRL 2026 accepted program.
 
-The November 11, 2026 snapshot contains 2,790 entries across 22 benchmark families. The expansion is described in [coverage.json](coverage.json), with task counts available through the guide and `/api/catalog`. Entries include source links, setup descriptions, available robot observations, grading summaries, exact task definitions or scoring checks, and official media where published. Some observations apply at benchmark or suite level. Each record labels that scope.
+The November 11, 2026 snapshot contains 2,900 entries across 23 benchmark families. The expansion is described in [coverage.json](coverage.json), with task counts available through the guide and `/api/catalog`. Entries include source links, setup descriptions, available robot observations, grading summaries, exact task definitions or scoring checks, and official media where published. Some observations apply at benchmark or suite level. Each record labels that scope.
 
 ## Open the guide
 
@@ -52,3 +52,9 @@ The added established suites are RLBench, ManiSkill, CALVIN, RoboTwin 2.0, NIST 
 The review covers the public accepted program. The follow-up expansion adds HARP-Bench (49 canonical tasks, with the 37-task paper subset marked), MESA/BiMESA (285 concrete evaluation definitions), RMMBench (113 current registered definitions), and H2RBench (all four tasks). RMMBench’s paper, episode presets and current registry use different inventories, as documented on its records. LiquidLab has one explicitly labeled benchmark-overview record based on its accepted abstract. The source reports 16 tasks, but their individual definitions were unavailable during ingestion. The total entry count includes this overview. The review ledger preserves paper links and ingestion status. The full-catalog expansion can be rebuilt from retained snapshots with `python3 fetch_corl_benchmarks.py`, then `python3 build_data.py` and `python3 build_report.py`. The two additional fetch scripts acquire the standard and physical benchmark source snapshots and emit their component catalogs.
 
 The follow-up catalogs can be regenerated with `fetch_mesa.py`, `fetch_harp.py`, and `fetch_mobile_transfer.py`, followed by `build_data.py` and `build_report.py`. LiquidLab’s overview is curated in `liquidlab_tasks.json` with retained accepted metadata and author publication pages.
+
+## ContactBench
+
+ContactBench adds all 36 published physical reference tasks (31 base and five long-horizon challenges), with official thumbnails, human demonstrations, variation metadata, and exact completion criteria. Six records identify the paper’s policy study; the remaining reference tasks have no paper policy experiment claimed. The separate simulation release contains 73 scripted variants over 22 base tasks and one scene-only setup, with source checkers and setup evidence. Website task numbers differ from paper/simulation numbering. These 110 entries do not represent 110 independent physical skills.
+
+Regenerate these catalogs with `python3 fetch_contactbench.py` and `python3 fetch_contactbench_sim.py`, then rebuild the data and guide. Sources and revision metadata are retained under `sources/contactbench/` and `sources/contactbench_sim/`. The guide includes the authors’ overview figure; task-level videos load from official hosts.

@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ContactBench 1.0: A Benchmark for Everyday Contact-Rich Robotic Manipulation</title>
+  <meta name="description" content="A benchmark of contact-rich manipulation skills, reference tasks, and 3D-printable assets.">
+  <meta name="referrer" content="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Lists config problems (typos, missing files); stays hidden when all is well -->
+  <div class="config-errors" id="config-errors" role="alert" hidden></div>
+
+  <!-- ============ Cover: title block + teaser ============ -->
+  <header class="cover">
+    <div class="cover-inner">
+      <h1><span class="title-name">ContactBench 1.0</span><span class="visually-hidden">: </span><span class="title-sub">A Benchmark for Everyday Contact&#8209;Rich Robotic Manipulation</span></h1>
+      <p class="authors">
+        <span><a href="https://jingyi-xiang.github.io/" target="_blank" rel="noopener">Jingyi Xiang</a><sup>1</sup></span>
+        <span><a href="https://michaelwyx.github.io/" target="_blank" rel="noopener">Yixuan Wang</a><sup>1</sup></span>
+        <span><a href="https://web.stanford.edu/~bohg/" target="_blank" rel="noopener">Jeannette Bohg</a><sup>2</sup></span>
+        <span><a href="https://siebelschool.illinois.edu/about/people/all-faculty/yuanwz" target="_blank" rel="noopener">Wenzhen Yuan</a><sup>1</sup></span>
+      </p>
+      <p class="affiliations">
+        <span><sup>1</sup>University of Illinois Urbana-Champaign</span>
+        <span><sup>2</sup>Stanford University</span>
+      </p>
+      <nav class="links" aria-label="Paper links">
+        <a class="link-btn" href="https://arxiv.org/abs/2610.24512" target="_blank" rel="noopener">
+          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13 8 3l5 10 M5 9h6"/></svg>arXiv</a>
+        <a class="link-btn" href="tasks.html">
+          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 2.5h4.5v4.5H2.5z M9 2.5h4.5v4.5H9z M2.5 9h4.5v4.5H2.5z M9 9h4.5v4.5H9z"/></svg>Benchmark tasks</a>
+        <a class="link-btn" href="assets.html">
+          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 14 4.75v6.5L8 14.5 2 11.25v-6.5z M2 4.75 8 8l6-3.25 M8 8v6.5"/></svg>3D-printable asset models</a>
+        <a class="link-btn" href="https://github.com/Michaelwyx/contactbench-sim" target="_blank" rel="noopener">
+          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4 2 8l3.5 4 M10.5 4 14 8l-3.5 4"/></svg>Simulation code</a>
+        <a class="link-btn" href="website_assets/pdf/benchmark-tasks.pdf" target="_blank" rel="noopener">
+          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.5h5.5L13 5v9.5H4z M9.5 1.5V5H13 M6 8.5h5 M6 11h5"/></svg>Benchmark tasks (PDF)</a>
+      </nav>
+    </div>
+    <!-- Each of the teaser's three parts links to its section. A zone's box is given in
+         fractions of the image (--x, --y: its top-left corner; --w, --h: its size);
+         measure them again if the image changes. On hover the part is outlined and grows
+         a little (js/main.js puts a copy of the image, cropped to the part, in each). -->
+    <figure class="teaser">
+      <img class="teaser-img" src="website_assets/images/teaser.png" width="2630" height="963"
+           alt="Overview of the benchmark: its 3D-printable assets for 36 contact-rich manipulation tasks (containers, utensils, a light bulb, a key and tool rack, a socket and plugs, a knob, fasteners, and tools) laid out on a table; a grid of scenes from the simulation suite; and frames of a robot gripper performing tasks, labeled &quot;Evaluate Robot Systems and Policies&quot;.">
+      <a class="teaser-zone" href="#benchmark" style="--x: 0; --y: 0; --w: .7038; --h: .5441" title="Go to Skills and Tasks" aria-label="Go to Contact-Rich Manipulation Skills and Tasks"></a>
+      <a class="teaser-zone" href="#simulation" style="--x: 0; --y: .5784; --w: .7038; --h: .4216" title="Go to Simulation" aria-label="Go to Simulation"></a>
+      <a class="teaser-zone" href="#experiments" style="--x: .7156; --y: 0; --w: .2844; --h: 1" title="Go to Experiments" aria-label="Go to Policy Benchmarking Experiments"></a>
+    </figure>
+  </header>
+
+  <div class="page">
+    <div class="page-inner">
+
+      <div class="layout">
+        <nav class="toc" id="toc" aria-label="Page contents"></nav>
+
+        <main class="content">
+
+          <!-- ============ 01 Overview ============ -->
+          <section class="page-section" id="overview" data-nav="overview" data-num="01" data-label="Overview">
+            <header class="psec-head">
+              <h2>Motivation and Overview</h2>
+              <p class="lead-question">What constitutes success in contact-rich manipulation?</p>
+              <p class="lead">While many prior works focus on insertion and peg-in-hole tasks or sustained-force tasks such as wiping and peeling, everyday object use spans a much broader range of contact behaviors. <strong>ContactBench 1.0</strong> offers a concrete, example-driven answer: we identify eight contact-rich skills drawn from routine human activity, instantiated through 36 reference tasks, more than 40 3D-printable assets, and their simulation counterparts. The assets are designed to produce realistic contact force profiles, be reproducible across popular 3D printers, and support controlled variations to evaluate a robot system's ability to adapt to novel task conditions that might or might not be obvious to the vision modality alone. Together, the benchmark gives the community common ground for comparing methods. Our benchmarking experiments show contact remains hard for current policies, with or without tactile sensing.</p>
+            </header>
+          </section>
+
+          <!-- ============ 02 Benchmark ============ -->
+          <section class="page-section" id="benchmark" data-nav="benchmark" data-num="02" data-label="Skills and Tasks">
+            <header class="psec-head">
+              <h2>Contact-Rich Manipulation Skills and Tasks</h2>
+              <p class="lead">Drawn from observations of routine human activities, we identify <strong>eight contact-rich manipulation skills</strong> that we believe are important for a general-purpose robot performing everyday tasks:</p>
+            </header>
+            <!-- js/benchmark.js puts one tile per skill (each playing the videos of its
+                 representative tasks, config/skills.js) before this paragraph and the
+                 Dexterous Long-Horizon Tasks band after it -->
+            <div id="skill-sections">
+              <p class="lead">ContactBench 1.0 includes <strong><span data-task-count>36</span> manipulation tasks</strong> to concretely evaluate a robot system's proficiency on the eight skills. Many tasks require more than one skill to complete. Due to the difficulty of many tasks for current robot systems, we record humans performing these tasks to demonstrate how they are supposed to completed. Below are some examples of the most challenging tasks that chain several skills together and demand more dexterity:</p>
+            </div>
+            <p class="section-cta"><a class="cta-btn" href="tasks.html">Browse all <span data-task-count>36</span> tasks<span class="cta-arrow" aria-hidden="true">→</span></a></p>
+          </section>
+
+          <!-- ============ 03 3D-printable Assets ============ -->
+          <section class="page-section" id="printable-assets" data-nav="printable-assets" data-num="03" data-label="Assets">
+            <header class="psec-head">
+              <h2>3D-Printable Assets and Task Variations</h2>
+              <p class="lead">ContactBench 1.0 includes <strong>more than 40 assets</strong> to support the included <span data-task-count>36</span> manipulation tasks. Every ContactBench asset can be 3D-printed in standard PLA filaments and assembled with off-the-shelf M3 screws, and many come in variants that change what the task demands. We follow the definitions in <a href="https://stargen-taxonomy.github.io/" target="_blank" rel="noopener">A Taxonomy for Evaluating Generalist Robot Manipulation Policies</a> and design assets to support the following types of generalization:</p>
+            </header>
+
+            <!-- Asset variations (js/variations.js): one band per type of variation, its
+                 heading and a still per example beside one player that runs through them.
+                 Each still's data-video is a file in data-dir; add or remove stills to change
+                 the clips. A still shows its clip's frame one second in, or the image in its
+                 data-thumb (a path from this page) if it has one; data-label puts a short
+                 label in its corner.
+                 data-dir holds 720 px tall copies of the videos in
+                 website_assets/videos/asset_variations/, and website_assets/images/stills/
+                 the stills (<video name>-t1.jpg, its frame one second in); after adding a
+                 still, node tools/check.mjs --make-media makes both.
+                 vb / b set the type's color (visual + behavioral / behavioral). -->
+            <div class="var-bands" data-dir="website_assets/videos/720p/asset_variations/">
+              <div class="var-band vb">
+                <div class="var-text">
+                  <div class="var-head">
+                    <h3 class="var-title">Visual + Behavioral Generalization</h3>
+                    <p class="var-sub">Variations to task-relevant objects that affect task behavior and can be observed by vision. Examples:</p>
+                  </div>
+                  <div class="var-stills">
+                    <button type="button" class="var-still" data-video="charging_blocks_final.mp4" data-thumb="website_assets/images/stills/asset_variations/charging_blocks_final-t1.jpg"></button>
+                    <button type="button" class="var-still" data-video="door_final.mp4" data-thumb="website_assets/images/stills/asset_variations/door_final-t1.jpg"></button>
+                    <button type="button" class="var-still" data-video="usb_final.mp4" data-thumb="website_assets/images/stills/asset_variations/usb_final-t1.jpg"></button>
+                  </div>
+                </div>
+                <div class="var-player"></div>
+              </div>
+              <div class="var-band b">
+                <div class="var-text">
+                  <div class="var-head">
+                    <h3 class="var-title">Behavioral Generalization</h3>
+                    <p class="var-sub">Variants that look the same to a camera but require different behavior. Examples:</p>
+                  </div>
+                  <div class="var-stills">
+                    <button type="button" class="var-still" data-video="bottles_final.mp4" data-thumb="website_assets/images/stills/asset_variations/bottles_final-t1.jpg"></button>
+                    <button type="button" class="var-still" data-video="door_handle_final.mp4" data-thumb="website_assets/images/stills/asset_variations/door_handle_final-t1.jpg"></button>
+                    <button type="button" class="var-still" data-video="lock_final.mp4" data-thumb="website_assets/images/stills/asset_variations/lock_final-t1.jpg"></button>
+                    <button type="button" class="var-still" data-video="insert_charger_bambu_p1s_comparison.mp4" data-thumb="website_assets/images/asset_variations/insert-charger-force-curves.png" data-label="Insertion force"></button>
+                    <button type="button" class="var-still" data-video="turn_door_handle_bambu_p1s_comparison.mp4" data-thumb="website_assets/images/asset_variations/turn-door-handle-force-curves.png" data-label="Rotation force"></button>
+                  </div>
+                </div>
+                <div class="var-player"></div>
+              </div>
+            </div>
+
+            <!-- The All assets page (assets.html, config/asset-page.js) -->
+            <p class="section-cta"><a class="cta-btn" href="assets.html">Browse 3D-printable asset models<span class="cta-arrow" aria-hidden="true">→</span></a></p>
+
+            <!-- The printer comparison (door handle and charger-outlet clips per printer,
+                 with the segmented control wired by showPrinter in js/main.js, and the force
+                 comparison plot) was removed for now; it is in git history at 41ef2ea. -->
+          </section>
+
+          <!-- ============ 04 Simulation ============ -->
+          <section class="page-section" id="simulation" data-nav="simulation" data-num="04" data-label="Simulation">
+            <header class="psec-head">
+              <h2>Simulation</h2>
+              <p class="lead">We provide simulated benchmark assets and task setups built with the <a href="https://developer.nvidia.com/newton-physics" target="_blank" rel="noopener">Newton physics engine</a>. The simulation suite reproduces each physical mechanism as an executable model with emphasis on force-realistic contact interactions and additionally includes teleoperation and GelSight Mini tactile simulation modules.</p>
+            </header>
+            <!-- The simulation videos (js/sim.js): a list on the left beside one player
+                 that runs through them. The videos are listed in config/sim.js. -->
+            <div id="sim-showcase"></div>
+
+            <!-- Two smaller players side by side (stacked under 860 px), each running
+                 through its videos (js/sim.js); the videos are under `modules` in config/sim.js. -->
+            <div class="sim-modules">
+              <div class="sim-module">
+                <h3 class="sim-module-title">Tunable Force Response For Simulated Assets</h3>
+                <div data-sim-module="force" style="--sim-ar: 1832 / 950"></div>
+              </div>
+              <div class="sim-module">
+                <h3 class="sim-module-title">GelSight Mini Tactile Simulation</h3>
+                <div data-sim-module="tactile"></div>
+              </div>
+            </div>
+
+            <p class="section-cta"><a class="cta-btn" href="https://github.com/Michaelwyx/contactbench-sim" target="_blank" rel="noopener">Simulation code<span class="cta-arrow" aria-hidden="true">→</span></a></p>
+          </section>
+
+          <!-- ============ 05 Real-World Setup ============ -->
+          <section class="page-section" id="real-world-setup" data-nav="real-world-setup" data-num="05" data-label="Real-World Setup">
+            <header class="psec-head">
+              <h2>Setting Up Benchmark Tasks in the Real World</h2>
+            </header>
+            <!-- One card per step, in order. A step's data-clip is a video in data-dir on
+                 .setup-steps; js/main.js loops it, muted, while it's on screen, with a
+                 pause button. A step can show an image instead (an <img> in its .setup-media).
+                 data-dir holds 540 px tall copies of the videos in
+                 website_assets/videos/real_world_setup/ (node tools/check.mjs --make-media). -->
+            <ol class="setup-steps" data-dir="website_assets/videos/540p/real_world_setup/">
+              <li class="setup-step">
+                <div class="setup-media">
+                  <img src="website_assets/videos/real_world_setup/board_with_dim.png" width="1041" height="835" loading="lazy"
+                       alt="A 24 by 24 inch board covered edge to edge in strips of hook-side Velcro, with a fiducial marker in its top-right corner.">
+                </div>
+                <div class="setup-text">
+                  <span class="setup-num">Step 1</span>
+                  <p>Cover the target workspace with hook-side Velcro.</p>
+                </div>
+              </li>
+              <li class="setup-step">
+                <div class="setup-media" data-clip="apply_velcro_to_asset.mp4"></div>
+                <div class="setup-text">
+                  <span class="setup-num">Step 2</span>
+                  <p>Apply loop-side Velcro to the asset object.</p>
+                </div>
+              </li>
+              <li class="setup-step">
+                <div class="setup-media" data-clip="dial_render.mp4"></div>
+                <div class="setup-text">
+                  <span class="setup-num">Step 3</span>
+                  <p>Systematically sample initial conditions and render them onto the Velcro-covered workspace.</p>
+                </div>
+              </li>
+              <li class="setup-step">
+                <div class="setup-media" data-clip="align_dial_with_render.mp4"></div>
+                <div class="setup-text">
+                  <span class="setup-num">Step 4</span>
+                  <p>Align the physical asset object with the render. The asset will be firmly attached to the workspace through Velcro.</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+
+          <!-- ============ 06 Experiments ============ -->
+          <section class="page-section" id="experiments" data-nav="experiments" data-num="06" data-label="Experiments">
+            <!-- "Main Results" in the contents bar: it has no subsection, so it links to the start of Experiments -->
+            <header class="psec-head" data-nav="main-results" data-label="Main Results">
+              <h2>Policy Benchmarking Experiments</h2>
+              <p class="lead">We collect data with a customized <a href="https://umi-gripper.github.io/" target="_blank" rel="noopener">UMI</a> hand-held gripper and evaluate two vision-only policy learning methods, <a href="https://diffusion-policy.cs.columbia.edu/" target="_blank" rel="noopener">Diffusion Policy</a> (DP) and <a href="https://github.com/Physical-Intelligence/openpi" target="_blank" rel="noopener">π0.5</a>, and their representative visual-tactile variants, <a href="https://reactive-diffusion-policy.github.io/" target="_blank" rel="noopener">Reactive Diffusion Policy</a> (RDP) and <a href="https://ftp1-policy.github.io/" target="_blank" rel="noopener">Foundation Tactile Policy</a> (FTP-1) on six tasks from our benchmark: </p>
+              <!-- <ol class="lead">
+                <li>How do the selected vision-based policy learning methods perform on contact-rich tasks from the benchmark, and what challenges do they face?</li>
+                <li>Do tactile-augmented variants of these policies address the challenges?</li>
+                <li>How do the evaluated policies generalize under behavioral perturbations, where task-relevant conditions change in ways that are difficult to perceive visually?</li>
+              </ol> -->
+            </header>
+
+            <!-- Human demonstrations carousel: tasks, videos, descriptions, and the caption under each video are in config/rollouts.js -->
+            <figure class="demos-fig">
+              <div class="demos" id="demo-carousel" role="region" aria-roledescription="carousel" aria-label="Human demonstrations"></div>
+            </figure>
+
+            <!-- <p class="lead">For each task, we collected 100 demonstrations using a customized <a href="https://umi-gripper.github.io/" target="_blank" rel="noopener">UMI</a> hand-held gripper (wrist videos were captured with <a href="https://www.realsenseai.com/products/depth-camera-d435i/" target="_blank" rel="noopener">RealSense D435i</a> and gripper trajectories were captured with <a href="https://www.vive.com/us/accessory/tracker3/" target="_blank" rel="noopener">HTC VIVE</a> + <a href="https://github.com/valvesoftware/openvr" target="_blank" rel="noopener">OpenVR</a>) and evaluated 30 rollouts for each policy. Each task was set up as described in <span class="ph">[TODO]</span>, and the same set of task object and robot initial conditions were shared across all policies for fair comparison. Tactile signals were captured with <a href="https://www.gelsight.com/product/gelsight-mini-system/" target="_blank" rel="noopener">GelSight Mini</a> except for tasks <em>retrieve single utensil from bin</em> and <em>pick up card from platform</em>, where the GelSight Mini form factor and coverage were not suitable for the tasks. For those two tasks, the standard compliant Fin-Ray gripper fingers were used, and no tactile signal was captured.</p> -->
+            <!-- <p class="lead">For each task, we collected 100 demonstrations using a customized <a href="https://umi-gripper.github.io/" target="_blank" rel="noopener">UMI</a> hand-held gripper and evaluated 30 rollouts for each policy. Each task was set up as described in <span class="ph">[TODO]</span>, and the same set of task object and robot initial conditions were shared across all policies for fair comparison. Tactile signals were not captured for tasks <em>retrieve single utensil from bin</em> and <em>pick up card from platform</em> since GelSight Mini does not have the suitable form factor or converage, hence only Diffusion Policy and π0.5 were evaluated on them. </p> -->
+            <!-- <p class="lead">For each task, we collected 100 demonstrations using a customized <a href="https://umi-gripper.github.io/" target="_blank" rel="noopener">UMI</a> hand-held gripper and evaluated 30 rollouts for each policy. Each task was set up as described in <span class="ph">[TODO]</span>, and the same set of task object and robot initial conditions were shared across all policies for fair comparison.</p> -->
+            <!-- <p class="lead">We focus on evaluating a policy's ability to learn contact-rich motor skills. Therefore, we perform full finetune on π0.5 and FTP-1 on each of the six tasks and effectively treating them as single-task specialist policies, leaving evaluation of their language understanding capabilities in the contact-rich setting to future work.</p> -->
+
+            <!-- Quantitative results: no heading -->
+            <section class="subsection" id="quantitative-results" aria-label="Quantitative results">
+              <!-- Results tables: one panel per metric, titled by its h4; js/rollouts.js adds the Previous / Next buttons and dots.
+                   ↑ higher is better, ↓ lower is better. Bold: best per task. -->
+              <figure class="results-fig rp-fig">
+                <div class="rp" id="results-panels" role="region" aria-roledescription="carousel" aria-label="Policy performance tables">
+                  <div class="rp-view">
+                    <div class="rp-track">
+
+                      <div class="rp-panel is-current" role="group" aria-roledescription="slide" aria-labelledby="rp-title-1">
+                        <p class="rp-desc">While the policies were able to make progress toward solving each task, the success rate remains at 56.7% for the best performing policy-task combination, with <b>turn doorknob to open door</b> being the exception where all policies achieved near 100% success rate.</p>
+                        <h4 class="rp-title" id="rp-title-1">Success rate and average task progress</h4>
+                        <div class="rp-scroll" tabindex="0" role="region" aria-labelledby="rp-title-1">
+                          <table class="rtable">
+                            <thead>
+                              <tr>
+                                <th scope="col" rowspan="2">Task</th>
+                                <th scope="colgroup" colspan="2" class="rt-grp">DP</th>
+                                <th scope="colgroup" colspan="2" class="rt-grp">RDP</th>
+                                <th scope="colgroup" colspan="2" class="rt-grp">π0.5</th>
+                                <th scope="colgroup" colspan="2" class="rt-grp">FTP-1</th>
+                              </tr>
+                              <tr>
+                                <th scope="col" class="g">SR <span class="rt-dir" aria-hidden="true">↑</span></th><th scope="col">Prog <span class="rt-dir" aria-hidden="true">↑</span></th>
+                                <th scope="col" class="g">SR <span class="rt-dir" aria-hidden="true">↑</span></th><th scope="col">Prog <span class="rt-dir" aria-hidden="true">↑</span></th>
+                                <th scope="col" class="g">SR <span class="rt-dir" aria-hidden="true">↑</span></th><th scope="col">Prog <span class="rt-dir" aria-hidden="true">↑</span></th>
+                                <th scope="col" class="g">SR <span class="rt-dir" aria-hidden="true">↑</span></th><th scope="col">Prog <span class="rt-dir" aria-hidden="true">↑</span></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th scope="row">Thread nut onto screw</th>
+                                <td class="g">8/30</td><td>0.39</td>
+                                <td class="g">0/30</td><td>0.24</td>
+                                <td class="g"><strong>14/30</strong></td><td><strong>0.66</strong></td>
+                                <td class="g"><strong>14/30</strong></td><td>0.63</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">Tighten screw with Allen key</th>
+                                <td class="g">0/30</td><td>0.58</td>
+                                <td class="g">0/30</td><td>0.36</td>
+                                <td class="g"><strong>17/30</strong></td><td><strong>0.82</strong></td>
+                                <td class="g">3/30</td><td>0.45</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">Plug in charger</th>
+                                <td class="g">2/30</td><td>0.32</td>
+                                <td class="g">4/30</td><td>0.34</td>
+                                <td class="g"><strong>6/30</strong></td><td><strong>0.44</strong></td>
+                                <td class="g">4/30</td><td>0.35</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">Turn doorknob to open door</th>
+                                <td class="g"><strong>30/30</strong></td><td><strong>1.00</strong></td>
+                                <td class="g">29/30</td><td>0.98</td>
+                                <td class="g"><strong>30/30</strong></td><td><strong>1.00</strong></td>
+                                <td class="g">29/30</td><td>0.98</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">Retrieve single utensil from bin</th>
+                                <td class="g">0/30</td><td>0.50</td>
+                                <td class="g ne" colspan="2">not evaluated</td>
+                                <td class="g"><strong>16/30</strong></td><td><strong>0.70</strong></td>
+                                <td class="g ne" colspan="2">not evaluated</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">Pick up card from platform</th>
+                                <td class="g"><strong>14/30</strong></td><td><strong>0.74</strong></td>
+                                <td class="g ne" colspan="2">not evaluated</td>
+                                <td class="g">2/30</td><td>0.28</td>
+                                <td class="g ne" colspan="2">not evaluated</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <p class="rp-note">SR: number of successful episodes out of 30. Prog: average fraction of task checkpoints reached per episode (0–1).</p>
+                      </div>
+
+                      <div class="rp-panel" role="group" aria-roledescription="slide" aria-labelledby="rp-title-2" inert>
+                        <p class="rp-desc">The trained policies tend to apply excessive forces when completing the tasks.</p>
+                        <h4 class="rp-title" id="rp-title-2">% of episodes with peak wrist force &gt; 40&nbsp;N <span class="rt-dir" aria-hidden="true">↓</span></h4>
+                        <div class="rp-scroll" tabindex="0" role="region" aria-labelledby="rp-title-2">
+                          <table class="rtable">
+                            <thead>
+                              <tr>
+                                <th scope="col">Task</th>
+                                <th scope="col">DP</th>
+                                <th scope="col">RDP</th>
+                                <th scope="col">π0.5</th>
+                                <th scope="col">FTP-1</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr><th scope="row">Thread nut onto screw</th><td>33%</td><td>27%</td><td>27%</td><td>83%</td></tr>
+                              <tr><th scope="row">Tighten screw with Allen key</th><td>10%</td><td>0%</td><td>7%</td><td>3%</td></tr>
+                              <tr><th scope="row">Plug in charger</th><td>80%</td><td>83%</td><td>40%</td><td>40%</td></tr>
+                              <tr><th scope="row">Turn doorknob to open door</th><td>10%</td><td>63%</td><td>7%</td><td>43%</td></tr>
+                              <tr><th scope="row">Retrieve single utensil from bin</th><td>97%</td><td class="ne">not evaluated</td><td>47%</td><td class="ne">not evaluated</td></tr>
+                              <tr><th scope="row">Pick up card from platform</th><td>57%</td><td class="ne">not evaluated</td><td>60%</td><td class="ne">not evaluated</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div class="rp-panel" role="group" aria-roledescription="slide" aria-labelledby="rp-title-3" inert>
+                        <p class="rp-desc">Even if the trained policies are able to complete the tasks, they sometimes take much longer and require more attempts compared to human demonstrations.</p>
+                        <h4 class="rp-title" id="rp-title-3">Average completion time of successful episodes <span class="rt-dir" aria-hidden="true">↓</span></h4>
+                        <div class="rp-scroll" tabindex="0" role="region" aria-labelledby="rp-title-3">
+                          <table class="rtable">
+                            <thead>
+                              <tr>
+                                <th scope="col">Task</th>
+                                <th scope="col" class="rt-human">Human<br>demos</th>
+                                <th scope="col" class="rt-sep">DP</th>
+                                <th scope="col">RDP</th>
+                                <th scope="col">π0.5</th>
+                                <th scope="col">FTP-1</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr><th scope="row">Thread nut onto screw</th><td class="rt-human">17.5 s</td><td class="rt-sep">1.72×</td><td>–</td><td>1.22×</td><td>1.32×</td></tr>
+                              <tr><th scope="row">Tighten screw with Allen key</th><td class="rt-human">19.7 s</td><td class="rt-sep">–</td><td>–</td><td>1.50×</td><td>0.84×<sup>†</sup></td></tr>
+                              <tr><th scope="row">Plug in charger</th><td class="rt-human">7.3 s</td><td class="rt-sep">1.06×<sup>†</sup></td><td>1.15×<sup>†</sup></td><td>0.89×</td><td>0.95×<sup>†</sup></td></tr>
+                              <tr><th scope="row">Turn doorknob to open door</th><td class="rt-human">7.6 s</td><td class="rt-sep">0.92×</td><td>0.91×</td><td>0.87×</td><td>0.89×</td></tr>
+                              <tr><th scope="row">Retrieve single utensil from bin</th><td class="rt-human">11.8 s</td><td class="rt-sep">–</td><td class="ne">not evaluated</td><td>2.05×</td><td class="ne">not evaluated</td></tr>
+                              <tr><th scope="row">Pick up card from platform</th><td class="rt-human">7.5 s</td><td class="rt-sep">1.11×</td><td class="ne">not evaluated</td><td>0.93×<sup>†</sup></td><td class="ne">not evaluated</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <p class="rp-note">For the policies, shown as a multiple of the time taken by human demonstrations. <sup>†</sup>Fewer than 5 successful episodes. A dash (–) marks no successful episodes.</p>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </figure>
+            </section>
+
+            <!-- A subsection with data-nav and data-label is listed under Experiments in the contents bar. -->
+            <section class="subsection" id="vision-challenges" data-nav="vision-challenges" data-label="Vision-Only Policies" aria-labelledby="vision-challenges-title">
+              <div class="sec-head">
+                <h3 id="vision-challenges-title">What are challenging for vision-only policies on the selected tasks?</h3>
+              </div>
+              <!-- <p class="lead">The rollouts we examined suggest that the low performance of vision-based policies across different tasks traces to a small number of recurring challenges, which are all tied to the policies being unable to perceive or react to contact events. We describe these challenges below, with examples of how each manifests across DP and π0.5 rollouts on the six tasks.</p> -->
+              <!-- <p class="lead">The rollouts we examined suggest that the low performance of vision-based policies across different tasks traces to a small number of recurring challenges, which are all tied to the policies being unable to perceive or react to contact events:</p> -->
+
+              <!-- The challenges as cards, numbered like the table's rows, in one labeled box
+                   per category. 1–4, the ways the policies fail to perceive and react to
+                   contact, share a box tinted in --contact, the color of that phrase in its
+                   label; Lack of memory sits in a dashed box (is-apart). -->
+              <div class="challenge-cards">
+                <div class="challenge-group is-contact">
+                  <p class="challenge-group-label" id="challenge-group-contact">We find vision-only policies struggle to <strong class="contact-term">perceive and react to contact events</strong>:</p>
+                  <ol aria-labelledby="challenge-group-contact">
+                    <li class="challenge-card">
+                      <span class="challenge-num" aria-hidden="true">1</span>
+                      <span class="challenge-card-name">Establishing and maintaining contact</span>
+                      <span class="challenge-card-def">The policies often miss or lose contact between the fingers, the object, and the environment.</span>
+                    </li>
+                    <li class="challenge-card">
+                      <span class="challenge-num" aria-hidden="true">2</span>
+                      <span class="challenge-card-name">Precise alignment</span>
+                      <span class="challenge-card-def">The policies don't make the small, visually subtle corrections needed to align an in-hand object with its target.</span>
+                    </li>
+                    <li class="challenge-card">
+                      <span class="challenge-num" aria-hidden="true">3</span>
+                      <span class="challenge-card-name">Avoiding unsafe forceful interactions</span>
+                      <span class="challenge-card-def">The policies often collide hard with task objects and the environment, which can fail the task or be unsafe.</span>
+                    </li>
+                    <li class="challenge-card">
+                      <span class="challenge-num" aria-hidden="true">4</span>
+                      <span class="challenge-card-name">Recognizing task-critical states</span>
+                      <span class="challenge-card-def">The policies can't tell some task-critical states apart by sight, such as how many chopsticks are grasped.</span>
+                    </li>
+                  </ol>
+                </div>
+                <div class="challenge-group is-apart">
+                  <p class="challenge-group-label" id="challenge-group-apart">Not specific to contact&#8209;rich manipulation</p>
+                  <ol start="5" aria-labelledby="challenge-group-apart">
+                    <li class="challenge-card">
+                      <span class="challenge-num" aria-hidden="true">5</span>
+                      <span class="challenge-card-name">Lack of memory</span>
+                      <span class="challenge-card-def">The policies repeat finished stages that still look unfinished, like tightening an already-tight screw.</span>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+
+              <!-- A table of the challenges: one row per .challenge block, one column per task.
+                   js/rollouts.js puts the task names over the columns and fills each row's
+                   .challenge-body with the clips listed under its id in challenges in
+                   config/rollouts.js. still-top keeps the top of a row's stills in view (where
+                   the force reading is); is-apart sets a row off with a dashed rule and a grey
+                   number. -->
+              <div class="challenges">
+                <div class="challenge" id="challenge-contact">
+                  <h4 class="challenge-title"><span class="challenge-num" aria-hidden="true">1</span>Establishing and maintaining contact</h4>
+                  <div class="challenge-body"></div>
+                </div>
+                <div class="challenge" id="challenge-alignment">
+                  <h4 class="challenge-title"><span class="challenge-num" aria-hidden="true">2</span>Precise alignment</h4>
+                  <div class="challenge-body"></div>
+                </div>
+                <div class="challenge still-top" id="challenge-force">
+                  <h4 class="challenge-title"><span class="challenge-num" aria-hidden="true">3</span>Avoiding unsafe forceful interactions</h4>
+                  <div class="challenge-body"></div>
+                </div>
+                <div class="challenge" id="challenge-states">
+                  <h4 class="challenge-title"><span class="challenge-num" aria-hidden="true">4</span>Recognizing task-critical states</h4>
+                  <div class="challenge-body"></div>
+                </div>
+                <div class="challenge is-apart" id="challenge-memory">
+                  <h4 class="challenge-title"><span class="challenge-num" aria-hidden="true">5</span>Lack of memory</h4>
+                  <div class="challenge-body"></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="subsection is-tactile" id="visual-tactile" data-nav="visual-tactile" data-label="Visual-Tactile Policies" aria-labelledby="visual-tactile-title">
+              <div class="sec-head">
+                <h3 id="visual-tactile-title">Do visual-tactile policies address the challenges above?</h3>
+              </div>
+              <p class="lead">Although intuitively, effective integration of force and/or tactile sensing can address the challenges above, <b>we did not find RDP and FTP-1 to meaningfully improve on their vision-only base policies in success rate, task progress, interaction force, or completion time</b> (as shown in the <a href="#task-progress">quantitative results</a> earlier). Across their rollouts, we observed three aspects that limited the benefit of the added tactile input:</p>
+              <!-- The three findings as full-width cards, one under another, each with its
+                   number (red, is-tactile), name, sentence, and failure clips. Each
+                   .failure-clips (js/rollouts.js) is a grid of the same cells as the table
+                   above, one per entry listed under its id in tactileFailures in
+                   config/rollouts.js -->
+              <ol class="tactile-cards">
+                <li class="tactile-card">
+                  <h4 class="tactile-card-title"><span class="challenge-num" aria-hidden="true">1</span>Sensor coverage limited the tactile information available to the policy</h4>
+                  <p class="tactile-card-text">Because GelSight Mini only captures contact inside the gripper fingertip, it cannot perceive and avoid collisions happening to other parts of the gripper finger.</p>
+                  <div class="failure-clips" id="tactile-coverage" data-tag="Same failure as vision-only">
+                    <!-- A .clip-note here becomes a tile, the size of a still, after the grid's clips -->
+                    <p class="clip-note">Although vision-only policies performed poorly on <em>retrieve single utensil from bin</em> and <em>pick up card from platform</em>, we could not collect demonstrations or train visual-tactile policies for them because GelSight Mini's fingertip-only coverage and bulky form factor made it unsuitable for either task.</p>
+                  </div>
+                </li>
+                <li class="tactile-card">
+                  <h4 class="tactile-card-title"><span class="challenge-num" aria-hidden="true">2</span>Tactile-guided behaviors weren't learned</h4>
+                  <p class="tactile-card-text">Despite the availability of tactile feedback, we find visual-tactile policies to fail in the same ways as the vision-only policies.</p>
+                  <div class="failure-clips" id="tactile-same-ways" data-tag="Same failure as vision-only"></div>
+                </li>
+                <li class="tactile-card">
+                  <h4 class="tactile-card-title"><span class="challenge-num" aria-hidden="true">3</span>Policies acted on incidental tactile signals rather than task-relevant ones</h4>
+                  <p class="tactile-card-text">In <em>tighten screw with Allen key</em>, policies frequently terminate the tightening motion after the Allen key slips in hand, even though in-hand slip can occur naturally as the task progresses and does not reliably indicate that the screw has been fully tightened.</p>
+                  <div class="failure-clips" id="tactile-incidental" data-tag="New failure mode"></div>
+                </li>
+              </ol>
+            </section>
+
+            <!-- Behavioral generalization (paper Section V-D). Full title in the paper: "How do the
+                 evaluated policies generalize when task-relevant conditions change in ways that
+                 are difficult to perceive visually?" -->
+            <section class="subsection" id="behavioral-generalization" data-nav="behavioral-generalization" data-label="Generalization" aria-labelledby="behavioral-generalization-title">
+              <div class="sec-head">
+                <h3 id="behavioral-generalization-title">How well do policies generalize to task changes that are hard to perceive visually?</h3>
+              </div>
+              <p class="lead">We conduct two behavioral generalization case studies on <em>turn doorknob to open door</em>, a task where all four policies achieve near-perfect success rates. We alter the task conditions in two ways:</p>
+              <!-- One part per variation, headed like the asset variation bands:
+                   b / vb set the colour of the rule
+                   (behavioral / visual + behavioral). Each part: its title, a figure
+                   or table, the findings, the example clips
+                   (.gen-clips: one per method, base on top and variation below,
+                   played only when pressed). -->
+              <div class="gen-parts">
+                <div class="gen-part b">
+                  <div class="var-head">
+                    <h4 class="var-title">Behavioral Variation: Required Rotation Amount to Unlock Door</h4>
+                  </div>
+                  <p>While the policies were trained on a door that requires 60° rotation to unlock, we test them on two additional doors that require 72° and 80° rotation to unlock. The three doors are visually indistinguishable.</p>
+                  <p>We find that RDP retains significantly higher success rates on the 72° and 80° variants compared to the other three policies. After investigating how much each policy actually rotates the door under the three task conditions, we find that RDP is the only policy that demonstrated adaptation to the changing task demand:</p>
+                  <figure class="gen-fig">
+                    <div class="gen-fig-scroll" tabindex="0" role="region" aria-label="Success rate and knob rotation figure"><img src="website_assets/images/generalization_experiments/doorknob_success_wrist_paper.png" alt="Left: bar chart of the success rate of DP, RDP, π0.5, and FTP-1 on the 60°, 72°, and 80° doors. Right: box plots of how far each policy turned the knob on each door, with the rotation needed to unlock it marked by a red dashed line. Only RDP's turns grow with the required rotation."></div>
+                    <figcaption>Left: success rate on each door (30 episodes per policy and door). Right: how far each policy turned the knob in each episode.</figcaption>
+                  </figure>
+                  <p>This shows that <b>tactile-augmented policies have the potential to achieve better behavioral generalization even when they offer no gain for in-distribution task settings.</b> However, the extent to which tactile sensing helps also depends on how tactile signals are integrated into the policy.</p>
+                  <div class="gen-clips">
+                    <div class="gen-rows" aria-hidden="true"><span>60° rotation<br><small>(train)</small></span><span>80° rotation</span></div>
+                    <figure class="gen-clip" style="--m: var(--m-dp)">
+                      <figcaption><b>DP</b> <span>vision</span></figcaption>
+                      <video src="website_assets/videos/generalization_experiments/scene_base_vs_80deg_trial12_dp.mp4" poster="website_assets/images/generalization_experiments/scene_base_vs_80deg_trial12_dp.jpg" controls preload="metadata" playsinline aria-label="DP: 60° rotation (train) above, 80° rotation below"></video>
+                    </figure>
+                    <figure class="gen-clip" style="--m: var(--m-rdp)">
+                      <figcaption><b>RDP</b> <span>vision + tactile</span></figcaption>
+                      <video src="website_assets/videos/generalization_experiments/scene_base_vs_80deg_trial12_rdp.mp4" poster="website_assets/images/generalization_experiments/scene_base_vs_80deg_trial12_rdp.jpg" controls preload="metadata" playsinline aria-label="RDP: 60° rotation (train) above, 80° rotation below"></video>
+                    </figure>
+                    <figure class="gen-clip" style="--m: var(--m-pi05)">
+                      <figcaption><b>π0.5</b> <span>vision</span></figcaption>
+                      <video src="website_assets/videos/generalization_experiments/scene_base_vs_80deg_trial12_pi05.mp4" poster="website_assets/images/generalization_experiments/scene_base_vs_80deg_trial12_pi05.jpg" controls preload="metadata" playsinline aria-label="π0.5: 60° rotation (train) above, 80° rotation below"></video>
+                    </figure>
+                    <figure class="gen-clip" style="--m: var(--m-ftp1)">
+                      <figcaption><b>FTP-1</b> <span>vision + tactile</span></figcaption>
+                      <video src="website_assets/videos/generalization_experiments/scene_base_vs_80deg_trial12_ftp1.mp4" poster="website_assets/images/generalization_experiments/scene_base_vs_80deg_trial12_ftp1.jpg" controls preload="metadata" playsinline aria-label="FTP-1: 60° rotation (train) above, 80° rotation below"></video>
+                    </figure>
+                    <div class="gen-rows is-repeat" aria-hidden="true"><span>60° rotation<br><small>(train)</small></span><span>80° rotation</span></div>
+                  </div>
+                </div>
+                <div class="gen-part vb">
+                  <div class="var-head">
+                    <h4 class="var-title">Visual + Behavioral Variation: Smaller Doorknob Diameter</h4>
+                  </div>
+                  <p>While the policies were trained on a door with a 60 mm diameter doorknob, we test them on a door with a smaller 55 mm diameter doorknob. Although this change can be perceived visually, the visual differences are subtle.</p>
+                  <p>Across 10 rollouts per policy (we did not run the full 30-rollout protocol since the failure was immediate and consistent across every rollout of every policy), all four policies achieved 0% success rate, and they were nowhere near establishing a stable grasp and completing the task:</p>
+                  <div class="gen-clips">
+                    <div class="gen-rows" aria-hidden="true"><span>60 mm doorknob<br><small>(train)</small></span><span>55 mm doorknob</span></div>
+                    <figure class="gen-clip" style="--m: var(--m-dp)">
+                      <figcaption><b>DP</b> <span>vision</span></figcaption>
+                      <video src="website_assets/videos/generalization_experiments/wrist_base_vs_smaller_knob_trial6_dp.mp4" poster="website_assets/images/generalization_experiments/wrist_base_vs_smaller_knob_trial6_dp.jpg" controls preload="metadata" playsinline aria-label="DP: 60 mm doorknob (train) above, 55 mm doorknob below"></video>
+                    </figure>
+                    <figure class="gen-clip" style="--m: var(--m-rdp)">
+                      <figcaption><b>RDP</b> <span>vision + tactile</span></figcaption>
+                      <video src="website_assets/videos/generalization_experiments/wrist_base_vs_smaller_knob_trial6_rdp.mp4" poster="website_assets/images/generalization_experiments/wrist_base_vs_smaller_knob_trial6_rdp.jpg" controls preload="metadata" playsinline aria-label="RDP: 60 mm doorknob (train) above, 55 mm doorknob below"></video>
+                    </figure>
+                    <figure class="gen-clip" style="--m: var(--m-pi05)">
+                      <figcaption><b>π0.5</b> <span>vision</span></figcaption>
+                      <video src="website_assets/videos/generalization_experiments/wrist_base_vs_smaller_knob_trial6_pi05.mp4" poster="website_assets/images/generalization_experiments/wrist_base_vs_smaller_knob_trial6_pi05.jpg" controls preload="metadata" playsinline aria-label="π0.5: 60 mm doorknob (train) above, 55 mm doorknob below"></video>
+                    </figure>
+                    <figure class="gen-clip" style="--m: var(--m-ftp1)">
+                      <figcaption><b>FTP-1</b> <span>vision + tactile</span></figcaption>
+                      <video src="website_assets/videos/generalization_experiments/wrist_base_vs_smaller_knob_trial6_ftp1.mp4" poster="website_assets/images/generalization_experiments/wrist_base_vs_smaller_knob_trial6_ftp1.jpg" controls preload="metadata" playsinline aria-label="FTP-1: 60 mm doorknob (train) above, 55 mm doorknob below"></video>
+                    </figure>
+                    <div class="gen-rows is-repeat" aria-hidden="true"><span>60 mm doorknob<br><small>(train)</small></span><span>55 mm doorknob</span></div>
+                  </div>
+                  <p>We further investigate the gripping width each policy reached when attempting to grasp the doorknob. None of the policies attempted to close the gripper more for the smaller doorknob, indicating that they <b>failed to learn a key aspect of grasping: adapting to the object’s size to achieve stable contact.</b></p>
+                  <figure class="gen-table">
+                    <figcaption>Gripping width each policy reached when attempting to grasp the doorknob (mm)</figcaption>
+                    <div class="rp-scroll" tabindex="0" role="region" aria-label="Gripping width each policy reached when attempting to grasp the doorknob">
+                      <table class="rtable">
+                        <thead>
+                          <tr>
+                            <th scope="col">Knob</th>
+                            <th scope="col">DP</th>
+                            <th scope="col">RDP</th>
+                            <th scope="col">π0.5</th>
+                            <th scope="col">FTP-1</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">60 mm (train)</th>
+                            <td>58.9 ± 0.12</td><td>59.0 ± 0.13</td><td>58.8 ± 0.13</td><td>59.2 ± 0.14</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">55 mm</th>
+                            <td>59.0 ± 0.11</td><td>59.0 ± 0.11</td><td>58.7 ± 0.11</td><td>58.9 ± 0.14</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </figure>
+                </div>
+              </div>
+            </section>
+
+            <!-- Policy rollout viewer: methods, tasks, and episodes are in config/rollouts.js -->
+            <section class="subsection" id="policy-rollouts" data-nav="policy-rollouts" data-label="All Policy Rollouts" aria-labelledby="policy-rollouts-title">
+              <div class="sec-head">
+                <h3 id="policy-rollouts-title">All Policy Rollouts</h3>
+              </div>
+              <div class="rollouts" id="rollout-viewer"></div>
+            </section>
+          </section>
+
+          <!-- ============ BibTeX ============ -->
+          <section class="page-section" id="citation" data-nav="citation" data-num="" data-label="BibTeX">
+            <header class="psec-head">
+              <h2>BibTeX</h2>
+            </header>
+            <div class="bib">
+              <button type="button" class="bib-copy" data-copy="bibtex">Copy</button>
+<pre id="bibtex">@article{xiang2026contactbench,
+  title   = {{ContactBench} 1.0: A Benchmark for Everyday Contact-Rich Robotic Manipulation},
+  author  = {Xiang, Jingyi and Wang, Yixuan and Bohg, Jeannette and Yuan, Wenzhen},
+  journal = {arXiv preprint arXiv:2610.24512},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2610.24512}
+}</pre>
+            </div>
+          </section>
+
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <!-- Order matters: registry, then config, then the renderers -->
+  <script src="js/registry.js"></script>
+  <script src="config/skills.js"></script>
+  <script src="config/asset-page.js"></script>
+  <script src="config/tasks/index.js"></script>
+  <script src="config/rollouts.js"></script>
+  <script src="config/sim.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/model-view.js"></script>
+  <script src="js/asset-cards.js"></script>
+  <script src="js/model-viewer.js"></script>
+  <script src="js/rollouts.js"></script>
+  <script src="js/reel.js"></script>
+  <script src="js/benchmark.js"></script>
+  <script src="js/sim.js"></script>
+  <script src="js/variations.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

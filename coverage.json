@@ -132,6 +132,12 @@
       "scope": "Four human-to-robot transfer tasks",
       "source": "https://davidz2851.github.io/h2rbench.github.io/",
       "notes": "Task prompts and completion stages are retained. Simulation\u2013real agreement metrics assess evaluator validity separately from task completion."
+    },
+    {
+      "family": "ContactBench",
+      "scope": "36 reference tasks plus separately labeled simulation release rows",
+      "source": "https://jingyi-xiang.github.io/contactbench/",
+      "notes": "The published catalog has 31 base tasks and 5 long-horizon challenges. Only six selected tasks have paper policy experiments. Simulation variants and its scene-only setup are separate entries. Website IDs and paper task numbers differ. External task thumbnails and human demonstrations load on demand."
     }
   ],
   "corl_review": {

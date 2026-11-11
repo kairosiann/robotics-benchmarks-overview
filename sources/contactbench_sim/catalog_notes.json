@@ -1,0 +1,21 @@
+{
+  "source_revision": "f51f6aab24ac72c8b4435643efe058c07d73c735",
+  "total_rows": 74,
+  "runnable_scripted_variants": 73,
+  "base_tasks_with_scripted_reference": 22,
+  "scene_only_task": 2,
+  "scope_notes": [
+    "All rows come from APPENDIX in the official registry.",
+    "Variants change object geometry, spring force, rotation amount or starting state and share Table C1 base tasks.",
+    "Task 2 is a scene with criterion-state readouts but no scripted policy or automatic verdict.",
+    "Other tasks and arbitrary --set option combinations are outside the fixed74-row registry.",
+    "No GPU rollout was run by this catalog ingestion.",
+    "The physical website's file IDs differ from the paper's Table C1 numbering.",
+    "Simulation photos are source-released overview or variant examples, not generated task demonstrations."
+  ],
+  "documentation_source": "https://github.com/Michaelwyx/contactbench-sim/blob/f51f6aab24ac72c8b4435643efe058c07d73c735/docs/tasks.md",
+  "record_counts": {
+    "Scene-only release": 1,
+    "Scripted simulation variants": 73
+  }
+}

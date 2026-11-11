@@ -211,6 +211,7 @@
       textBlock(task.grading_summary || (task.goal ? "See the published definition below." : "")),
       scope && task.grading_summary ? node("div", { className: "explorer-scope", textContent: scope }) : null,
       sourceLink(task.evaluation_source, "Evaluation protocol"));
+    if (task.evaluation_protocol) fields.append(textBlock(task.evaluation_protocol));
     for (const note of [task.source_note, task.catalog_scope].filter(Boolean)) {
       fields.append(node("p", { className: "explorer-scope", textContent: note }));
     }

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>All tasks · ContactBench 1.0: A Benchmark for Everyday Contact-Rich Robotic Manipulation</title>
+  <meta name="description" content="Every task in the contact-rich manipulation benchmark, with search and skill filters.">
+  <meta name="referrer" content="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Lists config problems (typos, missing files); stays hidden when all is well -->
+  <div class="config-errors" id="config-errors" role="alert" hidden></div>
+
+  <!-- Pinned to the top once the back link below (#page-back) scrolls out of view (js/all-tasks.js) -->
+  <div class="scroll-bar" id="scroll-bar">
+    <div class="scroll-bar-inner">
+      <a class="all-tasks-btn" href="index.html#benchmark"><span aria-hidden="true">←</span>Project page</a>
+      <span class="scroll-bar-title">All tasks</span>
+    </div>
+  </div>
+
+  <div class="page">
+    <main class="page-inner subpage">
+
+      <header class="sub-head">
+        <a class="all-tasks-btn" id="page-back" href="index.html#benchmark"><span aria-hidden="true">←</span>Project page</a>
+        <h1>All tasks</h1>
+        <!-- <p class="lead">Every task in the benchmark. Search by name, object, or variation, or filter by the skills a task uses.</p> -->
+      </header>
+
+      <!-- Filled in by js/all-tasks.js from config/ -->
+      <div class="filters" role="search">
+        <div class="search">
+          <svg class="search-ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3.5 3.5"/></svg>
+          <label class="visually-hidden" for="task-search">Search tasks</label>
+          <input type="search" id="task-search" placeholder="Search tasks" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="ro-row">
+          <span class="ro-k" id="skill-filter-label">Skills</span>
+          <div class="ro-opts" id="skill-filter" role="group" aria-labelledby="skill-filter-label"></div>
+        </div>
+        <p class="results" id="results" aria-live="polite"></p>
+      </div>
+
+      <div class="card-grid is-wide" id="all-tasks"></div>
+      <div class="empty-state" id="no-results" hidden>
+        <p>No tasks match these filters.</p>
+        <button type="button" class="ro-btn" data-clear>Clear search and filters</button>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <!-- Order matters: registry, then config, then the renderers -->
+  <script src="js/registry.js"></script>
+  <script src="config/skills.js"></script>
+  <script src="config/asset-page.js"></script>
+  <script src="config/tasks/index.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/model-view.js"></script>
+  <script src="js/asset-cards.js"></script>
+  <script src="js/model-viewer.js"></script>
+  <script src="js/all-tasks.js"></script>
+</body>
+</html>

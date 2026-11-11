@@ -19,7 +19,7 @@ SEARCH_PARAMETERS = {"q", "mode", "family", "benchmark", "suite", "setting", "li
 MODES = {"related", "all", "exact"}
 PREVIEW_FIELDS = (
     "record_kind", "reported_task_count",
-    "source_note", "catalog_scope",
+    "source_note", "catalog_scope", "evaluation_protocol",
     "id", "name", "title", "family", "benchmark", "suite", "split", "setting", "description", "instruction",
     "setup_summary", "setup_source", "observation", "observation_scope", "observation_source",
     "grading_summary", "grading_scope", "grading_evidence", "evaluation_source", "source",

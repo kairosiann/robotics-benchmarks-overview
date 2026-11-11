@@ -19,5 +19,6 @@
   "DC-plug": "https://robocurve.org/datacenterbench/media/setups/DC-plug-top.jpg",
   "DC-unplug": "https://robocurve.org/datacenterbench/media/setups/DC-unplug-top.jpg",
   "DC-join": "https://robocurve.org/datacenterbench/media/setups/DC-join-top.jpg",
-  "DC-clip": "https://robocurve.org/datacenterbench/media/setups/DC-clip-top.jpg"
+  "DC-clip": "https://robocurve.org/datacenterbench/media/setups/DC-clip-top.jpg",
+  "contactbench": "https://jingyi-xiang.github.io/contactbench/website_assets/images/teaser.png"
 }
