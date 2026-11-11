@@ -6,6 +6,10 @@ The November 11, 2026 snapshot contains 2,900 entries across 23 benchmark famili
 
 ## Open the guide
 
+The GitHub Pages deployment publishes the guide at https://kairosiann.github.io/robotics-benchmarks-overview/ after the repository is public and the **Publish benchmark website** workflow succeeds. The workflow runs on pushes to `main` and can be started manually from the Actions tab. While the repository is private it skips deployment. After changing visibility, run the workflow manually or push a new commit. If Pages needs manual configuration, select **GitHub Actions** under **Settings → Pages → Build and deployment**.
+
+The website exposes `catalog.json` for task discovery, `data/tasks/…json` for individual records (linked by `record_url` in the catalog), `tasks.json` for the complete dataset, and `model-guide.md` for agent usage. The Python API remains separately runnable. Build the static package locally with `python3 build_report.py` followed by `python3 build_site.py`; the generated `_site/` folder can be served by any static web host.
+
 Download and open [robotics-benchmark-guide.html](robotics-benchmark-guide.html) in a browser. Its text, task catalog, search, comparison interface, and embedded figures work offline. Optional official videos and additional photos load from their original hosts.
 
 Search a keyword or proposed task description, filter by benchmark family or version, and pin up to three published tasks beside a proposal. Search uses controlled synonyms and lexical matching. Match evidence identifies the action, object, outcome, or keyword and the field where it appeared. Scores order retrieval results and do not measure robot capability or semantic equivalence.
