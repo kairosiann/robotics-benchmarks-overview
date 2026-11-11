@@ -1,0 +1,21 @@
+{
+  "canonical_tasks": 49,
+  "compatibility_aliases": 32,
+  "paper_task_conditions": 37,
+  "evaluation_rows": 3403,
+  "paper_condition_counts": {
+    "cueing": 7,
+    "contribution": 10,
+    "interruption": 10,
+    "copresence": 10
+  },
+  "source_revision": "ba50829e877a7098d609fd611625884a70d00877",
+  "caveats": [
+    "Evaluation seeds were selected for privileged-expert solvability.",
+    "The remaining registered tasks are nine no-human bases and three factory extras.",
+    "Media show condition examples and retain benchmark scope.",
+    "The paper's 10 cm proximity convention is distinct from recorded collisions and task completion.",
+    "Safety checks are sampled. Brief contacts between checks may be missed.",
+    "Pour Water grades mug pose and tilt, not measured liquid transfer."
+  ]
+}

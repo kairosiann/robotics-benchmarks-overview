@@ -18,7 +18,7 @@ FIELDS = (
     ("Grading", 4, ("grading_summary", "goal", "predicates")),
     ("Robot input", 2, ("observation",)),
     ("Grader evidence", 2, ("grading_evidence",)),
-    ("Catalog metadata", 2, ("id", "benchmark", "family", "suite", "activity", "setting", "split")),
+    ("Catalog metadata", 2, ("id", "benchmark", "family", "suite", "activity", "setting", "split", "aliases", "record_kind")),
 )
 
 

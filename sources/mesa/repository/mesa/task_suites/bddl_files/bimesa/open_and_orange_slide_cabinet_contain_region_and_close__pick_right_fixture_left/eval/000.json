@@ -1,0 +1,427 @@
+{
+    "problem_name": "mimiclabs_lab1_tabletop_manipulation",
+    "fixtures": {
+        "table": [
+            "table"
+        ],
+        "slide_cabinet_106": [
+            "articulated_object"
+        ]
+    },
+    "regions": {
+        "table_object_0_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    0.0,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_peach_ood_1_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_brussel_sprout_ai_2_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_kiwi_3_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_pot_0_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_baking_sheet_ai_1_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_articulated_object_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    -0.15,
+                    -0.4,
+                    -0.05,
+                    0.0
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                0.0,
+                0.0
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "pot_0_on": {
+            "target": "pot_0",
+            "ranges": [],
+            "extra": [],
+            "yaw_rotation": [
+                0,
+                0
+            ],
+            "rgba": [
+                0,
+                0,
+                1,
+                0
+            ]
+        },
+        "baking_sheet_ai_1_on": {
+            "target": "baking_sheet_ai_1",
+            "ranges": [],
+            "extra": [],
+            "yaw_rotation": [
+                0,
+                0
+            ],
+            "rgba": [
+                0,
+                0,
+                1,
+                0
+            ]
+        },
+        "articulated_object_contain_region": {
+            "target": "articulated_object",
+            "ranges": [],
+            "extra": [],
+            "yaw_rotation": [
+                0,
+                0
+            ],
+            "rgba": [
+                0,
+                0,
+                1,
+                0
+            ]
+        }
+    },
+    "objects": {
+        "robocasa_orange_1": [
+            "object_0"
+        ],
+        "robocasa_peach_5": [
+            "peach_ood_1"
+        ],
+        "robocasa_ai_brussel_sprout_1": [
+            "brussel_sprout_ai_2"
+        ],
+        "robocasa_kiwi_0": [
+            "kiwi_3"
+        ],
+        "robocasa_ai_pot_0": [
+            "pot_0"
+        ],
+        "robocasa_ai_baking_sheet_1": [
+            "baking_sheet_ai_1"
+        ]
+    },
+    "textures": {},
+    "camera": {
+        "rightshoulder": {
+            "r": 1.2,
+            "theta": 1.0471975511965976,
+            "phi": 1.5707963267948966,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        },
+        "leftshoulder": {
+            "r": 1.2,
+            "theta": 1.0471975511965976,
+            "phi": -1.5707963267948966,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        },
+        "midshoulder": {
+            "r": 1.2,
+            "theta": 1.0471975511965976,
+            "phi": 0.0,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        },
+        "egocentric": {
+            "r": 1.3,
+            "theta": 0.39479111969976155,
+            "phi": 0.0,
+            "tilt": 0.0,
+            "pan": 0.0,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        }
+    },
+    "lighting": {},
+    "styles": {},
+    "scene_properties": {},
+    "initial_state": [
+        [
+            "on",
+            "object_0",
+            "table_object_0_init_region"
+        ],
+        [
+            "on",
+            "peach_ood_1",
+            "table_peach_ood_1_init_region"
+        ],
+        [
+            "on",
+            "brussel_sprout_ai_2",
+            "table_brussel_sprout_ai_2_init_region"
+        ],
+        [
+            "on",
+            "kiwi_3",
+            "table_kiwi_3_init_region"
+        ],
+        [
+            "on",
+            "pot_0",
+            "table_pot_0_init_region"
+        ],
+        [
+            "on",
+            "baking_sheet_ai_1",
+            "table_baking_sheet_ai_1_init_region"
+        ],
+        [
+            "on",
+            "articulated_object",
+            "table_articulated_object_init_region"
+        ]
+    ],
+    "goal_state": [
+        "and",
+        [
+            "close",
+            "articulated_object"
+        ],
+        [
+            "in",
+            "object_0",
+            "articulated_object_contain_region"
+        ]
+    ],
+    "distractor_goal_specs": [
+        [
+            "on",
+            "object_0",
+            "pot_0"
+        ],
+        [
+            "on",
+            "object_0",
+            "baking_sheet_ai_1"
+        ],
+        [
+            "in",
+            "peach_ood_1",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "peach_ood_1",
+            "pot_0"
+        ],
+        [
+            "on",
+            "peach_ood_1",
+            "baking_sheet_ai_1"
+        ],
+        [
+            "in",
+            "brussel_sprout_ai_2",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "brussel_sprout_ai_2",
+            "pot_0"
+        ],
+        [
+            "on",
+            "brussel_sprout_ai_2",
+            "baking_sheet_ai_1"
+        ],
+        [
+            "in",
+            "kiwi_3",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "kiwi_3",
+            "pot_0"
+        ],
+        [
+            "on",
+            "kiwi_3",
+            "baking_sheet_ai_1"
+        ],
+        [
+            "in",
+            "pot_0",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "pot_0",
+            "pot_0"
+        ],
+        [
+            "on",
+            "pot_0",
+            "baking_sheet_ai_1"
+        ]
+    ],
+    "demonstration_states": [
+        [
+            "open",
+            "articulated_object"
+        ],
+        [
+            "grasp",
+            "object_0"
+        ],
+        [
+            "in",
+            "object_0",
+            "articulated_object_contain_region"
+        ],
+        [
+            "close",
+            "articulated_object"
+        ]
+    ],
+    "language_instruction": [
+        "open",
+        "the",
+        "slide",
+        "cabinet",
+        "and",
+        "put",
+        "the",
+        "orange",
+        "in",
+        "it",
+        "and",
+        "close",
+        "it"
+    ]
+}

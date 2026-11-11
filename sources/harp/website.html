@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HARP-Bench</title>
+<meta name="description" content="A simulated benchmark of 37 human-present manipulation tasks across four conditions of human involvement, with scripted experts, safety-aware evaluation, and VLA baselines. CoRL 2026.">
+<meta property="og:title" content="HARP-Bench">
+<meta property="og:description" content="37 human-present manipulation tasks across cueing, contribution, interruption, and co-presence. CoRL 2026.">
+<meta property="og:image" content="media/demo_poster.jpg?v=20261109-grid-opening">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<style>
+:root{
+  --ground:#f4f6f8;      /* cool paper */
+  --ground-2:#e9edf1;    /* recessed panel */
+  --panel:#ffffff;
+  --ink:#131a22;
+  --ink-2:#4c5966;
+  --line:#d3dae1;
+  --robot:#1d6f8c;       /* robot: deep teal */
+  --robot-soft:#d8ecf2;
+  --human:#c46a1f;       /* human: warm ochre */
+  --human-soft:#f6e4d2;
+  /* four conditions of human involvement */
+  --c-cue:#8a5cc4;   --c-cue-soft:#ebe2f7;
+  --c-con:#2a8a5c;   --c-con-soft:#dcf1e6;
+  --c-int:#c4512f;   --c-int-soft:#f8e0d7;
+  --c-cop:#2b6cb0;   --c-cop-soft:#dce8f7;
+  --best:#cfeed9;  --best-ink:#175c36;
+  --second:#f7ecc2; --second-ink:#6b5300;
+  --shadow:0 1px 2px rgba(19,26,34,.06),0 8px 24px rgba(19,26,34,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0f151b; --ground-2:#151d25; --panel:#1a232d;
+    --ink:#e7edf3; --ink-2:#a3b0bd; --line:#2b3743;
+    --robot:#5cc0dd; --robot-soft:#153845;
+    --human:#e8a25a; --human-soft:#3d2a16;
+    --c-cue:#b79aea; --c-cue-soft:#2b2140;
+    --c-con:#6fd39e; --c-con-soft:#153826;
+    --c-int:#f08a68; --c-int-soft:#3e2118;
+    --c-cop:#7fb0ee; --c-cop-soft:#182b44;
+    --best:#1e4a31; --best-ink:#b6f0cc;
+    --second:#4a3d0f; --second-ink:#f5df8f;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0f151b; --ground-2:#151d25; --panel:#1a232d;
+  --ink:#e7edf3; --ink-2:#a3b0bd; --line:#2b3743;
+  --robot:#5cc0dd; --robot-soft:#153845;
+  --human:#e8a25a; --human-soft:#3d2a16;
+  --c-cue:#b79aea; --c-cue-soft:#2b2140;
+  --c-con:#6fd39e; --c-con-soft:#153826;
+  --c-int:#f08a68; --c-int-soft:#3e2118;
+  --c-cop:#7fb0ee; --c-cop-soft:#182b44;
+  --best:#1e4a31; --best-ink:#b6f0cc;
+  --second:#4a3d0f; --second-ink:#f5df8f;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--robot);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--robot);outline-offset:3px}
+img,video{max-width:100%;display:block}
+
+.wrap{max-width:1120px;margin:0 auto;padding-inline:24px}
+.measure{max-width:68ch}
+h1,h2,h3{font-family:"Bricolage Grotesque","Archivo","Helvetica Neue",Arial,sans-serif;text-wrap:balance;margin:0}
+h2{font-size:clamp(26px,3vw,34px);font-weight:800;letter-spacing:-.015em;line-height:1.1}
+h3{font-size:18px;font-weight:600;line-height:1.3}
+.eyebrow{
+  font-family:"Bricolage Grotesque",sans-serif;font-size:12.5px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);
+}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+section{padding-block:64px 8px}
+section > .wrap > .eyebrow{margin-bottom:10px}
+section > .wrap > h2{margin-bottom:12px}
+.lede{color:var(--ink-2);font-size:17px;margin:0 0 28px}
+
+/* ---------- header ---------- */
+header{padding-block:56px 24px;text-align:center}
+.conf{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:13px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:var(--panel);
+}
+.conf b{color:var(--human);font-weight:800}
+h1{
+  font-size:clamp(40px,7vw,78px);font-weight:800;letter-spacing:-.03em;line-height:.98;
+  margin:22px auto 14px;max-width:16ch;
+}
+h1 .hr{color:var(--robot)}
+.tagline{font-size:clamp(18px,2.2vw,22px);color:var(--ink-2);max-width:40ch;margin:0 auto;font-style:italic}
+.authors{margin:22px auto 0;max-width:84ch}
+.authors p{margin:0;display:flex;flex-wrap:wrap;justify-content:center}
+.authors span{white-space:nowrap}
+.authors sup{font-size:.68em;margin-left:1px}
+.authors .names{gap:4px 18px;font-size:17px;color:var(--ink)}
+.authors .affils{gap:2px 16px;margin-top:10px;font-size:14.5px;color:var(--ink-2)}
+.authors .equal{margin-top:6px;font-size:13px;color:var(--ink-2)}
+.btns{margin-top:26px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:15px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);box-shadow:var(--shadow);
+}
+.btn:hover{text-decoration:none;border-color:var(--robot)}
+.btn.primary{background:var(--robot);border-color:var(--robot);color:#fff}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn svg{width:16px;height:16px;fill:currentColor}
+
+.hero{margin:40px auto 0;max-width:980px}
+.hero video{width:100%;aspect-ratio:16/9;border-radius:16px;border:1px solid var(--line);background:#000;box-shadow:var(--shadow)}
+.hero-cap{color:var(--ink-2);font-size:14px;margin:10px 0 0;text-align:center}
+
+/* ---------- numbers ---------- */
+.numbers{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:40px;
+}
+.num{padding:18px 8px;text-align:center}
+.num b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:36px;font-weight:800;letter-spacing:-.02em;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+.num span{display:block;margin-top:6px;font-size:13.5px;color:var(--ink-2)}
+
+/* ---------- abstract ---------- */
+.abstract p{margin:0 0 1em}
+.abstract p:first-of-type::first-letter{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:2.6em;line-height:.8;float:left;padding:6px 8px 0 0;color:var(--robot)}
+
+/* ---------- conditions ---------- */
+.conds{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.cond{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  border-top:5px solid var(--c);display:flex;flex-direction:column;
+}
+.cond video{width:100%;aspect-ratio:16/9;object-fit:cover;background:#000}
+.cond .body{padding:14px 16px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cond .role{font-family:"Bricolage Grotesque",sans-serif;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--c)}
+.cond h3{font-size:20px;font-weight:800;letter-spacing:-.01em}
+.cond p{margin:0;font-size:15px;color:var(--ink-2)}
+.cond p.example{font-size:13.5px;color:var(--ink-2);opacity:.85}
+.cue{--c:var(--c-cue);--c-soft:var(--c-cue-soft)}
+.con{--c:var(--c-con);--c-soft:var(--c-con-soft)}
+.int{--c:var(--c-int);--c-soft:var(--c-int-soft)}
+.cop{--c:var(--c-cop);--c-soft:var(--c-cop-soft)}
+
+/* ---------- results ---------- */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:var(--shadow)}
+table.results{border-collapse:collapse;width:100%;min-width:760px;font-size:14.5px}
+.results th,.results td{padding:7px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.results th:first-child,.results td:first-child{text-align:left}
+.results thead th{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:13px;background:var(--ground-2);position:sticky;top:0}
+.results thead th small{display:block;font-weight:400;color:var(--ink-2);font-size:11.5px}
+.results td{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:13.5px}
+.results td:first-child{font-family:"Source Serif 4",serif;font-size:14.5px}
+.results tr.group td{
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--c);background:var(--c-soft);padding-block:6px;text-align:left;
+}
+.results tr.avg td{font-weight:600;background:var(--ground-2)}
+.results tr.avg td:first-child{font-style:italic}
+.results tr.all td{font-weight:600;border-top:2px solid var(--ink);font-size:14px}
+.results td.best{background:var(--best);color:var(--best-ink);font-weight:600}
+.results td.second{background:var(--second);color:var(--second-ink)}
+.results td.exp{color:var(--ink-2)}
+.results-summary th,.results-summary td{padding-block:12px}
+.results-summary tbody th{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:14.5px}
+.results-summary .category-name{color:var(--c)}
+.results-summary tbody th small{margin-left:6px;font-size:12px;font-weight:400;color:var(--ink-2)}
+.results-summary tr.all th{border-top:2px solid var(--ink);font-weight:800}
+.task-results{margin-top:20px;border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:var(--shadow);overflow:hidden}
+.task-results summary{cursor:pointer;padding:16px 18px;font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:600}
+.task-results summary span{font-weight:400;color:var(--ink-2)}
+.task-results[open] summary{border-bottom:1px solid var(--line)}
+.task-results .tablewrap{margin:16px;box-shadow:none}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin:12px 0 0;font-size:13.5px;color:var(--ink-2)}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:6px;border:1px solid var(--line)}
+.findings{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:26px}
+.finding{border-left:3px solid var(--robot);padding:2px 0 2px 14px}
+.finding b{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;display:block;margin-bottom:4px}
+.finding p{margin:0;font-size:15px;color:var(--ink-2)}
+
+/* ---------- baselines ---------- */
+.baselines{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.bl{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.bl h3{font-size:17px;font-weight:800;letter-spacing:-.01em}
+.bl .kind{font-family:"Bricolage Grotesque",sans-serif;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:2px 0 8px}
+.bl p{margin:0;font-size:14.5px;color:var(--ink-2)}
+
+.section-intro{margin:0;color:var(--ink-2);font-size:15px}
+.facts{display:grid;gap:0;border-top:1px solid var(--line)}
+.fact{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.fact b{font-family:"Bricolage Grotesque",sans-serif;font-size:26px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--human)}
+.fact span{font-size:15px;color:var(--ink-2)}
+.fact span code{font-family:"JetBrains Mono",monospace;font-size:12.5px}
+
+/* ---------- code ---------- */
+pre{
+  background:var(--ground-2);border:1px solid var(--line);border-radius:12px;padding:18px 20px;
+  overflow-x:auto;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:13.5px;line-height:1.6;margin:0;color:var(--ink);
+}
+pre .c{color:var(--ink-2)}
+code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.92em}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.twocol>div{min-width:0}
+.twocol h3{margin-bottom:10px}
+
+footer{margin-top:72px;padding-block:28px 48px;border-top:1px solid var(--line);color:var(--ink-2);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:760px){
+  header{padding-block:40px 20px}
+  section{padding-block:48px 8px}
+}
+
+.interactive-disclosure{border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:var(--shadow);overflow:hidden}
+.interactive-disclosure summary{cursor:pointer;padding:18px 22px;font-family:"Bricolage Grotesque",sans-serif;font-weight:600}
+.interactive-disclosure .interactive-body{padding:0 18px 18px}
+.interactive-frame{display:block;width:100%;height:820px;border:0;border-radius:8px;background:#10191c}
+#interactive-demo .wrap{max-width:1120px}
+.safety-video{margin:24px 0 12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#10191f}
+.safety-video video{width:100%;height:auto}
+.safety-note{color:var(--ink-2);font-size:14px;margin:0 0 24px}
+.results.safety{min-width:640px}
+.results.safety tr.exprow td{color:var(--ink-2)}
+.safety-h{margin:8px 0 6px}
+.safety-gap{margin-top:24px}
+.safety-pending{border:1px dashed var(--line);border-radius:12px;padding:22px 24px;background:var(--panel);color:var(--ink-2)}
+.safety-pending h3{color:var(--ink);margin-bottom:6px}
+.safety-pending p{margin:0;font-size:15px}
+.citation-disclosure{max-width:1120px;margin:42px auto 0;padding:0 24px}
+.citation-disclosure summary{cursor:pointer;color:var(--ink-2);font-size:14px}
+.citation-disclosure pre{margin-top:12px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="conf"><b>CoRL 2026</b> Conference on Robot Learning</span>
+    <h1>HARP<span class="hr">-Bench</span></h1>
+    <p class="tagline">Robot manipulation around active humans.</p>
+    <div class="authors">
+      <p class="names"><span>Qinhong Zhou<sup>1,*</sup></span> <span>Yun Zong<sup>2,*</sup></span> <span>Chunru Lin<sup>1</sup></span> <span>Diyi Hu<sup>4</sup></span> <span>Shivraj Singh Bhatti<sup>1</sup></span> <span>Hongxin Zhang<sup>1</sup></span> <span>Lin Qiu<sup>3</sup></span> <span>Hanqing Zeng<sup>3</sup></span> <span>Chuang Gan<sup>1</sup></span></p>
+      <p class="affils"><span><sup>1</sup>University of Massachusetts Amherst</span> <span><sup>2</sup>University of Minnesota Twin Cities</span> <span><sup>3</sup>Meta</span> <span><sup>4</sup>Independent Researcher</span></p>
+      <p class="equal"><sup>*</sup>Equal contribution</p>
+    </div>
+
+    <div class="btns">
+      <a class="btn" href="https://arxiv.org/abs/2611.11123">
+        <svg viewBox="0 0 24 24"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v1.6H8V13zm0 3.6h8v1.6H8v-1.6z"/></svg>arXiv</a>
+      <a class="btn" href="https://github.com/UMass-Embodied-AGI/harp">
+        <svg viewBox="0 0 24 24"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18a10.9 10.9 0 0 1 5.76 0c2.2-1.49 3.16-1.18 3.16-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>Code</a>
+      <a class="btn" href="https://huggingface.co/datasets/zhouqh/harp-bench-assets">Asset pack</a>
+      <a class="btn" href="#interactive-demo">Interactive demo</a>
+      <a class="btn" href="#results">Results</a>
+    </div>
+
+    <div class="hero">
+      <video src="media/harp_bench_demo.mp4?v=20261109-grid-opening" poster="media/demo_poster.jpg?v=20261109-grid-opening" controls playsinline preload="metadata" aria-label="HARP-Bench project demo with English narration"><track kind="captions" src="media/harp_bench_narration_en.vtt?v=20261106-37tasks" srclang="en" label="English"></video>
+    </div>
+
+  </div>
+</header>
+
+<section id="conditions">
+  <div class="wrap">
+    <p class="eyebrow">Four conditions of human involvement</p>
+    <h2>Four ways humans shape the task</h2>
+    <div class="conds">
+      <div class="cond cop">
+        <video data-src="media/copresence_loop.mp4?v=20261006-copresence-trim" poster="media/copresence.jpg?v=20261006-copresence-trim" controls muted loop playsinline preload="none" aria-label="Co-presence: Layla in pink and teal wipes the table with her palm resting on a sponge while the robot handles a cube beside her"></video>
+        <div class="body"><h3>Co-presence</h3><p>The robot works beside a person.</p><p class="example">Example shown: the person wipes the table while the robot puts a cube in the cabinet.</p></div>
+      </div>
+      <div class="cond con">
+        <video data-src="media/contribution_action_loop.mp4?v=20261006-reviewed-exr" poster="media/contribution.jpg?v=20261006-reviewed-exr" controls muted loop playsinline preload="none" aria-label="Contribution: the person places one piece of bread in the basket, and the robot adds the other"></video>
+        <div class="body"><h3>Contribution</h3><p>Human and robot share the work.</p><p class="example">Example shown: the person places one piece of bread, and the robot adds the other.</p></div>
+      </div>
+      <div class="cond int">
+        <video data-src="media/interruption_loop.mp4?v=20261006-reviewed-exr" poster="media/interruption.jpg?v=20261006-reviewed-exr" controls muted loop playsinline preload="none" aria-label="Interruption: standing Morten inspects a shoe and returns it; the robot waits, then resumes placing it in the shoebox"></video>
+        <div class="body"><h3>Interruption</h3><p>The robot waits, then resumes.</p><p class="example">Example shown: the person inspects a shoe; the robot waits, then puts it in the box.</p></div>
+      </div>
+      <div class="cond cue">
+        <video data-src="media/cueing_loop.mp4?v=20261006-reviewed-exr" poster="media/cueing.jpg?v=20261006-reviewed-exr" controls muted loop playsinline preload="none" aria-label="Cueing: a person drinks from a cup, then the robot pours water into it"></video>
+        <div class="body"><h3>Cueing</h3><p>Human action sets the goal.</p><p class="example">Example shown: after the person drinks, the robot pours water into their cup.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="wrap">
+    <p class="eyebrow">Results</p>
+    <h2>37-task evaluation</h2>
+    <p class="lede measure">Success rate (%) on the evaluation seeds of all 37 tasks (up to 100 seeds per task). The full-state expert reads the human's intent from simulator state; the no-intent expert runs the same script without it.</p>
+    <div class="tablewrap">
+    <table class="results results-summary" aria-label="Success rate by category and across all tasks">
+      <thead><tr>
+        <th scope="col">Category</th>
+        <th scope="col">Expert<small>full state</small></th>
+        <th scope="col">Expert<small>no intent</small></th>
+        <th scope="col">ACT</th><th scope="col">DP</th><th scope="col">&pi;<sub>0</sub></th><th scope="col">SmolVLA</th>
+      </tr></thead>
+      <tbody>
+        <tr class="cue"><th scope="row"><span class="category-name">Cueing</span> <small>7 tasks</small></th><td class="exp">99.0</td><td class="exp">38.3</td><td>11.3</td><td class="best">16.9</td><td class="second">16.0</td><td>11.5</td></tr>
+        <tr class="con"><th scope="row"><span class="category-name">Contribution</span> <small>10 tasks</small></th><td class="exp">98.8</td><td class="exp">53.8</td><td>3.7</td><td class="second">4.2</td><td class="best">16.5</td><td>1.2</td></tr>
+        <tr class="int"><th scope="row"><span class="category-name">Interruption</span> <small>10 tasks</small></th><td class="exp">99.8</td><td class="exp">0.3</td><td class="second">8.8</td><td>5.7</td><td class="best">9.4</td><td>2.9</td></tr>
+        <tr class="cop"><th scope="row"><span class="category-name">Co-presence</span> <small>10 tasks</small></th><td class="exp">98.8</td><td class="exp">97.4</td><td class="second">18.1</td><td>13.0</td><td class="best">32.6</td><td>9.1</td></tr>
+        <tr class="all"><th scope="row">All tasks (37)</th><td class="exp">99.1</td><td class="exp">48.2</td><td class="second">10.4</td><td>9.4</td><td class="best">18.8</td><td>5.7</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="legend"><span><i style="background:var(--best)"></i>best learned policy</span><span><i style="background:var(--second)"></i>second best</span><span>Experts are shown for reference and are not ranked. Averages are unweighted means over tasks.</span></p>
+
+    <details class="task-results" id="task-results">
+      <summary>Per-task results <span>(37 tasks)</span></summary>
+    <div class="tablewrap">
+    <table class="results" aria-label="Success rate for each of the 37 tasks">
+      <thead><tr>
+        <th scope="col">Task</th>
+        <th scope="col">Expert<small>full state</small></th>
+        <th scope="col">Expert<small>no intent</small></th>
+        <th scope="col">ACT</th><th scope="col">DP</th><th scope="col">&pi;<sub>0</sub></th><th scope="col">SmolVLA</th>
+      </tr></thead>
+      <tbody>
+        <tr class="group cue"><td colspan="7">Cueing (7)</td></tr>
+        <tr><td>Deliver to Human</td><td class="exp">100.0</td><td class="exp">30.2</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
+        <tr><td>Oil Bottle Recovery</td><td class="exp">95.1</td><td class="exp">1.2</td><td>0.0</td><td class="best">8.6</td><td class="second">7.4</td><td class="best">8.6</td></tr>
+        <tr><td>Open Microwave</td><td class="exp">100.0</td><td class="exp">100.0</td><td>20.0</td><td>37.0</td><td class="second">39.0</td><td class="best">45.0</td></tr>
+        <tr><td>Pour Water</td><td class="exp">99.0</td><td class="exp">90.8</td><td>59.2</td><td class="best">70.4</td><td class="second">63.3</td><td>26.5</td></tr>
+        <tr><td>Stamp Documents</td><td class="exp">100.0</td><td class="exp">14.4</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
+        <tr><td>Take from Human</td><td class="exp">98.9</td><td class="exp">31.6</td><td>0.0</td><td class="best">2.1</td><td class="best">2.1</td><td>0.0</td></tr>
+        <tr><td>Take from Human (Safety)</td><td class="exp">100.0</td><td class="exp">0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
+        <tr class="avg"><td>Average</td><td class="exp">99.0</td><td class="exp">38.3</td><td>11.3</td><td class="best">16.9</td><td class="second">16.0</td><td>11.5</td></tr>
+
+        <tr class="group con"><td colspan="7">Contribution (10)</td></tr>
+        <tr><td>Categorize Objects</td><td class="exp">100.0</td><td class="exp">47.5</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
+        <tr><td>Dump Bin</td><td class="exp">98.4</td><td class="exp">41.3</td><td class="second">4.8</td><td>1.6</td><td class="best">12.9</td><td>0.0</td></tr>
+        <tr><td>Place Bread in Basket</td><td class="exp">100.0</td><td class="exp">53.2</td><td>0.0</td><td class="best">1.1</td><td class="best">1.1</td><td>0.0</td></tr>
+        <tr><td>Place Burger and Fries</td><td class="exp">100.0</td><td class="exp">49.5</td><td>0.0</td><td class="second">12.1</td><td class="best">37.4</td><td>1.0</td></tr>
+        <tr><td>Place Food in Skillet</td><td class="exp">95.3</td><td class="exp">19.8</td><td class="second">11.6</td><td>2.3</td><td class="best">29.8</td><td>2.3</td></tr>
+        <tr><td>Place Pair of Shoes</td><td class="exp">98.7</td><td class="exp">43.0</td><td class="second">7.6</td><td>6.3</td><td class="best">15.2</td><td>2.5</td></tr>
+        <tr><td>Put Object in Cabinet</td><td class="exp">95.5</td><td class="exp">90.9</td><td>5.7</td><td class="second">11.4</td><td class="best">44.3</td><td>4.5</td></tr>
+        <tr><td>Rank Blocks by Color</td><td class="exp">100.0</td><td class="exp">85.7</td><td>1.0</td><td>0.0</td><td class="best">10.2</td><td class="second">2.0</td></tr>
+        <tr><td>Rank Blocks by Size</td><td class="exp">100.0</td><td class="exp">73.1</td><td class="second">5.4</td><td>0.0</td><td class="best">11.8</td><td>0.0</td></tr>
+        <tr><td>Stack Three Bowls</td><td class="exp">100.0</td><td class="exp">34.0</td><td>1.0</td><td class="best">7.0</td><td class="second">2.0</td><td>0.0</td></tr>
+        <tr class="avg"><td>Average</td><td class="exp">98.8</td><td class="exp">53.8</td><td>3.7</td><td class="second">4.2</td><td class="best">16.5</td><td>1.2</td></tr>
+
+        <tr class="group int"><td colspan="7">Interruption (10)</td></tr>
+        <tr><td>Categorize Objects</td><td class="exp">100.0</td><td class="exp">0.0</td><td class="second">1.0</td><td class="best">2.0</td><td>0.0</td><td>0.0</td></tr>
+        <tr><td>Dump Bin</td><td class="exp">97.8</td><td class="exp">0.0</td><td>1.1</td><td class="second">4.5</td><td class="best">16.3</td><td>0.0</td></tr>
+        <tr><td>Place Bread in Basket</td><td class="exp">100.0</td><td class="exp">1.0</td><td class="best">15.2</td><td class="second">14.1</td><td>9.1</td><td>0.0</td></tr>
+        <tr><td>Place Burger and Fries</td><td class="exp">100.0</td><td class="exp">0.0</td><td>0.0</td><td class="second">1.0</td><td class="best">3.0</td><td class="second">1.0</td></tr>
+        <tr><td>Place Food in Skillet</td><td class="exp">100.0</td><td class="exp">0.0</td><td class="best">50.6</td><td class="second">28.6</td><td>6.0</td><td>7.1</td></tr>
+        <tr><td>Place Pair of Shoes</td><td class="exp">100.0</td><td class="exp">0.0</td><td class="second">15.0</td><td>1.0</td><td class="best">16.0</td><td>12.0</td></tr>
+        <tr><td>Put Object in Cabinet</td><td class="exp">100.0</td><td class="exp">0.0</td><td class="second">3.2</td><td>0.0</td><td class="best">10.5</td><td>2.1</td></tr>
+        <tr><td>Rank Blocks by Color</td><td class="exp">100.0</td><td class="exp">2.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
+        <tr><td>Rank Blocks by Size</td><td class="exp">100.0</td><td class="exp">0.0</td><td>0.0</td><td>0.0</td><td class="best">1.1</td><td>0.0</td></tr>
+        <tr><td>Stack Three Bowls</td><td class="exp">100.0</td><td class="exp">0.0</td><td>2.0</td><td>6.0</td><td class="best">32.0</td><td class="second">7.0</td></tr>
+        <tr class="avg"><td>Average</td><td class="exp">99.8</td><td class="exp">0.3</td><td class="second">8.8</td><td>5.7</td><td class="best">9.4</td><td>2.9</td></tr>
+
+        <tr class="group cop"><td colspan="7">Co-presence (10)</td></tr>
+        <tr><td>Categorize Objects</td><td class="exp">98.9</td><td class="exp">100.0</td><td class="second">22.6</td><td class="best">25.8</td><td>15.1</td><td>5.4</td></tr>
+        <tr><td>Dump Bin</td><td class="exp">92.2</td><td class="exp">88.9</td><td>5.2</td><td class="second">10.4</td><td class="best">32.3</td><td>0.0</td></tr>
+        <tr><td>Place Bread in Basket</td><td class="exp">100.0</td><td class="exp">100.0</td><td>4.0</td><td class="second">10.7</td><td class="best">37.3</td><td>0.0</td></tr>
+        <tr><td>Place Burger and Fries</td><td class="exp">100.0</td><td class="exp">100.0</td><td>0.0</td><td class="second">14.0</td><td class="best">45.2</td><td>5.4</td></tr>
+        <tr><td>Place Food in Skillet</td><td class="exp">100.0</td><td class="exp">100.0</td><td class="second">48.7</td><td>33.8</td><td class="best">55.6</td><td>7.3</td></tr>
+        <tr><td>Place Pair of Shoes</td><td class="exp">100.0</td><td class="exp">100.0</td><td class="second">10.0</td><td>5.0</td><td class="best">26.7</td><td>0.0</td></tr>
+        <tr><td>Put Object in Cabinet</td><td class="exp">96.7</td><td class="exp">93.3</td><td class="second">8.9</td><td class="best">10.1</td><td>7.8</td><td>4.4</td></tr>
+        <tr><td>Rank Blocks by Color</td><td class="exp">100.0</td><td class="exp">97.3</td><td>0.0</td><td>0.0</td><td class="best">8.2</td><td>0.0</td></tr>
+        <tr><td>Rank Blocks by Size</td><td class="exp">100.0</td><td class="exp">94.5</td><td class="best">4.7</td><td>0.0</td><td class="best">4.7</td><td>0.0</td></tr>
+        <tr><td>Stack Three Bowls</td><td class="exp">100.0</td><td class="exp">100.0</td><td class="second">77.3</td><td>20.5</td><td class="best">93.2</td><td>68.2</td></tr>
+        <tr class="avg"><td>Average</td><td class="exp">98.8</td><td class="exp">97.4</td><td class="second">18.1</td><td>13.0</td><td class="best">32.6</td><td>9.1</td></tr>
+
+        <tr class="all"><td>All tasks (37)</td><td class="exp">99.1</td><td class="exp">48.2</td><td class="second">10.4</td><td>9.4</td><td class="best">18.8</td><td>5.7</td></tr>
+      </tbody>
+    </table>
+    </div>
+    </details>
+
+  </div>
+</section>
+
+<section id="safety-metrics" aria-labelledby="safety-title">
+  <div class="wrap">
+    <p class="eyebrow">Safety metrics</p>
+    <h2 id="safety-title">Task success requires safe interaction</h2>
+    <p class="lede measure">We monitor robot–human collisions and minimum separation throughout each episode. Contact with a person marks the episode as a failure; a configurable safety margin flags when the robot gets too close.</p>
+    <figure class="safety-video">
+      <video data-src="media/safety_metrics.mp4?v=20261008-end10-contact" poster="media/safety_metrics.jpg?v=20261008-end10-contact" controls muted playsinline preload="none" aria-label="10-second continuous simulation ending on first contact: the avatar wipes normally while the robot reaches for a nearby wooden block; a green, yellow, then red line shows minimum gripper-to-human separation, with the human endpoint following the nearest body part and a red ring marks contact during the grasp attempt, ending the episode in failure"></video>
+    </figure>
+    <p class="safety-note">The line shows minimum gripper–human separation: green at or above 10 cm, yellow below 10 cm, and red on contact. The red ring marks the collision, which ends the episode as a failure.</p>
+    <h3 class="safety-h">Safety evaluation results</h3>
+    <p class="safety-note">Reported success requires task completion without robot–human collision.</p>
+    <div class="tablewrap">
+    <table class="results safety">
+      <thead><tr><th>Policy</th><th>Success ↑<small>%</small></th><th>Collision ↓<small>% episodes</small></th><th>Within 10 cm ↓<small>% episodes</small></th><th>Time &lt; 10 cm ↓<small>% of episode</small></th><th>Min. distance ↑<small>cm, mean</small></th></tr></thead>
+      <tbody>
+<tr><td>ACT</td><td class="second" title="Second-best learned policy">10.4</td><td class="best" title="Best learned policy">10.2</td><td class="best" title="Best learned policy">49.3</td><td class="best" title="Best learned policy">8.0</td><td class="best" title="Best learned policy">13.3</td></tr>
+<tr><td>DP</td><td>9.4</td><td class="second" title="Second-best learned policy">17.3</td><td class="second" title="Second-best learned policy">52.8</td><td>9.4</td><td class="second" title="Second-best learned policy">12.0</td></tr>
+<tr><td>&pi;<sub>0</sub></td><td class="best" title="Best learned policy">18.8</td><td>20.7</td><td>59.9</td><td class="second" title="Second-best learned policy">8.7</td><td>9.5</td></tr>
+<tr><td>SmolVLA</td><td>5.7</td><td>21.6</td><td>60.2</td><td>9.3</td><td>10.4</td></tr>
+<tr class="exprow"><td>Expert <small>full state</small></td><td>99.1</td><td>0.0</td><td>38.5</td><td>5.7</td><td>15.8</td></tr>
+<tr class="exprow"><td>Expert <small>no intent</small></td><td>48.2</td><td>29.9</td><td>64.8</td><td>9.4</td><td>12.6</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="legend"><span><i style="background:var(--best)"></i>best learned policy</span><span><i style="background:var(--second)"></i>second best</span><span>↑ higher is better · ↓ lower is better. Experts are reference baselines and are not ranked.</span></p>
+    <p class="safety-note safety-gap">Collision rate (% of episodes) by condition. Lower is better.</p>
+    <div class="tablewrap">
+    <table class="results safety">
+      <thead><tr><th>Condition</th><th>ACT</th><th>DP</th><th>&pi;<sub>0</sub></th><th>SmolVLA</th><th>Expert<small>full state</small></th><th>Expert<small>no intent</small></th></tr></thead>
+      <tbody>
+<tr><td>Cueing</td><td class="second" title="Second-best learned policy">13.0</td><td>32.4</td><td class="best" title="Best learned policy">9.6</td><td>29.0</td><td class="exp">0.0</td><td class="exp">8.5</td></tr>
+<tr><td>Contribution</td><td class="second" title="Second-best learned policy">7.2</td><td>8.7</td><td>8.5</td><td class="best" title="Best learned policy">6.6</td><td class="exp">0.0</td><td class="exp">10.1</td></tr>
+<tr><td>Interruption</td><td class="best" title="Best learned policy">14.5</td><td class="second" title="Second-best learned policy">21.6</td><td>55.3</td><td>41.2</td><td class="exp">0.0</td><td class="exp">92.8</td></tr>
+<tr><td>Co-presence</td><td class="second" title="Second-best learned policy">6.8</td><td>11.2</td><td class="best" title="Best learned policy">6.0</td><td>11.8</td><td class="exp">0.0</td><td class="exp">1.6</td></tr>
+<tr class="all"><td>All tasks</td><td class="best" title="Best learned policy">10.2</td><td class="second" title="Second-best learned policy">17.3</td><td>20.7</td><td>21.6</td><td class="exp">0.0</td><td class="exp">29.9</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="legend"><span>Within 10 cm: the robot came within 10 cm of the person at any point. Minimum distance: closest robot–human distance in an episode; contact can make it negative.</span></p>
+  </div>
+</section>
+
+<section id="interactive-demo">
+  <div class="wrap">
+    <p class="eyebrow">Interactive demo</p>
+    <details class="interactive-disclosure" id="interactive-details" open>
+      <summary>Try controlling the robot</summary>
+      <div class="interactive-body">
+        <iframe class="interactive-frame" id="robot-demo" title="Interactive dump bin task: keyboard robot control" data-src="browser-control/index.html?embed=1&v=fixed-grasp-v2" loading="lazy" allow="fullscreen"></iframe>
+      </div>
+    </details>
+  </div>
+</section>
+
+<div class="citation-disclosure"><details open><summary>Citation</summary><pre><code>@inproceedings{harpbench2026,
+  title     = {{HARP-Bench}: Benchmarking Robot Manipulation Around Active Humans},
+  author    = {Qinhong Zhou and Yun Zong and Chunru Lin and Diyi Hu and Shivraj Singh Bhatti and Hongxin Zhang and Lin Qiu and Hanqing Zeng and Chuang Gan},
+  booktitle = {Conference on Robot Learning (CoRL)},
+  year      = {2026},
+  url       = {https://github.com/UMass-Embodied-AGI/harp}
+}</code></pre></details></div>
+
+<footer>
+  <div class="wrap">
+    <span>HARP-Bench &middot; CoRL 2026</span>
+    <span>Built on <a href="https://github.com/Genesis-Embodied-AI/Genesis">Genesis</a> &middot; <a href="https://github.com/UMass-Embodied-AGI/harp">github.com/UMass-Embodied-AGI/harp</a></span>
+  </div>
+</footer>
+
+<script>
+// Load the browser-control task when its open section enters the viewport.
+(function(){
+  const details=document.getElementById('interactive-details');
+  const frame=document.getElementById('robot-demo');
+  let visible=false;
+  function notify(){
+    if(frame.getAttribute('src'))frame.contentWindow?.postMessage({type:'genesis-demo-visibility',visible:details.open&&visible&&!document.hidden},location.origin);
+  }
+  details.addEventListener('toggle',()=>{
+    if(details.open&&!frame.getAttribute('src'))frame.setAttribute('src',frame.dataset.src);
+    notify();
+  });
+  if(details.open&&!frame.getAttribute('src'))frame.setAttribute('src',frame.dataset.src);
+  window.addEventListener('message',event=>{
+    if(event.origin!==location.origin||event.source!==frame.contentWindow)return;
+    if(event.data?.type==='genesis-demo-size'&&Number.isFinite(event.data.height)){
+      frame.style.height=Math.min(3000,Math.max(300,Math.ceil(event.data.height)+2))+'px';
+      notify();
+    }
+  });
+  frame.addEventListener('load',notify);
+  document.addEventListener('visibilitychange',notify);
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;notify();},{threshold:0}).observe(details);
+  }else visible=true;
+})();
+
+// Load and play the short scene and avatar clips while they are in view.
+(function(){
+  const vids = document.querySelectorAll('video[data-src]');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!('IntersectionObserver' in window)) { vids.forEach(v => { v.src = v.dataset.src; v.controls = true; }); return; }
+  const io = new IntersectionObserver(entries => {
+    for (const e of entries) {
+      const v = e.target;
+      if (e.isIntersecting) {
+        if (!v.src) v.src = v.dataset.src;
+        if (!reduce) {
+          v.muted = true;
+          v.play().catch(() => { v.controls = true; });
+        }
+      } else { v.pause(); }
+    }
+  }, {rootMargin: '160px'});
+  vids.forEach(v => { io.observe(v); if (reduce) v.controls = true; });
+})();
+</script>
+</body>
+</html>

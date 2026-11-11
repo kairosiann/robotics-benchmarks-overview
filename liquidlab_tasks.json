@@ -1,0 +1,30 @@
+[
+  {
+    "id": "liquidlab--overview",
+    "family": "LiquidLab",
+    "benchmark": "LiquidLab",
+    "suite": "Published benchmark overview",
+    "setting": "Simulation",
+    "name": "overview",
+    "title": "LiquidLab — benchmark overview (individual task catalog unavailable)",
+    "instruction": "Robotic wet-lab automation with direct liquid manipulation, liquid-handler platform operation and long-horizon laboratory protocols.",
+    "description": "Robotic wet-lab automation with direct liquid manipulation, liquid-handler platform operation and long-horizon laboratory protocols.",
+    "source": "https://www.corl.org/program/accepted-papers",
+    "evaluation_source": "https://openreview.net/forum?id=SBGylS4zwM",
+    "observation": "",
+    "observation_scope": "unavailable",
+    "observation_source": "",
+    "setup_summary": "",
+    "setup_source": "",
+    "goal": "",
+    "grading_summary": "The accepted abstract describes particle-level volumetric success criteria. Per-task conditions and numeric thresholds were unavailable in the retrieved sources.",
+    "grading_scope": "benchmark",
+    "grading_evidence": "The benchmark abstract describes a parallel SPH fluid simulation pipeline in Genesis and evaluates imitation-learning and vision-language-action policies.",
+    "media": [],
+    "conference": "CoRL 2026",
+    "record_kind": "benchmark-overview",
+    "reported_task_count": 16,
+    "source_note": "Overview record only. The accepted abstract reports 16 tasks. Individual names, initial states, numerical rubrics, robot inputs and task media have not been retrieved. Author publication pages list the paper, and one says its link is available soon. OpenReview required browser verification during this review.",
+    "catalog_scope": "One searchable benchmark overview. This entry does not represent one of the sixteen physical tasks."
+  }
+]

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="MESA: An Evaluation Framework for Compositional, Semantic, and Spatial Generalization in Robotics">
+  <meta name="keywords" content="MESA, Robotics, Benchmark, Evaluation, Foundation Models, Manipulation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MESA: An Evaluation Framework for Compositional, Semantic, and Spatial Generalization in Robotics</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css?v=20261008">
+  <link rel="icon" href="./static/images/favicon.png">
+  <style>
+    .copyable-block {
+      position: relative;
+    }
+
+    .copy-button {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      border: 1px solid #dbdbdb;
+      border-radius: 6px;
+      background: #fff;
+      color: #363636;
+      font-size: 0.8rem;
+      line-height: 1;
+      padding: 0.45rem 0.6rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .copy-button:hover {
+      background: #f5f5f5;
+    }
+
+    .copy-button.copied {
+      background: #48c78e;
+      border-color: #48c78e;
+      color: #fff;
+    }
+
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script defer src="./static/js/video-playback.js?v=20261008"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']]
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+</head>
+<body>
+
+
+<section class="hero publication-header">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title"><span class="publication-title-layout"><img class="publication-logo" src="./static/images/mesa_logo.png" alt="MESA"> <span>An Evaluation Framework for Compositional, Semantic, and Spatial Generalization in Robotics</span></span></h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://albertwilcox.github.io/">Albert Wilcox</a><sup>1,2,*</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/frankchang1000/">Frank Chang</a><sup>1,*</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=YDhbRU4AAAAJ&hl=en">Nhi Nguyen</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/aishani-chakraborty-274bb1254/">Aishani Chakraborty</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://jeremy-collins.github.io/">Jeremy A. Collins</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://sites.google.com/view/vaibhavsaxena">Vaibhav Saxena</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/bpjoffe/">Benjamin Joffe</a><sup>1,2</sup>,</span>
+            <span class="author-block">
+              <a href="https://siddkaramcheti.com/">Siddharth Karamcheti</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://animesh.garg.tech/">Animesh Garg</a><sup>1</sup></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Georgia Institute of Technology,</span>
+            <span class="author-block"><sup>2</sup>Georgia Tech Research Institute</span>
+          </div>
+
+          <p><sup>*</sup>Equal contribution.</p>
+          <p class="is-size-5 has-text-weight-semibold" style="margin-top: 0.75rem;">CoRL 2026</p>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- arXiv Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2611.05567"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/pairlab/mesa-env"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </a>
+              </span>
+              <!-- Hugging Face Link. -->
+              <span class="link-block">
+                <a href="https://huggingface.co/collections/albertwilcox/mesa"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-database"></i>
+                  </span>
+                  <span>Weights and Data</span>
+                </a>
+              </span>
+              <!-- Documentation Link. -->
+              <span class="link-block">
+                <a href="documentation/index.html"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-book"></i>
+                  </span>
+                  <span>Documentation</span>
+                </a>
+              </span>
+              <!-- Twitter Link. -->
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-twitter"></i>
+                  </span>
+                  <span>Twitter</span>
+                </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Video Placeholder Section -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="publication-video">
+          <video id="teaser" autoplay muted loop playsinline controls preload="metadata">
+            <source src="./static/videos/mesa_teaser.mp4" type="video/mp4">
+          </video>
+          <div style="margin-top: 0.75rem; text-align: center;">
+            <span style="display: inline-block; padding: 0.4rem 0.8rem; border: 1px solid #dbdbdb; border-radius: 6px; background-color: #f5f5f5; font-weight: 600;">
+              🔊 Sound On
+            </span>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-left">
+          <p>
+            Despite growing interest in foundation models for robotic manipulation, systematic evaluation of their capabilities remains elusive. Existing benchmarks are either narrow and saturated, offering little signal on SOTA methods, broadly scoped, providing diversity at the cost of controlled experimentation, or require training on large, messy open-source datasets.
+          </p>
+          <p>
+            We introduce <strong>MESA</strong>, an evaluation framework designed for precise, reproducible measurement of language-conditioned policy generalization. MESA provides five evaluation suites that isolate in-distribution performance and four distinct axes of generalization: <em>spatial configuration</em>, <em>object instance</em>, <em>object category</em>, and <em>subtask composition</em>, enabling researchers to diagnose where and why policies fail, not just whether they fail.
+          </p>
+          <p>
+            To populate these suites at scale, we develop <strong>MESA-Gen</strong>, a pipeline for task and demonstration generation built by improving MimicGen. We instantiate the framework on two platforms and release both: the single-arm <strong>MESA</strong> suite, and <strong>BiMESA</strong>, the first large-scale benchmark for bimanual generalization.
+          </p>
+          <p>
+            We evaluate seven baseline methods spanning diffusion policies, VLM-based approaches, and pretrained VLAs, finding that the strongest model achieves only <strong>52% on MESA</strong> and <strong>49% on BiMESA</strong>, providing meaningful signal while leaving ample room for progress. MESA rankings are broadly consistent with RoboArena scores, suggesting that MESA captures method-level differences relevant beyond simulation.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+
+        <h2 class="title is-3">MESA-Bench: Overview </h2>
+
+        <figure class="image">
+          <img src="./static/images/paper/teaser.png" 
+               alt="MESA and BiMESA overview"
+               style="border-radius: 10px;">
+        </figure>
+
+        <div class="content has-text-left" style="margin-top: 1.5rem;">
+
+          <p>
+            MESA-Bench spans <strong>two embodiments</strong> &mdash; a single-arm Franka Panda and a bimanual YAM setup &mdash; and for each we release <strong>both a training set and five evaluation suites</strong>. The single-arm training set <strong>MESA-70</strong> contains 7,000 demonstrations across 70 tasks, and the bimanual training set <strong>BiMESA-57</strong> contains 6,833 demonstrations across 57 tasks. Each embodiment is evaluated with the same five suites:
+          </p>
+
+          <ul>
+            <li>
+              A suite evaluating <strong>in-distribution performance</strong>
+            </li>
+            
+              <li>
+                <strong>MESA-Spatial</strong>: evaluates seen tasks with unseen spatial configurations
+              </li>
+
+              <li>
+                <strong>MESA-Instance</strong>: evaluates seen tasks with unseen object instances
+              </li>
+
+              <li>
+                <strong>MESA-Category</strong>: evaluates tasks with unseen object categories
+              </li>
+
+              <li>
+                <strong>MESA-Composite</strong>: evaluates unseen composite tasks comprised of in-distribution subtasks
+              </li>
+          </ul>
+
+          <p>
+            BiMESA preserves all four generalization axes while adding coordination-specific challenges with no single-arm analogue: <strong>cross-arm handoffs</strong>, <strong>articulated-fixture interaction</strong>, and <strong>dual-arm coordination</strong>. BiMESA combines 4,681 MESA-Gen demonstrations with 2,152 teleoperated demonstrations; coordinated cross-arm pick-and-place and handoffs are collected by teleoperation.
+          </p>
+        </div>
+
+        <div style="margin-top: 2rem;">
+        <h3 class="title is-5">Reset Distribution</h3>
+
+        <div class="content has-text-left">
+          <p>
+            Each task contains a number of distractor objects and corresponding distractor tasks, aimed to probe the language following of the evaluated policy. 
+            For example, for a target task “put the orange in the basket” with a bowl and apple for distractor objects, the distractor task predicates
+            would be <code>In(apple, basket)</code>, <code>In(apple, bowl)</code>, <code>In(orange, bowl)</code> and <code>In(bowl, basket)</code>. After
+            a failed rollout, if any of these predicates were satisfied, we log a distractor task completion.
+          </p>
+
+          <p>
+            Below, we visualize reset distributions with distractor objects for several tasks.
+          </p>
+
+          <div class="bench-video" style="max-width: 640px; margin: 1rem auto;">
+            <video class="video" autoplay muted loop playsinline controls preload="metadata">
+              <source src="./static/videos/resets_compressed.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+
+        <h2 class="title is-3">MESA-Gen: Data Generation Pipeline</h2>
+
+        <figure class="image" style="margin-top: 1rem;">
+          <img src="./static/images/paper/pipeline.png" alt="MESA-Gen data generation pipeline" style="border-radius: 10px;">
+        </figure>
+        
+        <div class="content has-text-left" style="margin-top: 1rem;">
+          <p>
+            We introduce <strong>MESA-Gen</strong>, a pipeline for scalable task and demonstration generation built by improving MimicGen. To build your own experiments using our framework:
+          </p>
+          <ol>
+            <li>If a suitable task skeleton does not already exist, define it in Python.</li>
+            <li>Instantiate a task from the skeleton and generate BDDL files for the training and evaluation sets.</li>
+            <li>Optionally, collect a small number of source demonstrations.</li>
+            <li>Generate a large dataset for imitation learning using our modified MimicGen pipeline. As we describe in the paper, we introduce "subtask stitching", which enables data generation for tasks without human data.</li>
+          </ol>
+        </div>
+
+        <div class="publication-video" style="max-width: 700px; margin: 0 auto;">
+          <video autoplay muted loop playsinline controls preload="metadata">
+            <source src="./static/videos/mesa_datagen.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="key-findings">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+
+        <h2 class="title is-3">Key Findings</h2>
+
+        <div class="content has-text-left">
+
+          <h3 class="title is-6"><strong>Robot pretraining does not uniformly transfer.</strong></h3>
+          <div class="bench-video" style="max-width: 700px; margin: 1rem auto;">
+            <video class="mesa-video" autoplay muted loop playsinline controls preload="metadata">
+              <source src="./static/videos/pretraining_compressed.mp4" type="video/mp4">
+            </video>
+          </div>
+          <p>
+            PG-FM and $\pi_0$ share a backbone and architecture, differing primarily in $\pi_0$'s pretraining on a large robot dataset that includes both single-arm Franka and bimanual YAM-like embodiments. In the single-arm setting this pretraining yields a consistent improvement, but in the bimanual setting PG-FM slightly <em>outperforms</em> $\pi_0$ on average. This surprising reversal suggests that embodiment similarity alone does not guarantee transfer from pretraining.
+          </p>
+
+          <h3 class="title is-6"><strong>Action representation matters.</strong></h3>
+          <div class="bench-video" style="max-width: 700px; margin: 1rem auto;">
+            <video class="mesa-video" autoplay muted loop playsinline controls preload="metadata">
+              <source src="./static/videos/action_rep_compressed.mp4" type="video/mp4">
+            </video>
+          </div>
+          <p>
+            PG-Bin, which uses RT-2-style action binning, averages only 18.3% on
+            BiMESA despite sharing its VLM backbone with PG-FM (30.4%). This indicates that
+            directly discretizing continuous action dimensions into language
+            tokens is a poor fit for the fine-grained control required by BiMESA.
+          </p>
+
+          <h3 class="title is-6"><strong>OOD object instances are challenging, even for frontier policies.</strong></h3>
+          <div class="bench-video" style="max-width: 700px; margin: 1rem auto;">
+            <video class="mesa-video" autoplay muted loop playsinline controls preload="metadata">
+              <source src="./static/videos/instance_gen_compressed.mp4" type="video/mp4">
+            </video>
+          </div>
+          <p>
+            We see that across the board, policies struggle to identify unseen object instances. For example, all three models above have seen the red bell pepper during training. However, they have difficulty identifying the out-of-distribution green bell pepper, with some even mistaking the mango for the bell pepper.
+          </p>
+
+          <h3 class="title is-6"><strong>OOD spatial configurations lead to a consistent performance drop.</strong></h3>
+          <div class="bench-video" style="max-width: 700px; margin: 1rem auto;">
+            <video class="mesa-video" autoplay muted loop playsinline controls preload="metadata">
+              <source src="./static/videos/spatial_gen_compressed.mp4" type="video/mp4">
+            </video>
+          </div>
+          <p>
+            Despite seeing the same object and same task previously, policies struggle to identify the target object when it is placed in different spatial configurations. Here, we see that the policies can correctly identify the tomato over a similar looking object when the tomato is in an in-distribution position (left). When the tomato's position is on the right, all policies except $\pi_{0.5}$ still select the distractor item on the left.
+          </p>
+
+          <h3 class="title is-6"><strong>Novel object categories remain challenging.</strong></h3>
+          <p>
+            Performance drops sharply on unseen object categories for all baselines. GR00T-N1.6 is particularly strong on <strong>BiMESA-Category</strong>, achieving 26.1% success and 55.6% language following. This suggests that preserving the VLM backbone's open-vocabulary knowledge can help policies ground instructions involving unfamiliar objects. In the first table, we show the success rates over each of our evaluation suites.
+            In the second table, we evaluate the <strong>language following rate</strong>, which we define precisely in the paper, of these baselines.
+          </p>
+
+          <div class="results-table-wrap">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th>Setting</th><th>DP</th><th>PG-Bin</th><th>PG-FM</th><th>GR00T-N1.6</th><th>&pi;<sub>0</sub></th><th>FAST</th><th>&pi;<sub>0.5</sub></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="rowlabel">MESA-ID</td><td>1.6</td><td>&ndash;</td><td>30.7</td><td>25.0</td><td>43.1</td><td>46.5</td><td class="best">62.8</td></tr>
+                <tr><td class="rowlabel">MESA-Spatial</td><td>1.0</td><td>&ndash;</td><td>35.0</td><td>23.2</td><td>42.2</td><td>53.6</td><td class="best">68.6</td></tr>
+                <tr><td class="rowlabel">MESA-Instance</td><td>1.9</td><td>&ndash;</td><td>22.7</td><td>22.7</td><td>34.0</td><td>39.1</td><td class="best">55.4</td></tr>
+                <tr><td class="rowlabel">MESA-Composite</td><td>0.3</td><td>&ndash;</td><td>17.7</td><td>15.0</td><td>27.5</td><td>28.9</td><td class="best">46.7</td></tr>
+                <tr><td class="rowlabel">MESA-Category</td><td>0.7</td><td>&ndash;</td><td>7.7</td><td>14.1</td><td>11.6</td><td>8.4</td><td class="best">26.4</td></tr>
+                <tr class="avg-row"><td class="rowlabel">MESA Avg.</td><td>1.1</td><td>&ndash;</td><td>22.8</td><td>20.0</td><td>31.7</td><td>35.3</td><td class="best">52.0</td></tr>
+                <tr class="embodiment-sep"><td class="rowlabel">BiMESA-ID</td><td>13.0</td><td>26.7</td><td>43.8</td><td>47.0</td><td>45.9</td><td>53.7</td><td class="best">68.7</td></tr>
+                <tr><td class="rowlabel">BiMESA-Spatial</td><td>18.8</td><td>30.3</td><td>50.8</td><td>46.2</td><td>49.2</td><td>58.1</td><td class="best">70.5</td></tr>
+                <tr><td class="rowlabel">BiMESA-Instance</td><td>9.4</td><td>13.9</td><td>28.6</td><td>36.7</td><td>23.9</td><td>36.7</td><td class="best">48.1</td></tr>
+                <tr><td class="rowlabel">BiMESA-Composite</td><td>5.7</td><td>14.4</td><td>17.9</td><td>22.1</td><td>18.4</td><td>28.8</td><td class="best">37.5</td></tr>
+                <tr><td class="rowlabel">BiMESA-Category</td><td>5.8</td><td>6.0</td><td>10.9</td><td class="best">26.1</td><td>10.6</td><td>19.8</td><td>18.6</td></tr>
+                <tr class="avg-row"><td class="rowlabel">BiMESA Avg.</td><td>10.6</td><td>18.3</td><td>30.4</td><td>35.6</td><td>29.6</td><td>39.4</td><td class="best">48.7</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-caption"><strong>Success rates (%)</strong> on the single-arm (MESA) and bimanual (BiMESA) suites. &pi;<sub>0.5</sub> achieves the strongest average on both embodiments; GR00T-N1.6 is particularly competitive on BiMESA-Category.</p>
+
+          <div class="results-table-wrap">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th>Setting</th><th>DP</th><th>PG-Bin</th><th>PG-FM</th><th>GR00T-N1.6</th><th>&pi;<sub>0</sub></th><th>FAST</th><th>&pi;<sub>0.5</sub></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="rowlabel">MESA-ID</td><td>18.9</td><td>&ndash;</td><td>80.0</td><td>71.4</td><td>79.7</td><td>83.7</td><td class="best">87.6</td></tr>
+                <tr><td class="rowlabel">MESA-Spatial</td><td>11.4</td><td>&ndash;</td><td>77.4</td><td>53.7</td><td>73.0</td><td>78.6</td><td class="best">84.5</td></tr>
+                <tr><td class="rowlabel">MESA-Instance</td><td>23.5</td><td>&ndash;</td><td>66.6</td><td>60.5</td><td>66.5</td><td>69.0</td><td class="best">76.9</td></tr>
+                <tr><td class="rowlabel">MESA-Composite</td><td>6.4</td><td>&ndash;</td><td>65.1</td><td>56.2</td><td>65.5</td><td>66.3</td><td class="best">81.5</td></tr>
+                <tr><td class="rowlabel">MESA-Category</td><td>12.1</td><td>&ndash;</td><td>32.6</td><td>42.5</td><td>33.1</td><td>28.0</td><td class="best">44.1</td></tr>
+                <tr class="avg-row"><td class="rowlabel">MESA Avg.</td><td>14.4</td><td>&ndash;</td><td>64.3</td><td>56.9</td><td>63.6</td><td>65.1</td><td class="best">74.9</td></tr>
+                <tr class="embodiment-sep"><td class="rowlabel">BiMESA-ID</td><td>34.9</td><td>78.7</td><td>84.6</td><td>87.7</td><td>73.4</td><td>86.9</td><td class="best">92.9</td></tr>
+                <tr><td class="rowlabel">BiMESA-Spatial</td><td>45.3</td><td>75.7</td><td>86.2</td><td>77.5</td><td>72.6</td><td>83.0</td><td class="best">89.1</td></tr>
+                <tr><td class="rowlabel">BiMESA-Instance</td><td>25.5</td><td>53.0</td><td>64.4</td><td>73.3</td><td>48.0</td><td>64.8</td><td class="best">74.0</td></tr>
+                <tr><td class="rowlabel">BiMESA-Composite</td><td>14.5</td><td>65.1</td><td>66.7</td><td>71.2</td><td>42.3</td><td>66.7</td><td class="best">80.1</td></tr>
+                <tr><td class="rowlabel">BiMESA-Category</td><td>15.7</td><td>27.4</td><td>30.1</td><td class="best">55.6</td><td>21.2</td><td>35.1</td><td>28.7</td></tr>
+                <tr class="avg-row"><td class="rowlabel">BiMESA Avg.</td><td>27.2</td><td>60.0</td><td>66.4</td><td class="best">73.1</td><td>51.5</td><td>67.3</td><td>73.0</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-caption"><strong>Language following rate (%)</strong>. VLM-based policies exhibit strong in-distribution language following. Unseen object categories remain challenging, with GR00T-N1.6 particularly strong on BiMESA-Category.</p>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+        <h2 class="title is-3">Controlled Distribution Shifts</h2>
+        <div class="content has-text-left">
+          <p>
+            Because MESA-Spatial and MESA-Instance each contain tasks with in-distribution counterparts in MESA-ID, we can directly compare success rates with and without distribution shift. Across both spatial and instance-level shifts, performance generally drops relative to matched in-distribution tasks, showing that MESA evaluates more than task memorization.
+          </p>
+        </div>
+        <div class="figure-row figure-row--comparisons">
+          <figure class="image">
+            <img src="./static/images/paper/spatial_comparison.png" alt="Spatial in- vs out-of-distribution comparison">
+          </figure>
+          <figure class="image">
+            <img src="./static/images/paper/instance_comparison.png" alt="Instance in- vs out-of-distribution comparison">
+          </figure>
+        </div>
+        <figure class="image figure-legend">
+          <img src="./static/images/paper/dist_shift_legend.png" alt="Legend">
+        </figure>
+        <p class="figure-caption">For tasks with matched in-distribution counterparts, policies generally perform worse under held-out spatial configurations (left) and object instances (right).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+        <h2 class="title is-3">Scaling Data Quantity &amp; Diversity</h2>
+        <div class="content has-text-left">
+          <p>
+            We study the effect of demonstration quantity for $\pi_0$ and $\pi_{0.5}$ under a fixed compute budget. Scaling data almost monotonically improves performance, but a striking result is that <strong>$\pi_{0.5}$ trained with 10 demonstrations per task consistently outperforms $\pi_0$ with 100</strong> &mdash; in this regime, pretraining quality dominates data quantity.
+          </p>
+        </div>
+        <div class="figure-row figure-row--quantity">
+          <figure class="image"><img src="./static/images/paper/dq_id.png" alt="Data quantity, ID"></figure>
+          <figure class="image"><img src="./static/images/paper/dq_spatial.png" alt="Data quantity, Spatial"></figure>
+          <figure class="image"><img src="./static/images/paper/dq_instance.png" alt="Data quantity, Instance"></figure>
+          <figure class="image"><img src="./static/images/paper/dq_composite.png" alt="Data quantity, Composite"></figure>
+          <figure class="image"><img src="./static/images/paper/dq_category.png" alt="Data quantity, Category"></figure>
+        </div>
+        <figure class="image figure-legend">
+          <img src="./static/images/paper/dq_legend.png" alt="Legend">
+        </figure>
+        <div class="content has-text-left">
+          <p>
+            Auxiliary co-training does not yield consistent gains across models and evaluation suites. One exception is $\pi_0$ on MESA-Spatial, where success increases from 42.2% to 54.4%; its Category performance instead decreases from 11.6% to 8.7%. Simply increasing task diversity does not consistently improve generalization in this setting.
+          </p>
+        </div>
+        <div class="results-table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr><th>Method</th><th>ID</th><th>Spatial</th><th>Instance</th><th>Composite</th><th>Category</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="rowlabel">DP</td><td>1.6</td><td>1.0</td><td>1.9</td><td>0.3</td><td>0.7</td></tr>
+              <tr><td class="rowlabel">DP + Aux</td><td>2.3</td><td>2.4</td><td>2.2</td><td>0.6</td><td>0.3</td></tr>
+              <tr class="embodiment-sep"><td class="rowlabel">&pi;<sub>0</sub></td><td>43.1</td><td>42.2</td><td>34.0</td><td>27.5</td><td>11.6</td></tr>
+              <tr><td class="rowlabel">&pi;<sub>0</sub> + Aux</td><td>43.4</td><td>54.4</td><td>33.2</td><td>28.8</td><td>8.7</td></tr>
+              <tr class="embodiment-sep"><td class="rowlabel">&pi;<sub>0.5</sub></td><td class="best">62.8</td><td>68.6</td><td class="best">55.4</td><td class="best">46.7</td><td class="best">26.4</td></tr>
+              <tr><td class="rowlabel">&pi;<sub>0.5</sub> + Aux</td><td>59.0</td><td class="best">69.2</td><td>53.6</td><td>45.6</td><td>23.0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-caption"><strong>Auxiliary co-training does not yield consistent generalization gains.</strong> Models are trained for the same number of gradient steps.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-widescreen">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+        <h2 class="title is-3">Studying Cross-Arm Transfer</h2>
+        <div class="content has-text-left">
+          <p>
+            BiMESA-Spatial is especially distinctive: rather than relocating a single object, it holds out the <em>arm assignment</em>, so a held-out configuration must be executed by a different arm than seen in training. This probes whether a policy has acquired <em>arm-symmetric skills</em> or has instead memorized per-arm trajectories.
+          </p>
+          <p>
+            We compare in-distribution tasks against matched arm-switched variants. Policies show modest degradation when switching single-arm tasks (left) or reversing handoff direction (middle), but much larger drops when transferring <strong>articulated manipulation</strong> skills across arms (right) &mdash; a failure mode with no single-arm analogue. DP, PG-Bin and $\pi_0$-FAST do not degrade on reversed handoffs. Error bars are 95% Wilson intervals.
+          </p>
+        </div>
+        <div class="figure-row figure-row--cross-arm">
+          <figure class="image"><img src="./static/images/paper/xarm_switch.png" alt="Cross-arm: single-arm task switch"></figure>
+          <figure class="image"><img src="./static/images/paper/xarm_handoff.png" alt="Cross-arm: handoff reversal"></figure>
+          <figure class="image"><img src="./static/images/paper/xarm_articulated.png" alt="Cross-arm: articulated manipulation"></figure>
+        </div>
+        <figure class="image figure-legend">
+          <img src="./static/images/paper/dist_shift_legend.png" alt="Legend">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+        <h2 class="title is-3">Comparison with Real-World Performance</h2>
+        <div class="content has-text-left">
+          <p>
+            A simulated benchmark is most useful when it aligns with real-world trends. We compare MESA and BiMESA success rates to Elo scores on <strong>RoboArena</strong>, a crowdsourced evaluation platform based on blind human preferences. The rankings are broadly consistent &mdash; $\pi_{0.5}$ and $\pi_0$-FAST are strongest across evaluations &mdash; providing preliminary evidence that MESA captures method-level differences relevant beyond simulation. The main disagreement is the ordering of PG-FM and $\pi_0$, which differs between RoboArena and single-arm MESA.
+          </p>
+        </div>
+        <div class="results-table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr><th></th><th>PG-Bin</th><th>PG-FM</th><th>&pi;<sub>0</sub></th><th>&pi;<sub>0</sub>-FAST</th><th>&pi;<sub>0.5</sub></th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="rowlabel">RoboArena (Elo)</td><td>771</td><td>1527</td><td>1449</td><td>1564</td><td class="best">1594</td></tr>
+              <tr><td class="rowlabel">MESA (SR %)</td><td>&ndash;</td><td>22.8</td><td>31.7</td><td>35.3</td><td class="best">52.0</td></tr>
+              <tr><td class="rowlabel">BiMESA (SR %)</td><td>18.3</td><td>30.4</td><td>29.6</td><td>39.4</td><td class="best">48.7</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-caption"><strong>Comparing RoboArena Elo with MESA success rates.</strong> MESA and BiMESA exhibit broadly similar stack rankings to RoboArena.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{wilcox2026mesa,
+  author    = {Albert Wilcox and Frank Chang and Nhi Nguyen and Aishani Chakraborty and Jeremy A. Collins and Vaibhav Saxena and Benjamin Joffe and Siddharth Karamcheti and Animesh Garg},
+  title     = {{MESA}: An Evaluation Framework for Compositional, Semantic, and Spatial Generalization in Robotics},
+  booktitle = {10th Annual Conference on Robot Learning},
+  year      = {2026},
+  url       = {https://openreview.net/forum?id=Br2rXixvyN},
+}</code></pre>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Acknowledgements</h2>
+        <div class="content has-text-left">
+          <p>
+            The authors would like to acknowledge the State of Georgia and the Agricultural Technology 
+            Research Program at Georgia Tech for supporting the work described in this paper.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link" href="https://openreview.net/forum?id=Br2rXixvyN" aria-label="Read the paper on OpenReview">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link external-link" href="https://github.com/pairlab/mesa-env" aria-label="View the public MESA code">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            Website template borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    function addCopyButtons() {
+      const codeBlocks = document.querySelectorAll("pre");
+      codeBlocks.forEach((block) => {
+        if (block.dataset.copyButtonInitialized === "true") {
+          return;
+        }
+
+        block.classList.add("copyable-block");
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "copy-button";
+        button.textContent = "Copy";
+        button.setAttribute("aria-label", "Copy code to clipboard");
+
+        button.addEventListener("click", async () => {
+          const codeNode = block.querySelector("code");
+          const textToCopy = codeNode ? codeNode.innerText : block.innerText;
+          if (!textToCopy) {
+            return;
+          }
+
+          try {
+            await navigator.clipboard.writeText(textToCopy);
+          } catch (_error) {
+            const fallback = document.createElement("textarea");
+            fallback.value = textToCopy;
+            fallback.style.position = "fixed";
+            fallback.style.opacity = "0";
+            document.body.appendChild(fallback);
+            fallback.focus();
+            fallback.select();
+            document.execCommand("copy");
+            fallback.remove();
+          }
+
+          button.classList.add("copied");
+          button.textContent = "Copied!";
+          setTimeout(() => {
+            button.classList.remove("copied");
+            button.textContent = "Copy";
+          }, 1200);
+        });
+
+        block.appendChild(button);
+        block.dataset.copyButtonInitialized = "true";
+      });
+    }
+
+    addCopyButtons();
+
+  });
+</script>
+
+
+
+</body>
+</html>

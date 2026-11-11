@@ -1,0 +1,3458 @@
+{
+  "wash_broccoli_pepper": {
+    "task": {
+      "components": [
+        {
+          "name": "sink_0",
+          "xml_path": "obj/meshes/containers/sinks/sink_0/model.xml",
+          "position": [
+            3.200039841043554,
+            -2.295000001845708,
+            0.9381176470588236
+          ],
+          "orientation": [
+            4.632679487995776e-05,
+            0.0,
+            0.0,
+            0.999999998926914
+          ],
+          "class": "Sink",
+          "sink_type": "sink_0"
+        },
+        {
+          "name": "tray_7",
+          "xml_path": "obj/meshes/containers/tray/tray_7/model.xml",
+          "position": [
+            3.6500671738525043,
+            -2.2498841861248735,
+            0.9500000000000001
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "broccoli_0",
+          "xml_path": "obj/meshes/ingredients/broccoli/broccoli_0/model.xml",
+          "position": [
+            2.7307275259968264,
+            -2.410769037123751,
+            0.9547255648398738
+          ],
+          "orientation": [
+            0.28017638423704105,
+            0.10931935938455417,
+            -0.6456711971592333,
+            0.7018968418069498
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "bell_pepper_2",
+          "xml_path": "obj/meshes/ingredients/bell_pepper/bell_pepper_2/model.xml",
+          "position": [
+            2.5751503969451455,
+            -2.149731413767553,
+            0.9523854789207581
+          ],
+          "orientation": [
+            0.0007536814720732434,
+            0.0012531514947065352,
+            0.0023743748634404904,
+            0.9999961119522303
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "cabbage_14",
+          "xml_path": "obj/meshes/ingredients/cabbage/cabbage_14/model.xml",
+          "position": [
+            2.575068942477305,
+            -2.3498875561914563,
+            0.9537867939092999
+          ],
+          "orientation": [
+            0.0008025023743013876,
+            2.6413483194669056e-05,
+            -5.070306174073879e-05,
+            0.9999996763606802
+          ],
+          "class": "Ingredient"
+        },
+        {
+          "name": "lettuce_2",
+          "xml_path": "obj/meshes/ingredients/lettuce/lettuce_2/model.xml",
+          "position": [
+            2.7216791963039455,
+            -2.1481325930714315,
+            0.951643870340362
+          ],
+          "orientation": [
+            -0.0032677240359082088,
+            -0.05315638097918216,
+            0.027442837329402142,
+            0.9982036925498391
+          ],
+          "class": "Ingredient"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the broccoli and bell pepper, please wash them and put them in the tray."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "broccoli_0"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "tray_7",
+                    "entities": [
+                      "broccoli_0"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "bell_pepper_2"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "tray_7",
+                    "entities": [
+                      "bell_pepper_2"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "is_open": {
+              "container": "sink_0"
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_5",
+      "destination_position": "top",
+      "fixture_surface": "island_island_group",
+      "target_entity": [
+        "broccoli_0",
+        "bell_pepper_2"
+      ],
+      "target_container": [
+        "tray_7"
+      ]
+    }
+  },
+  "wash_fruit_from_shelf": {
+    "task": {
+      "components": [
+        {
+          "name": "sink_0",
+          "xml_path": "obj/meshes/containers/sinks/sink_0/model.xml",
+          "position": [
+            3.200039841043554,
+            -2.295000001845708,
+            0.9381176470588236
+          ],
+          "orientation": [
+            4.632679487995776e-05,
+            0.0,
+            0.0,
+            0.999999998926914
+          ],
+          "class": "Sink",
+          "sink_type": "sink_0"
+        },
+        {
+          "name": "tray_7",
+          "xml_path": "obj/meshes/containers/tray/tray_7/model.xml",
+          "position": [
+            3.690067173852504,
+            -2.179884186124874,
+            0.9500000000000001
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "table_shelf_4",
+          "xml_path": "obj/meshes/containers/table_shelf/table_shelf_4/table_shelf_4.xml",
+          "position": [
+            2.640067173852504,
+            -2.349884186124874,
+            0.989570312
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "CommonContainer"
+        },
+        {
+          "name": "orange_12",
+          "xml_path": "obj/meshes/fruit/orange/orange_12/model.xml",
+          "position": [
+            2.6738199112339527,
+            -2.3134164401240263,
+            1.0866517564872749
+          ],
+          "orientation": [
+            -0.09787310152164215,
+            -0.44965534248853156,
+            0.5010739732878987,
+            0.7329091364306585
+          ],
+          "class": "Fruit"
+        },
+        {
+          "name": "apple_22",
+          "xml_path": "obj/meshes/fruit/apple/apple_22/model.xml",
+          "position": [
+            2.7778866785003786,
+            -2.3515209146930887,
+            1.0866564417170361
+          ],
+          "orientation": [
+            6.0874593202525844e-05,
+            -0.029738403953612172,
+            -0.02230268351058808,
+            0.9993088681347735
+          ],
+          "class": "Fruit"
+        },
+        {
+          "name": "pomegranate_4",
+          "xml_path": "obj/meshes/fruit/pomegranate/pomegranate_4/model.xml",
+          "position": [
+            2.534140000371249,
+            -2.1268999619232236,
+            0.9533667587027738
+          ],
+          "orientation": [
+            -0.26579719218872283,
+            -0.827025219362095,
+            -0.19227824220739578,
+            0.4565196783680892
+          ],
+          "class": "Fruit"
+        },
+        {
+          "name": "tomato_5",
+          "xml_path": "obj/meshes/ingredients/tomato/tomato_5/model.xml",
+          "position": [
+            2.7550680983991467,
+            -2.0998552506490458,
+            0.9504551637341124
+          ],
+          "orientation": [
+            0.0007767073845813492,
+            4.3175777929608353e-07,
+            0.00043760119432429523,
+            0.9999996026152447
+          ],
+          "class": "Ingredient"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "The fruit on the table shelf has not been washed. Wash every piece of fruit and return all of them to the tray."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "apple_22"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "tray_7",
+                    "entities": [
+                      "apple_22"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "orange_12"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "tray_7",
+                    "entities": [
+                      "orange_12"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "is_open": {
+              "container": "sink_0"
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_6",
+      "destination_position": "top",
+      "fixture_surface": "island_island_group",
+      "target_entity": [
+        "apple_22",
+        "orange_12"
+      ],
+      "target_container": [
+        "tray_7",
+        "table_shelf_4"
+      ]
+    }
+  },
+  "wash_fruit_plate": {
+    "task": {
+      "components": [
+        {
+          "name": "sink_0",
+          "xml_path": "obj/meshes/containers/sinks/sink_0/model.xml",
+          "position": [
+            3.200039841043554,
+            -2.295000001845708,
+            0.9381176470588236
+          ],
+          "orientation": [
+            4.632679487995776e-05,
+            0.0,
+            0.0,
+            0.999999998926914
+          ],
+          "class": "Sink",
+          "sink_type": "sink_0"
+        },
+        {
+          "name": "tray_1",
+          "xml_path": "obj/meshes/containers/tray/tray_1/model.xml",
+          "position": [
+            3.6500671738525043,
+            -2.2498841861248735,
+            0.9500000000000001
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "apple_0",
+          "xml_path": "obj/meshes/fruit/apple/apple_0/model.xml",
+          "position": [
+            2.7219659196999886,
+            -2.1506607717264363,
+            0.95376494318043
+          ],
+          "orientation": [
+            0.0007954462805548473,
+            -0.04662143416221777,
+            -0.011459590499925404,
+            0.9988465782728829
+          ],
+          "class": "Fruit"
+        },
+        {
+          "name": "pear_13",
+          "xml_path": "obj/meshes/fruit/pear/pear_13/model.xml",
+          "position": [
+            2.5293590112440514,
+            -2.367426865237068,
+            0.9417323500720421
+          ],
+          "orientation": [
+            0.013559525364243492,
+            -0.7553982676150695,
+            -0.29504595522883814,
+            0.5849251925324718
+          ],
+          "class": "Fruit"
+        },
+        {
+          "name": "pomegranate_4",
+          "xml_path": "obj/meshes/fruit/pomegranate/pomegranate_4/model.xml",
+          "position": [
+            2.724951225983756,
+            -2.364713638158807,
+            0.9537589045298812
+          ],
+          "orientation": [
+            -0.02202331923780716,
+            0.006217942752604415,
+            -0.20672896878106478,
+            0.9781305864067391
+          ],
+          "class": "Fruit"
+        },
+        {
+          "name": "tomato_8",
+          "xml_path": "obj/meshes/ingredients/tomato/tomato_8/model.xml",
+          "position": [
+            2.575067554013942,
+            -2.1498671149927944,
+            0.947532950775388
+          ],
+          "orientation": [
+            0.0008117302337714786,
+            2.648016675466544e-07,
+            0.0003227824262947754,
+            0.9999996184526584
+          ],
+          "class": "Ingredient"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the apple, orange, and pear, please wash them and put them on the plate."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "apple_0"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "tray_1",
+                    "entities": [
+                      "apple_0"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "pear_13"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "tray_1",
+                    "entities": [
+                      "pear_13"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "is_open": {
+              "container": "sink_0"
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_1",
+      "destination_position": "top",
+      "fixture_surface": "island_island_group",
+      "target_entity": [
+        "apple_0",
+        "pear_13"
+      ],
+      "target_container": [
+        "tray_1"
+      ]
+    }
+  },
+  "wash_place_apple": {
+    "task": {
+      "components": [
+        {
+          "name": "sink_0",
+          "xml_path": "obj/meshes/containers/sinks/sink_0/model.xml",
+          "position": [
+            3.200039841043554,
+            -2.295000001845708,
+            0.9381176470588236
+          ],
+          "orientation": [
+            4.632679487995776e-05,
+            0.0,
+            0.0,
+            0.999999998926914
+          ],
+          "class": "Sink",
+          "sink_type": "sink_0"
+        },
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.687820396665435,
+            -0.2941330059285601,
+            0.9410266802991079
+          ],
+          "orientation": [
+            0.9999895167522496,
+            -2.9508282938254323e-09,
+            -6.343749391690448e-07,
+            0.00457890655075716
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "bowl_2",
+          "xml_path": "obj/meshes/containers/bowl/bowl_2/model.xml",
+          "position": [
+            2.680067173852504,
+            -2.4598841861248735,
+            0.9500000000000001
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "CommonContainer"
+        },
+        {
+          "name": "apple_22",
+          "xml_path": "obj/meshes/fruit/apple/apple_22/model.xml",
+          "position": [
+            2.6779797841312196,
+            -2.2139481315001244,
+            0.9563095335994117
+          ],
+          "orientation": [
+            0.0004844914093037896,
+            -0.02932573555948168,
+            -0.02186691508314584,
+            0.9993305782005852
+          ],
+          "class": "Fruit"
+        },
+        {
+          "name": "peach_3",
+          "xml_path": "obj/meshes/fruit/peach/peach_3/model.xml",
+          "position": [
+            2.5801229969615287,
+            -2.13767341718415,
+            0.9529594503966552
+          ],
+          "orientation": [
+            0.0007915442947609419,
+            0.0009026270951357113,
+            -0.004477693580530616,
+            0.9999892544333451
+          ],
+          "class": "Fruit"
+        },
+        {
+          "name": "pomegranate_1",
+          "xml_path": "obj/meshes/fruit/pomegranate/pomegranate_1/model.xml",
+          "position": [
+            2.862758685078617,
+            -2.110860869827255,
+            0.9503789439126
+          ],
+          "orientation": [
+            -0.14200024395433192,
+            0.8891046911809172,
+            0.34922398685853384,
+            0.2595599850509057
+          ],
+          "class": "Fruit"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the apple, please wash it and put it on the bowl."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "apple_22"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "bowl_2",
+                    "entities": [
+                      "apple_22"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "is_open": {
+              "container": "sink_0"
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_5",
+      "destination_position": "top",
+      "fixture_surface": "island_island_group",
+      "target_entity": [
+        "apple_22"
+      ],
+      "target_container": [
+        "bowl_2"
+      ]
+    }
+  },
+  "wash_place_carrot": {
+    "task": {
+      "components": [
+        {
+          "name": "sink_0",
+          "xml_path": "obj/meshes/containers/sinks/sink_0/model.xml",
+          "position": [
+            3.200039841043554,
+            -2.295000001845708,
+            0.9381176470588236
+          ],
+          "orientation": [
+            4.632679487995776e-05,
+            0.0,
+            0.0,
+            0.999999998926914
+          ],
+          "class": "Sink",
+          "sink_type": "sink_0"
+        },
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.689999429936511,
+            -0.30026878496379594,
+            0.9260964582718663
+          ],
+          "orientation": [
+            0.9999960304938238,
+            -1.596559757910591e-05,
+            -1.673651033721981e-05,
+            0.0028175275656320683
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "plate_0",
+          "xml_path": "obj/meshes/tablewares/plates/plate_0/model.xml",
+          "position": [
+            2.680067173852504,
+            -2.4098841861248737,
+            0.9344665053
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "Plate"
+        },
+        {
+          "name": "carrot_1",
+          "xml_path": "obj/meshes/ingredients/carrot/carrot_1/model.xml",
+          "position": [
+            2.686556274567964,
+            -2.1238840565680315,
+            0.9339986139348593
+          ],
+          "orientation": [
+            -0.0065887712462736146,
+            0.21751581188937696,
+            0.032455869229848194,
+            0.9754947853392685
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "cucumber_2",
+          "xml_path": "obj/meshes/ingredients/cucumber/cucumber_2/model.xml",
+          "position": [
+            2.5710100069187263,
+            -2.174570958208198,
+            0.9373430411484462
+          ],
+          "orientation": [
+            -0.0007156596435277756,
+            -0.24148483989782807,
+            0.008614364637213896,
+            0.9703660920769503
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "radish_6",
+          "xml_path": "obj/meshes/ingredients/radish/radish_6/model.xml",
+          "position": [
+            2.779873590916642,
+            -2.1798450754421212,
+            0.9392651282912853
+          ],
+          "orientation": [
+            -0.0062201273053619005,
+            0.0018314588913494105,
+            -0.12226024824571392,
+            0.9924768951837272
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the carrot, please wash it and put it on the plate."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "carrot_1"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "plate_0",
+                    "entities": [
+                      "carrot_1"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "is_open": {
+              "container": "sink_0"
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_1",
+      "destination_position": "top",
+      "fixture_surface": "island_island_group",
+      "target_entity": [
+        "carrot_1"
+      ],
+      "target_container": [
+        "plate_0"
+      ]
+    }
+  },
+  "wash_place_cucumber": {
+    "task": {
+      "components": [
+        {
+          "name": "sink_0",
+          "xml_path": "obj/meshes/containers/sinks/sink_0/model.xml",
+          "position": [
+            3.200039841043554,
+            -2.295000001845708,
+            0.9381176470588236
+          ],
+          "orientation": [
+            4.632679487995776e-05,
+            0.0,
+            0.0,
+            0.999999998926914
+          ],
+          "class": "Sink",
+          "sink_type": "sink_0"
+        },
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.6879755408497794,
+            -0.2946579508707855,
+            0.9410266706714461
+          ],
+          "orientation": [
+            0.999991523603462,
+            -7.913019936438644e-09,
+            -6.771550435185718e-07,
+            0.004117368184899156
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "tray_7",
+          "xml_path": "obj/meshes/containers/tray/tray_7/model.xml",
+          "position": [
+            2.680067173852504,
+            -2.4498841861248737,
+            0.9500000000000001
+          ],
+          "orientation": [
+            -0.7062616448200053,
+            -0.0,
+            0.0,
+            0.7079509086484322
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "cucumber_2",
+          "xml_path": "obj/meshes/ingredients/cucumber/cucumber_2/model.xml",
+          "position": [
+            2.7710022712407762,
+            -2.1245688737958637,
+            0.9373429942651003
+          ],
+          "orientation": [
+            -0.0005978739426060473,
+            -0.24147278197914507,
+            0.008642245198799007,
+            0.9703689245374277
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "carrot_4",
+          "xml_path": "obj/meshes/ingredients/carrot/carrot_4/model.xml",
+          "position": [
+            2.5803035090656774,
+            -2.1749457039137967,
+            0.9335444476622048
+          ],
+          "orientation": [
+            0.0008881372896254373,
+            0.009121611360880999,
+            -0.0022224794781260564,
+            0.9999555330129963
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "bell_pepper_3",
+          "xml_path": "obj/meshes/ingredients/bell_pepper/bell_pepper_3/model.xml",
+          "position": [
+            2.682374476244481,
+            -2.175015157499935,
+            0.9523727524712415
+          ],
+          "orientation": [
+            -0.00022467606970844088,
+            0.03595512020952033,
+            -0.0019299105280266079,
+            0.9993515168831917
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the cucumber, please wash it and put it in the tray."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "cucumber_2"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "tray_7",
+                    "entities": [
+                      "cucumber_2"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "is_open": {
+              "container": "sink_0"
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_6",
+      "destination_position": "top",
+      "fixture_surface": "island_island_group",
+      "target_entity": [
+        "cucumber_2"
+      ],
+      "target_container": [
+        "tray_7"
+      ]
+    }
+  },
+  "wash_veg_salad": {
+    "task": {
+      "components": [
+        {
+          "name": "sink_0",
+          "xml_path": "obj/meshes/containers/sinks/sink_0/model.xml",
+          "position": [
+            3.200039841043554,
+            -2.295000001845708,
+            0.9381176470588236
+          ],
+          "orientation": [
+            4.632679487995776e-05,
+            0.0,
+            0.0,
+            0.999999998926914
+          ],
+          "class": "Sink",
+          "sink_type": "sink_0"
+        },
+        {
+          "name": "tray_7",
+          "xml_path": "obj/meshes/containers/tray/tray_7/model.xml",
+          "position": [
+            3.6500671738525043,
+            -2.2498841861248735,
+            0.9500000000000001
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "carrot_0",
+          "xml_path": "obj/meshes/ingredients/carrot/carrot_0/model.xml",
+          "position": [
+            2.5996623474716296,
+            -2.1477197472576366,
+            0.9375891446194459
+          ],
+          "orientation": [
+            0.004272910772240051,
+            0.5992751662440639,
+            0.05355073297493465,
+            0.7987385907507717
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "tomato_2",
+          "xml_path": "obj/meshes/ingredients/tomato/tomato_2/model.xml",
+          "position": [
+            2.725066813128993,
+            -2.3498788097700603,
+            0.9462613260131415
+          ],
+          "orientation": [
+            0.0006630454467364478,
+            1.3265811953866096e-06,
+            9.365180548418842e-05,
+            0.9999997757991334
+          ],
+          "class": "Ingredient"
+        },
+        {
+          "name": "cucumber_3",
+          "xml_path": "obj/meshes/ingredients/cucumber/cucumber_3/model.xml",
+          "position": [
+            2.541209085213732,
+            -2.3500496857459203,
+            0.9409396494707123
+          ],
+          "orientation": [
+            -0.03665287469608184,
+            -0.6485554970029072,
+            0.005897233051865246,
+            0.7602615054875237
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "bell_pepper_1",
+          "xml_path": "obj/meshes/ingredients/bell_pepper/bell_pepper_1/model.xml",
+          "position": [
+            2.79193710438773,
+            -2.1372726424535697,
+            0.956656969196545
+          ],
+          "orientation": [
+            -0.08146904397912924,
+            0.7819116325148546,
+            0.10808200040549448,
+            0.6085189191795345
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to make a vegetable salad, please wash the carrot, tomato, and cucumber and put them in the tray."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "carrot_0"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "tray_7",
+                    "entities": [
+                      "carrot_0"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "tomato_2"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "tray_7",
+                    "entities": [
+                      "tomato_2"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "sink_0",
+                    "entities": [
+                      "cucumber_3"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "tray_7",
+                    "entities": [
+                      "cucumber_3"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "is_open": {
+              "container": "sink_0"
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_9",
+      "destination_position": "top",
+      "fixture_surface": "island_island_group",
+      "target_entity": [
+        "carrot_0",
+        "tomato_2",
+        "cucumber_3"
+      ],
+      "target_container": [
+        "tray_7"
+      ]
+    }
+  },
+  "heat_scone_0": {
+    "task": {
+      "components": [
+        {
+          "name": "microwave_1",
+          "xml_path": "obj/meshes/containers/microwaves/pack_1/model.xml",
+          "position": [
+            2.449967571243619,
+            -2.8751273913887982,
+            0.9600000000000001
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Microwave"
+        },
+        {
+          "name": "plate_3",
+          "xml_path": "obj/meshes/tablewares/plates/plate3/plate.xml",
+          "position": [
+            3.329967571243619,
+            -3.0751273913887984,
+            0.9700000000000001
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Plate"
+        },
+        {
+          "name": "scone_6",
+          "xml_path": "obj/meshes/breads/scone/scone_6/model.xml",
+          "position": [
+            3.1674837142401207,
+            -3.132391608223664,
+            0.9371436618630317
+          ],
+          "orientation": [
+            -0.6106772970682617,
+            0.011182346413683032,
+            -0.007310070020849704,
+            -0.7917668576357424
+          ],
+          "class": "Bread"
+        },
+        {
+          "name": "bread_2",
+          "xml_path": "obj/meshes/breads/bread/bread_2/model.xml",
+          "position": [
+            2.8249672875659733,
+            -3.0209798615859973,
+            0.9419395718555827
+          ],
+          "orientation": [
+            0.9999998908643906,
+            0.00046424435848001065,
+            3.7423506973798795e-05,
+            -3.671326089804026e-05
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "potato_6",
+          "xml_path": "obj/meshes/ingredients/potato/potato_6/model.xml",
+          "position": [
+            2.8251947366495624,
+            -3.2292977126089766,
+            0.9444912710584742
+          ],
+          "orientation": [
+            0.999988098039048,
+            0.00015861947505874067,
+            0.004847843036783337,
+            -0.0005263439947611152
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the scone, please warm it in the microwave."
+      ],
+      "conditions": {
+        "asyn_sequence": {
+          "condition_sets": [
+            {
+              "is_open": {
+                "container": "microwave_1"
+              }
+            },
+            {
+              "contain": {
+                "container": "microwave_1",
+                "entities": [
+                  "scone_6"
+                ]
+              }
+            }
+          ],
+          "ordered_indices": [
+            0,
+            1
+          ]
+        }
+      },
+      "robocasa_scene": "ONE_WALL_LARGE_5",
+      "destination_position": "bottom",
+      "fixture_surface": "island_counter_island_group",
+      "target_entity": [
+        "scone_6"
+      ],
+      "target_container": [
+        "microwave_1",
+        "plate_3"
+      ]
+    }
+  },
+  "heat_waffle_0": {
+    "task": {
+      "components": [
+        {
+          "name": "microwave_1",
+          "xml_path": "obj/meshes/containers/microwaves/pack_1/model.xml",
+          "position": [
+            2.449967571243619,
+            -2.8751273913887982,
+            0.9600000000000001
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Microwave"
+        },
+        {
+          "name": "plate_4",
+          "xml_path": "obj/meshes/tablewares/plates/plate_4/model.xml",
+          "position": [
+            3.329967571243619,
+            -3.0751273913887984,
+            0.9585205694
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Plate"
+        },
+        {
+          "name": "waffle_0",
+          "xml_path": "obj/meshes/dessert/waffle/waffle_0/model.xml",
+          "position": [
+            3.0786480678089814,
+            -3.1218818604052734,
+            0.9222691743321269
+          ],
+          "orientation": [
+            0.9999712905122675,
+            9.671462416384924e-05,
+            0.0006795346544372763,
+            0.007546325606822691
+          ],
+          "class": "Dessert"
+        },
+        {
+          "name": "tofu_10",
+          "xml_path": "obj/meshes/ingredients/tofu/tofu_10/model.xml",
+          "position": [
+            2.8249675528807145,
+            -3.229295298555255,
+            0.9360830531821122
+          ],
+          "orientation": [
+            0.9999999997890251,
+            2.542276972282092e-06,
+            -7.268524233931006e-06,
+            -1.9043495471742092e-05
+          ],
+          "class": "Ingredient"
+        },
+        {
+          "name": "bread_1",
+          "xml_path": "obj/meshes/breads/bread/bread_1/model.xml",
+          "position": [
+            2.8249278061798595,
+            -3.021041064104388,
+            0.9523692064933552
+          ],
+          "orientation": [
+            0.9999989727406655,
+            0.0012613019406422278,
+            -0.0006807423232236482,
+            -1.4997324412294368e-05
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "cake_0",
+          "xml_path": "obj/meshes/dessert/cake/cake_0/model.xml",
+          "position": [
+            2.9200222402810088,
+            -2.832215725739251,
+            0.9387403281733634
+          ],
+          "orientation": [
+            -0.0008265018504438449,
+            0.9979757982773785,
+            -0.06348465795154803,
+            -0.0036498153508596845
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the waffle, please warm it in the microwave."
+      ],
+      "conditions": {
+        "asyn_sequence": {
+          "condition_sets": [
+            {
+              "is_open": {
+                "container": "microwave_1"
+              }
+            },
+            {
+              "contain": {
+                "container": "microwave_1",
+                "entities": [
+                  "waffle_0"
+                ]
+              }
+            }
+          ],
+          "ordered_indices": [
+            0,
+            1
+          ]
+        }
+      },
+      "robocasa_scene": "ONE_WALL_LARGE_6",
+      "destination_position": "bottom",
+      "fixture_surface": "island_counter_island_group",
+      "target_entity": [
+        "waffle_0"
+      ],
+      "target_container": [
+        "microwave_1",
+        "plate_4"
+      ]
+    }
+  },
+  "reheat_steak_0": {
+    "task": {
+      "components": [
+        {
+          "name": "microwave_1",
+          "xml_path": "obj/meshes/containers/microwaves/pack_1/model.xml",
+          "position": [
+            2.449967571243619,
+            -2.8751273913887982,
+            0.9600000000000001
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Microwave"
+        },
+        {
+          "name": "plate_3",
+          "xml_path": "obj/meshes/tablewares/plates/plate3/plate.xml",
+          "position": [
+            3.329967571243619,
+            -3.0751273913887984,
+            0.9700000000000001
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Plate"
+        },
+        {
+          "name": "steak_15",
+          "xml_path": "obj/meshes/cooked_food/steak_15/model.xml",
+          "position": [
+            2.822738358728685,
+            -3.0245575273180116,
+            0.9325560370840176
+          ],
+          "orientation": [
+            0.9921262318828277,
+            0.10781284669847732,
+            -0.05133662718920433,
+            0.03776878083269259
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "pork_loin_5",
+          "xml_path": "obj/meshes/ingredients/pork_loin/pork_loin_5/model.xml",
+          "position": [
+            3.074967507940635,
+            -3.2292943878943223,
+            0.9340348183897825
+          ],
+          "orientation": [
+            0.9999999999996996,
+            -2.1118095644317472e-07,
+            3.278276476305762e-07,
+            -6.709367834745823e-07
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "salami_11",
+          "xml_path": "obj/meshes/ingredients/salami/salami_11/model.xml",
+          "position": [
+            2.8249670465826413,
+            -3.2292937870152785,
+            0.9324888631012375
+          ],
+          "orientation": [
+            0.9999999999724029,
+            4.681690587072823e-06,
+            5.481040119694541e-06,
+            1.7980332825901465e-06
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the steak, please warm it in the microwave."
+      ],
+      "conditions": {
+        "asyn_sequence": {
+          "condition_sets": [
+            {
+              "is_open": {
+                "container": "microwave_1"
+              }
+            },
+            {
+              "contain": {
+                "container": "microwave_1",
+                "entities": [
+                  "steak_15"
+                ]
+              }
+            }
+          ],
+          "ordered_indices": [
+            0,
+            1
+          ]
+        }
+      },
+      "robocasa_scene": "ONE_WALL_LARGE_4",
+      "destination_position": "bottom",
+      "fixture_surface": "island_counter_island_group",
+      "target_entity": [
+        "steak_15"
+      ],
+      "target_container": [
+        "microwave_1",
+        "plate_3"
+      ]
+    }
+  },
+  "classify_chocolate_snacks": {
+    "task": {
+      "components": [
+        {
+          "name": "sink_0",
+          "xml_path": "obj/meshes/containers/sinks/sink_0/model.xml",
+          "position": [
+            3.200039841043554,
+            -2.295000001845708,
+            0.9381176470588236
+          ],
+          "orientation": [
+            4.632679487995776e-05,
+            0.0,
+            0.0,
+            0.999999998926914
+          ],
+          "class": "Sink",
+          "sink_type": "sink_0"
+        },
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.6900000000000004,
+            -0.3,
+            0.9261971830985917
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "shelf_1",
+          "xml_path": "obj/meshes/containers/shelf/shelf1.xml",
+          "position": [
+            3.2000671738525037,
+            -2.9501158136605095,
+            0.9500000000000001
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Shelf"
+        },
+        {
+          "name": "bar_0",
+          "xml_path": "obj/meshes/snacks/bar/bar_0/model.xml",
+          "position": [
+            3.450046699569938,
+            -3.3751721027706227,
+            0.9347534625085556
+          ],
+          "orientation": [
+            0.9999977531008715,
+            0.001991261834426979,
+            -0.0007266317784825618,
+            2.5995683026042342e-05
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "boxed_food_0",
+          "xml_path": "obj/meshes/snacks/boxed_food/boxed_food_0/model.xml",
+          "position": [
+            2.9509970965812267,
+            -3.375116158608718,
+            0.9557479664540726
+          ],
+          "orientation": [
+            0.9999123176801848,
+            1.656319204501482e-06,
+            0.013242137524420635,
+            -5.236872058622828e-05
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "Put chocolate-related snacks on the first layer and other snacks on the second layer."
+      ],
+      "conditions": {
+        "contain": {
+          "container": "shelf_1",
+          "entities": [
+            "bar_0",
+            "boxed_food_0"
+          ]
+        }
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_8",
+      "destination_position": "bottom",
+      "fixture_surface": "island_island_group",
+      "target_entity": [
+        "bar_0",
+        "boxed_food_0"
+      ],
+      "target_container": [
+        "shelf_1"
+      ]
+    }
+  },
+  "uncover_fruit": {
+    "task": {
+      "components": [
+        {
+          "name": "sink_0",
+          "xml_path": "obj/meshes/containers/sinks/sink_0/model.xml",
+          "position": [
+            3.200039841043554,
+            -2.295000001845708,
+            0.9381176470588236
+          ],
+          "orientation": [
+            4.632679487995776e-05,
+            0.0,
+            0.0,
+            0.999999998926914
+          ],
+          "class": "Sink",
+          "sink_type": "sink_0"
+        },
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.6899994299365115,
+            -0.30026878496379544,
+            0.9260964582718668
+          ],
+          "orientation": [
+            0.9999960304938242,
+            -1.5965597589229864e-05,
+            -1.6736510339687854e-05,
+            0.002817527565631433
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "tray_5",
+          "xml_path": "obj/meshes/containers/tray/tray_5/model.xml",
+          "position": [
+            2.250065320780711,
+            -2.1949575367975083,
+            0.9500000000000001
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "bell_pepper_0",
+          "xml_path": "obj/meshes/ingredients/bell_pepper/bell_pepper_0/model.xml",
+          "position": [
+            2.827368806760901,
+            -2.307578193248147,
+            0.9523788036588291
+          ],
+          "orientation": [
+            4.9359295497296635e-05,
+            0.03613959113859749,
+            -0.0017433965614739562,
+            0.9993452296801266
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "pan_0",
+          "xml_path": "obj/meshes/tablewares/pans/pan_0/model.xml",
+          "position": [
+            2.5751694217754326,
+            -2.1399198441758243,
+            0.9529749586695211
+          ],
+          "orientation": [
+            0.004090371304929418,
+            -0.999991265205406,
+            -0.0007568550276305232,
+            0.00040687337981651334
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "apple_0",
+          "xml_path": "obj/meshes/fruit/apple/apple_0/model.xml",
+          "position": [
+            2.632306902617198,
+            -2.1573337866265567,
+            0.9555980242816781
+          ],
+          "orientation": [
+            0.32344132198307707,
+            -0.6210101734134758,
+            0.09894152554121952,
+            0.7070662276437626
+          ],
+          "class": "Fruit"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "Help me wash the apple."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "contain": {
+              "container": "tray_5",
+              "entities": [
+                "pan_0"
+              ]
+            }
+          },
+          {
+            "contain": {
+              "container": "sink_0",
+              "entities": [
+                "apple_0"
+              ]
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_1",
+      "destination_position": "top",
+      "fixture_surface": "sink_island_group",
+      "target_entity": "apple_0",
+      "target_container": "tray_5"
+    }
+  },
+  "store_yogurt": {
+    "task": {
+      "components": [
+        {
+          "name": "counter_0",
+          "xml_path": "obj/meshes/containers/counter/counter_0/model.xml",
+          "position": [
+            2.249967571243619,
+            -2.6001273913887983,
+            1.06
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Counter"
+        },
+        {
+          "name": "yogurt_1",
+          "xml_path": "obj/meshes/drinks/yogurt/yogurt_1/model.xml",
+          "position": [
+            2.7496061159990894,
+            -3.137534253249341,
+            0.9455660935577505
+          ],
+          "orientation": [
+            0.9999735179704298,
+            -0.001796110122444473,
+            -0.007052462997436469,
+            -1.0580240589224687e-05
+          ],
+          "class": "Drink"
+        },
+        {
+          "name": "hamburger",
+          "xml_path": "obj/meshes/breads/hamburger/hamburger_15/model.xml",
+          "position": [
+            2.6722492750147193,
+            -2.611106182970126,
+            0.9437295220586518
+          ],
+          "orientation": [
+            -0.5100191062639683,
+            1.9682327543341834e-05,
+            -1.1035103785251084e-06,
+            0.8601630722468223
+          ],
+          "class": "Bread"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "Put the yogurt away into the cabinet."
+      ],
+      "conditions": {
+        "asyn_sequence": {
+          "condition_sets": [
+            {
+              "is_open": {
+                "container": "counter_0"
+              }
+            },
+            {
+              "contain": {
+                "container": "counter_0",
+                "entities": [
+                  "yogurt_1"
+                ]
+              }
+            }
+          ],
+          "ordered_indices": [
+            0,
+            1
+          ]
+        }
+      },
+      "robocasa_scene": "ONE_WALL_LARGE_7",
+      "destination_position": "bottom",
+      "fixture_surface": "island_counter_island_group",
+      "target_entity": "yogurt_1",
+      "target_container": "counter_0"
+    }
+  },
+  "select_same_cake": {
+    "task": {
+      "components": [
+        {
+          "name": "counter_0",
+          "xml_path": "obj/meshes/containers/counter/counter_0/model.xml",
+          "position": [
+            2.249967571243619,
+            -2.6001273913887983,
+            1.056
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Counter"
+        },
+        {
+          "name": "cake_9",
+          "xml_path": "obj/meshes/dessert/cake/cake_9/model.xml",
+          "position": [
+            2.249822751791261,
+            -2.6000748597909524,
+            1.0603456218087983
+          ],
+          "orientation": [
+            0.9999987718807967,
+            -0.0004194585172150311,
+            -0.0014994855104852865,
+            -0.00017842268547068645
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "cake_0",
+          "xml_path": "obj/meshes/dessert/cake/cake_0/model.xml",
+          "position": [
+            2.7445951920553675,
+            -2.98782403106418,
+            0.9386656910787782
+          ],
+          "orientation": [
+            0.9999110057130055,
+            -0.0019694986197290347,
+            -0.0008070778854954623,
+            -0.013170055219363876
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "scone_0",
+          "xml_path": "obj/meshes/breads/scone/scone_0/model.xml",
+          "position": [
+            2.749967989846389,
+            -3.2126275372743294,
+            0.9374128604319478
+          ],
+          "orientation": [
+            0.9999999999976767,
+            1.2812620701212299e-06,
+            4.028359121442353e-07,
+            1.686498449593321e-06
+          ],
+          "class": "Bread"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "An object is already stored in the cabinet. Pick the object of the same kind on the table and put it into the cabinet."
+      ],
+      "conditions": {
+        "asyn_sequence": {
+          "condition_sets": [
+            {
+              "is_open": {
+                "container": "counter_0"
+              }
+            },
+            {
+              "contain": {
+                "container": "counter_0",
+                "entities": [
+                  "cake_0"
+                ]
+              }
+            }
+          ],
+          "ordered_indices": [
+            0,
+            1
+          ]
+        }
+      },
+      "robocasa_scene": "ONE_WALL_LARGE_8",
+      "destination_position": "bottom",
+      "fixture_surface": "island_counter_island_group",
+      "target_entity": "cake_0",
+      "target_container": "counter_0"
+    }
+  },
+  "select_same_banana": {
+    "task": {
+      "components": [
+        {
+          "name": "counter_0",
+          "xml_path": "obj/meshes/containers/counter/counter_0/model.xml",
+          "position": [
+            2.249967571243619,
+            -2.6001273913887983,
+            1.056
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Counter"
+        },
+        {
+          "name": "cherry_1",
+          "xml_path": "obj/meshes/fruit/cherry/cherry_1/model.xml",
+          "position": [
+            2.2499866087394085,
+            -2.620127279716107,
+            1.047530311687665
+          ],
+          "orientation": [
+            0.9999999628436644,
+            -2.3424272070319572e-07,
+            0.00026813421901690634,
+            4.915948924829038e-05
+          ],
+          "class": "Fruit"
+        },
+        {
+          "name": "banana_21",
+          "xml_path": "obj/meshes/fruit/banana/banana_21/model.xml",
+          "position": [
+            2.748416971098958,
+            -3.0627313104389344,
+            0.9312333145384593
+          ],
+          "orientation": [
+            0.9981703175998878,
+            0.0032122181216590936,
+            -0.06037792963567608,
+            0.00045202896725081166
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "bar_soap_2",
+          "xml_path": "obj/meshes/cleaning_supplies/bar_soap/bar_soap_2/model.xml",
+          "position": [
+            2.749967671328317,
+            -3.2126274135681805,
+            0.9326421098510757
+          ],
+          "orientation": [
+            0.9999999999981193,
+            -1.2836681379716265e-07,
+            5.570021840469712e-09,
+            1.9354832319761366e-06
+          ],
+          "class": "CleaningSupplies"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "An object is already stored in the cabinet. Pick the object of the same kind on the table and put it into the cabinet."
+      ],
+      "conditions": {
+        "asyn_sequence": {
+          "condition_sets": [
+            {
+              "is_open": {
+                "container": "counter_0"
+              }
+            },
+            {
+              "contain": {
+                "container": "counter_0",
+                "entities": [
+                  "banana_21"
+                ]
+              }
+            }
+          ],
+          "ordered_indices": [
+            0,
+            1
+          ]
+        }
+      },
+      "robocasa_scene": "ONE_WALL_LARGE_1",
+      "destination_position": "bottom",
+      "fixture_surface": "island_counter_island_group",
+      "target_entity": "banana_21",
+      "target_container": "counter_0"
+    }
+  },
+  "fix_burnt_bread_0": {
+    "task": {
+      "components": [
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.6900000000000004,
+            -0.3,
+            0.9261971830985917
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "plate_0",
+          "xml_path": "obj/meshes/tablewares/plates/plate_0/model.xml",
+          "position": [
+            4.69,
+            -0.53,
+            0.9344665052999999
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Plate"
+        },
+        {
+          "name": "bread_21",
+          "xml_path": "obj/meshes/breads/bread/bread_21/model.xml",
+          "position": [
+            4.690289819858219,
+            -0.5298773053442278,
+            0.9580669536116843
+          ],
+          "orientation": [
+            0.9999942136621763,
+            -0.00048351743456894505,
+            0.001977183884228509,
+            -0.0027257286999979023
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "pan_1",
+          "xml_path": "obj/meshes/tablewares/pans/pan_1/model.xml",
+          "position": [
+            3.8600000000000003,
+            -0.3,
+            0.9921924474999999
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "tray_7",
+          "xml_path": "obj/meshes/containers/tray/tray_7/model.xml",
+          "position": [
+            4.3100000000000005,
+            -0.195,
+            0.96
+          ],
+          "orientation": [
+            0.7073882691671998,
+            0.0,
+            0.0,
+            0.706825181105366
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "bread_9",
+          "xml_path": "obj/meshes/breads/bread/bread_9/model.xml",
+          "position": [
+            4.409854165621533,
+            -0.5000099129005268,
+            0.9274597541936913
+          ],
+          "orientation": [
+            0.9999472332677776,
+            0.0006256281610046637,
+            -0.010253710886494445,
+            2.612618986059901e-05
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "cake_7",
+          "xml_path": "obj/meshes/dessert/cake/cake_7/model.xml",
+          "position": [
+            4.192880656730667,
+            -0.5222473828503508,
+            0.9400971011457779
+          ],
+          "orientation": [
+            0.9961596561792767,
+            -0.04383301191869915,
+            0.013848713527513355,
+            0.07451724364569651
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "The bread on the plate is burnt, I would like it placed in the tray, and a fresh one pan-fried and placed on the same plate."
+      ],
+      "conditions": {
+        "asyn_sequence": {
+          "condition_sets": [
+            {
+              "contain": {
+                "container": "tray_7",
+                "entities": [
+                  "bread_21"
+                ]
+              }
+            },
+            {
+              "contain": {
+                "container": "pan_1",
+                "entities": [
+                  "bread_9"
+                ]
+              }
+            },
+            {
+              "is_open": {
+                "container": "stove_0",
+                "joint_name": "knob_front_right"
+              }
+            },
+            {
+              "contain": {
+                "container": "plate_0",
+                "entities": [
+                  "bread_9"
+                ]
+              }
+            }
+          ],
+          "ordered_indices": [
+            1,
+            3
+          ]
+        }
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_3",
+      "destination_position": "bottom",
+      "fixture_surface": "stovetop_main_group",
+      "target_entity": [
+        "bread_21",
+        "bread_9"
+      ],
+      "target_container": [
+        "plate_0",
+        "pan_1",
+        "tray_7"
+      ]
+    }
+  },
+  "fix_burnt_bread_1": {
+    "task": {
+      "components": [
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.6900000000000004,
+            -0.3,
+            0.9261971830985917
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "plate_11",
+          "xml_path": "obj/meshes/tablewares/plates/plate_11/model.xml",
+          "position": [
+            4.69,
+            -0.53,
+            0.9216875821999999
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Plate"
+        },
+        {
+          "name": "bread_21",
+          "xml_path": "obj/meshes/breads/bread/bread_21/model.xml",
+          "position": [
+            4.68969160774015,
+            -0.5297563439973495,
+            0.9502129923173896
+          ],
+          "orientation": [
+            0.9999805310231297,
+            -0.004266363033649155,
+            -0.0044005268841856935,
+            -0.0011709330916955974
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "pan_1",
+          "xml_path": "obj/meshes/tablewares/pans/pan_1/model.xml",
+          "position": [
+            3.8600000000000003,
+            -0.3,
+            0.9921924474999999
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "tray_1",
+          "xml_path": "obj/meshes/containers/tray/tray_1/model.xml",
+          "position": [
+            4.3100000000000005,
+            -0.195,
+            0.96
+          ],
+          "orientation": [
+            0.7073882691671998,
+            0.0,
+            0.0,
+            0.706825181105366
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "bread_3",
+          "xml_path": "obj/meshes/breads/bread/bread_3/model.xml",
+          "position": [
+            4.403397264467768,
+            -0.5058847530556324,
+            0.9278573265854014
+          ],
+          "orientation": [
+            0.9995349318491505,
+            0.0012633558980636368,
+            0.01661603157616428,
+            0.02553882220953409
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "donut_15",
+          "xml_path": "obj/meshes/dessert/donut/donut_15/model.xml",
+          "position": [
+            4.21008587388007,
+            -0.500050894642742,
+            0.9323771273945902
+          ],
+          "orientation": [
+            0.9999921434397047,
+            0.0021212657483741875,
+            0.0033486242796771453,
+            2.4341348841853618e-06
+          ],
+          "class": "Dessert"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "The bread on the plate is burnt, I would like it placed in the tray, and a fresh one pan-fried and placed on the same plate."
+      ],
+      "conditions": {
+        "asyn_sequence": {
+          "condition_sets": [
+            {
+              "contain": {
+                "container": "tray_1",
+                "entities": [
+                  "bread_21"
+                ]
+              }
+            },
+            {
+              "contain": {
+                "container": "pan_1",
+                "entities": [
+                  "bread_3"
+                ]
+              }
+            },
+            {
+              "is_open": {
+                "container": "stove_0",
+                "joint_name": "knob_front_right"
+              }
+            },
+            {
+              "contain": {
+                "container": "plate_11",
+                "entities": [
+                  "bread_3"
+                ]
+              }
+            }
+          ],
+          "ordered_indices": [
+            1,
+            3
+          ]
+        }
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_4",
+      "destination_position": "bottom",
+      "fixture_surface": "stovetop_main_group",
+      "target_entity": [
+        "bread_21",
+        "bread_3"
+      ],
+      "target_container": [
+        "plate_11",
+        "pan_1",
+        "tray_1"
+      ]
+    }
+  },
+  "fix_burnt_bread_2": {
+    "task": {
+      "components": [
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.6900000000000004,
+            -0.3,
+            0.9261971830985917
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "plate_12",
+          "xml_path": "obj/meshes/tablewares/plates/plate_12/model.xml",
+          "position": [
+            4.69,
+            -0.53,
+            0.9298957287999998
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Plate"
+        },
+        {
+          "name": "bread_21",
+          "xml_path": "obj/meshes/breads/bread/bread_21/model.xml",
+          "position": [
+            4.689933045757089,
+            -0.5300727176008779,
+            0.9654147210851887
+          ],
+          "orientation": [
+            0.9999970109473018,
+            0.001033421365972212,
+            -0.0016221984760745082,
+            0.0015095061598270768
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "pan_2",
+          "xml_path": "obj/meshes/tablewares/pans/pan_2/model.xml",
+          "position": [
+            3.8600000000000003,
+            -0.3,
+            0.9980271984
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "tray_2",
+          "xml_path": "obj/meshes/containers/tray/tray_2/model.xml",
+          "position": [
+            4.3100000000000005,
+            -0.195,
+            0.96
+          ],
+          "orientation": [
+            0.7073882691671998,
+            0.0,
+            0.0,
+            0.706825181105366
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "bread_9",
+          "xml_path": "obj/meshes/breads/bread/bread_9/model.xml",
+          "position": [
+            4.409853449179665,
+            -0.5000099059417931,
+            0.9274597479811395
+          ],
+          "orientation": [
+            0.9999472440720425,
+            0.000622431202017071,
+            -0.01025285164508526,
+            2.6177659065390835e-05
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "donut_13",
+          "xml_path": "obj/meshes/dessert/donut/donut_13/model.xml",
+          "position": [
+            4.209904322958359,
+            -0.499951041091356,
+            0.93283714607049
+          ],
+          "orientation": [
+            0.9999912027085831,
+            -0.0017524137857206428,
+            -0.0038102711190622566,
+            -7.338503839089203e-05
+          ],
+          "class": "Dessert"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "The bread on the plate is burnt, I would like it placed in the tray, and a fresh one pan-fried and placed on the same plate."
+      ],
+      "conditions": {
+        "asyn_sequence": {
+          "condition_sets": [
+            {
+              "contain": {
+                "container": "tray_2",
+                "entities": [
+                  "bread_21"
+                ]
+              }
+            },
+            {
+              "contain": {
+                "container": "pan_2",
+                "entities": [
+                  "bread_9"
+                ]
+              }
+            },
+            {
+              "is_open": {
+                "container": "stove_0",
+                "joint_name": "knob_front_right"
+              }
+            },
+            {
+              "contain": {
+                "container": "plate_12",
+                "entities": [
+                  "bread_9"
+                ]
+              }
+            }
+          ],
+          "ordered_indices": [
+            1,
+            3
+          ]
+        }
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_7",
+      "destination_position": "bottom",
+      "fixture_surface": "stovetop_main_group",
+      "target_entity": [
+        "bread_21",
+        "bread_9"
+      ],
+      "target_container": [
+        "plate_12",
+        "pan_2",
+        "tray_2"
+      ]
+    }
+  },
+  "cook_steak_0": {
+    "task": {
+      "components": [
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.6899994299365115,
+            -0.30026878496379583,
+            0.9260964582718663
+          ],
+          "orientation": [
+            0.9999960304938238,
+            -1.5965597582664993e-05,
+            -1.6736510339533725e-05,
+            0.002817527565632016
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "plate_0",
+          "xml_path": "obj/meshes/tablewares/plates/plate_0/model.xml",
+          "position": [
+            4.735,
+            -0.42999999999999994,
+            0.9544665052999999
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Plate"
+        },
+        {
+          "name": "pan_1",
+          "xml_path": "obj/meshes/tablewares/pans/pan_1/model.xml",
+          "position": [
+            3.9350000000000005,
+            -0.29999999999999993,
+            0.9921924474999999
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "steak_0",
+          "xml_path": "obj/meshes/ingredients/steak/steak_2/model.xml",
+          "position": [
+            4.24755801142452,
+            -0.3375560582839244,
+            0.9290364448207175
+          ],
+          "orientation": [
+            0.9999897186737051,
+            0.003143312095665972,
+            0.0032682826120015817,
+            -2.1557384675800986e-05
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "pork_chop_13",
+          "xml_path": "obj/meshes/ingredients/pork_chop/pork_chop_13/model.xml",
+          "position": [
+            4.378153892775574,
+            -0.468944857131128,
+            0.9303516506034756
+          ],
+          "orientation": [
+            0.9987534657959737,
+            0.049309283885531775,
+            -0.0035215029384762435,
+            -0.006907105057772295
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the steak, please cook it in the pan and put it on the plate."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "pan_1",
+                    "entities": [
+                      "steak_0"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "plate_0",
+                    "entities": [
+                      "steak_0"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "is_open": {
+              "container": "stove_0",
+              "joint_name": "knob_front_right"
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_9",
+      "destination_position": "bottom",
+      "fixture_surface": "stovetop_main_group",
+      "target_entity": [
+        "steak_0"
+      ],
+      "target_container": [
+        "plate_0",
+        "pan_1"
+      ]
+    }
+  },
+  "cook_chicken_breast_0": {
+    "task": {
+      "components": [
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.689999429936511,
+            -0.3002687849637964,
+            0.9260964582718667
+          ],
+          "orientation": [
+            0.9999960304938239,
+            -1.5965597570882165e-05,
+            -1.6736510340626082e-05,
+            0.002817527565631833
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "plate_5",
+          "xml_path": "obj/meshes/tablewares/plates/plate_5/model.xml",
+          "position": [
+            4.735,
+            -0.42999999999999994,
+            0.9471978849
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Plate"
+        },
+        {
+          "name": "pan_1",
+          "xml_path": "obj/meshes/tablewares/pans/pan_1/model.xml",
+          "position": [
+            3.9350000000000005,
+            -0.29999999999999993,
+            0.9921924474999999
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "chicken_breast_0",
+          "xml_path": "obj/meshes/ingredients/chicken_breast/chicken_breast_0/model.xml",
+          "position": [
+            4.238683802944517,
+            -0.3376142344165175,
+            0.9353834809269785
+          ],
+          "orientation": [
+            0.9590737832294782,
+            -0.025666007416415455,
+            -0.26649072435686305,
+            -0.09220318984152377
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "pork_chop_13",
+          "xml_path": "obj/meshes/ingredients/pork_chop/pork_chop_13/model.xml",
+          "position": [
+            4.378153892775576,
+            -0.4689448571311284,
+            0.9303516506034756
+          ],
+          "orientation": [
+            0.9987534657959738,
+            0.04930928388553307,
+            -0.0035215029384776265,
+            -0.006907105057792647
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "lamb_chop_5",
+          "xml_path": "obj/meshes/ingredients/lamb_chop/lamb_chop_5/model.xml",
+          "position": [
+            4.247594979530424,
+            -0.46168653277269056,
+            0.9362931704997374
+          ],
+          "orientation": [
+            0.999674912907301,
+            -0.025324098263623876,
+            0.0029592896630715165,
+            3.399418317275548e-05
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the chicken breast, please cook it in the pan and put it on the plate."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "pan_1",
+                    "entities": [
+                      "chicken_breast_0"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "plate_5",
+                    "entities": [
+                      "chicken_breast_0"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "is_open": {
+              "container": "stove_0",
+              "joint_name": "knob_front_right"
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_0",
+      "destination_position": "bottom",
+      "fixture_surface": "stovetop_main_group",
+      "target_entity": [
+        "chicken_breast_0"
+      ],
+      "target_container": [
+        "plate_5",
+        "pan_1"
+      ]
+    }
+  },
+  "cook_sausage_0": {
+    "task": {
+      "components": [
+        {
+          "name": "stove_0",
+          "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+          "position": [
+            3.6879755408497785,
+            -0.2946579508707895,
+            0.9410266706714461
+          ],
+          "orientation": [
+            0.999991523603462,
+            -7.91301993844702e-09,
+            -6.771550435185562e-07,
+            0.00411736818489764
+          ],
+          "class": "Stove",
+          "has_offset": true
+        },
+        {
+          "name": "plate_7",
+          "xml_path": "obj/meshes/tablewares/plates/plate_7/model.xml",
+          "position": [
+            4.735,
+            -0.42999999999999994,
+            0.9395809835
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "Plate"
+        },
+        {
+          "name": "pan_1",
+          "xml_path": "obj/meshes/tablewares/pans/pan_1/model.xml",
+          "position": [
+            3.9350000000000005,
+            -0.29999999999999993,
+            0.9921924474999999
+          ],
+          "orientation": [
+            0.0007963267107332633,
+            0.0,
+            0.0,
+            0.9999996829318346
+          ],
+          "class": "FlatContainer"
+        },
+        {
+          "name": "sausage_0",
+          "xml_path": "obj/meshes/ingredients/sausage/sausage_0/model.xml",
+          "position": [
+            4.372500122050409,
+            -0.4624998795193567,
+            0.9327408373065196
+          ],
+          "orientation": [
+            0.9999999999876296,
+            2.4095186800075675e-09,
+            4.95906906501637e-06,
+            -3.8517073402932636e-07
+          ],
+          "class": "Ingredient"
+        },
+        {
+          "name": "lamb_chop_5",
+          "xml_path": "obj/meshes/ingredients/lamb_chop/lamb_chop_5/model.xml",
+          "position": [
+            4.24759499866895,
+            -0.33668651278325906,
+            0.9362931704997374
+          ],
+          "orientation": [
+            0.9996749129173815,
+            -0.025324097382244434,
+            0.0029592972054590994,
+            3.369644559187223e-05
+          ],
+          "class": "LongEntity"
+        },
+        {
+          "name": "pork_chop_13",
+          "xml_path": "obj/meshes/ingredients/pork_chop/pork_chop_13/model.xml",
+          "position": [
+            4.240203839094794,
+            -0.4716539472545097,
+            0.9303516506034756
+          ],
+          "orientation": [
+            0.9966534974458897,
+            0.049434853207699164,
+            4.181606025211417e-05,
+            0.06509991988185845
+          ],
+          "class": "LongEntity"
+        }
+      ],
+      "scene": {
+        "name": "empty",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "orientation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "floor_textures": [
+          "floorplane"
+        ],
+        "shadow": false
+      },
+      "instructions": [
+        "I want to eat the sausage, please cook it in the pan and put it on the plate."
+      ],
+      "conditions": {
+        "and_conditions": [
+          {
+            "asyn_sequence": {
+              "condition_sets": [
+                {
+                  "contain": {
+                    "container": "pan_1",
+                    "entities": [
+                      "sausage_0"
+                    ]
+                  }
+                },
+                {
+                  "contain": {
+                    "container": "plate_7",
+                    "entities": [
+                      "sausage_0"
+                    ]
+                  }
+                }
+              ],
+              "ordered_indices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "is_open": {
+              "container": "stove_0",
+              "joint_name": "knob_front_right"
+            }
+          }
+        ]
+      },
+      "robocasa_scene": "U_SHAPED_LARGE_2",
+      "destination_position": "bottom",
+      "fixture_surface": "stovetop_main_group",
+      "target_entity": [
+        "sausage_0"
+      ],
+      "target_container": [
+        "plate_7",
+        "pan_1"
+      ]
+    }
+  }
+}

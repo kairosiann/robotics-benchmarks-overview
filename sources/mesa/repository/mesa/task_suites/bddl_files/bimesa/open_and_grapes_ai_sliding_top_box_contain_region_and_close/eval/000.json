@@ -1,0 +1,441 @@
+{
+    "problem_name": "mimiclabs_lab1_tabletop_manipulation",
+    "fixtures": {
+        "table": [
+            "table"
+        ],
+        "sliding_top_box_765": [
+            "articulated_object"
+        ]
+    },
+    "regions": {
+        "table_object_0_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.0
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_cucumber_1_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_bar_2_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_bell_pepper_ai_3_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_pan_0_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_bowl_1_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_articulated_object_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.0
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "pan_0_on": {
+            "target": "pan_0",
+            "ranges": [],
+            "extra": [],
+            "yaw_rotation": [
+                0,
+                0
+            ],
+            "rgba": [
+                0,
+                0,
+                1,
+                0
+            ]
+        },
+        "bowl_1_on": {
+            "target": "bowl_1",
+            "ranges": [],
+            "extra": [],
+            "yaw_rotation": [
+                0,
+                0
+            ],
+            "rgba": [
+                0,
+                0,
+                1,
+                0
+            ]
+        },
+        "articulated_object_contain_region": {
+            "target": "articulated_object",
+            "ranges": [],
+            "extra": [],
+            "yaw_rotation": [
+                0,
+                0
+            ],
+            "rgba": [
+                0,
+                0,
+                1,
+                0
+            ]
+        }
+    },
+    "objects": {
+        "robocasa_ai_grapes_7": [
+            "object_0"
+        ],
+        "robocasa_cucumber_2": [
+            "cucumber_1"
+        ],
+        "robocasa_bar_4": [
+            "bar_2"
+        ],
+        "robocasa_ai_bell_pepper_5": [
+            "bell_pepper_ai_3"
+        ],
+        "robocasa_pan_20": [
+            "pan_0"
+        ],
+        "robocasa_bowl_16": [
+            "bowl_1"
+        ]
+    },
+    "textures": {},
+    "camera": {
+        "rightshoulder": {
+            "r": 1.2,
+            "theta": 1.0471975511965976,
+            "phi": 1.5707963267948966,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        },
+        "leftshoulder": {
+            "r": 1.2,
+            "theta": 1.0471975511965976,
+            "phi": -1.5707963267948966,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        },
+        "midshoulder": {
+            "r": 1.2,
+            "theta": 1.0471975511965976,
+            "phi": 0.0,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        },
+        "egocentric": {
+            "r": 1.3,
+            "theta": 0.39479111969976155,
+            "phi": 0.0,
+            "tilt": 0.0,
+            "pan": 0.0,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        }
+    },
+    "lighting": {},
+    "styles": {},
+    "scene_properties": {},
+    "initial_state": [
+        [
+            "on",
+            "object_0",
+            "table_object_0_init_region"
+        ],
+        [
+            "on",
+            "cucumber_1",
+            "table_cucumber_1_init_region"
+        ],
+        [
+            "on",
+            "bar_2",
+            "table_bar_2_init_region"
+        ],
+        [
+            "on",
+            "bell_pepper_ai_3",
+            "table_bell_pepper_ai_3_init_region"
+        ],
+        [
+            "on",
+            "pan_0",
+            "table_pan_0_init_region"
+        ],
+        [
+            "on",
+            "bowl_1",
+            "table_bowl_1_init_region"
+        ],
+        [
+            "on",
+            "articulated_object",
+            "table_articulated_object_init_region"
+        ]
+    ],
+    "goal_state": [
+        "and",
+        [
+            "close",
+            "articulated_object"
+        ],
+        [
+            "in",
+            "object_0",
+            "articulated_object_contain_region"
+        ]
+    ],
+    "distractor_goal_specs": [
+        [
+            "on",
+            "object_0",
+            "pan_0"
+        ],
+        [
+            "on",
+            "object_0",
+            "bowl_1"
+        ],
+        [
+            "in",
+            "cucumber_1",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "cucumber_1",
+            "pan_0"
+        ],
+        [
+            "on",
+            "cucumber_1",
+            "bowl_1"
+        ],
+        [
+            "in",
+            "bar_2",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "bar_2",
+            "pan_0"
+        ],
+        [
+            "on",
+            "bar_2",
+            "bowl_1"
+        ],
+        [
+            "in",
+            "bell_pepper_ai_3",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "bell_pepper_ai_3",
+            "pan_0"
+        ],
+        [
+            "on",
+            "bell_pepper_ai_3",
+            "bowl_1"
+        ],
+        [
+            "in",
+            "pan_0",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "pan_0",
+            "pan_0"
+        ],
+        [
+            "on",
+            "pan_0",
+            "bowl_1"
+        ],
+        [
+            "in",
+            "bowl_1",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "bowl_1",
+            "pan_0"
+        ],
+        [
+            "on",
+            "bowl_1",
+            "bowl_1"
+        ]
+    ],
+    "demonstration_states": [
+        [
+            "open",
+            "articulated_object"
+        ],
+        [
+            "grasp",
+            "object_0"
+        ],
+        [
+            "in",
+            "object_0",
+            "articulated_object_contain_region"
+        ],
+        [
+            "close",
+            "articulated_object"
+        ]
+    ],
+    "language_instruction": [
+        "open",
+        "the",
+        "box",
+        "and",
+        "put",
+        "the",
+        "grapes",
+        "in",
+        "it",
+        "and",
+        "close",
+        "it"
+    ]
+}

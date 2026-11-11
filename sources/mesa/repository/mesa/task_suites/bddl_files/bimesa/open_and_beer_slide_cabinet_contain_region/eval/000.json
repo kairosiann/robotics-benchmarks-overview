@@ -1,0 +1,420 @@
+{
+    "problem_name": "mimiclabs_lab1_tabletop_manipulation",
+    "fixtures": {
+        "table": [
+            "table"
+        ],
+        "slide_cabinet_294": [
+            "articulated_object"
+        ]
+    },
+    "regions": {
+        "table_object_0_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.0
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_broccoli_1_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_cake_2_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_lime_3_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_bowl_0_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_tray_ai_1_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    0.05,
+                    -0.4,
+                    0.3,
+                    0.4
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                -1.5707963267948966,
+                1.5707963267948966
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "table_articulated_object_init_region": {
+            "target": "table",
+            "ranges": [
+                [
+                    -0.15,
+                    -0.4,
+                    -0.05,
+                    0.0
+                ]
+            ],
+            "extra": [],
+            "yaw_rotation": [
+                0.0,
+                0.0
+            ],
+            "rgba": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "bowl_0_on": {
+            "target": "bowl_0",
+            "ranges": [],
+            "extra": [],
+            "yaw_rotation": [
+                0,
+                0
+            ],
+            "rgba": [
+                0,
+                0,
+                1,
+                0
+            ]
+        },
+        "tray_ai_1_on": {
+            "target": "tray_ai_1",
+            "ranges": [],
+            "extra": [],
+            "yaw_rotation": [
+                0,
+                0
+            ],
+            "rgba": [
+                0,
+                0,
+                1,
+                0
+            ]
+        },
+        "articulated_object_contain_region": {
+            "target": "articulated_object",
+            "ranges": [],
+            "extra": [],
+            "yaw_rotation": [
+                0,
+                0
+            ],
+            "rgba": [
+                0,
+                0,
+                1,
+                0
+            ]
+        }
+    },
+    "objects": {
+        "robocasa_beer_19": [
+            "object_0"
+        ],
+        "robocasa_broccoli_1": [
+            "broccoli_1"
+        ],
+        "robocasa_cake_5": [
+            "cake_2"
+        ],
+        "robocasa_lime_2": [
+            "lime_3"
+        ],
+        "robocasa_bowl_15": [
+            "bowl_0"
+        ],
+        "robocasa_ai_tray_3": [
+            "tray_ai_1"
+        ]
+    },
+    "textures": {},
+    "camera": {
+        "rightshoulder": {
+            "r": 1.2,
+            "theta": 1.0471975511965976,
+            "phi": 1.5707963267948966,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        },
+        "leftshoulder": {
+            "r": 1.2,
+            "theta": 1.0471975511965976,
+            "phi": -1.5707963267948966,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        },
+        "midshoulder": {
+            "r": 1.2,
+            "theta": 1.0471975511965976,
+            "phi": 0.0,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        },
+        "egocentric": {
+            "r": 1.3,
+            "theta": 0.39479111969976155,
+            "phi": 0.0,
+            "tilt": 0.0,
+            "pan": 0.0,
+            "r_radius": 0.0,
+            "theta_radius": 0.0,
+            "phi_radius": 0.0
+        }
+    },
+    "lighting": {},
+    "styles": {},
+    "scene_properties": {},
+    "initial_state": [
+        [
+            "on",
+            "object_0",
+            "table_object_0_init_region"
+        ],
+        [
+            "on",
+            "broccoli_1",
+            "table_broccoli_1_init_region"
+        ],
+        [
+            "on",
+            "cake_2",
+            "table_cake_2_init_region"
+        ],
+        [
+            "on",
+            "lime_3",
+            "table_lime_3_init_region"
+        ],
+        [
+            "on",
+            "bowl_0",
+            "table_bowl_0_init_region"
+        ],
+        [
+            "on",
+            "tray_ai_1",
+            "table_tray_ai_1_init_region"
+        ],
+        [
+            "on",
+            "articulated_object",
+            "table_articulated_object_init_region"
+        ]
+    ],
+    "goal_state": [
+        "and",
+        [
+            "open",
+            "articulated_object"
+        ],
+        [
+            "in",
+            "object_0",
+            "articulated_object_contain_region"
+        ]
+    ],
+    "distractor_goal_specs": [
+        [
+            "on",
+            "object_0",
+            "bowl_0"
+        ],
+        [
+            "on",
+            "object_0",
+            "tray_ai_1"
+        ],
+        [
+            "in",
+            "broccoli_1",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "broccoli_1",
+            "bowl_0"
+        ],
+        [
+            "on",
+            "broccoli_1",
+            "tray_ai_1"
+        ],
+        [
+            "in",
+            "cake_2",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "cake_2",
+            "bowl_0"
+        ],
+        [
+            "on",
+            "cake_2",
+            "tray_ai_1"
+        ],
+        [
+            "in",
+            "lime_3",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "lime_3",
+            "bowl_0"
+        ],
+        [
+            "on",
+            "lime_3",
+            "tray_ai_1"
+        ],
+        [
+            "in",
+            "bowl_0",
+            "articulated_object_contain_region"
+        ],
+        [
+            "on",
+            "bowl_0",
+            "bowl_0"
+        ],
+        [
+            "on",
+            "bowl_0",
+            "tray_ai_1"
+        ]
+    ],
+    "demonstration_states": [
+        [
+            "open",
+            "articulated_object"
+        ],
+        [
+            "grasp",
+            "object_0"
+        ],
+        [
+            "in",
+            "object_0",
+            "articulated_object_contain_region"
+        ]
+    ],
+    "language_instruction": [
+        "open",
+        "the",
+        "slide",
+        "cabinet",
+        "and",
+        "put",
+        "the",
+        "beer",
+        "in",
+        "it"
+    ]
+}

@@ -136,6 +136,8 @@
         "required": ["id", "name", "benchmark", "suite", "family", "setting", "source"],
         "properties": {
           "id": {"type": "string"},
+          "record_kind": {"type": "string", "description": "benchmark-overview identifies a catalog-level summary with no retrieved individual task definition."},
+          "reported_task_count": {"type": "integer", "description": "Task count reported by a source, distinct from ingested record count."},
           "name": {"type": "string", "description": "Original task identifier or name."},
           "title": {"type": "string"},
           "benchmark": {"type": "string"},

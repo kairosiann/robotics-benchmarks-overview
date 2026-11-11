@@ -1,0 +1,54 @@
+{
+  "arxiv_id": "",
+  "comment": "",
+  "journal_ref": "",
+  "categories": [],
+  "published": "",
+  "updated": "",
+  "url": "",
+  "pdf": "",
+  "sources": [],
+  "posts": [],
+  "authors": [
+    "Yuzhou Wang",
+    "Longqi Li",
+    "Yang Liu",
+    "Yuanhao Wang",
+    "Shuyong Gao",
+    "Shengyuan Wang",
+    "Tianyang Wang",
+    "Yue Yao",
+    "Min Xu"
+  ],
+  "abstract": "Realizing true end-to-end biological laboratory automation requires robotic systems that can support two essential capabilities: directly manipulating liquids, and preparing and clearing the programmable automated liquid-handler platforms through which liquids are ultimately processed. However, existing laboratory benchmarks such as AutoBio and LabUtopia focus on rigid-body instrument operations or chemistry procedures with limited fluid modeling fidelity. We introduce LiquidLab, a robotic benchmark to jointly evaluate physically grounded liquid manipulation and automated liquid-handler operation for biological laboratory automation, comprising sixteen tasks across direct liquid manipulation, platform operations, and long-horizon wet-lab protocols. We further propose a parallel SPH fluid simulation pipeline built on Genesis that enables large-scale parallel liquid simulation on a single GPU, and ground task success in particle-level volumetric criteria rather than pose proxies. Benchmarking four representative imitation-learning and vision-language-action policies reveals that current models remain far from reliable, with failures concentrated in millimeter-scale labware staging and free-surface fluid control, exposing a clear gap between current robotic capabilities and the demands of fully autonomous biology.",
+  "keywords": [
+    "Benchmarks and datasets for robot learning"
+  ],
+  "tags": [
+    "Simulation",
+    "Benchmark",
+    "Deformable"
+  ],
+  "areas": [
+    "Manipulation"
+  ],
+  "topics": [
+    "Manipulation > Deformable objects",
+    "Manipulation > General manipulation"
+  ],
+  "methods": [
+    "Sim-to-real & simulation",
+    "Datasets & benchmarks"
+  ],
+  "project": "",
+  "code": "",
+  "title": "LiquidLab: Benchmarking Robotic Automation for Liquid Operation in Laboratory",
+  "presentation": "poster",
+  "openreview_id": "SBGylS4zwM",
+  "openreview": "https://openreview.net/forum?id=SBGylS4zwM",
+  "poster": {
+    "session": "Poster Session 2",
+    "time": "Tue 11/10, 5:00\u20136:30 PM",
+    "number": 109
+  }
+}

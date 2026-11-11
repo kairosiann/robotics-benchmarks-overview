@@ -132,7 +132,7 @@
       ? familyTasks.filter((task) => task.benchmark === activeVersion)
       : familyTasks;
     const suites = [...new Set(versionTasks.map((task) => task.suite).filter(Boolean))].sort();
-    const splits = [...new Set(versionTasks.map((task) => task.split).filter((split) => /^(Atomic-Seen|Composite-Seen|Composite-Unseen)$/.test(split)))];
+    const splits = [...new Set(versionTasks.map((task) => task.split).filter(Boolean))];
     setOptions(byId("suite"), [...suites, ...splits.map((split) => ["split:" + split, split + " split"])], "All suites and splits");
   }
 

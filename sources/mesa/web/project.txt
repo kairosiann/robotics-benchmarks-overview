@@ -1,0 +1,472 @@
+MESA: An Evaluation Framework for Compositional, Semantic, and Spatial Generalization in Robotics
+An Evaluation Framework for Compositional, Semantic, and Spatial Generalization in Robotics
+Albert Wilcox
+1,2,*
+,
+Frank Chang
+1,*
+,
+Nhi Nguyen
+1
+,
+Aishani Chakraborty
+1
+,
+Jeremy A. Collins
+1
+,
+Vaibhav Saxena
+1
+,
+Benjamin Joffe
+1,2
+,
+Siddharth Karamcheti
+1
+,
+Animesh Garg
+1
+1
+Georgia Institute of Technology,
+2
+Georgia Tech Research Institute
+*
+Equal contribution.
+CoRL 2026
+arXiv
+Code
+Weights and Data
+Documentation
+Twitter
+🔊 Sound On
+Abstract
+Despite growing interest in foundation models for robotic manipulation, systematic evaluation of their capabilities remains elusive. Existing benchmarks are either narrow and saturated, offering little signal on SOTA methods, broadly scoped, providing diversity at the cost of controlled experimentation, or require training on large, messy open-source datasets.
+We introduce
+MESA
+, an evaluation framework designed for precise, reproducible measurement of language-conditioned policy generalization. MESA provides five evaluation suites that isolate in-distribution performance and four distinct axes of generalization:
+spatial configuration
+,
+object instance
+,
+object category
+, and
+subtask composition
+, enabling researchers to diagnose where and why policies fail, not just whether they fail.
+To populate these suites at scale, we develop
+MESA-Gen
+, a pipeline for task and demonstration generation built by improving MimicGen. We instantiate the framework on two platforms and release both: the single-arm
+MESA
+suite, and
+BiMESA
+, the first large-scale benchmark for bimanual generalization.
+We evaluate seven baseline methods spanning diffusion policies, VLM-based approaches, and pretrained VLAs, finding that the strongest model achieves only
+52% on MESA
+and
+49% on BiMESA
+, providing meaningful signal while leaving ample room for progress. MESA rankings are broadly consistent with RoboArena scores, suggesting that MESA captures method-level differences relevant beyond simulation.
+MESA-Bench: Overview
+MESA-Bench spans
+two embodiments
+— a single-arm Franka Panda and a bimanual YAM setup — and for each we release
+both a training set and five evaluation suites
+. The single-arm training set
+MESA-70
+contains 7,000 demonstrations across 70 tasks, and the bimanual training set
+BiMESA-57
+contains 6,833 demonstrations across 57 tasks. Each embodiment is evaluated with the same five suites:
+A suite evaluating
+in-distribution performance
+MESA-Spatial
+: evaluates seen tasks with unseen spatial configurations
+MESA-Instance
+: evaluates seen tasks with unseen object instances
+MESA-Category
+: evaluates tasks with unseen object categories
+MESA-Composite
+: evaluates unseen composite tasks comprised of in-distribution subtasks
+BiMESA preserves all four generalization axes while adding coordination-specific challenges with no single-arm analogue:
+cross-arm handoffs
+,
+articulated-fixture interaction
+, and
+dual-arm coordination
+. BiMESA combines 4,681 MESA-Gen demonstrations with 2,152 teleoperated demonstrations; coordinated cross-arm pick-and-place and handoffs are collected by teleoperation.
+Reset Distribution
+Each task contains a number of distractor objects and corresponding distractor tasks, aimed to probe the language following of the evaluated policy. 
+            For example, for a target task “put the orange in the basket” with a bowl and apple for distractor objects, the distractor task predicates
+            would be
+In(apple, basket)
+,
+In(apple, bowl)
+,
+In(orange, bowl)
+and
+In(bowl, basket)
+. After
+            a failed rollout, if any of these predicates were satisfied, we log a distractor task completion.
+Below, we visualize reset distributions with distractor objects for several tasks.
+MESA-Gen: Data Generation Pipeline
+We introduce
+MESA-Gen
+, a pipeline for scalable task and demonstration generation built by improving MimicGen. To build your own experiments using our framework:
+If a suitable task skeleton does not already exist, define it in Python.
+Instantiate a task from the skeleton and generate BDDL files for the training and evaluation sets.
+Optionally, collect a small number of source demonstrations.
+Generate a large dataset for imitation learning using our modified MimicGen pipeline. As we describe in the paper, we introduce "subtask stitching", which enables data generation for tasks without human data.
+Key Findings
+Robot pretraining does not uniformly transfer.
+PG-FM and $\pi_0$ share a backbone and architecture, differing primarily in $\pi_0$'s pretraining on a large robot dataset that includes both single-arm Franka and bimanual YAM-like embodiments. In the single-arm setting this pretraining yields a consistent improvement, but in the bimanual setting PG-FM slightly
+outperforms
+$\pi_0$ on average. This surprising reversal suggests that embodiment similarity alone does not guarantee transfer from pretraining.
+Action representation matters.
+PG-Bin, which uses RT-2-style action binning, averages only 18.3% on
+            BiMESA despite sharing its VLM backbone with PG-FM (30.4%). This indicates that
+            directly discretizing continuous action dimensions into language
+            tokens is a poor fit for the fine-grained control required by BiMESA.
+OOD object instances are challenging, even for frontier policies.
+We see that across the board, policies struggle to identify unseen object instances. For example, all three models above have seen the red bell pepper during training. However, they have difficulty identifying the out-of-distribution green bell pepper, with some even mistaking the mango for the bell pepper.
+OOD spatial configurations lead to a consistent performance drop.
+Despite seeing the same object and same task previously, policies struggle to identify the target object when it is placed in different spatial configurations. Here, we see that the policies can correctly identify the tomato over a similar looking object when the tomato is in an in-distribution position (left). When the tomato's position is on the right, all policies except $\pi_{0.5}$ still select the distractor item on the left.
+Novel object categories remain challenging.
+Performance drops sharply on unseen object categories for all baselines. GR00T-N1.6 is particularly strong on
+BiMESA-Category
+, achieving 26.1% success and 55.6% language following. This suggests that preserving the VLM backbone's open-vocabulary knowledge can help policies ground instructions involving unfamiliar objects. In the first table, we show the success rates over each of our evaluation suites.
+            In the second table, we evaluate the
+language following rate
+, which we define precisely in the paper, of these baselines.
+Setting
+DP
+PG-Bin
+PG-FM
+GR00T-N1.6
+π
+0
+FAST
+π
+0.5
+MESA-ID
+1.6
+–
+30.7
+25.0
+43.1
+46.5
+62.8
+MESA-Spatial
+1.0
+–
+35.0
+23.2
+42.2
+53.6
+68.6
+MESA-Instance
+1.9
+–
+22.7
+22.7
+34.0
+39.1
+55.4
+MESA-Composite
+0.3
+–
+17.7
+15.0
+27.5
+28.9
+46.7
+MESA-Category
+0.7
+–
+7.7
+14.1
+11.6
+8.4
+26.4
+MESA Avg.
+1.1
+–
+22.8
+20.0
+31.7
+35.3
+52.0
+BiMESA-ID
+13.0
+26.7
+43.8
+47.0
+45.9
+53.7
+68.7
+BiMESA-Spatial
+18.8
+30.3
+50.8
+46.2
+49.2
+58.1
+70.5
+BiMESA-Instance
+9.4
+13.9
+28.6
+36.7
+23.9
+36.7
+48.1
+BiMESA-Composite
+5.7
+14.4
+17.9
+22.1
+18.4
+28.8
+37.5
+BiMESA-Category
+5.8
+6.0
+10.9
+26.1
+10.6
+19.8
+18.6
+BiMESA Avg.
+10.6
+18.3
+30.4
+35.6
+29.6
+39.4
+48.7
+Success rates (%)
+on the single-arm (MESA) and bimanual (BiMESA) suites. π
+0.5
+achieves the strongest average on both embodiments; GR00T-N1.6 is particularly competitive on BiMESA-Category.
+Setting
+DP
+PG-Bin
+PG-FM
+GR00T-N1.6
+π
+0
+FAST
+π
+0.5
+MESA-ID
+18.9
+–
+80.0
+71.4
+79.7
+83.7
+87.6
+MESA-Spatial
+11.4
+–
+77.4
+53.7
+73.0
+78.6
+84.5
+MESA-Instance
+23.5
+–
+66.6
+60.5
+66.5
+69.0
+76.9
+MESA-Composite
+6.4
+–
+65.1
+56.2
+65.5
+66.3
+81.5
+MESA-Category
+12.1
+–
+32.6
+42.5
+33.1
+28.0
+44.1
+MESA Avg.
+14.4
+–
+64.3
+56.9
+63.6
+65.1
+74.9
+BiMESA-ID
+34.9
+78.7
+84.6
+87.7
+73.4
+86.9
+92.9
+BiMESA-Spatial
+45.3
+75.7
+86.2
+77.5
+72.6
+83.0
+89.1
+BiMESA-Instance
+25.5
+53.0
+64.4
+73.3
+48.0
+64.8
+74.0
+BiMESA-Composite
+14.5
+65.1
+66.7
+71.2
+42.3
+66.7
+80.1
+BiMESA-Category
+15.7
+27.4
+30.1
+55.6
+21.2
+35.1
+28.7
+BiMESA Avg.
+27.2
+60.0
+66.4
+73.1
+51.5
+67.3
+73.0
+Language following rate (%)
+. VLM-based policies exhibit strong in-distribution language following. Unseen object categories remain challenging, with GR00T-N1.6 particularly strong on BiMESA-Category.
+Controlled Distribution Shifts
+Because MESA-Spatial and MESA-Instance each contain tasks with in-distribution counterparts in MESA-ID, we can directly compare success rates with and without distribution shift. Across both spatial and instance-level shifts, performance generally drops relative to matched in-distribution tasks, showing that MESA evaluates more than task memorization.
+For tasks with matched in-distribution counterparts, policies generally perform worse under held-out spatial configurations (left) and object instances (right).
+Scaling Data Quantity & Diversity
+We study the effect of demonstration quantity for $\pi_0$ and $\pi_{0.5}$ under a fixed compute budget. Scaling data almost monotonically improves performance, but a striking result is that
+$\pi_{0.5}$ trained with 10 demonstrations per task consistently outperforms $\pi_0$ with 100
+— in this regime, pretraining quality dominates data quantity.
+Auxiliary co-training does not yield consistent gains across models and evaluation suites. One exception is $\pi_0$ on MESA-Spatial, where success increases from 42.2% to 54.4%; its Category performance instead decreases from 11.6% to 8.7%. Simply increasing task diversity does not consistently improve generalization in this setting.
+Method
+ID
+Spatial
+Instance
+Composite
+Category
+DP
+1.6
+1.0
+1.9
+0.3
+0.7
+DP + Aux
+2.3
+2.4
+2.2
+0.6
+0.3
+π
+0
+43.1
+42.2
+34.0
+27.5
+11.6
+π
+0
++ Aux
+43.4
+54.4
+33.2
+28.8
+8.7
+π
+0.5
+62.8
+68.6
+55.4
+46.7
+26.4
+π
+0.5
++ Aux
+59.0
+69.2
+53.6
+45.6
+23.0
+Auxiliary co-training does not yield consistent generalization gains.
+Models are trained for the same number of gradient steps.
+Studying Cross-Arm Transfer
+BiMESA-Spatial is especially distinctive: rather than relocating a single object, it holds out the
+arm assignment
+, so a held-out configuration must be executed by a different arm than seen in training. This probes whether a policy has acquired
+arm-symmetric skills
+or has instead memorized per-arm trajectories.
+We compare in-distribution tasks against matched arm-switched variants. Policies show modest degradation when switching single-arm tasks (left) or reversing handoff direction (middle), but much larger drops when transferring
+articulated manipulation
+skills across arms (right) — a failure mode with no single-arm analogue. DP, PG-Bin and $\pi_0$-FAST do not degrade on reversed handoffs. Error bars are 95% Wilson intervals.
+Comparison with Real-World Performance
+A simulated benchmark is most useful when it aligns with real-world trends. We compare MESA and BiMESA success rates to Elo scores on
+RoboArena
+, a crowdsourced evaluation platform based on blind human preferences. The rankings are broadly consistent — $\pi_{0.5}$ and $\pi_0$-FAST are strongest across evaluations — providing preliminary evidence that MESA captures method-level differences relevant beyond simulation. The main disagreement is the ordering of PG-FM and $\pi_0$, which differs between RoboArena and single-arm MESA.
+PG-Bin
+PG-FM
+π
+0
+π
+0
+-FAST
+π
+0.5
+RoboArena (Elo)
+771
+1527
+1449
+1564
+1594
+MESA (SR %)
+–
+22.8
+31.7
+35.3
+52.0
+BiMESA (SR %)
+18.3
+30.4
+29.6
+39.4
+48.7
+Comparing RoboArena Elo with MESA success rates.
+MESA and BiMESA exhibit broadly similar stack rankings to RoboArena.
+BibTeX
+@inproceedings{wilcox2026mesa,
+  author    = {Albert Wilcox and Frank Chang and Nhi Nguyen and Aishani Chakraborty and Jeremy A. Collins and Vaibhav Saxena and Benjamin Joffe and Siddharth Karamcheti and Animesh Garg},
+  title     = {{MESA}: An Evaluation Framework for Compositional, Semantic, and Spatial Generalization in Robotics},
+  booktitle = {10th Annual Conference on Robot Learning},
+  year      = {2026},
+  url       = {https://openreview.net/forum?id=Br2rXixvyN},
+}
+Acknowledgements
+The authors would like to acknowledge the State of Georgia and the Agricultural Technology 
+            Research Program at Georgia Tech for supporting the work described in this paper.
+This website is licensed under a
+Creative
+            Commons Attribution-ShareAlike 4.0 International License
+.
+Website template borrowed from
+Nerfies
+.

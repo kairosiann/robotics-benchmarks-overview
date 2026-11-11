@@ -131,7 +131,7 @@ old=json.loads(read('bddl_tree.html'))
 for x in old['tree']:
  if x['path'].endswith('/problem0.bddl'):
   n=x['path'].split('/')[-2];f=P/('legacy_'+n+'.bddl');code=f.read_text() if f.exists() else '';add('BEHAVIOR-100','Original 100',n,n.replace('_',' '),goal(code),'https://github.com/StanfordVL/bddl/blob/'+old['sha']+'/'+x['path'],details={'code':code})
-for additional_catalog in ('standard_tasks.json', 'physical_tasks.json', 'corl_tasks.json'):
+for additional_catalog in ('standard_tasks.json', 'physical_tasks.json', 'corl_tasks.json', 'mesa_tasks.json', 'harp_tasks.json', 'mobile_transfer_tasks.json', 'liquidlab_tasks.json'):
  rows.extend(json.loads((ROOT / additional_catalog).read_text()))
 if len({row['id'] for row in rows}) != len(rows):
  raise ValueError('Task IDs must be unique')

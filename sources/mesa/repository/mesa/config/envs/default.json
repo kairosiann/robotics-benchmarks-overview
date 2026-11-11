@@ -1,0 +1,20 @@
+{
+    "robots": ["Panda"],
+    "render_camera": "leftshoulder",
+    "horizon": 3000,
+    "control_freq": 20,
+    "camera_heights": 128,
+    "camera_widths": 128,
+    "use_camera_obs": true,
+    "has_renderer": false,
+    "has_offscreen_renderer": true,
+    "render_collision_mesh": false,
+    "render_visual_mesh": true,
+    "render_gpu_device_id": -1,
+    "ignore_done": false,
+    "hard_reset": true,
+    "camera_names": ["leftshoulder", "robot0_eye_in_hand"],
+    "camera_depths": false,
+    "camera_segmentations": null,
+    "renderer": "mujoco"
+}

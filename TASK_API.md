@@ -53,3 +53,5 @@ def get_benchmark_task(task_id: str) -> dict:
 ```
 
 Keep `observation_scope` with the observation text when comparing tasks. Some sources specify the robot inputs at the benchmark or evaluation-track level. Where a record summarizes a checker or an instruction, consult its original goal, rubric, or source before asserting an exact success threshold.
+
+Check `record_kind` when assessing coverage. A `benchmark-overview` record summarizes a published benchmark whose individual task definitions were unavailable during ingestion. Its `reported_task_count` describes the source's claim. `/api/catalog` reports record-kind counts separately from the total entries.

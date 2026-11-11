@@ -102,16 +102,51 @@
       "scope": "54 paired physical tasks",
       "source": "https://arxiv.org/html/2606.16826",
       "notes": "Added after CoRL screening. Exact prompts are available. Individual process-score point rubrics are not enumerated in the task tables."
+    },
+    {
+      "family": "HARP-Bench",
+      "scope": "Canonical source registry with paper evaluation subset",
+      "source": "https://github.com/UMass-Embodied-AGI/harp",
+      "notes": "Canonical task records preserve compatibility aliases and mark the paper evaluation subset. Task completion and human safety metrics are distinct."
+    },
+    {
+      "family": "LiquidLab",
+      "scope": "Benchmark overview only",
+      "source": "https://openreview.net/forum?id=SBGylS4zwM",
+      "notes": "The accepted abstract reports 16 tasks. One searchable overview is included. Individual task definitions, numeric criteria and policy inputs could not be retrieved. This row is not a reconstructed task catalog."
+    },
+    {
+      "family": "MESA",
+      "scope": "Single-arm and bimanual evaluation suite entries",
+      "source": "https://pairlab.github.io/MESA/",
+      "notes": "MESA and BiMESA use separate embodiment and generalization splits. Repeated task templates across splits remain versioned suite entries."
+    },
+    {
+      "family": "RMMBench",
+      "scope": "Current registered mobile-manipulation tasks",
+      "source": "https://mxxq-stack.github.io/rmmbench-project/",
+      "notes": "The paper, released episode presets and current source registry have different counts. Registry scope and preset availability are labeled on records."
+    },
+    {
+      "family": "H2RBench",
+      "scope": "Four human-to-robot transfer tasks",
+      "source": "https://davidz2851.github.io/h2rbench.github.io/",
+      "notes": "Task prompts and completion stages are retained. Simulation\u2013real agreement metrics assess evaluator validity separately from task completion."
     }
   ],
   "corl_review": {
     "source": "https://www.corl.org/program/accepted-papers",
     "screened_count": 687,
-    "notes": "Screened the public accepted program and 33 benchmark/evaluation title candidates. Added three suites with retrievable task-level evidence. The retained corl_review.json records reviewed candidates. Public accepted papers are the scope of this review.",
+    "notes": "Screened the public 687-paper accepted program and 33 benchmark/evaluation title candidates. Added task-level evidence for seven selected suites. LiquidLab has an explicitly labeled overview record with its reported 16-task scope. The retained corl_review.json records candidates and ingestion status.",
     "added": [
       "WireCraft: A Simulation Benchmark for Industrial DLO Manipulation",
+      "HARP-Bench: Benchmarking Robot Manipulation Around Active Humans",
+      "MESA: An Evaluation Framework for Compositional, Semantic, and Spatial Generalization in Robotics",
+      "RMMBench: A Comprehensive Benchmark for Robotic Mobile Manipulation",
       "IMBench: A Benchmark for Intuitive Robotic Manipulation",
-      "ATOM-Bench: A Real-World Benchmark for Atomic Skills and Compositional Generalization in Manipulation Policies"
+      "LiquidLab: Benchmarking Robotic Automation for Liquid Operation in Laboratory \u2014 overview only",
+      "ATOM-Bench: A Real-World Benchmark for Atomic Skills and Compositional Generalization in Manipulation Policies",
+      "H2RBench: A Real-to-Sim Benchmark for Evaluating Human-to-Robot Transfer"
     ]
   }
 }

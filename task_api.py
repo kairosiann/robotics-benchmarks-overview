@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parent
 SEARCH_PARAMETERS = {"q", "mode", "family", "benchmark", "suite", "setting", "limit", "offset"}
 MODES = {"related", "all", "exact"}
 PREVIEW_FIELDS = (
+    "record_kind", "reported_task_count",
     "source_note", "catalog_scope",
     "id", "name", "title", "family", "benchmark", "suite", "split", "setting", "description", "instruction",
     "setup_summary", "setup_source", "observation", "observation_scope", "observation_source",
@@ -59,6 +60,7 @@ class TaskCatalog:
             versions[task["benchmark"]].append(task)
         self.metadata = {
             "total": len(tasks),
+            "record_kinds": dict(sorted(Counter(task.get("record_kind", "task-entry") for task in tasks).items())),
             "families": dict(sorted(Counter(task["family"] for task in tasks).items())),
             "settings": dict(sorted(Counter(task["setting"] for task in tasks).items())),
             "benchmarks": [

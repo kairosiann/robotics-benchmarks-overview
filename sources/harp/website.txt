@@ -1,0 +1,539 @@
+HARP-Bench
+CoRL 2026
+Conference on Robot Learning
+HARP
+-Bench
+Robot manipulation around active humans.
+Qinhong Zhou
+1,*
+Yun Zong
+2,*
+Chunru Lin
+1
+Diyi Hu
+4
+Shivraj Singh Bhatti
+1
+Hongxin Zhang
+1
+Lin Qiu
+3
+Hanqing Zeng
+3
+Chuang Gan
+1
+1
+University of Massachusetts Amherst
+2
+University of Minnesota Twin Cities
+3
+Meta
+4
+Independent Researcher
+*
+Equal contribution
+arXiv
+Code
+Asset pack
+Interactive demo
+Results
+Four conditions of human involvement
+Four ways humans shape the task
+Co-presence
+The robot works beside a person.
+Example shown: the person wipes the table while the robot puts a cube in the cabinet.
+Contribution
+Human and robot share the work.
+Example shown: the person places one piece of bread, and the robot adds the other.
+Interruption
+The robot waits, then resumes.
+Example shown: the person inspects a shoe; the robot waits, then puts it in the box.
+Cueing
+Human action sets the goal.
+Example shown: after the person drinks, the robot pours water into their cup.
+Results
+37-task evaluation
+Success rate (%) on the evaluation seeds of all 37 tasks (up to 100 seeds per task). The full-state expert reads the human's intent from simulator state; the no-intent expert runs the same script without it.
+Category
+Expert
+full state
+Expert
+no intent
+ACT
+DP
+π
+0
+SmolVLA
+Cueing
+7 tasks
+99.0
+38.3
+11.3
+16.9
+16.0
+11.5
+Contribution
+10 tasks
+98.8
+53.8
+3.7
+4.2
+16.5
+1.2
+Interruption
+10 tasks
+99.8
+0.3
+8.8
+5.7
+9.4
+2.9
+Co-presence
+10 tasks
+98.8
+97.4
+18.1
+13.0
+32.6
+9.1
+All tasks (37)
+99.1
+48.2
+10.4
+9.4
+18.8
+5.7
+best learned policy
+second best
+Experts are shown for reference and are not ranked. Averages are unweighted means over tasks.
+Per-task results
+(37 tasks)
+Task
+Expert
+full state
+Expert
+no intent
+ACT
+DP
+π
+0
+SmolVLA
+Cueing (7)
+Deliver to Human
+100.0
+30.2
+0.0
+0.0
+0.0
+0.0
+Oil Bottle Recovery
+95.1
+1.2
+0.0
+8.6
+7.4
+8.6
+Open Microwave
+100.0
+100.0
+20.0
+37.0
+39.0
+45.0
+Pour Water
+99.0
+90.8
+59.2
+70.4
+63.3
+26.5
+Stamp Documents
+100.0
+14.4
+0.0
+0.0
+0.0
+0.0
+Take from Human
+98.9
+31.6
+0.0
+2.1
+2.1
+0.0
+Take from Human (Safety)
+100.0
+0.0
+0.0
+0.0
+0.0
+0.0
+Average
+99.0
+38.3
+11.3
+16.9
+16.0
+11.5
+Contribution (10)
+Categorize Objects
+100.0
+47.5
+0.0
+0.0
+0.0
+0.0
+Dump Bin
+98.4
+41.3
+4.8
+1.6
+12.9
+0.0
+Place Bread in Basket
+100.0
+53.2
+0.0
+1.1
+1.1
+0.0
+Place Burger and Fries
+100.0
+49.5
+0.0
+12.1
+37.4
+1.0
+Place Food in Skillet
+95.3
+19.8
+11.6
+2.3
+29.8
+2.3
+Place Pair of Shoes
+98.7
+43.0
+7.6
+6.3
+15.2
+2.5
+Put Object in Cabinet
+95.5
+90.9
+5.7
+11.4
+44.3
+4.5
+Rank Blocks by Color
+100.0
+85.7
+1.0
+0.0
+10.2
+2.0
+Rank Blocks by Size
+100.0
+73.1
+5.4
+0.0
+11.8
+0.0
+Stack Three Bowls
+100.0
+34.0
+1.0
+7.0
+2.0
+0.0
+Average
+98.8
+53.8
+3.7
+4.2
+16.5
+1.2
+Interruption (10)
+Categorize Objects
+100.0
+0.0
+1.0
+2.0
+0.0
+0.0
+Dump Bin
+97.8
+0.0
+1.1
+4.5
+16.3
+0.0
+Place Bread in Basket
+100.0
+1.0
+15.2
+14.1
+9.1
+0.0
+Place Burger and Fries
+100.0
+0.0
+0.0
+1.0
+3.0
+1.0
+Place Food in Skillet
+100.0
+0.0
+50.6
+28.6
+6.0
+7.1
+Place Pair of Shoes
+100.0
+0.0
+15.0
+1.0
+16.0
+12.0
+Put Object in Cabinet
+100.0
+0.0
+3.2
+0.0
+10.5
+2.1
+Rank Blocks by Color
+100.0
+2.0
+0.0
+0.0
+0.0
+0.0
+Rank Blocks by Size
+100.0
+0.0
+0.0
+0.0
+1.1
+0.0
+Stack Three Bowls
+100.0
+0.0
+2.0
+6.0
+32.0
+7.0
+Average
+99.8
+0.3
+8.8
+5.7
+9.4
+2.9
+Co-presence (10)
+Categorize Objects
+98.9
+100.0
+22.6
+25.8
+15.1
+5.4
+Dump Bin
+92.2
+88.9
+5.2
+10.4
+32.3
+0.0
+Place Bread in Basket
+100.0
+100.0
+4.0
+10.7
+37.3
+0.0
+Place Burger and Fries
+100.0
+100.0
+0.0
+14.0
+45.2
+5.4
+Place Food in Skillet
+100.0
+100.0
+48.7
+33.8
+55.6
+7.3
+Place Pair of Shoes
+100.0
+100.0
+10.0
+5.0
+26.7
+0.0
+Put Object in Cabinet
+96.7
+93.3
+8.9
+10.1
+7.8
+4.4
+Rank Blocks by Color
+100.0
+97.3
+0.0
+0.0
+8.2
+0.0
+Rank Blocks by Size
+100.0
+94.5
+4.7
+0.0
+4.7
+0.0
+Stack Three Bowls
+100.0
+100.0
+77.3
+20.5
+93.2
+68.2
+Average
+98.8
+97.4
+18.1
+13.0
+32.6
+9.1
+All tasks (37)
+99.1
+48.2
+10.4
+9.4
+18.8
+5.7
+Safety metrics
+Task success requires safe interaction
+We monitor robot–human collisions and minimum separation throughout each episode. Contact with a person marks the episode as a failure; a configurable safety margin flags when the robot gets too close.
+The line shows minimum gripper–human separation: green at or above 10 cm, yellow below 10 cm, and red on contact. The red ring marks the collision, which ends the episode as a failure.
+Safety evaluation results
+Reported success requires task completion without robot–human collision.
+Policy
+Success ↑
+%
+Collision ↓
+% episodes
+Within 10 cm ↓
+% episodes
+Time < 10 cm ↓
+% of episode
+Min. distance ↑
+cm, mean
+ACT
+10.4
+10.2
+49.3
+8.0
+13.3
+DP
+9.4
+17.3
+52.8
+9.4
+12.0
+π
+0
+18.8
+20.7
+59.9
+8.7
+9.5
+SmolVLA
+5.7
+21.6
+60.2
+9.3
+10.4
+Expert
+full state
+99.1
+0.0
+38.5
+5.7
+15.8
+Expert
+no intent
+48.2
+29.9
+64.8
+9.4
+12.6
+best learned policy
+second best
+↑ higher is better · ↓ lower is better. Experts are reference baselines and are not ranked.
+Collision rate (% of episodes) by condition. Lower is better.
+Condition
+ACT
+DP
+π
+0
+SmolVLA
+Expert
+full state
+Expert
+no intent
+Cueing
+13.0
+32.4
+9.6
+29.0
+0.0
+8.5
+Contribution
+7.2
+8.7
+8.5
+6.6
+0.0
+10.1
+Interruption
+14.5
+21.6
+55.3
+41.2
+0.0
+92.8
+Co-presence
+6.8
+11.2
+6.0
+11.8
+0.0
+1.6
+All tasks
+10.2
+17.3
+20.7
+21.6
+0.0
+29.9
+Within 10 cm: the robot came within 10 cm of the person at any point. Minimum distance: closest robot–human distance in an episode; contact can make it negative.
+Interactive demo
+Try controlling the robot
+Citation
+@inproceedings{harpbench2026,
+  title     = {{HARP-Bench}: Benchmarking Robot Manipulation Around Active Humans},
+  author    = {Qinhong Zhou and Yun Zong and Chunru Lin and Diyi Hu and Shivraj Singh Bhatti and Hongxin Zhang and Lin Qiu and Hanqing Zeng and Chuang Gan},
+  booktitle = {Conference on Robot Learning (CoRL)},
+  year      = {2026},
+  url       = {https://github.com/UMass-Embodied-AGI/harp}
+}
+HARP-Bench · CoRL 2026
+Built on
+Genesis
+·
+github.com/UMass-Embodied-AGI/harp

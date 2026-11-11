@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>H2RBench: A Real-to-Sim Benchmark for Evaluating Human-to-Robot Transfer</title>
+  <meta name="description" content="H2RBench: A Real-to-Sim Benchmark for Evaluating Human-to-Robot Transfer">
+  <meta name="keywords" content="H2RBench, Human-to-Robot Transfer, Robot Manipulation, Benchmark, Real-to-Sim">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+.task-box {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      background: #fafafa;
+    }
+    .tag-precision {
+      display: inline-block;
+      background: #e3f2fd;
+      color: #1565C0;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 0.82em;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .result-table th {
+      background: #37474f;
+      color: white;
+    }
+    .ghost-row {
+      background: #f1f8e9 !important;
+      font-weight: 600;
+    }
+
+    /* Simulator experiments */
+    .sim-method-panel { display: none; }
+    .sim-method-panel.is-active { display: block; }
+    /* Real-world experiments */
+    .rw-method-panel { display: none; }
+    .rw-method-panel.is-active { display: block; }
+    .demo-label {
+      font-size: 0.82em; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; margin: 12px 0 6px;
+    }
+    .demo-label.success { color: #2e7d32; }
+    .demo-label.failure { color: #c62828; }
+    .rw-carousel { position: relative; overflow: hidden; }
+    .rw-track { display: flex; transition: transform 0.3s ease; }
+    .rw-item { flex: 0 0 100%; width: 100%; }
+    .rw-item video { width: 100%; border-radius: 4px; display: block; }
+    .rw-placeholder {
+      background: #f0f0f0; border-radius: 4px; height: 110px;
+      display: flex; align-items: center; justify-content: center;
+      color: #bbb; font-style: italic; font-size: 0.85em;
+    }
+    .rw-nav {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin-top: 5px;
+    }
+    .rw-prev, .rw-next {
+      background: #37474f; color: white; border: none;
+      border-radius: 4px; padding: 1px 10px; font-size: 1.2em; cursor: pointer;
+    }
+    .rw-prev:hover, .rw-next:hover { background: #263238; }
+    .rw-counter { font-size: 0.82em; color: #555; min-width: 36px; text-align: center; }
+  </style>
+</head>
+
+<body>
+
+  <!-- =================== HERO =================== -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">H2RBench: A Real-to-Sim Benchmark for Evaluating Human-to-Robot Transfer</h1>
+
+            <div class="is-size-5 publication-authors" style="margin-top: 14px;">
+              <span class="author-block">Chuyang Xiao<sup>1,*</sup>,</span>
+              <span class="author-block">Haotian Zhan<sup>1,*</sup>,</span>
+              <span class="author-block">Sriram Krishna<sup>1</sup>,</span>
+              <span class="author-block">Peilin Meng<sup>2</sup>,</span>
+              <span class="author-block">Muhammad Zubair Irshad<sup>3</sup>,</span>
+              <span class="author-block">Sergey Zakharov<sup>3</sup>,</span>
+              <span class="author-block">David Held<sup>1</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Robotics Institute, Carnegie Mellon University</span>
+              <span class="author-block"><sup>2</sup>University of Michigan</span>
+              <span class="author-block"><sup>3</sup>Toyota Research Institute</span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>*</sup>Equal contribution; authors are listed in alphabetical order.</span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><em>CoRL 2026</em></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link -->
+                <span class="link-block">
+                  <a href="static/pdfs/H2RBench.pdf" target="_blank" rel="noopener noreferrer" class="button is-normal is-rounded is-dark" style="margin: 0;">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>PDF</span>
+                  </a>
+                </span>
+                <!-- Paper Link -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2609.24778v2" target="_blank" rel="noopener noreferrer" class="button is-normal is-rounded is-dark" style="margin: 0;">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <!-- Code Link -->
+                <span class="link-block">
+                  <a href="https://github.com/xiaochy/H2RBench" target="_blank" rel="noopener noreferrer" class="button is-normal is-rounded is-dark" style="margin: 0;">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== INTRO VIDEO =================== -->
+  <section class="section" style="padding-top: 0; padding-bottom: 0;">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <video id="intro-video" controls autoplay muted loop playsinline width="100%" style="border-radius: 8px;">
+            <source src="static/videos/intro.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== TEASER =================== -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <img src="static/images/teaser_final.png" alt="H2RBench Teaser" width="100%" style="border-radius:8px;" />
+        <h2 class="subtitle has-text-centered" style="margin-top: 16px;">
+          <strong>H2RBench</strong> provides a standardized Real2Sim benchmark for evaluating human-to-robot (H2R) transfer methods
+          across four manipulation tasks reconstructed from real-world scenes,
+          enabling systematic analysis of human-data scaling and
+          sim-to-real correlation (Pearson&nbsp;<em>r</em>&nbsp;=&nbsp;0.89).
+        </h2>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =================== ABSTRACT =================== -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Learning robot manipulation policies from human video demonstrations constitutes a promising avenue
+              for scalable robot learning. However, comparing different human-to-robot (H2R) transfer methods
+              remains challenging, as existing approaches are evaluated under different settings, including
+              differing task suites, scene layouts, object instances, and amounts of robot supervision.
+            </p>
+            <p>
+              To address this challenge, we present <strong>H2RBench</strong>, a Real2Sim benchmark for
+              evaluating H2R transfer methods. H2RBench provides a standardized protocol built on real human
+              video demonstrations and simulated robot demonstrations, and includes four manipulation tasks
+              spanning diverse interaction requirements. We evaluate multiple representative H2R transfer methods,
+              each adopting a different strategy for bridging the embodiment gap.
+            </p>
+            <p>
+              Using H2RBench, we systematically characterize how each method scales with the amount of human
+              demonstrations, revealing that methods differ substantially in their ability to leverage additional
+              human data. We further show that simulation performance is broadly predictive of real-world robot
+              performance, with an overall Pearson correlation of <em>r</em>&nbsp;=&nbsp;0.89, Spearman
+              correlation of <em>&rho;</em>&nbsp;=&nbsp;0.85, and Mean Maximum Rank Violation (MMRV) of 0.06
+              across method&ndash;task configurations. These results establish H2RBench as a practical and
+              scalable benchmark for comparative H2R evaluation prior to real-world deployment.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== BENCHMARK OVERVIEW =================== -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Benchmark Overview</h2>
+
+          <div class="content has-text-justified has-text-centered">
+            <img src="static/images/pipeline_final.png" alt="H2RBench Pipeline" width="100%" style="border-radius:8px;" />
+            <p style="margin-top:10px; color:#555;">
+              <strong>Figure 1: H2RBench Evaluation Pipeline.</strong>
+              We reconstruct real-world workspaces into Isaac Lab simulation environments,
+              collect task-specific human and robot demonstrations across four manipulation tasks,
+              and train and evaluate all methods under a shared benchmark protocol.
+            </p>
+
+            <p class="has-text-justified" style="margin-top:20px;">
+              H2RBench provides a unified observation-action interface supporting diverse H2R policy
+              representations. Synchronized front, side, and wrist-mounted RGB-D camera views are provided
+              together with robot proprioception and language observations. Human demonstrations are recorded
+              using static front and side cameras, while robot demonstrations additionally include wrist-mounted
+              observations. The robot demonstration budget is held <em>fixed</em> across methods; only the
+              number of human demonstrations is varied, enabling controlled analysis of human-data scaling.
+            </p>
+          </div>
+
+          <!-- Task Suite -->
+          <h3 class="title is-4" style="margin-top:2rem;">Task Suite</h3>
+          <p class="content has-text-justified">
+            The four tasks span a broad range of manipulation challenges with varying precision requirements
+            and task horizons, each reconstructed from a real-world scene.
+          </p>
+
+          <div class="columns is-multiline">
+            <div class="column is-half">
+              <div class="task-box">
+                <span class="tag-precision">Coarse &middot; Short</span>
+                <strong>Pick-and-Place (Mug &rarr; Plate)</strong>
+                <p style="margin-top:6px; font-size:0.9em;">
+                  Pick a mug from a randomized position and place it onto a fixed plate.
+                  40 robot demos, up to 100 human demos.
+                </p>
+                <p style="font-size:0.82em; font-weight:700; color:#37474f; margin-top:14px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Sim Robot Demos</p>
+                <div style="display:flex; gap:8px;">
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Camera 0</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/pick_mug/episode_000000/cam0.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Camera 1</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/pick_mug/episode_000000/cam1.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Wrist</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/pick_mug/episode_000000/wrist_cam.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+                <p style="font-size:0.82em; font-weight:700; color:#37474f; margin-top:14px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Real Human Demos</p>
+                <div style="display:flex; gap:8px;">
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Front</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/human/pick_mug/episode_000000_front.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Left</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/human/pick_mug/episode_000000_left.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="task-box">
+                <span class="tag-precision">Moderate &middot; Short</span>
+                <strong>Stacking (Bowl &rarr; Bowl)</strong>
+                <p style="margin-top:6px; font-size:0.9em;">
+                  Stack one bowl onto another. Requires precise terminal pose alignment.
+                  100 robot demos, up to 300 human demos.
+                </p>
+                <p style="font-size:0.82em; font-weight:700; color:#37474f; margin-top:14px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Sim Robot Demos</p>
+                <div style="display:flex; gap:8px;">
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Camera 0</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/stack_bowls/episode_000000/cam0.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Camera 1</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/stack_bowls/episode_000000/cam1.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Wrist</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/stack_bowls/episode_000000/wrist_cam.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+                <p style="font-size:0.82em; font-weight:700; color:#37474f; margin-top:14px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Real Human Demos</p>
+                <div style="display:flex; gap:8px;">
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Front</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/human/stack_bowls/episode_000000_front.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Left</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/human/stack_bowls/episode_000000_left.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="task-box">
+                <span class="tag-precision">Precise &middot; Short</span>
+                <strong>Insertion (Donut &rarr; Peg)</strong>
+                <p style="margin-top:6px; font-size:0.9em;">
+                  Insert a donut onto a fixed peg. Contact-rich with tight positional tolerances.
+                  100 robot demos, up to 300 human demos.
+                </p>
+                <p style="font-size:0.82em; font-weight:700; color:#37474f; margin-top:14px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Sim Robot Demos</p>
+                <div style="display:flex; gap:8px;">
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Camera 0</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/insert_donut/episode_000013/cam0.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Camera 1</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/insert_donut/episode_000013/cam1.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Wrist</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/insert_donut/episode_000013/wrist_cam.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+                <p style="font-size:0.82em; font-weight:700; color:#37474f; margin-top:14px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Real Human Demos</p>
+                <div style="display:flex; gap:8px;">
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Front</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/human/insert_donut/episode_000000_front.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Left</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/human/insert_donut/episode_000000_left.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="task-box">
+                <span class="tag-precision">Moderate &middot; Long</span>
+                <strong>Sequential Manipulation (Blocks &rarr; Box)</strong>
+                <p style="margin-top:6px; font-size:0.9em;">
+                  Sequentially place multiple blocks into a box. Tests long-horizon execution.
+                  100 robot demos, up to 300 human demos.
+                </p>
+                <p style="font-size:0.82em; font-weight:700; color:#37474f; margin-top:14px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Sim Robot Demos</p>
+                <div style="display:flex; gap:8px;">
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Camera 0</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/pick_toys/episode_000000/cam0.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Camera 1</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/pick_toys/episode_000000/cam1.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Wrist</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/tasks/pick_toys/episode_000000/wrist_cam.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+                <p style="font-size:0.82em; font-weight:700; color:#37474f; margin-top:14px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Real Human Demos</p>
+                <div style="display:flex; gap:8px;">
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Front</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/human/pick_toys/episode_000000_front.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div style="flex:1; text-align:center;">
+                    <p style="font-size:0.8em; margin-bottom:4px; font-weight:600;">Left</p>
+                    <video controls muted loop preload="metadata" style="width:100%; border-radius:4px;">
+                      <source src="static/videos/human/pick_toys/episode_000000_left.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== METHODS =================== -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Methods Evaluated</h2>
+          <p class="content has-text-justified">
+            We benchmark four representative H2R transfer methods spanning the major embodiment-bridging strategies:
+          </p>
+          <div class="columns is-multiline">
+            <div class="column is-half">
+              <div class="task-box">
+                <span class="tag-precision">Visual Alignment</span>
+                <strong>Phantom</strong>
+                <p style="margin-top:6px; font-size:0.9em;">
+                  Inpaints the human arm and overlays a rendered robot arm on human demos before imitation learning.
+                </p>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="task-box">
+                <span class="tag-precision">Keypoint Representation</span>
+                <strong>Point Policy</strong>
+                <p style="margin-top:6px; font-size:0.9em;">
+                  Represents human and robot behavior via shared 3D keypoints from multi-view observations.
+                </p>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="task-box">
+                <span class="tag-precision">Latent Dynamics</span>
+                <strong>AMPLIFY</strong>
+                <p style="margin-top:6px; font-size:0.9em;">
+                  Decouples latent dynamics learning from action inference; learns dynamics from videos then predicts actions from robot demos.
+                </p>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="task-box">
+                <span class="tag-precision">Hierarchical Subgoal</span>
+                <strong>GHOST</strong>
+                <p style="margin-top:6px; font-size:0.9em;">
+                  Hierarchically decomposes transfer into a high-level subgoal planner (human+robot demos) and a low-level controller (robot demos only).
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =================== RESULTS =================== -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Experiments</h2>
+
+          <h3 class="title is-4">Capability &amp; Human Transfer Effectiveness</h3>
+          <p class="content has-text-justified">
+            GHOST achieves the strongest and most consistent performance across all four tasks.
+            Methods with hierarchical decomposition or explicit subgoal representations tend to achieve
+            stronger and more robust performance, suggesting that structured intermediate abstractions
+            are effective for bridging the embodiment gap.
+          </p>
+
+          <div style="overflow-x:auto; margin-bottom: 1.5rem;">
+            <table class="table is-bordered is-striped is-hoverable is-fullwidth result-table"
+                   style="text-align:center; font-size:0.9em;">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="vertical-align:middle; background:#37474f; color:white;">Method</th>
+                  <th colspan="2" style="background:#37474f; color:white;">Pick-Place</th>
+                  <th colspan="2" style="background:#37474f; color:white;">Stacking</th>
+                  <th colspan="2" style="background:#37474f; color:white;">Insertion</th>
+                  <th colspan="2" style="background:#37474f; color:white;">Sequential</th>
+                </tr>
+                <tr>
+                  <th style="background:#546e7a; color:white;">Prog.</th><th style="background:#546e7a; color:white;">SR</th>
+                  <th style="background:#546e7a; color:white;">Prog.</th><th style="background:#546e7a; color:white;">SR</th>
+                  <th style="background:#546e7a; color:white;">Prog.</th><th style="background:#546e7a; color:white;">SR</th>
+                  <th style="background:#546e7a; color:white;">Prog.</th><th style="background:#546e7a; color:white;">SR</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Phantom</td>
+                  <td>77.0</td><td>56.7</td>
+                  <td>75.6</td><td>25.6</td>
+                  <td><u>39.2</u></td><td><u>7.8</u></td>
+                  <td><u>37.8</u></td><td><u>13.3</u></td>
+                </tr>
+                <tr>
+                  <td>AMPLIFY</td>
+                  <td>74.4</td><td>58.9</td>
+                  <td><u>85.3</u></td><td><u>61.1</u></td>
+                  <td>35.0</td><td>2.2</td>
+                  <td>8.1</td><td>0.0</td>
+                </tr>
+                <tr>
+                  <td>Point Policy</td>
+                  <td><u>82.6</u></td><td><u>62.2</u></td>
+                  <td>79.7</td><td>61.1</td>
+                  <td>37.8</td><td>6.7</td>
+                  <td>17.4</td><td>0.0</td>
+                </tr>
+                <tr class="ghost-row">
+                  <td>GHOST</td>
+                  <td><strong>91.1</strong></td><td><strong>82.2</strong></td>
+                  <td><strong>88.9</strong></td><td><strong>76.7</strong></td>
+                  <td><strong>64.7</strong></td><td><strong>34.5</strong></td>
+                  <td><strong>63.3</strong></td><td><strong>38.9</strong></td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="font-size:0.85em; color:#666; text-align:center;">
+              Best per column is <strong>bold</strong>; second-best is <u>underlined</u>.
+              Prog. = average task progression; SR = final-stage success rate.
+              Mean across random seeds, under robot + maximum human demonstration training.
+            </p>
+          </div>
+
+          <!-- Human transfer gain figures -->
+          <p class="content has-text-justified">
+            Human demonstrations consistently improve performance on pick-and-place and stacking
+            (high-level spatial tasks), while gains are limited for insertion and sequential manipulation,
+            where fine-grained contact dynamics and error accumulation remain challenging.
+          </p>
+
+          <div class="columns is-vcentered" style="margin-bottom: 1.5rem;">
+            <div class="column has-text-centered">
+              <img src="static/images/comparison_robotonly_withhuman/h2r_panel_A_seeds.png"
+                   alt="Absolute performance comparison" width="100%"
+                   style="border-radius:6px; border:1px solid #eee;" />
+              <p style="font-size:0.85em; color:#555; margin-top:6px;">
+                Absolute performance: robot-only vs. robot+human.
+              </p>
+            </div>
+            <div class="column has-text-centered">
+              <img src="static/images/comparison_robotonly_withhuman/h2r_panel_B_seeds.png"
+                   alt="Log-odds transfer gain" width="100%"
+                   style="border-radius:6px; border:1px solid #eee;" />
+              <p style="font-size:0.85em; color:#555; margin-top:6px;">
+                Human transfer impact (log-odds gain). Positive = beneficial.
+              </p>
+            </div>
+          </div>
+          <p style="text-align:center; font-size:0.85em; color:#555; margin-bottom:2rem;">
+            <strong>Figure 2:</strong> Capability and human transfer impact across H2R methods and tasks.
+          </p>
+
+          <h3 class="title is-4">Scaling with Human Supervision</h3>
+          <p class="content has-text-justified">
+            For simpler tasks most methods improve steadily with more human demonstrations.
+            For precision-sensitive tasks (insertion) and long-horizon tasks (sequential manipulation),
+            scaling trends are less consistent&mdash;some methods saturate or fluctuate,
+            suggesting that compounding execution errors are difficult to address through additional human data alone.
+          </p>
+
+          <div class="has-text-centered" style="margin-bottom:2rem;">
+            <img src="static/images/scaling_curves_seeds.png"
+                 alt="Scaling curves" width="100%"
+                 style="max-width:860px; border-radius:6px; border:1px solid #eee;" />
+            <p style="font-size:0.85em; color:#555; margin-top:8px;">
+              <strong>Figure 3:</strong> Policy performance as a function of human demonstration count.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =================== SIM VS REAL =================== -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Sim-vs-Real Fidelity</h2>
+          <div class="content has-text-justified">
+            <p>
+              For each method&ndash;task pair we train (i) a <em>simulation-pipeline</em> policy
+              (real human demos + simulated robot demos, evaluated in simulation) and
+              (ii) a <em>real-world-pipeline</em> policy (real human demos + real robot demos, evaluated on the physical robot).
+              We measure Sim-vs-Real correspondence using Pearson <em>r</em>, Spearman <em>&rho;</em>, and MMRV.
+            </p>
+          </div>
+
+          <!-- Metrics table -->
+          <div style="max-width:440px; margin: 0 auto 1.5rem auto;">
+            <table class="table is-bordered is-fullwidth has-text-centered result-table"
+                   style="font-size:0.93em;">
+              <thead>
+                <tr>
+                  <th style="background:#37474f; color:white;">Condition</th>
+                  <th style="background:#37474f; color:white;">Pearson r &uarr;</th>
+                  <th style="background:#37474f; color:white;">Spearman &rho; &uarr;</th>
+                  <th style="background:#37474f; color:white;">MMRV &darr;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Robot Only</td>
+                  <td><strong>0.971</strong></td>
+                  <td><strong>0.940</strong></td>
+                  <td><strong>0.014</strong></td>
+                </tr>
+                <tr>
+                  <td>Robot + Max Human</td>
+                  <td>0.894</td>
+                  <td>0.851</td>
+                  <td>0.060</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="font-size:0.82em; color:#666; text-align:center;">
+              N = 16 method&ndash;task pairs per condition.
+            </p>
+          </div>
+
+          <!-- Scatter plots -->
+          <div class="columns is-vcentered interpolation-panel">
+            <div class="column has-text-centered">
+              <img src="static/images/sim_real_robot_only.png"
+                   alt="Sim-vs-Real robot only" width="100%"
+                   style="border-radius:6px; border:1px solid #eee;" />
+              <p style="font-size:0.85em; color:#555; margin-top:6px;">Robot-Only</p>
+            </div>
+            <div class="column has-text-centered">
+              <img src="static/images/sim_real_maxh_only.png"
+                   alt="Sim-vs-Real max human" width="100%"
+                   style="border-radius:6px; border:1px solid #eee;" />
+              <p style="font-size:0.85em; color:#555; margin-top:6px;">Robot + Max Human Demos</p>
+            </div>
+          </div>
+          <p style="text-align:center; font-size:0.85em; color:#555; margin-bottom:1rem;">
+            <strong>Figure 4:</strong> Sim-vs-Real correlation. Each point is one method&ndash;task pair.
+            Higher simulated performance reliably predicts higher real-world performance.
+          </p>
+
+          <div class="content has-text-justified">
+            <p>
+              Simulation performance is broadly predictive of real-world robot performance across both training conditions,
+              supporting H2RBench as a practical proxy for comparative H2R evaluation prior to real-world deployment.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =================== ROLLOUT VIDEOS (separate pages) =================== -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Rollout Videos</h2>
+          <p class="content has-text-justified">
+            We evaluate all four methods across four manipulation tasks both in simulation and in real-world settings.
+            Representative success and failure rollouts for each method&ndash;task pair are shown on separate pages:
+          </p>
+          <div class="columns is-multiline">
+            <div class="column is-half">
+              <div class="task-box">
+                <span class="tag-precision">Simulation</span>
+                <strong>Simulator Experiments</strong>
+                <p style="margin-top:6px; font-size:0.9em;">
+                  Success and failure rollouts of Phantom, AMPLIFY, Point Policy, and GHOST in H2RBench simulation.
+                </p>
+                <a href="./simulator.html" class="button is-small is-rounded is-dark" style="margin-top:10px;">
+                  <span class="icon"><i class="fas fa-video"></i></span>
+                  <span>View Simulator Videos</span>
+                </a>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="task-box">
+                <span class="tag-precision">Real World</span>
+                <strong>Real-World Experiments</strong>
+                <p style="margin-top:6px; font-size:0.9em;">
+                  Success and failure rollouts of all four methods on the physical robot, with failure-mode annotations.
+                </p>
+                <a href="./realworld.html" class="button is-small is-rounded is-dark" style="margin-top:10px;">
+                  <span class="icon"><i class="fas fa-video"></i></span>
+                  <span>View Real-World Videos</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =================== BIBTEX =================== -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3">BibTeX</h2>
+      <pre><code>@misc{xiao2026h2rbenchrealtosimbenchmarkevaluating,
+      title={H2RBench: A Real-to-Sim Benchmark for Evaluating Human-to-Robot Transfer},
+      author={Chuyang Xiao and Haotian Zhan and Sriram Krishna and Peilin Meng and Muhammad Zubair Irshad and Sergey Zakharov and David Held},
+      year={2026},
+      eprint={2609.24778},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2609.24778},
+}</code></pre>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <div class="container">
+    </div>
+  </footer>
+
+  <script>
+    // Carousels
+    document.querySelectorAll('.rw-carousel').forEach(function(carousel) {
+      var track = carousel.querySelector('.rw-track');
+      var items = carousel.querySelectorAll('.rw-item');
+      var nav = carousel.querySelector('.rw-nav');
+      if (items.length <= 1) return;
+      var current = 0;
+      nav.innerHTML = '<button class="rw-prev">&#8249;</button><span class="rw-counter"></span><button class="rw-next">&#8250;</button>';
+      var counter = nav.querySelector('.rw-counter');
+      function update() {
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        counter.textContent = (current + 1) + ' / ' + items.length;
+      }
+      nav.querySelector('.rw-prev').addEventListener('click', function() { current = (current - 1 + items.length) % items.length; update(); });
+      nav.querySelector('.rw-next').addEventListener('click', function() { current = (current + 1) % items.length; update(); });
+      update();
+    });
+  </script>
+</body>
+
+</html>

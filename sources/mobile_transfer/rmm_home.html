@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RMMBench: A Comprehensive Benchmark for Robotic Mobile Manipulation</title>
+<meta name="description" content="RMMBench is a comprehensive benchmark for robotic mobile manipulation, evaluating VLMs across grounded spatial perception and composite navigation-manipulation tasks.">
+<style>
+  :root {
+    --text: #1f2328;
+    --muted: #656d76;
+    --accent: #0969da;
+    --accent-dark: #0550ae;
+    --bg: #ffffff;
+    --border: #e4e8ec;
+    --section-rule: #3b4351;
+    --light-bg: #f6f8fa;
+    --radius: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 16px;
+  }
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Top navbar ---------- */
+  .navbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .navbar-inner {
+    max-width: 1000px; margin: 0 auto; padding: 10px 24px;
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  }
+  .navbar .brand { font-weight: 700; color: var(--accent); font-size: 1.05rem; }
+  .navbar a.nav-link { color: var(--muted); text-decoration: none; font-size: .88rem; }
+  .navbar a.nav-link:hover { color: var(--accent); }
+
+  /* ---------- Hero ---------- */
+  header.hero { padding: 64px 0 20px; text-align: center; }
+  h1.title {
+    font-size: 2.1rem; line-height: 1.25; font-weight: 800;
+    letter-spacing: -.01em; margin-bottom: 14px;
+  }
+  .authors { font-size: 1rem; margin: 18px 0 6px; }
+  .authors a { color: var(--accent); text-decoration: none; }
+  .authors a:hover { text-decoration: underline; }
+  .affiliations { color: var(--muted); font-size: .92rem; margin-bottom: 6px; }
+  .author-notes { color: var(--muted); font-size: .82rem; }
+  .link-buttons { margin: 26px 0 8px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 20px; border-radius: 20px; font-size: .92rem; font-weight: 600;
+    text-decoration: none; border: 1px solid var(--border); background: var(--bg); color: var(--text);
+    transition: all .15s ease;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 1px 4px rgba(9,105,218,.15); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-dark); color: #fff; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 34px 0; }
+  h2.section-title {
+    font-size: 1.45rem; font-weight: 750; margin-bottom: 18px;
+    border-bottom: 2px solid var(--section-rule); padding-bottom: 6px;
+  }
+  h3.subsection-title {
+    font-size: 1.12rem; font-weight: 700; margin: 26px 0 10px; color: var(--text);
+  }
+  p { margin-bottom: 12px; }
+  .muted { color: var(--muted); }
+  .emph { color: var(--accent-dark); }
+  ul.bullets { margin: 0 0 12px 22px; }
+  ul.bullets li { margin-bottom: 6px; }
+  figure.placeholder {
+    border: 2px dashed var(--border); border-radius: var(--radius);
+    background: var(--light-bg); padding: 40px 20px; text-align: center; color: var(--muted);
+    margin: 14px 0;
+  }
+
+  /* ---------- Tables ---------- */
+  .table-wrap { overflow-x: auto; margin: 14px 0; }
+  table.results {
+    border-collapse: collapse; font-size: .82rem; width: 100%;
+    min-width: 720px;
+  }
+  table.results caption {
+    caption-side: top; text-align: left; font-size: .9rem; font-weight: 650;
+    padding-bottom: 8px; color: var(--text);
+  }
+  table.results th, table.results td {
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 6px 8px; text-align: center; white-space: nowrap;
+  }
+  table.results th { background: var(--light-bg); font-weight: 650; }
+  table.results td:first-child, table.results th:first-child { text-align: left; font-weight: 600; }
+  table.results tr.ours td { background: #eaf3ff; }
+  table.results .row-group td, table.results th.group-sep { border-top: 2px solid var(--section-rule); }
+  .tbl-note { font-size: .78rem; color: var(--muted); margin-top: -6px; margin-bottom: 22px; }
+
+  /* ---------- Metric cards ---------- */
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin: 14px 0; }
+  .metric-card {
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px;
+    background: var(--bg);
+  }
+  .metric-card h4 { font-size: .98rem; font-weight: 700; margin-bottom: 6px; }
+  .metric-card p { font-size: .88rem; color: var(--muted); margin-bottom: 0; }
+
+  /* ---------- Video section ---------- */
+  .video-grid { display: grid; grid-template-columns: 1fr; gap: 26px; margin-top: 10px; }
+  .video-grid.demo-grid { grid-template-columns: repeat(6, 1fr); gap: 14px 12px; }
+.video-grid.nav-grid { grid-template-columns: repeat(5, 1fr); gap: 16px 14px; }
+  .video-item { margin: 0; min-width: 0; }
+  .video-item video { width: 100%; height: auto; display: block; border-radius: 6px; border: 1px solid var(--border); background: #000; }
+  .video-cap {
+    font-size: .72rem; text-align: center; color: var(--muted);
+    margin-top: 5px; line-height: 1.4; word-break: break-all;
+  }
+@media (max-width: 960px) {
+  .video-grid.demo-grid { grid-template-columns: repeat(3, 1fr); }
+  .video-grid.nav-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 560px) {
+  .video-grid.demo-grid { grid-template-columns: repeat(2, 1fr); }
+  .video-grid.nav-grid { grid-template-columns: repeat(2, 1fr); }
+}
+  .video-placeholder {
+    border: 2px dashed var(--border); border-radius: var(--radius);
+    background: var(--light-bg); padding: 46px 20px; text-align: center; color: var(--muted);
+  }
+  .video-placeholder .tag { color: var(--accent); font-weight: 700; }
+  video.demo { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); background: #000; }
+
+  /* ---------- Debug rollout inspector ---------- */
+  .debug-group-title { margin: 20px 0 10px; display: flex; align-items: baseline; gap: 10px; }
+  .debug-group-title h4 { font-size: 1rem; }
+  .debug-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  @media (min-width: 900px) {
+    .debug-grid.two-col { grid-template-columns: 1fr 1fr; }
+  }
+  .debug-card {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--bg); overflow: hidden; display: flex; flex-direction: column;
+  }
+  .debug-card-header {
+    padding: 12px 16px; background: var(--light-bg); border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .debug-card-header .name { font-weight: 700; font-size: .95rem; }
+  .debug-card-header .name .model { color: var(--muted); font-weight: 500; font-size: .8rem; }
+  .debug-card-header .open-link { font-size: .8rem; color: var(--accent); text-decoration: none; white-space: nowrap; }
+  .debug-card-header .open-link:hover { text-decoration: underline; }
+  .debug-card iframe {
+    width: 100%; height: 480px; border: 0; display: block; background: #f6f8fa;
+  }
+  .debug-card .hint {
+    font-size: .75rem; color: var(--muted); padding: 6px 14px; background: var(--light-bg);
+    border-top: 1px solid var(--border);
+  }
+
+  .fig-caption {
+    font-size: .82rem; color: var(--muted); text-align: center;
+    margin-top: 8px; line-height: 1.5;
+  }
+  .fig-caption strong { color: var(--text); }
+  figure.paper-fig { margin: 10px 0 6px; }
+  figure.paper-fig img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); }
+
+  /* ---------- Citation ---------- */
+  .citation-box {
+    background: var(--light-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px 20px; font-size: .8rem; overflow-x: auto;
+  }
+  .citation-box pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre; }
+
+  footer { padding: 30px 0 50px; color: var(--muted); font-size: .85rem; text-align: center; }
+  .ack { text-align: left; font-size: .88rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ================= Top navbar ================= -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <span class="brand">RMMBench</span>
+    <a class="nav-link" href="#abstract">Abstract</a>
+    <a class="nav-link" href="#benchmark">Benchmark</a>
+    <a class="nav-link" href="#videos">Videos</a>
+    <a class="nav-link" href="#rollouts">Rollout Logs</a>
+    <a class="nav-link" href="#citation">Citation</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- ================= Hero ================= -->
+  <header class="hero">
+    <h1 class="title">RMMBench: A Comprehensive Benchmark for<br>Robotic Mobile Manipulation</h1>
+    <div class="authors">
+      <a href="#">Huapeng Li</a><sup>1</sup>,
+      <a href="#">Fuxiang Feng</a><sup>1</sup>,
+      <a href="#">Jinqiu Fan</a><sup>1</sup>,
+      <a href="#">Shuo Yang</a><sup>1</sup>,
+      <a href="#">Fengjiao Chen</a><sup>1</sup>,
+      <a href="#">Xuezhi Cao</a><sup>1</sup>,
+      <a href="#">Ran Song</a><sup>1&dagger;</sup>,
+      <a href="#">Wei Zhang</a><sup>1</sup>
+    </div>
+    <div class="affiliations">
+      <sup>1</sup>Shandong University &nbsp;&nbsp; <sup>2</sup>Meituan Group
+    </div>
+    
+    <!--
+      ============================================================
+      TODO: Fill in the real links (arXiv / GitHub / Dataset, etc.)
+      ============================================================
+    -->
+    <div class="link-buttons">
+      <!-- TODO: replace "#" with the arXiv / paper PDF link -->
+      <a class="btn btn-primary" href="https://arxiv.org/abs/2610.05414" target="_blank" rel="noopener noreferrer">&#128196; Paper</a>
+      <a class="btn" href="https://github.com/mxxq-stack/RMMBench" target="_blank">&#128187; Code</a>
+    </div>
+  </header>
+
+  <!-- ================= Abstract ================= -->
+  <section id="abstract">
+    <h2 class="section-title">Abstract</h2>
+    <p>
+      Although the advancement of vision-language models (VLMs) has endowed robots with enhanced environmental understanding and task reasoning, a comprehensive evaluation methodology is important to advance the integration of VLMs in robotic navigation and manipulation. However, current benchmarks lack a comprehensive method to evaluate diverse robotic tasks, and evaluation metrics remain relatively constrained, making it difficult to assess the embodied capabilities of VLMs in a thorough and fine-grained manner.
+    </p>
+    <p>
+      To address this issue, we propose <strong>RMMBench</strong>, an evaluation benchmark that requires robots to understand language instructions and perform long-horizon tasks in continuous spaces. RMMBench seamlessly integrates high- and low-level embodied tasks into a unified framework, constructing a &ldquo;navigation&ndash;manipulation&rdquo; task suite comprising <span class="emph">90 canonical task scenarios</span> that range from localized manipulation to long-horizon composite navigation. The results reveal that leading VLMs still face major challenges in spatial localization when coping with mobile manipulation tasks, and also highlight the necessity of enhancing the spatial perception capability of robots during long-period interactions.
+    </p>
+    <figure class="paper-fig">
+      <img src="images/abstract.gif" alt="Overview of the RMMBench (animated)">
+      <figcaption class="fig-caption"><strong>Overview of the RMMBench.</strong> RMMBench is a comprehensive mobile manipulation benchmark with a standardized skill library to evaluate the embodied performance of vision-language models.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ================= Benchmark ================= -->
+  <section id="benchmark">
+    <h2 class="section-title">The RMMBench Benchmark</h2>
+    <p>
+      RMMBench requires VLM-based models to execute continuous-space, long-horizon mobile manipulation tasks based on language instructions and raw visual feedback. Evaluating this capability requires tight integration of sequential planning, spatial grounding, and closed-loop visual verification.
+    </p>
+
+    <figure class="paper-fig">
+      <img src="images/framework.png" alt="Overview of the RMMBench evaluation pipeline">
+      <figcaption class="fig-caption"><strong>Overview of the RMMBench evaluation pipeline.</strong> It ingests head and wrist camera views, complemented by an optional bird&rsquo;s eye view (BEV) modality. Navigation is executed over a Hanan grid dynamically bounded by the workspace geometry. For manipulation tasks, the pipeline overlays algorithmic candidates from GraspNet and a human-verified baseline fallback onto the wrist view for the VLM to select. Decision-making is conditioned on the historical context.</figcaption>
+    </figure>
+
+  </section>
+  <section id="videos">
+    <h2 class="section-title">Video Demonstrations</h2>
+    <p class="muted">
+      The demonstrations are organized into two parts: <strong>manipulation</strong> tasks and <strong>navigation</strong> tasks.
+      <!--
+        ============================================================
+        TODO: Add videos here (manipulation / navigation).
+        Template (put video files into the videos/ directory):
+        <h3 class="subsection-title">Manipulation</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+          <video class="demo" controls muted loop playsinline src="videos/manipulation_demo_1.mp4"></video>
+        </div>
+        ============================================================
+      -->
+    </p>
+
+    <h3 class="subsection-title">Manipulation Tasks</h3>
+    <!-- Successful (True) manipulation episodes, one per task, 6 per row -->
+    <div class="video-grid demo-grid">
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/cook_chicken_breast_0.mp4"></video><figcaption class="video-cap">cook_chicken_breast_0</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/cook_sausage_0.mp4"></video><figcaption class="video-cap">cook_sausage_0</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/fix_burnt_bread_0.mp4"></video><figcaption class="video-cap">fix_burnt_bread_0</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/pick_bottle_opener_0.mp4"></video><figcaption class="video-cap">pick_bottle_opener_0</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/pick_chip.mp4"></video><figcaption class="video-cap">pick_chip</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/pick_chocolate.mp4"></video><figcaption class="video-cap">pick_chocolate</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/pick_no_sugar_drink.mp4"></video><figcaption class="video-cap">pick_no_sugar_drink</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/pick_non_alcoholic_drink.mp4"></video><figcaption class="video-cap">pick_non_alcoholic_drink</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/pick_whisk_0.mp4"></video><figcaption class="video-cap">pick_whisk_0</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/select_bagged_snacks.mp4"></video><figcaption class="video-cap">select_bagged_snacks</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/select_bread_toaster_0.mp4"></video><figcaption class="video-cap">select_bread_toaster_0</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/select_bread_toaster_1.mp4"></video><figcaption class="video-cap">select_bread_toaster_1</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/select_bread_toaster_2.mp4"></video><figcaption class="video-cap">select_bread_toaster_2</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/select_same_cake.mp4"></video><figcaption class="video-cap">select_same_cake</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/store_yogurt.mp4"></video><figcaption class="video-cap">store_yogurt</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/uncover_fruit.mp4"></video><figcaption class="video-cap">uncover_fruit</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/wash_place_carrot.mp4"></video><figcaption class="video-cap">wash_place_carrot</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/manip/wash_place_cucumber.mp4"></video><figcaption class="video-cap">wash_place_cucumber</figcaption></figure>
+    </div>
+
+    <h3 class="subsection-title">Navigation Tasks</h3>
+    <div class="video-grid nav-grid">
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/nav/nav_01.mp4"></video><figcaption class="video-cap">I want chicken for dinner tonight, put it in the sink for washing.</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/nav/nav_02.mp4"></video><figcaption class="video-cap">Heat up the steak first, and then wash the apple for me.</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/nav/nav_03.mp4"></video><figcaption class="video-cap">Put the bell pepper from the big white fridge onto the plate.</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/nav/nav_04.mp4"></video><figcaption class="video-cap">Put the bagged snacks into the blue tray.</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/nav/nav_05.mp4"></video><figcaption class="video-cap">Put the carrot on the plate and the cheese in the tray.</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/nav/nav_06.mp4"></video><figcaption class="video-cap">Get me a drink from the closed mini-fridge by the window.</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/nav/nav_07.mp4"></video><figcaption class="video-cap">I would like toasted bread, put the right food into the pan.</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/nav/nav_08.mp4"></video><figcaption class="video-cap">I want steak, put the steak into the pan to prepare it.</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/nav/nav_09.mp4"></video><figcaption class="video-cap">Get the bell pepper from the open fridge.</figcaption></figure>
+      <figure class="video-item"><video controls muted loop playsinline preload="metadata" src="videos/nav/nav_10.mp4"></video><figcaption class="video-cap">Choose a suitable tool based on the food next to the tray and put it into the tray.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ================= Rollout Logs ================= -->
+  <section id="rollouts">
+    <h2 class="section-title">Interactive Rollout Logs</h2>
+    <p>
+      These interactive execution logs record the complete multi-step decision process of a VLM agent
+      (<strong>Gemini-3-Flash</strong>) on RMMBench tasks, including the natural-language instruction, per-step visual observations,
+      skill selections, bounding-box predictions, and environmental feedback. Each panel below is a <em>scrollable</em> mini window &mdash;
+      scroll up and down inside a panel to walk through the episode step by step, or click &ldquo;Open full log&rdquo; to view the complete page.
+    </p>
+
+    <div class="debug-group-title">
+      <h3 class="subsection-title" style="margin:0;">Manipulation Tasks</h3>
+    </div>
+    <div class="debug-grid two-col">
+      <div class="debug-card">
+        <div class="debug-card-header">
+          <span class="name">select_snacks <span class="model">&middot; Gemini-3-Flash</span></span>
+          <a class="open-link" href="debug/manipulation_select_snacks.html" target="_blank">Open full log &nearr;</a>
+        </div>
+        <iframe src="debug/manipulation_select_snacks.html" title="select_snacks rollout log" loading="lazy" scrolling="yes"></iframe>
+        <div class="hint">Scroll inside the window to inspect each step.</div>
+      </div>
+      <div class="debug-card">
+        <div class="debug-card-header">
+          <span class="name">uncover_fruit <span class="model">&middot; Gemini-3-Flash</span></span>
+          <a class="open-link" href="debug/manipulation_uncover_fruit.html" target="_blank">Open full log &nearr;</a>
+        </div>
+        <iframe src="debug/manipulation_uncover_fruit.html" title="uncover_fruit rollout log" loading="lazy" scrolling="yes"></iframe>
+        <div class="hint">Scroll inside the window to inspect each step.</div>
+      </div>
+    </div>
+
+    <div class="debug-group-title">
+      <h3 class="subsection-title" style="margin:0;">Composite Navigation Tasks</h3>
+    </div>
+    <div class="debug-grid two-col">
+      <div class="debug-card">
+        <div class="debug-card-header">
+          <span class="name">organize_snacks_to_tray <span class="model">&middot; no BEV, no LiDAR rays</span></span>
+          <a class="open-link" href="debug/nav_nobev_without_lidar.html" target="_blank">Open full log &nearr;</a>
+        </div>
+        <iframe src="debug/nav_nobev_without_lidar.html" title="navigation rollout log without LiDAR rays" loading="lazy" scrolling="yes"></iframe>
+        <div class="hint">Composite navigation without BEV and without LiDAR auxiliary rays &mdash; purely egocentric decision-making.</div>
+      </div>
+      <div class="debug-card">
+        <div class="debug-card-header">
+          <span class="name">organize_snacks_to_tray <span class="model">&middot; no BEV, with LiDAR rays</span></span>
+          <a class="open-link" href="debug/nav_nobev_with_lidar.html" target="_blank">Open full log &nearr;</a>
+        </div>
+        <iframe src="debug/nav_nobev_with_lidar.html" title="navigation rollout log with LiDAR rays" loading="lazy" scrolling="yes"></iframe>
+        <div class="hint">Composite navigation without BEV but with LiDAR auxiliary rays overlaid on the view.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Citation ================= -->
+  <section id="citation">
+    <h2 class="section-title">Citation</h2>
+    <!-- TODO: update the arXiv ID / venue in the BibTeX below once available -->
+    <div class="citation-box">
+<pre>@article{li2026rmmbench,
+  title   = {RMMBench: A Comprehensive Benchmark for Robotic Mobile Manipulation},
+  author  = {Li, Huapeng and Feng, Fuxiang and Fan, Jinqiu and Yang, Shuo and
+             Chen, Fengjiao and Cao, Xuezhi and Song, Ran and Zhang, Wei},
+  journal = {arXiv preprint arXiv:2610.05414},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2610.05414}
+}</pre>
+    </div>
+  </section>
+
+  <!-- ================= Acknowledgments ================= -->
+  <section id="acknowledgments">
+    <h2 class="section-title">Acknowledgments</h2>
+    <p class="ack">
+      This work was supported in part by the National Natural Science Foundation of China under Grant U22A2057,
+      in part by the Key R&amp;D Program of Shandong Province under Grant 2025CXGC010210,
+      and in part by the Municipal-University Collaborative Development Project of Jinan under Grant JNSX2025002.
+    </p>
+  </section>
+
+  <footer>
+    <p>RMMBench &copy; 2026 &middot; Shandong University &amp; Meituan Group &middot; Template inspired by academic project pages.</p>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1238 @@
+{
+     "default": {
+        "engine": {
+            "option": {
+                "impratio": 10,
+                "timestep": 0.001,
+                "density": 1.225,
+                "viscosity": 1.8e-05,
+                "integrator": "implicitfast",
+                "flag": {
+                    "multiccd": "enable"
+                }
+            }
+        },
+        "evaluation": {}
+    },
+
+    "pick_snack_single": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "chocolate_2",
+                    "chocolate_5",
+                    "chocolate_6"
+                ],
+                "distractor": [
+                    "bagged_food_8",
+                    "bar_10",
+                    "boxed_food_0",
+                    "chips_7"
+                ],
+                "seen_container": [
+                    "plate_2"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_0",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [
+                {
+                    "name": "stove_0",
+                    "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+                    "class": "Stove",
+                    "position": [
+                        2.75,
+                        -0.3,
+                        0.9402205882352941
+                    ]
+                }
+            ],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "pick_multi_snack_single_container": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "bar_11",
+                    "bar_10",
+                    "bagged_food_9",
+                    "bagged_food_11",
+                    "chips_1",
+                    "bagged_food_7"
+                ],
+                "distractor": [
+                    "boxed_food_11",
+                    "canned_food_0"
+                ],
+                "seen_container": [
+                    "tray_7"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_2",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [
+                {
+                    "name": "stove_0",
+                    "xml_path": "obj/meshes/containers/stovetops/stove_0/model.xml",
+                    "class": "Stove",
+                    "position": [
+                        2.75,
+                        -0.3,
+                        0.9402205882352941
+                    ]
+                }
+            ],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "wash_fruit_veg": {
+        "robot": {
+            "position": [
+                2.950067173852504,
+                -1.7998841861248738,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                -1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "carrot_1"
+                ],
+                "distractor": [
+                    "radish_6",
+                    "cucumber_2"
+                ],
+                "seen_container": [
+                    "plate_0"
+                ],
+                "fixed_fixture": [
+                    "sink_0",
+                    "stove_0"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "U_SHAPED_LARGE_1",
+                "destination_position": "top",
+                "fixture_surface": "island_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "wash_multi_fruit_veg": {
+        "robot": {
+            "position": [
+                3.050067173852504,
+                -1.798841861248737,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                -1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "carrot_0",
+                    "tomato_2",
+                    "cucumber_3"
+                ],
+                "distractor": [
+                    "bell_pepper_1",
+                    "eggplant_4"
+                ],
+                "seen_container": [
+                    "tray_7"
+                ],
+                "fixed_fixture": [
+                    "sink_0"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "U_SHAPED_LARGE_9",
+                "destination_position": "top",
+                "fixture_surface": "island_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "wash_fruit_shelf": {
+        "robot": {
+            "position": [
+                3.050067173852504,
+                -1.6998841861248737,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                -1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "apple_22",
+                    "orange_12"
+                ],
+                "distractor": [
+                    "tomato_5",
+                    "pomegranate_4"
+                ],
+                "mid_container": [
+                    {
+                        "table_shelf_4": [
+                            "orange_12",
+                            "apple_22"
+                        ]
+                    }
+                ],
+                "seen_container": [
+                    "tray_7",
+                    "table_shelf_4"
+                ],
+                "fixed_fixture": [
+                    "sink_0"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "U_SHAPED_LARGE_6",
+                "destination_position": "top",
+                "fixture_surface": "island_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "cook_meat_pan_stove": {
+        "robot": {
+            "position": [
+                4.25,
+                -0.875,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "steak_0"
+                ],
+                "distractor": [
+                    "pork_chop_13",
+                    "lamb_chop_5"
+                ],
+                "seen_container": [
+                    "plate_0",
+                    "pan_1"
+                ],
+                "fixed_fixture": [
+                    "stove_0"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "U_SHAPED_LARGE_9",
+                "destination_position": "bottom",
+                "fixture_surface": "stovetop_main_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "reheat_microwave": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "steak_15"
+                ],
+                "distractor": [
+                    "steak_3",
+                    "pork_chop_1",
+                    "steak_5",
+                    "lamb_chop_2",
+                    "beet_1",
+                    "steak_6",
+                    "ham_7",
+                    "salami_11",
+                    "pork_loin_5"
+                ],
+                "seen_container": [
+                    "microwave_1",
+                    "plate_3"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_4",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "store_meat_fridge": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "lamb_chop_1",
+                    "chicken_breast_7"
+                ],
+                "distractor": [
+                    "beet_7",
+                    "tofu_0"
+                ],
+                "seen_container": [
+                    "small_fridge"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_9",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "prepare_meat_tool": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    [
+                        "pork_loin_8"
+                    ],
+                    [
+                        "tongs_6"
+                    ]
+                ],
+                "distractor": [
+                    "ham_0",
+                    "scissors_0"
+                ],
+                "seen_container": [
+                    "pan_4",
+                    "tray_0"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_4",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "pick_bread_toaster": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "bread_3"
+                ],
+                "distractor": [
+                    "bagel_2",
+                    "cake_1"
+                ],
+                "seen_container": [
+                    "plate_0"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_0",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "pick_bread_prep": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "bread_5",
+                    "jam_0",
+                    "knife_22"
+                ],
+                "distractor": [
+                    "peanut_butter_jar_2",
+                    "spoon_8"
+                ],
+                "seen_container": [
+                    "tray_7"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_9",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "pick_kitchen_tool": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    [
+                        "can_opener_1"
+                    ]
+                ],
+                "distractor": [
+                    "canned_food_6",
+                    "tongs_0",
+                    "bottle_opener_15"
+                ],
+                "seen_container": [
+                    "tray_2"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_0",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "pick_multi_kitchen_tool": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    [
+                        "can_opener_2"
+                    ],
+                    [
+                        "bottle_opener_1"
+                    ]
+                ],
+                "distractor": [
+                    "canned_food_3",
+                    "beer_2",
+                    "scissors_0",
+                    "tongs_3"
+                ],
+                "seen_container": [
+                    "tray_0",
+                    "tray_1"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_2",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "bring_cold_drink": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "water_bottle_0"
+                ],
+                "distractor": [
+                    "water_bottle_1",
+                    "bottled_cola_0"
+                ],
+                "mid_container": [
+                    {
+                        "small_fridge": [
+                            "water_bottle_0",
+                            "bottled_cola_0"
+                        ]
+                    }
+                ],
+                "seen_container": [
+                    "tray_7"
+                ],
+                "random_scene": false,
+                "sample_strategy": "left",
+                "split_ratio": 0.5,
+                "robocasa_scene": "ONE_WALL_LARGE_3",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "pick_drink_choice_no_fridge": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "water_bottle_2"
+                ],
+                "distractor": [
+                    "beer_5",
+                    "wine_2"
+                ],
+                "seen_container": [
+                    "tray_3"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_1",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "store_item_fridge": {
+        "robot": {
+            "position": [
+                2.749967571243619,
+                -3.650127391388798,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "water_bottle_2"
+                ],
+                "distractor": [
+                    "beer_5",
+                    "wine_2"
+                ],
+                "seen_container": [
+                    "small_fridge"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_6",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "fix_burnt_bread": {
+        "robot": {
+            "position": [
+                4.25,
+                -0.875,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "bread_21",
+                    "bread_9"
+                ],
+                "distractor": [
+                    "bread_7",
+                    "cake_7"
+                ],
+                "mid_container": [
+                    {
+                        "plate_0": [
+                            "bread_21"
+                        ]
+                    }
+                ],
+                "seen_container": [
+                    "plate_0",
+                    "pan_1",
+                    "tray_7"
+                ],
+                "fixed_fixture": [
+                    "stove_0"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "U_SHAPED_LARGE_3",
+                "destination_position": "bottom",
+                "fixture_surface": "stovetop_main_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "classify_snacks_on_shelf": {
+        "robot": {
+            "position": [
+                3.200067173852504,
+                -3.800115813660509,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "bagged_food_0",
+                    "bar_0",
+                    "boxed_food_0"
+                ],
+                "seen_container": [
+                    "shelf_1"
+                ],
+                "fixed_fixture": [
+                    "sink_0",
+                    "stove_0"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "U_SHAPED_LARGE_8",
+                "destination_position": "bottom",
+                "fixture_surface": "island_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "uncover_object": {
+        "robot": {
+            "position": [
+                2.6,
+                -1.7,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                -1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "apple_0"
+                ],
+                "mid_container": [
+                    {
+                        "pan_0": [
+                            "apple_0"
+                        ]
+                    }
+                ],
+                "distractor": [
+                    "bell_pepper_0"
+                ],
+                "seen_container": [
+                    "tray_5"
+                ],
+                "fixed_fixture": [
+                    "sink_0",
+                    "stove_0"
+                ],
+                "random_scene": false,
+                "robocasa_scene": "U_SHAPED_LARGE_0",
+                "destination_position": "top",
+                "fixture_surface": "sink_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "store_cabinet": {
+        "robot": {
+            "position": [
+                2.5,
+                -3.540115813660509,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "yogurt_1"
+                ],
+                "distractor": [
+                    "hamburger",
+                    "scone"
+                ],
+                "seen_container": [
+                    "counter_0"
+                ],
+                "num_objects": [
+                    2
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_7",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "select_same_class_cabinet": {
+        "robot": {
+            "position": [
+                2.5,
+                -3.540115813660509,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "seen_object": [
+                    "cake_0"
+                ],
+                "distractor": [
+                    "cake_9",
+                    "scone_0"
+                ],
+                "seen_container": [
+                    "counter_0"
+                ],
+                "mid_container": [
+                    {
+                        "counter_0": [
+                            "cake_9"
+                        ]
+                    }
+                ],
+                "random_scene": false,
+                "robocasa_scene": "ONE_WALL_LARGE_8",
+                "destination_position": "bottom",
+                "fixture_surface": "island_counter_island_group"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+      "navigate_to_refrigerator": {
+        "robot": {
+            "position": [
+                2.8,
+                -4,
+                0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "random_init": false,
+            "ngrid": [
+                10,
+                10
+            ],
+            "asset": {
+                "composite_configs": [
+                    {
+                        "seen_object": [
+                            "bell_pepper_0",
+                            "juice",
+                            "milk_4"
+                        ],
+                        "mid_container": [
+                            {
+                                "big_fridge": [
+                                    "bell_pepper_0",
+                                    "juice",
+                                    "milk_4"
+                                ]
+                            }
+                        ],
+                        "seen_container": [
+                            "big_fridge"
+                        ],
+                        "fixture_surface": "island_counter_island_group",
+                        "destination_position": "right"
+                    }
+                ],
+                "robocasa_scene": "ONE_WALL_LARGE_0"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "nav_wash_place": {
+        "robot": {
+            "position": [
+                1.7,
+                -0.89,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "composite_configs": [
+                    {
+                        "seen_object": [
+                            "carrot_1"
+                        ],
+                        "distractor": [
+                            "radish_6",
+                            "cucumber_2"
+                        ],
+                        "fixture_surface": "counter_1_main_group",
+                        "destination_position": "bottom"
+                    },
+                    {
+                        "seen_container": [
+                            "plate_0"
+                        ],
+                        "fixture_surface": "sink_island_group",
+                        "destination_position": "top"
+                    }
+                ],
+                "fixed_fixture": [
+                    "sink_0",
+                    "stove_0"
+                ],
+                "robocasa_scene": "U_SHAPED_LARGE_6"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "nav_pick_snacks": {
+        "robot": {
+            "position": [
+                3.4,
+                -0.89,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "composite_configs": [
+                    {
+                        "seen_object": [
+                            "boxed_food_0"
+
+                        ],
+                        "distractor": [
+                            "bagged_food_8",
+                            "bar_10",
+                            "chips_7",
+                            "chocolate_5",
+                            "chocolate_6"
+                        ],
+                        "fixture_surface": "counter_main_main_group",
+                        "destination_position": "bottom"
+                    },
+                    {
+                        "seen_container": [
+                            "plate_2"
+                        ],
+                        "fixture_surface": "counter_1_left_group",
+                        "destination_position": "right"
+                    }
+                ],
+                "robocasa_scene": "G_SHAPED_LARGE_6"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "nav_cook_steak": {
+        "robot": {
+            "position": [
+                1.7,
+                -0.89,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "composite_configs": [
+                    {
+                        "seen_object": [
+                            "steak_0"
+                        ],
+                        "distractor": [
+                            "pork_chop_13",
+                            "lamb_chop_5"
+                        ],
+                        "fixture_surface": "island_island_group",
+                        "destination_position": "bottom"
+                    },
+                    {
+                        "seen_container": [
+                            "plate_0",
+                            "pan_1"
+                        ],
+                        "fixture_surface": "stovetop_main_group",
+                        "destination_position": "bottom"
+                    }
+                ],
+                "fixed_fixture": [
+                    "sink_0",
+                    "stove_0"
+                ],
+                "robocasa_scene": "U_SHAPED_LARGE_0"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "nav_select_tool": {
+        "robot": {
+            "position": [
+                1.7,
+                -4.89,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "composite_configs": [
+                    {
+                        "seen_object": [
+                            "whisk_8"
+                        ],
+                        "distractor": [
+                            "spoon_14",
+                            "ladle_3",
+                            "spatula_6"
+                        ],
+                        "fixture_surface": "counter_main_main_group",
+                        "destination_position": "bottom"
+                    },
+                    {
+                        "seen_object": [
+                            "egg_10"
+                        ],
+                        "seen_container": [
+                            "tray_3"
+                        ],
+                        "fixture_surface": "counter_1_left_group",
+                        "destination_position": "right"
+                    }
+                ],
+                "robocasa_scene": "G_SHAPED_LARGE_6"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "nav_burnt_bread": {
+        "robot": {
+            "position": [
+                4.75, -4.65, 0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "composite_configs": [
+                    {
+                        "seen_object": [
+                            "bread_21",
+                            "bread_9",
+                          "cake_7"
+                        ],
+                        "mid_container": [
+                            {
+                                "plate_0": [
+                                    "bread_21"
+                                ]
+                            }
+                        ],
+                        "seen_container": [
+                            "tray_7","plate_0"
+                        ],
+                        "fixture_surface": "island_counter_island_group",
+                        "destination_position": "bottom"
+                    },
+                    {
+                        "seen_container": [
+                            "pan_1"
+                        ],
+                        "fixture_surface": "stovetop_main_group",
+                        "destination_position": "bottom"
+                    }
+                ],
+                "fixed_fixture": [
+                    "stove_0"
+                ],
+                "robocasa_scene": "ONE_WALL_LARGE_0"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    },
+    "nav_store_item_fridge": {
+        "robot": {
+            "position": [
+                2.2, -0.9000000000000001,
+                0.0
+            ],
+            "euler": [
+                0,
+                0,
+                1.57
+            ]
+        },
+        "task": {
+            "asset": {
+                "composite_configs": [
+                    {
+                        "seen_object": [
+                            "water_bottle_2"
+                        ],
+                        "distractor": [
+                            "beer_5",
+                            "wine_2"
+                        ],
+                        "fixture_surface": "counter_main_main_group",
+                        "destination_position": "bottom"
+                    },
+                    {
+                        "seen_container": [
+                            "small_fridge","tray_3"
+                        ],
+                        "fixture_surface": "counter_1_front_group",
+                        "destination_position": "bottom"
+                    }
+                ],
+                "robocasa_scene": "G_SHAPED_SMALL_9"
+            },
+            "components": [],
+            "scene": {
+                "name": "empty"
+            }
+        }
+    }
+}

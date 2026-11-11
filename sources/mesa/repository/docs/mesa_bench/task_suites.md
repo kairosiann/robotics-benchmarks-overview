@@ -1,0 +1,198 @@
+# Task suites
+
+This page lists the benchmark task suites defined in `mesa/task_suites/task_sets.py`.
+
+## MESA-70 (`mesa-70`)
+
+| Task ID | Natural Language Instruction |
+| --- | --- |
+| open_and_avocado_cabinet_top_region | open the top drawer of the cabinet and put the avocado in it |
+| open_and_carrot_cabinet_top_region | open the top drawer of the cabinet and put the carrot in it |
+| open_and_lemon_cabinet_middle_region | open the middle drawer of the cabinet and put the lemon in it |
+| open_and_onion_cabinet_middle_region | open the middle drawer of the cabinet and put the onion in it |
+| open_and_mushroom_cabinet_bottom_region | open the bottom drawer of the cabinet and put the mushroom in it |
+| open_and_broccoli_cabinet_bottom_region | open the bottom drawer of the cabinet and put the broccoli in it |
+| open_and_canned_food_microwave_heating_region | open the microwave and put the canned food in it |
+| open_and_eggplant_microwave_heating_region | open the microwave and put the eggplant in it |
+| open_and_candle_slide_cabinet_contain_region | open the slide cabinet and put the candle in it |
+| open_and_book_slide_cabinet_contain_region | open the slide cabinet and put the book in it |
+| open_and_can_sliding_top_box_contain_region | open the box and put the can in it |
+| open_and_cheese_sliding_top_box_contain_region | open the box and put the cheese in it |
+| bar_soap_cabinet_top_region_and_close | put the bar soap in the top drawer of the cabinet and close it |
+| kiwi_cabinet_top_region_and_close | put the kiwi in the top drawer of the cabinet and close it |
+| garlic_cabinet_middle_region_and_close | put the garlic in the middle drawer of the cabinet and close it |
+| sponge_cabinet_middle_region_and_close | put the sponge in the middle drawer of the cabinet and close it |
+| cucumber_cabinet_bottom_region_and_close | put the cucumber in the bottom drawer of the cabinet and close it |
+| bar_cabinet_bottom_region_and_close | put the bar in the bottom drawer of the cabinet and close it |
+| bowl_microwave_heating_region_and_close | put the bowl in the microwave and close it |
+| potato_microwave_heating_region_and_close | put the potato in the microwave and close it |
+| croissant_slide_cabinet_contain_region_and_close | put the croissant in the slide cabinet and close it |
+| beer_slide_cabinet_contain_region_and_close | put the beer in the slide cabinet and close it |
+| bell_pepper_sliding_top_box_contain_region_and_close | put the bell pepper in the box and close it |
+| mango_sliding_top_box_contain_region_and_close | put the mango in the box and close it |
+| bottled_water_tray_on | put the bottled water on the tray |
+| apple_tray_on | put the apple on the tray |
+| onion_tray_on | put the onion on the tray |
+| candle_tray_on | put the candle on the tray |
+| lemon_plate_on | put the lemon on the plate |
+| cheese_plate_on | put the cheese on the plate |
+| orange_plate_on | put the orange on the plate |
+| fish_plate_on | put the fish on the plate |
+| egg_bowl_on | put the egg in the bowl |
+| lime_bowl_on | put the lime in the bowl |
+| mushroom_bowl_on | put the mushroom in the bowl |
+| carrot_bowl_on | put the carrot in the bowl |
+| jam_basket_contain_region | put the jam in the basket |
+| avocado_basket_contain_region | put the avocado in the basket |
+| jug_basket_contain_region | put the jug in the basket |
+| yogurt_basket_contain_region | put the yogurt in the basket |
+| corn_cutting_board_on | put the corn on the cutting board |
+| orange_cutting_board_on | put the orange on the cutting board |
+| bagel_cutting_board_on | put the bagel on the cutting board |
+| eggplant_cutting_board_on | put the eggplant on the cutting board |
+| garlic_pan_on | put the garlic in the pan |
+| fish_pan_on | put the fish in the pan |
+| broccoli_pan_on | put the broccoli in the pan |
+| plate_bowl_drainer_left_region | put the plate in the left side of the dish drainer |
+| cup_bowl_drainer_right_region | put the cup in the right side of the dish drainer |
+| mug_bowl_drainer_left_region | put the mug in the left side of the dish drainer |
+| peach_tray_on | put the peach on the tray |
+| peach_cutting_board_on | put the peach on the cutting board |
+| peach_basket_contain_region | put the peach in the basket |
+| open_and_peach_cabinet_top_region | open the top drawer of the cabinet and put the peach in it |
+| squash_tray_on | put the squash on the tray |
+| squash_pan_on | put the squash in the pan |
+| open_and_squash_microwave_heating_region | open the microwave and put the squash in it |
+| wine_tray_on | put the wine on the tray |
+| wine_sliding_top_box_contain_region | put the wine in the box |
+| open_and_wine_slide_cabinet_contain_region | open the slide cabinet and put the wine in it |
+| tomato_left_pan_on | put the tomato in the pan |
+| tomato_left_tray_on | put the tomato on the tray |
+| tomato_left_cutting_board_on | put the tomato on the cutting board |
+| open_and_tomato_left_slide_cabinet_contain_region | open the slide cabinet and put the tomato in it |
+| rolling_pin_left_pan_on | put the rolling pin in the pan |
+| rolling_pin_left_tray_on | put the rolling pin on the tray |
+| rolling_pin_left_bowl_drainer_right_region | put the rolling pin in the right side of the dish drainer |
+| water_bottle_left_tray_on | put the water bottle on the tray |
+| water_bottle_left_basket_contain_region | put the water bottle in the basket |
+| open_and_water_bottle_left_slide_cabinet_contain_region | open the slide cabinet and put the water bottle in it |
+
+## MESA-Spatial (`mesa-spatial`)
+
+| Task ID | Natural Language Instruction |
+| --- | --- |
+| tomato_right_pan_on | put the tomato in the pan |
+| tomato_right_tray_on | put the tomato on the tray |
+| tomato_right_cutting_board_on | put the tomato on the cutting board |
+| open_and_tomato_right_slide_cabinet_contain_region | open the slide cabinet and put the tomato in it |
+| rolling_pin_right_pan_on | put the rolling pin in the pan |
+| rolling_pin_right_tray_on | put the rolling pin on the tray |
+| rolling_pin_right_bowl_drainer_right_region | put the rolling pin in the right side of the dish drainer |
+| water_bottle_right_tray_on | put the water bottle on the tray |
+| water_bottle_right_basket_contain_region | put the water bottle in the basket |
+| open_and_water_bottle_right_slide_cabinet_contain_region | open the slide cabinet and put the water bottle in it |
+
+## MESA-Instance (`mesa-instance`)
+
+| Task ID | Natural Language Instruction |
+| --- | --- |
+| peach_ood_tray_ai_on | put the peach on the tray |
+| peach_ood_cutting_board_ai_on | put the peach on the cutting board |
+| peach_ood_basket_contain_region | put the peach in the basket |
+| open_and_peach_ood_cabinet_top_region | open the top drawer of the cabinet and put the peach in it |
+| squash_ood_tray_ai_on | put the squash on the tray |
+| squash_ood_pan_ai_on | put the squash in the pan |
+| open_and_squash_ood_microwave_heating_region | open the microwave and put the squash in it |
+| wine_ood_tray_ai_on | put the wine on the tray |
+| wine_ood_sliding_top_box_contain_region | put the wine in the box |
+| open_and_wine_ood_slide_cabinet_contain_region | open the slide cabinet and put the wine in it |
+| bell_pepper_ai_sliding_top_box_contain_region_and_close | put the bell pepper in the box and close it |
+| fish_ai_pan_ai_on | put the fish in the pan |
+| jam_ai_basket_contain_region | put the jam in the basket |
+| mushroom_ai_bowl_on | put the mushroom in the bowl |
+| potato_ai_microwave_heating_region_and_close | put the potato in the microwave and close it |
+| cheese_ai_plate_ai_on | put the cheese on the plate |
+| orange_ai_plate_ai_on | put the orange on the plate |
+| open_and_carrot_ai_cabinet_top_region | open the top drawer of the cabinet and put the carrot in it |
+| beer_ai_slide_cabinet_contain_region_and_close | put the beer in the slide cabinet and close it |
+| apple_ai_tray_ai_on | put the apple on the tray |
+
+## MESA-Category (`mesa-category`)
+
+| Task ID | Natural Language Instruction |
+| --- | --- |
+| pear_pot_on | put the pear in the pot |
+| salt_shaker_sliding_top_box_contain_region_and_close | put the salt shaker in the box and close it |
+| cupcake_basket_contain_region | put the cupcake in the basket |
+| beet_ai_pot_on | put the beet in the pot |
+| brussel_sprout_ai_pan_on | put the brussel sprout in the pan |
+| chili_pepper_ai_bowl_on | put the chili pepper in the bowl |
+| ginger_ai_cutting_board_on | put the ginger on the cutting board |
+| grapes_ai_basket_contain_region | put the grapes in the basket |
+| ice_cream_ai_bowl_on | put the ice cream in the bowl |
+| olive_oil_bottle_ai_basket_contain_region | put the olive oil in the basket |
+| pomegranate_ai_cabinet_top_region | put the pomegranate in the top drawer of the cabinet |
+| radish_ai_cutting_board_on | put the radish on the cutting board |
+| raspberry_ai_basket_contain_region | put the raspberry in the basket |
+| sausage_ai_baking_sheet_ai_on | put the sausage on the baking sheet |
+| scone_ai_plate_on | put the scone on the plate |
+| strawberry_ai_bowl_on | put the strawberry in the bowl |
+| thermos_ai_slide_cabinet_contain_region | put the thermos in the slide cabinet |
+| sushi_ai_plate_on | put the sushi on the plate |
+| potato_baking_sheet_ai_on | put the potato on the baking sheet |
+| kebabs_ai_pan_on | put the kebabs in the pan |
+
+## MESA-Composite (`mesa-composite`)
+
+| Task ID | Natural Language Instruction |
+| --- | --- |
+| mushroom_tray_on | put the mushroom on the tray |
+| apple_plate_on | put the apple on the plate |
+| onion_bowl_on | put the onion in the bowl |
+| carrot_pan_on | put the carrot in the pan |
+| cheese_basket_contain_region | put the cheese in the basket |
+| lemon_cutting_board_on | put the lemon on the cutting board |
+| sponge_bowl_drainer_right_region | put the sponge in the right side of the dish drainer |
+| cup_bowl_drainer_left_region | put the cup in the left side of the dish drainer |
+| open_and_broccoli_cabinet_middle_region | open the middle drawer of the cabinet and put the broccoli in it |
+| open_and_apple_cabinet_middle_region | open the middle drawer of the cabinet and put the apple in it |
+| open_and_beer_sliding_top_box_contain_region | open the box and put the beer in it |
+| open_and_jam_slide_cabinet_contain_region | open the slide cabinet and put the jam in it |
+| open_and_apple_sliding_top_box_contain_region_and_close | open the box and put the apple in it and close it |
+| open_and_mushroom_cabinet_middle_region_and_close | open the middle drawer of the cabinet and put the mushroom in it and close it |
+| open_and_carrot_cabinet_top_region_and_close | open the top drawer of the cabinet and put the carrot in it and close it |
+| open_and_potato_microwave_heating_region_and_close | open the microwave and put the potato in it and close it |
+| lemon_lime_basket_contain_region | put the lemon and lime in the basket |
+| fish_garlic_pan_on | put the fish and garlic in the pan |
+| broccoli_mushroom_cutting_board_on | put the broccoli and mushroom on the cutting board |
+| cheese_mug_tray_on | put the cheese and mug on the tray |
+
+## Task ID Naming Conventions
+
+Each task ID is a unique identifier for a task, which is useful when two tasks have the same natural language instruction (e.g. in-distribution vs out-of-distribution variants of the same task). For MESA, we construct them as follows, but you are welcome to choose whatever naming convention you prefer for your own task suites.
+
+**Pick and place** tasks are constructed as follows:
+```
+<object(s)>_<goal/location/action>_<region/extra>
+```
+
+Some examples:
+- `apple_plate_on` &rarr; Put the apple on the plate.
+- `cheese_basket_contain_region` &rarr; Put the cheese in the `contain_region` basket.
+
+
+**Articulated manipulation** tasks start with a root specifying which object gets placed in which region of the target articulated object.
+```
+<object(s)>_<target>_<region>
+```
+
+Some examples:
+- `apple_cabinet_middle_region` &rarr; Put the apple in the `middle_region` of the cabinet.
+- `cheese_microwave_heating_region` &rarr; Put the cheese in the `heating_region` of the microwave.
+
+From here, we add `open_and_` to indicate that the target articulated object is opened before the placement, and `_and_close` to indicate that the target articulated object is closed after the placement.
+
+Some examples:
+- `open_and_apple_cabinet_middle_region` &rarr; Open the `middle_region` (eg middle drawer) of the cabinet and put the apple in it.
+- `cheese_microwave_heating_region_and_close` &rarr; Put the cheese in the `heating_region` of the microwave and close it.
+

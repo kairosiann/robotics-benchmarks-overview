@@ -5,7 +5,7 @@
   "screened_count": 687,
   "screening_method": "Screened all accepted-paper titles and available abstract metadata for benchmark, task-suite and evaluation contributions. Verified selected titles in the official conference page and used authors\u2019 papers and task catalogs for task ingestion. This covers the public accepted program, not confidential or inaccessible submissions.",
   "candidate_count": 33,
-  "selected_rationale": "WireCraft adds industrial flexible-wire tasks. IMBench adds physical constraints, hidden-state reasoning and recovery. ATOM-Bench adds paired physical atomic and compositional tasks with public instruction tables.",
+  "selected_rationale": "WireCraft adds industrial flexible-wire tasks. IMBench adds physical constraints, hidden-state reasoning and recovery. ATOM-Bench adds paired physical atomic and compositional tasks with public instruction tables. Follow-up ingestion adds active-human interaction, controlled generalization, mobile manipulation and human-to-robot transfer. LiquidLab is represented by a benchmark overview because individual definitions were unavailable.",
   "candidates": [
     {
       "title": "When Vision Overrides Language: Evaluating and Mitigating Counterfactual Failures in VLAs",
@@ -84,8 +84,8 @@
       "openreview": "https://openreview.net/forum?id=cCI6zZIcEw",
       "paper": "",
       "official_title_verified": true,
-      "status": "reviewed; not ingested",
-      "family": ""
+      "status": "added",
+      "family": "HARP-Bench"
     },
     {
       "title": "HelpMeOut: A Neuropsychology-Grounded Benchmark for Error-Aware Monitoring of Household Task Execution",
@@ -108,8 +108,8 @@
       "openreview": "https://openreview.net/forum?id=Br2rXixvyN",
       "paper": "",
       "official_title_verified": true,
-      "status": "reviewed; not ingested",
-      "family": ""
+      "status": "added",
+      "family": "MESA"
     },
     {
       "title": "ScaleEvals: Scaling Generalist Policy Evaluation through Reset-Free Autonomous Play",
@@ -132,8 +132,8 @@
       "openreview": "https://openreview.net/forum?id=Nxn1pyNZpE",
       "paper": "https://arxiv.org/abs/2610.05414",
       "official_title_verified": true,
-      "status": "reviewed; not ingested",
-      "family": ""
+      "status": "added",
+      "family": "RMMBench"
     },
     {
       "title": "Monkey See, Can Monkey Do? A Benchmark for Evaluating Robot Skill Learning by Observation",
@@ -164,8 +164,8 @@
       "openreview": "https://openreview.net/forum?id=SBGylS4zwM",
       "paper": "",
       "official_title_verified": true,
-      "status": "reviewed; not ingested",
-      "family": ""
+      "status": "overview-only; individual task catalog unavailable",
+      "family": "LiquidLab"
     },
     {
       "title": "Benchmarking Real-World Robotic Manipulation through Stochastic Challenges",
@@ -244,8 +244,8 @@
       "openreview": "https://openreview.net/forum?id=SMKzI5HX9P",
       "paper": "https://arxiv.org/abs/2609.24778",
       "official_title_verified": true,
-      "status": "reviewed; not ingested",
-      "family": ""
+      "status": "added",
+      "family": "H2RBench"
     },
     {
       "title": "RoboSnap: One-Shot Real-to-Sim Scene Generation for Generalizable Robot Learning and Evaluation",
