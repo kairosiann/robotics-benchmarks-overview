@@ -336,7 +336,11 @@ def maniskill_records(snapshot):
         if name in {"Empty-v1", "TableTopFreeDraw-v1", "PickClutterYCB-v1", "RoboCasaKitchen-v1"}:
             task["source_note"] = "This registered supporting or open-ended environment does not declare a standard task success criterion in its task card."
             task["entry_type"] = "Supporting environment"
-            task["grading_summary"] = "The environment supplies no standard task-completion flag in its evaluation method. Its initialization and evaluation code are included for inspecting the supported scene."
+            task["grading_summary"] = "The evaluation method supplies no implemented task-completion criterion. Its initialization and evaluation code are included for inspecting the supported scene."
+        if name == "PickClutterYCB-v1":
+            task["grading_summary"] = "The inherited evaluate method returns false success and false failure for every environment. A task-specific completion criterion is not implemented in this snapshot."
+        if name == "RoboCasaKitchen-v1":
+            task["description"] = "Initialize a base kitchen environment."
         if name in {"PickCube-v1", "PickCubeSO100-v1", "PickCubeWidowXAI-v1"}:
             threshold = {"PickCube-v1": 0.025, "PickCubeSO100-v1": 0.015625, "PickCubeWidowXAI-v1": 0.0225}[name]
             task["grading_summary"] = f"The cube must be within {threshold} m of its target for this variant's default robot configuration, and the robot must satisfy the static-velocity check."
@@ -488,7 +492,10 @@ class MediaParser(HTMLParser):
         data = dict(attrs)
         path = data.get("src", "")
         if tag in {"source", "video", "iframe"} and path and any(value in path for value in [".mp4", ".webm", "youtube", "vimeo"]):
-            self.media.append({"type": "video", "url": urljoin(self.url, path), "label": "Official task demonstration", "scope": "task"})
+            match = re.search(r"/([^/]+)_(head|world)\.mp4$", path)
+            label = f"{match[1]} · {match[2]} view" if match else "Official task demonstration"
+            scope = "variant" if match else "task"
+            self.media.append({"type": "video", "url": urljoin(self.url, path), "label": label, "scope": scope})
 
 
 # Human-readable summaries of the pinned check_success methods. Exact code remains

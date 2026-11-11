@@ -55878,7 +55878,7 @@
     "observation": "ManiSkill supports state/state_dict and visual observation modes. Visual modes can include RGB, depth and point clouds, and hide simulator-only state that the corresponding state mode exposes. Robot state and task-specific goal information depend on the environment.",
     "observation_scope": "benchmark",
     "observation_source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
-    "grading_summary": "None",
+    "grading_summary": "The evaluation method supplies no implemented task-completion criterion. Its initialization and evaluation code are included for inspecting the supported scene.",
     "grading_scope": "task",
     "grading_evidence": "The SAPIEN simulator calls evaluate to obtain success/failure diagnostics. Sparse rewards follow task success where defined, while dense rewards may provide additional shaping.",
     "evaluation_source": "https://github.com/haosulab/ManiSkill/blob/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/mani_skill/envs/tasks/drawing/draw.py#L194",
@@ -55906,6 +55906,7 @@
     "retrieved": "2026-11-11",
     "max_episode_steps": 1000,
     "source_note": "This registered supporting or open-ended environment does not declare a standard task success criterion in its task card.",
+    "entry_type": "Supporting environment",
     "sensor_configuration": "def _default_sensor_configs(self):\n        pose = sapien_utils.look_at(eye=[0.3, 0, 0.8], target=[0, 0, 0.1])\n        return [\n            CameraConfig(\n                \"base_camera\",\n                pose=pose,\n                width=320,\n                height=240,\n                fov=1.2,\n                near=0.01,\n                far=100,\n            )\n        ]",
     "initial_conditions": "def _initialize_episode(self, env_idx: torch.Tensor, options: dict):\n        # NOTE (stao): for simplicity this task cannot handle partial resets\n        self.draw_step = 0\n        with torch.device(self.device):\n            self.table_scene.initialize(env_idx)\n            for dot in self.dots:\n                # initially spawn dots in the table so they aren't seen\n                dot.set_pose(\n                    sapien.Pose(\n                        p=[0, 0, -self.DOT_THICKNESS], q=euler2quat(0, np.pi / 2, 0)\n                    )\n                )",
     "video": "https://raw.githubusercontent.com/haosulab/ManiSkill/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/figures/environment_demos/TableTopFreeDraw-v1_rt.mp4",
@@ -56026,7 +56027,7 @@
     "observation": "ManiSkill supports state/state_dict and visual observation modes. Visual modes can include RGB, depth and point clouds, and hide simulator-only state that the corresponding state mode exposes. Robot state and task-specific goal information depend on the environment.",
     "observation_scope": "benchmark",
     "observation_source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
-    "grading_summary": "The environment's evaluate result supplies success/failure or diagnostic values. Consult the attached implementation for the registered environment.",
+    "grading_summary": "The evaluation method supplies no implemented task-completion criterion. Its initialization and evaluation code are included for inspecting the supported scene.",
     "grading_scope": "task",
     "grading_evidence": "The SAPIEN simulator calls evaluate to obtain success/failure diagnostics. Sparse rewards follow task success where defined, while dense rewards may provide additional shaping.",
     "evaluation_source": "https://github.com/haosulab/ManiSkill/blob/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/mani_skill/envs/tasks/empty_env.py#L45",
@@ -56035,6 +56036,7 @@
     "retrieved": "2026-11-11",
     "max_episode_steps": 200000,
     "source_note": "This registered supporting or open-ended environment does not declare a standard task success criterion in its task card.",
+    "entry_type": "Supporting environment",
     "sensor_configuration": "def _default_sensor_configs(self):\n        pose = sapien_utils.look_at([1.25, -1.25, 1.5], [0.0, 0.0, 0.2])\n        return [CameraConfig(\"base_camera\", pose, 128, 128, np.pi / 2, 0.01, 100)]",
     "initial_conditions": "def _initialize_episode(self, env_idx: torch.Tensor, options: dict):\n        pass",
     "media_source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
@@ -56311,7 +56313,7 @@
     "suite": "Mobile manipulation",
     "name": "RoboCasaKitchen-v1",
     "title": "Robo casa kitchen-v1",
-    "description": "Initialized a Base Kitchen environment. Args: robots: Specification for specific robot arm(s) to be instantiated within this env (e.g: \"Sawyer\" would generate one arm; [\"Panda\", \"Panda\", \"Sawyer\"] would generate three robot arms) env_configuration (str): Specifies how to position the robot(s) within the environment. Default is \"default\", which should be interpreted accordingly by any subclasses. controller_configs (str or list of dict): If set, contains relevant controller parameters for creating a custom controller. Else, uses the default controller for this specific task. Should either be single dict if same controller is to be used for all robots or else it should be a list of the same length as \"robots\" param base_types (None or str or list of str): type of base, used to instantiate base models from base factory. Default is \"default\", which is the default base associated with the robot(s) the 'robots' specification. None results in no base, and any other (valid) model overrides the default base. Should either be single str if same base type is to be used for all robots or else it should be a list of the same length as \"robots\" param gripper_types (None or str or list of str): type of gripper, used to instantiate gripper models from gripper factory. Default is \"default\", which is the default grippers(s) associated with the robot(s) the 'robots' specification. None removes the gripper, and any other (valid) model overrides the default gripper. Should either be single str if same gripper type is to be used for all robots or else it should be a list of the same length as \"robots\" param initialization_noise (dict or list of dict): dict containing the initialization noise parameters. The expected keys and corresponding value types are specified below: :'magnitude': The scale factor of uni-variate random noise applied to each of a robot's given initial joint positions. Setting this value to None or 0.0 results in no noise being applied. If \"gaussian\" type of noise is applied then this magnitude scales the standard deviation applied, If \"uniform\" type of noise is applied then this magnitude sets the bounds of the sampling range :'type': Type of noise to apply. Can either specify \"gaussian\" or \"uniform\" Should either be single dict if same noise value is to be used for all robots or else it should be a list of the same length as \"robots\" param :Note: Specifying \"default\" will automatically use the default noise settings. Specifying None will automatically create the required dict with \"magnitude\" set to 0.0. use_camera_obs (bool): if True, every observation includes rendered image(s) placement_initializer (ObjectPositionSampler): if provided, will be used to place objects on every reset, else a UniformRandomSampler is used by default. has_renderer (bool): If true, render the simulation state in a viewer instead of headless mode. has_offscreen_renderer (bool): True if using off-screen rendering render_camera (str): Name of camera to render if has_renderer is True. Setting this value to 'None' will result in the default angle being applied, which is useful as it can be dragged / panned by the user using the mouse render_collision_mesh (bool): True if rendering collision meshes in camera. False otherwise. render_visual_mesh (bool): True if rendering visual meshes in camera. False otherwise. render_gpu_device_id (int): corresponds to the GPU device id to use for offscreen rendering. Defaults to -1, in which case the device will be inferred from environment variables (GPUS or CUDA_VISIBLE_DEVICES). control_freq (float): how many control signals to receive in every second. This sets the abase of simulation time that passes between every action input. horizon (int): Every episode lasts for exactly @horizon timesteps. ignore_done (bool): True if never terminating the environment (ignore @horizon). camera_names (str or list of str): name of camera to be rendered. Should either be single str if same name is to be used for all cameras' rendering or else it should be a list of cameras to render. :Note: At least one camera must be specified if @use_camera_obs is True. :Note: To render all robots' cameras of a certain type (e.g.: \"robotview\" or \"eye_in_hand\"), use the convention \"all-{name}\" (e.g.: \"all-robotview\") to automatically render all camera images from each robot's camera list). camera_heights (int or list of int): height of camera frame. Should either be single int if same height is to be used for all cameras' frames or else it should be a list of the same length as \"camera names\" param. camera_widths (int or list of int): width of camera frame. Should either be single int if same width is to be used for all cameras' frames or else it should be a list of the same length as \"camera names\" param. camera_depths (bool or list of bool): True if rendering RGB-D, and RGB otherwise. Should either be single bool if same depth setting is to be used for all cameras or else it should be a list of the same length as \"camera names\" param. renderer (str): Specifies which renderer to use. renderer_config (dict): dictionary for the renderer configurations init_robot_base_pos (str): name of the fixture to place the near. If None, will randomly select a fixture. seed (int): environment seed. Default is None, where environment is unseeded, ie. random layout_and_style_ids (list of list of int): list of layout and style ids to use for the kitchen. layout_ids ((list of) LayoutType or int): layout id(s) to use for the kitchen. -1 and None specify all layouts -2 specifies layouts not involving islands/wall stacks, -3 specifies layouts involving islands/wall stacks, -4 specifies layouts with dining areas. style_ids ((list of) StyleType or int): style id(s) to use for the kitchen. -1 and None specify all styles. generative_textures (str): if set to \"100p\", will use AI generated textures obj_registries (tuple of str): tuple containing the object registries to use for sampling objects. can contain \"objaverse\" and/or \"aigen\" to sample objects from objaverse, AI generated, or both. obj_instance_split (str): string for specifying a custom set of object instances to use. \"A\" specifies all but the last 3 object instances (or the first half - whichever is larger), \"B\" specifies the rest, and None specifies all. use_distractors (bool): if True, will add distractor objects to the scene translucent_robot (bool): if True, will make the robot appear translucent during rendering randomize_cameras (bool): if True, will add gaussian noise to the position and rotation of the wrist and agentview cameras",
+    "description": "Initialize a base kitchen environment.",
     "goal": "def evaluate(self):\n        return {}",
     "source": "https://github.com/haosulab/ManiSkill/blob/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/mani_skill/envs/tasks/mobile_manipulation/robocasa/kitchen.py#L27",
     "setting": "Simulation",
@@ -56320,7 +56322,7 @@
     "observation": "ManiSkill supports state/state_dict and visual observation modes. Visual modes can include RGB, depth and point clouds, and hide simulator-only state that the corresponding state mode exposes. Robot state and task-specific goal information depend on the environment.",
     "observation_scope": "benchmark",
     "observation_source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
-    "grading_summary": "The environment's evaluate result supplies success/failure or diagnostic values. Consult the attached implementation for the registered environment.",
+    "grading_summary": "The evaluation method supplies no implemented task-completion criterion. Its initialization and evaluation code are included for inspecting the supported scene.",
     "grading_scope": "task",
     "grading_evidence": "The SAPIEN simulator calls evaluate to obtain success/failure diagnostics. Sparse rewards follow task success where defined, while dense rewards may provide additional shaping.",
     "evaluation_source": "https://github.com/haosulab/ManiSkill/blob/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/mani_skill/envs/tasks/mobile_manipulation/robocasa/kitchen.py#L455",
@@ -56329,6 +56331,7 @@
     "retrieved": "2026-11-11",
     "max_episode_steps": 100,
     "source_note": "This registered supporting or open-ended environment does not declare a standard task success criterion in its task card.",
+    "entry_type": "Supporting environment",
     "sensor_configuration": "def _default_sensor_configs(self):\n        # TODO (fix cameras to be where robocasa places them)\n        pose = sapien_utils.look_at([3.0, -7.5, 2.5], [3.0, 0.0, 1.0])\n        return [\n            CameraConfig(\"base_camera\", pose, 128, 128, 60 * np.pi / 180, 0.01, 100)\n        ]",
     "initial_conditions": "def _initialize_episode(self, env_idx: torch.Tensor, options: dict):\n        with torch.device(self.device):\n            self.scene_builder.initialize(env_idx)\n            # TODO (stao): no way to make this faster atm on GPU without a lot of work\n            for scene_idx in range(self.num_envs):\n                for actor_data in self.object_actors[scene_idx].values():\n                    actor_data[\"actor\"].set_pose(actor_data[\"pose\"])",
     "media_source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
@@ -56399,7 +56402,7 @@
     "observation": "ManiSkill supports state/state_dict and visual observation modes. Visual modes can include RGB, depth and point clouds, and hide simulator-only state that the corresponding state mode exposes. Robot state and task-specific goal information depend on the environment.",
     "observation_scope": "benchmark",
     "observation_source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
-    "grading_summary": "The environment's evaluate result supplies success/failure or diagnostic values. Consult the attached implementation for the registered environment.",
+    "grading_summary": "The robot's root position must be within horizontal distance 0.35 of the goal, and the agent must not be fallen.",
     "grading_scope": "task",
     "grading_evidence": "The SAPIEN simulator calls evaluate to obtain success/failure diagnostics. Sparse rewards follow task success where defined, while dense rewards may provide additional shaping.",
     "evaluation_source": "https://github.com/haosulab/ManiSkill/blob/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/mani_skill/envs/tasks/quadruped/quadruped_reach.py#L99",
@@ -56774,7 +56777,7 @@
     "observation": "ManiSkill supports state/state_dict and visual observation modes. Visual modes can include RGB, depth and point clouds, and hide simulator-only state that the corresponding state mode exposes. Robot state and task-specific goal information depend on the environment.",
     "observation_scope": "benchmark",
     "observation_source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
-    "grading_summary": "The environment's evaluate result supplies success/failure or diagnostic values. Consult the attached implementation for the registered environment.",
+    "grading_summary": "The inherited evaluate method returns false success and false failure for every environment. A task-specific completion criterion is not implemented in this snapshot.",
     "grading_scope": "task",
     "grading_evidence": "The SAPIEN simulator calls evaluate to obtain success/failure diagnostics. Sparse rewards follow task success where defined, while dense rewards may provide additional shaping.",
     "evaluation_source": "https://github.com/haosulab/ManiSkill/blob/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/mani_skill/envs/tasks/tabletop/pick_clutter_ycb.py#L179",
@@ -56802,6 +56805,7 @@
     "retrieved": "2026-11-11",
     "source_note": "This registered supporting or open-ended environment does not declare a standard task success criterion in its task card.",
     "max_episode_steps": 100,
+    "entry_type": "Supporting environment",
     "sensor_configuration": "def _default_sensor_configs(self):\n        pose = sapien_utils.look_at(eye=[0.3, 0, 0.6], target=[-0.1, 0, 0.1])\n        return [\n            CameraConfig(\n                \"base_camera\",\n                pose=pose,\n                width=128,\n                height=128,\n                fov=np.pi / 2,\n                near=0.01,\n                far=100,\n            )\n        ]",
     "initial_conditions": "def _initialize_episode(self, env_idx: torch.Tensor, options: dict):\n        with torch.device(self.device):\n            b = len(env_idx)\n            self.scene_builder.initialize(env_idx)\n            goal_pos = torch.rand(size=(b, 3)) * torch.tensor(\n                [0.3, 0.5, 0.1]\n            ) + torch.tensor([-0.15, -0.25, 0.35])\n            self.goal_pos = goal_pos\n            self.goal_site.set_pose(Pose.create_from_pq(self.goal_pos))\n\n            # reset objects to original poses\n            if b == self.num_envs:\n                # if all envs reset\n                self.all_objects.pose = self.all_objects.initial_pose\n            else:\n                # if only some envs reset, we unfortunately still have to do some mask wrangling\n                mask = torch.isin(self.all_objects._scene_idxs, env_idx)\n                self.all_objects.pose = self.all_objects.initial_pose[mask]",
     "video": "https://raw.githubusercontent.com/haosulab/ManiSkill/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/figures/environment_demos/PickClutterYCB-v1_rt.mp4",
@@ -56824,7 +56828,7 @@
     "observation": "ManiSkill supports state/state_dict and visual observation modes. Visual modes can include RGB, depth and point clouds, and hide simulator-only state that the corresponding state mode exposes. Robot state and task-specific goal information depend on the environment.",
     "observation_scope": "benchmark",
     "observation_source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
-    "grading_summary": "- the cube position is within goal_thresh (default 0.025m) euclidean distance of the goal position - the robot is static (q velocity < 0.2)",
+    "grading_summary": "The cube must be within 0.025 m of its target for this variant's default robot configuration, and the robot must satisfy the static-velocity check.",
     "grading_scope": "task",
     "grading_evidence": "The SAPIEN simulator calls evaluate to obtain success/failure diagnostics. Sparse rewards follow task success where defined, while dense rewards may provide additional shaping.",
     "evaluation_source": "https://github.com/haosulab/ManiSkill/blob/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/mani_skill/envs/tasks/tabletop/pick_cube.py#L147",
@@ -56873,7 +56877,7 @@
     "observation": "ManiSkill supports state/state_dict and visual observation modes. Visual modes can include RGB, depth and point clouds, and hide simulator-only state that the corresponding state mode exposes. Robot state and task-specific goal information depend on the environment.",
     "observation_scope": "benchmark",
     "observation_source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
-    "grading_summary": "- the cube position is within goal_thresh (default 0.025m) euclidean distance of the goal position - the robot is static (q velocity < 0.2)",
+    "grading_summary": "The cube must be within 0.015625 m of its target for this variant's default robot configuration, and the robot must satisfy the static-velocity check.",
     "grading_scope": "task",
     "grading_evidence": "The SAPIEN simulator calls evaluate to obtain success/failure diagnostics. Sparse rewards follow task success where defined, while dense rewards may provide additional shaping.",
     "evaluation_source": "https://github.com/haosulab/ManiSkill/blob/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/mani_skill/envs/tasks/tabletop/pick_cube.py#L147",
@@ -56900,6 +56904,7 @@
     "source_snapshot": "62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3",
     "retrieved": "2026-11-11",
     "max_episode_steps": 50,
+    "source_note": "The shared task-card prose gives the Panda threshold. This summary uses the variant-specific value from PICK_CUBE_CONFIGS.",
     "sensor_configuration": "def _default_sensor_configs(self):\n        pose = sapien_utils.look_at(\n            eye=self.sensor_cam_eye_pos, target=self.sensor_cam_target_pos\n        )\n        return [CameraConfig(\"base_camera\", pose, 128, 128, np.pi / 2, 0.01, 100)]",
     "initial_conditions": "def _initialize_episode(self, env_idx: torch.Tensor, options: dict):\n        with torch.device(self.device):\n            b = len(env_idx)\n            self.table_scene.initialize(env_idx)\n            xyz = torch.zeros((b, 3))\n            xyz[:, :2] = (\n                torch.rand((b, 2)) * self.cube_spawn_half_size * 2\n                - self.cube_spawn_half_size\n            )\n            xyz[:, 0] += self.cube_spawn_center[0]\n            xyz[:, 1] += self.cube_spawn_center[1]\n\n            xyz[:, 2] = self.cube_half_size\n            qs = randomization.random_quaternions(b, lock_x=True, lock_y=True)\n            self.cube.set_pose(Pose.create_from_pq(xyz, qs))\n\n            goal_xyz = torch.zeros((b, 3))\n            goal_xyz[:, :2] = (\n                torch.rand((b, 2)) * self.cube_spawn_half_size * 2\n                - self.cube_spawn_half_size\n            )\n            goal_xyz[:, 0] += self.cube_spawn_center[0]\n            goal_xyz[:, 1] += self.cube_spawn_center[1]\n            goal_xyz[:, 2] = torch.rand((b)) * self.max_goal_height + xyz[:, 2]\n            self.goal_site.set_pose(Pose.create_from_pq(goal_xyz))",
     "video": "https://raw.githubusercontent.com/haosulab/ManiSkill/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/figures/environment_demos/PickCubeSO100-v1_rt.mp4",
@@ -56922,7 +56927,7 @@
     "observation": "ManiSkill supports state/state_dict and visual observation modes. Visual modes can include RGB, depth and point clouds, and hide simulator-only state that the corresponding state mode exposes. Robot state and task-specific goal information depend on the environment.",
     "observation_scope": "benchmark",
     "observation_source": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
-    "grading_summary": "- the cube position is within goal_thresh (default 0.025m) euclidean distance of the goal position - the robot is static (q velocity < 0.2)",
+    "grading_summary": "The cube must be within 0.0225 m of its target for this variant's default robot configuration, and the robot must satisfy the static-velocity check.",
     "grading_scope": "task",
     "grading_evidence": "The SAPIEN simulator calls evaluate to obtain success/failure diagnostics. Sparse rewards follow task success where defined, while dense rewards may provide additional shaping.",
     "evaluation_source": "https://github.com/haosulab/ManiSkill/blob/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/mani_skill/envs/tasks/tabletop/pick_cube.py#L147",
@@ -56949,6 +56954,7 @@
     "source_snapshot": "62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3",
     "retrieved": "2026-11-11",
     "max_episode_steps": 50,
+    "source_note": "The shared task-card prose gives the Panda threshold. This summary uses the variant-specific value from PICK_CUBE_CONFIGS.",
     "sensor_configuration": "def _default_sensor_configs(self):\n        pose = sapien_utils.look_at(\n            eye=self.sensor_cam_eye_pos, target=self.sensor_cam_target_pos\n        )\n        return [CameraConfig(\"base_camera\", pose, 128, 128, np.pi / 2, 0.01, 100)]",
     "initial_conditions": "def _initialize_episode(self, env_idx: torch.Tensor, options: dict):\n        with torch.device(self.device):\n            b = len(env_idx)\n            self.table_scene.initialize(env_idx)\n            xyz = torch.zeros((b, 3))\n            xyz[:, :2] = (\n                torch.rand((b, 2)) * self.cube_spawn_half_size * 2\n                - self.cube_spawn_half_size\n            )\n            xyz[:, 0] += self.cube_spawn_center[0]\n            xyz[:, 1] += self.cube_spawn_center[1]\n\n            xyz[:, 2] = self.cube_half_size\n            qs = randomization.random_quaternions(b, lock_x=True, lock_y=True)\n            self.cube.set_pose(Pose.create_from_pq(xyz, qs))\n\n            goal_xyz = torch.zeros((b, 3))\n            goal_xyz[:, :2] = (\n                torch.rand((b, 2)) * self.cube_spawn_half_size * 2\n                - self.cube_spawn_half_size\n            )\n            goal_xyz[:, 0] += self.cube_spawn_center[0]\n            goal_xyz[:, 1] += self.cube_spawn_center[1]\n            goal_xyz[:, 2] = torch.rand((b)) * self.max_goal_height + xyz[:, 2]\n            self.goal_site.set_pose(Pose.create_from_pq(goal_xyz))",
     "video": "https://raw.githubusercontent.com/haosulab/ManiSkill/62ff3a5896b4d5b4cf0ac4c8d79afe600c9404a3/figures/environment_demos/PickCubeWidowXAI-v1_rt.mp4",
@@ -58892,50 +58898,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/adjust_bottle/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/adjust_bottle/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/adjust_bottle/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/adjust_bottle/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/adjust_bottle/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/adjust_bottle/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/adjust_bottle/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/adjust_bottle/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -59033,62 +59039,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/beat_block_hammer/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/beat_block_hammer/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/beat_block_hammer/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/beat_block_hammer/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/beat_block_hammer/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/beat_block_hammer/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/beat_block_hammer/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/beat_block_hammer/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/beat_block_hammer/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/beat_block_hammer/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -59186,62 +59192,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_rgb/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_rgb/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_rgb/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_rgb/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_rgb/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_rgb/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_rgb/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_rgb/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_rgb/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_rgb/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -59339,62 +59345,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_size/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_size/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_size/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_size/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_size/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_size/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_size/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_size/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_size/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/blocks_ranking_size/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -59484,50 +59490,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_alarmclock/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_alarmclock/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_alarmclock/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_alarmclock/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_alarmclock/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_alarmclock/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_alarmclock/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_alarmclock/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -59625,62 +59631,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_bell/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_bell/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_bell/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_bell/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_bell/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_bell/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_bell/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_bell/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_bell/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/click_bell/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -59756,62 +59762,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/dump_bin_bigbin/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/dump_bin_bigbin/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/dump_bin_bigbin/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/dump_bin_bigbin/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/dump_bin_bigbin/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/dump_bin_bigbin/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/dump_bin_bigbin/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/dump_bin_bigbin/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/dump_bin_bigbin/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/dump_bin_bigbin/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -59909,62 +59915,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/grab_roller/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/grab_roller/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/grab_roller/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/grab_roller/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/grab_roller/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/grab_roller/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/grab_roller/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/grab_roller/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/grab_roller/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/grab_roller/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -60057,38 +60063,38 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_block/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_block/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_block/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_block/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_block/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_block/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -60186,62 +60192,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_mic/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_mic/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_mic/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_mic/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_mic/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_mic/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_mic/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_mic/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_mic/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/handover_mic/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -60331,50 +60337,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/hanging_mug/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/hanging_mug/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/hanging_mug/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/hanging_mug/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/hanging_mug/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/hanging_mug/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/hanging_mug/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/hanging_mug/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -60462,62 +60468,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/lift_pot/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/lift_pot/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/lift_pot/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/lift_pot/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/lift_pot/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/lift_pot/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/lift_pot/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/lift_pot/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/lift_pot/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/lift_pot/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -60615,62 +60621,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_can_pot/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_can_pot/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_can_pot/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_can_pot/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_can_pot/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_can_pot/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_can_pot/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_can_pot/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_can_pot/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_can_pot/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -60768,62 +60774,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_pillbottle_pad/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_pillbottle_pad/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_pillbottle_pad/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_pillbottle_pad/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_pillbottle_pad/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_pillbottle_pad/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_pillbottle_pad/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_pillbottle_pad/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_pillbottle_pad/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_pillbottle_pad/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -60921,62 +60927,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_playingcard_away/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_playingcard_away/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_playingcard_away/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_playingcard_away/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_playingcard_away/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_playingcard_away/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_playingcard_away/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_playingcard_away/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_playingcard_away/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_playingcard_away/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -61074,62 +61080,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_stapler_pad/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_stapler_pad/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_stapler_pad/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_stapler_pad/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_stapler_pad/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_stapler_pad/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_stapler_pad/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_stapler_pad/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_stapler_pad/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/move_stapler_pad/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -61226,62 +61232,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_laptop/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_laptop/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_laptop/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_laptop/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_laptop/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_laptop/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_laptop/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_laptop/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_laptop/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_laptop/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -61379,62 +61385,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_microwave/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_microwave/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_microwave/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_microwave/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_microwave/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_microwave/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_microwave/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_microwave/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_microwave/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/open_microwave/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -61519,50 +61525,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_diverse_bottles/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_diverse_bottles/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_diverse_bottles/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_diverse_bottles/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_diverse_bottles/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_diverse_bottles/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_diverse_bottles/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_diverse_bottles/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -61640,50 +61646,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_dual_bottles/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_dual_bottles/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_dual_bottles/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_dual_bottles/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_dual_bottles/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_dual_bottles/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_dual_bottles/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/pick_dual_bottles/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -61761,62 +61767,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_left/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_left/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_left/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_left/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_left/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_left/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_left/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_left/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_left/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_left/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -61914,62 +61920,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_right/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_right/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_right/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_right/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_right/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_right/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_right/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_right/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_right/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_a2b_right/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -62067,62 +62073,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_basket/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_basket/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_basket/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_basket/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_basket/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_basket/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_basket/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_basket/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_basket/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_basket/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -62200,50 +62206,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_skillet/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_skillet/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_skillet/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_skillet/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_skillet/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_skillet/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_skillet/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_bread_skillet/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -62321,62 +62327,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_burger_fries/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_burger_fries/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_burger_fries/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_burger_fries/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_burger_fries/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_burger_fries/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_burger_fries/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_burger_fries/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_burger_fries/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_burger_fries/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -62474,50 +62480,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_can_basket/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_can_basket/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_can_basket/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_can_basket/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_can_basket/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_can_basket/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_can_basket/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_can_basket/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -62615,50 +62621,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_cans_plasticbox/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_cans_plasticbox/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_cans_plasticbox/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_cans_plasticbox/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_cans_plasticbox/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_cans_plasticbox/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_cans_plasticbox/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_cans_plasticbox/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -62756,62 +62762,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_container_plate/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_container_plate/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_container_plate/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_container_plate/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_container_plate/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_container_plate/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_container_plate/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_container_plate/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_container_plate/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_container_plate/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -62869,62 +62875,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_dual_shoes/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_dual_shoes/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_dual_shoes/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_dual_shoes/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_dual_shoes/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_dual_shoes/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_dual_shoes/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_dual_shoes/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_dual_shoes/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_dual_shoes/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -63019,62 +63025,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_empty_cup/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_empty_cup/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_empty_cup/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_empty_cup/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_empty_cup/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_empty_cup/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_empty_cup/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_empty_cup/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_empty_cup/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_empty_cup/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -63172,50 +63178,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_fan/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_fan/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_fan/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_fan/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_fan/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_fan/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_fan/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_fan/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -63313,62 +63319,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_mouse_pad/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_mouse_pad/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_mouse_pad/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_mouse_pad/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_mouse_pad/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_mouse_pad/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_mouse_pad/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_mouse_pad/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_mouse_pad/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_mouse_pad/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -63466,50 +63472,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_basket/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_basket/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_basket/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_basket/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_basket/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_basket/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_basket/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_basket/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -63589,62 +63595,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_scale/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_scale/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_scale/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_scale/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_scale/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_scale/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_scale/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_scale/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_scale/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_scale/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -63742,62 +63748,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_stand/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_stand/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_stand/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_stand/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_stand/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_stand/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_stand/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_stand/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_stand/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_object_stand/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -63895,62 +63901,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_phone_stand/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_phone_stand/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_phone_stand/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_phone_stand/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_phone_stand/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_phone_stand/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_phone_stand/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_phone_stand/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_phone_stand/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_phone_stand/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -63994,62 +64000,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_shoe/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_shoe/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_shoe/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_shoe/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_shoe/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_shoe/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_shoe/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_shoe/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_shoe/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/place_shoe/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -64147,62 +64153,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/press_stapler/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/press_stapler/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/press_stapler/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/press_stapler/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/press_stapler/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/press_stapler/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/press_stapler/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/press_stapler/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/press_stapler/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/press_stapler/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -64300,38 +64306,38 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_bottles_dustbin/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_bottles_dustbin/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_bottles_dustbin/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_bottles_dustbin/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_bottles_dustbin/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_bottles_dustbin/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -64409,38 +64415,38 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_object_cabinet/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_object_cabinet/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_object_cabinet/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_object_cabinet/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_object_cabinet/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/put_object_cabinet/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -64509,50 +64515,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/rotate_qrcode/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/rotate_qrcode/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/rotate_qrcode/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/rotate_qrcode/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/rotate_qrcode/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/rotate_qrcode/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/rotate_qrcode/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/rotate_qrcode/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -64650,50 +64656,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/scan_object/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/scan_object/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/scan_object/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/scan_object/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/scan_object/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/scan_object/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/scan_object/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/scan_object/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -64771,62 +64777,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -64925,62 +64931,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle_horizontally/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle_horizontally/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle_horizontally/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle_horizontally/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle_horizontally/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle_horizontally/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle_horizontally/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle_horizontally/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle_horizontally/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/shake_bottle_horizontally/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -65079,50 +65085,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_three/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_three/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_three/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_three/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_three/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_three/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_three/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_three/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -65200,62 +65206,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_two/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_two/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_two/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_two/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_two/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_two/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_two/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_two/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_two/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_blocks_two/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -65347,50 +65353,50 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_three/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_three/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_three/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_three/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_three/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_three/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_three/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_three/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -65488,62 +65494,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_two/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_two/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_two/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_two/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_two/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_two/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_two/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_two/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_two/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stack_bowls_two/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -65639,62 +65645,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stamp_seal/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stamp_seal/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stamp_seal/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stamp_seal/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stamp_seal/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stamp_seal/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stamp_seal/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stamp_seal/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stamp_seal/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/stamp_seal/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
@@ -65784,62 +65790,62 @@
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/turn_switch/aloha-agilex_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/turn_switch/franka-panda_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/turn_switch/ARX-X5_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/turn_switch/piper_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/turn_switch/ur5-wsg_head.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · head view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/turn_switch/aloha-agilex_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "aloha-agilex · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/turn_switch/franka-panda_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "franka-panda · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/turn_switch/ARX-X5_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ARX-X5 · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/turn_switch/piper_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "piper · world view",
+        "scope": "variant"
       },
       {
         "type": "video",
         "url": "https://robotwin-platform.github.io/doc/tasks/task_video_clean/turn_switch/ur5-wsg_world.mp4",
-        "label": "Official task demonstration",
-        "scope": "task"
+        "label": "ur5-wsg · world view",
+        "scope": "variant"
       }
     ],
     "source_snapshot": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
