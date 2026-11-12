@@ -50,3 +50,16 @@ jobs:
       - name: Publish website
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify the published catalog is reachable
+        env:
+          BENCHMARK_PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 5 --max-time 15 "${BENCHMARK_PAGES_URL%/}/catalog.json" --output /tmp/published-benchmark-catalog.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          expected = json.loads(Path('_site/catalog.json').read_text())
+          published = json.loads(Path('/tmp/published-benchmark-catalog.json').read_text())
+          assert published == expected, 'Published catalog differs from the deployment artifact'
+          print(f'Public HTTPS check passed for all {len(published):,} catalog entries')
+          PY
