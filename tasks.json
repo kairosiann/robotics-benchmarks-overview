@@ -17224,7 +17224,7 @@
     "observation_source": "https://arxiv.org/html/2405.05941",
     "grading_summary": "The source center is above the target center. Their XY center distance is at most the norm of the target bounding-box half-size in XY plus 0.003 m; the vertical center offset minus both bounding-box half-heights is at most 0.02 m. This task disables the additional other-actor contact restriction. The success flag does not require gripper release; grasp diagnostics are reported separately.",
     "grading_scope": "task",
-    "grading_evidence": "The environment sets success to src_on_target, computed from bounding-box-relative geometry and, for carrot placement, an additional contact test. Grasp, consecutive-grasp and moved-object fields are diagnostic; robot-link contacts are ignored by the contact restriction.",
+    "grading_evidence": "The environment sets success to src_on_target, computed from bounding-box-relative geometry and, for carrot placement and cube stacking, an additional contact test. Grasp, consecutive-grasp and moved-object fields are diagnostic; robot-link contacts are ignored by the contact restriction.",
     "evaluation_source": "https://github.com/simpler-env/ManiSkill2_real2sim/blob/ef7a4d4fdf4b69f2c2154db5b15b9ac8dfe10682/mani_skill2_real2sim/envs/custom_scenes/put_on_in_scene.py#L43",
     "media": [
       {
@@ -17258,7 +17258,7 @@
     "observation_source": "https://arxiv.org/html/2405.05941",
     "grading_summary": "The source center is above the target center. Their XY center distance is at most the norm of the target bounding-box half-size in XY plus 0.003 m; the vertical center offset minus both bounding-box half-heights is at most 0.02 m. Contacts with actors other than the target and robot links must have summed impulse norm at most 1e-6. The success flag does not require gripper release; grasp diagnostics are reported separately.",
     "grading_scope": "task",
-    "grading_evidence": "The environment sets success to src_on_target, computed from bounding-box-relative geometry and, for carrot placement, an additional contact test. Grasp, consecutive-grasp and moved-object fields are diagnostic; robot-link contacts are ignored by the contact restriction.",
+    "grading_evidence": "The environment sets success to src_on_target, computed from bounding-box-relative geometry and, for carrot placement and cube stacking, an additional contact test. Grasp, consecutive-grasp and moved-object fields are diagnostic; robot-link contacts are ignored by the contact restriction.",
     "evaluation_source": "https://github.com/simpler-env/ManiSkill2_real2sim/blob/ef7a4d4fdf4b69f2c2154db5b15b9ac8dfe10682/mani_skill2_real2sim/envs/custom_scenes/put_on_in_scene.py#L43",
     "media": [
       {
@@ -17276,7 +17276,7 @@
     "suite": "WidowX",
     "name": "widowx_stack_cube",
     "description": "stack cube",
-    "goal": "Green block rests on the yellow block under the stacking checker.",
+    "goal": "The source center is above the target center. Their XY center distance is at most the norm of the target bounding-box half-size in XY plus 0.003 m; the vertical center offset minus both bounding-box half-heights is at most 0.02 m. Contacts with actors other than the target and robot links must have summed impulse norm at most 1e-6. The success flag does not require gripper release; grasp diagnostics are reported separately.",
     "source": "https://github.com/simpler-env/SimplerEnv/blob/main/simpler_env/__init__.py",
     "setup": "",
     "sim_environment": "StackGreenCubeOnYellowCubeBakedTexInScene-v0",
@@ -17290,10 +17290,10 @@
     "observation": "The WidowX setup uses a third-person workspace camera. SIMPLER recreates the real camera and workspace in simulation.",
     "observation_scope": "suite",
     "observation_source": "https://arxiv.org/html/2405.05941",
-    "grading_summary": "Green block rests on the yellow block under the stacking checker.",
+    "grading_summary": "The source center is above the target center. Their XY center distance is at most the norm of the target bounding-box half-size in XY plus 0.003 m; the vertical center offset minus both bounding-box half-heights is at most 0.02 m. Contacts with actors other than the target and robot links must have summed impulse norm at most 1e-6. The success flag does not require gripper release; grasp diagnostics are reported separately.",
     "grading_scope": "task",
-    "grading_evidence": "The simulated rollout is scored by the registered environment. The paper also evaluates representative tasks on real hardware to compare policy outcomes.",
-    "evaluation_source": "https://arxiv.org/html/2405.05941",
+    "grading_evidence": "The environment sets success to src_on_target, computed from bounding-box-relative geometry and, for carrot placement and cube stacking, an additional contact test. Grasp, consecutive-grasp and moved-object fields are diagnostic; robot-link contacts are ignored by the contact restriction.",
+    "evaluation_source": "https://github.com/simpler-env/ManiSkill2_real2sim/blob/ef7a4d4fdf4b69f2c2154db5b15b9ac8dfe10682/mani_skill2_real2sim/envs/custom_scenes/put_on_in_scene.py#L43",
     "media": [
       {
         "type": "video",
@@ -17326,7 +17326,7 @@
     "observation_source": "https://arxiv.org/html/2405.05941",
     "grading_summary": "The source center is above the target center. Their XY center distance is at most the norm of the target bounding-box half-size in XY plus 0.003 m; the vertical center offset minus both bounding-box half-heights is at most 0.06 m. This task disables the additional other-actor contact restriction. The success flag does not require gripper release; grasp diagnostics are reported separately.",
     "grading_scope": "task",
-    "grading_evidence": "The environment sets success to src_on_target, computed from bounding-box-relative geometry and, for carrot placement, an additional contact test. Grasp, consecutive-grasp and moved-object fields are diagnostic; robot-link contacts are ignored by the contact restriction.",
+    "grading_evidence": "The environment sets success to src_on_target, computed from bounding-box-relative geometry and, for carrot placement and cube stacking, an additional contact test. Grasp, consecutive-grasp and moved-object fields are diagnostic; robot-link contacts are ignored by the contact restriction.",
     "evaluation_source": "https://github.com/simpler-env/ManiSkill2_real2sim/blob/ef7a4d4fdf4b69f2c2154db5b15b9ac8dfe10682/mani_skill2_real2sim/envs/custom_scenes/put_on_in_scene.py#L43",
     "media": [
       {

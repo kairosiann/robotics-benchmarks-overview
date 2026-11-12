@@ -14,6 +14,8 @@ The strongest evidence consists of exact simulator predicates/checkers and publi
 
 **Status:** Root corrected the three task-specific summaries/goals and added pinned evaluation-source provenance. Regenerated artifacts remain part of root’s integration checks.
 
+The cube-stacking record now also states its inherited geometric/contact checks explicitly. Its success flag does not establish stable, released stacking.
+
 Affected records: `widowx_spoon_on_towel`, `widowx_carrot_on_plate`, `widowx_put_eggplant_in_basket`. Their summary says “placement/release checks.” The original environment's `PutOnInSceneEnv.evaluate` assigns success from the placement flags; grasp and movement fields are diagnostics. It never gates success on release, and its optional contact rejection excludes robot links. This matters when comparing a proposal that explicitly requires releasing the object.
 
 The official original ManiSkill2_real2sim source is pinned to **ef7a4d4fdf4b69f2c2154db5b15b9ac8dfe10682**, committed October 19, 2024, so it predates the catalog snapshot. Supplemental audit evidence is retained at `sources/review/simpler_put_on_in_scene.py` and `sources/review/simpler_checker_snapshot.json`.

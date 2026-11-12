@@ -1,7 +1,7 @@
 {
-  "validated_at": "2026-11-12T07:10:57.512633+00:00",
+  "validated_at": "2026-11-12T07:17:02.309493+00:00",
   "status": "passed",
-  "catalog_sha256": "c9b8f2d79a0d6796905a60017f7ffccfc101b0fddbfc62a51bf223423e6f278a",
+  "catalog_sha256": "e2c470aab012bcd104c5067a94c3467975af76eabe4d1582c56fac937947e389",
   "catalog": {
     "records": 2900,
     "families": {
@@ -90,7 +90,7 @@
       {
         "query": "stack cups",
         "options": {},
-        "total": 85,
+        "total": 88,
         "top_ids": [
           "rlbench--stack-cups",
           "contactbench--reference-25",
@@ -126,7 +126,7 @@
       {
         "query": "pick up object",
         "options": {},
-        "total": 2369,
+        "total": 2370,
         "top_ids": [
           "contactbench--reference-06",
           "contactbench-sim--pick-up-object-on-platform",
@@ -329,5 +329,5 @@
     "paths": 6,
     "references": "resolved"
   },
-  "elapsed_seconds": 7.05
+  "elapsed_seconds": 6.95
 }

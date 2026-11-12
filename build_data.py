@@ -82,10 +82,10 @@ for n in envs:
  elif 'close_' in n:g='Target drawer joint reaches the closed-state condition.'
  elif 'stack' in n:g='Green block rests on the yellow block under the stacking checker.'
  else:g='The simulator checks source-object position relative to the target using its geometric placement test.'
- if n in ('widowx_spoon_on_towel','widowx_carrot_on_plate','widowx_put_eggplant_in_basket'):
+ if n in ('widowx_spoon_on_towel','widowx_carrot_on_plate','widowx_put_eggplant_in_basket','widowx_stack_cube'):
   height='0.06 m' if n=='widowx_put_eggplant_in_basket' else '0.02 m'
   g=f'The source center is above the target center. Their XY center distance is at most the norm of the target bounding-box half-size in XY plus 0.003 m; the vertical center offset minus both bounding-box half-heights is at most {height}. '
-  if n=='widowx_carrot_on_plate':g+='Contacts with actors other than the target and robot links must have summed impulse norm at most 1e-6. '
+  if n in ('widowx_carrot_on_plate','widowx_stack_cube'):g+='Contacts with actors other than the target and robot links must have summed impulse norm at most 1e-6. '
   else:g+='This task disables the additional other-actor contact restriction. '
   g+='The success flag does not require gripper release; grasp diagnostics are reported separately.'
  environment,parameters=env_map[n]
