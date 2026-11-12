@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-11-12T07:12:02.011758+00:00",
+  "status": "pass",
+  "tasks": 2900,
+  "families": 23,
+  "individual_records_checked": 2900,
+  "local_links_checked": 35,
+  "embedded_catalog_matches": true,
+  "external_link_availability_checked": false,
+  "note": "Static artifact integrity, not a scientific replication or media-rights determination."
+}

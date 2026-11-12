@@ -25,8 +25,12 @@ def build():
         shutil.rmtree(records)
     records.mkdir(parents=True)
     shutil.copyfile(ROOT / "robotics-benchmark-guide.html", DESTINATION / "index.html")
-    for name in ("tasks.json", "coverage.json", "TASK_API.md", "task-api.openapi.json"):
+    for name in ("tasks.json", "coverage.json", "corl_review.json", "TASK_API.md", "task-api.openapi.json", "THIRD_PARTY.md"):
         shutil.copyfile(ROOT / name, DESTINATION / name)
+    license_destination = DESTINATION / "third-party-licenses"
+    if license_destination.exists():
+        shutil.rmtree(license_destination)
+    shutil.copytree(ROOT / "sources" / "review" / "licenses", license_destination)
     index = []
     for task in tasks:
         filename = hashlib.sha256(task["id"].encode("utf-8")).hexdigest()[:24] + ".json"

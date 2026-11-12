@@ -268,6 +268,37 @@
       : null;
   }
 
+  function loadMedia(button, type, url, label) {
+    const visual = mediaElement(type, url, label);
+    if (!visual) return;
+    const holder = button.parentElement;
+    for (const oldStatus of holder.querySelectorAll(":scope > .explorer-media-status")) oldStatus.remove();
+    const status = node("p", { className: "explorer-media-status", role: "status" });
+    const originalLabel = button.textContent;
+    button.disabled = true;
+    button.textContent = "Loading…";
+    visual.classList.add("explorer-loading-media");
+    const loaded = () => {
+      const shouldFocus = document.activeElement === button;
+      button.remove();
+      visual.classList.remove("explorer-loading-media");
+      status.textContent = type === "video" ? "If playback is unavailable, open the original source." : "";
+      if (shouldFocus) {
+        visual.tabIndex = visual.tagName === "IMG" ? -1 : 0;
+        visual.focus({ preventScroll: true });
+      }
+    };
+    visual.addEventListener(type === "image" || visual.tagName === "IFRAME" ? "load" : "loadedmetadata", loaded, { once: true });
+    visual.addEventListener("error", () => {
+      visual.remove();
+      button.disabled = false;
+      button.textContent = originalLabel;
+      status.textContent = "Unable to load this media. Check your connection or open the original source.";
+    }, { once: true });
+    holder.insertBefore(visual, button.nextSibling);
+    holder.insertBefore(status, visual.nextSibling);
+  }
+
   function renderMedia(task) {
     const media = node("div", { className: "explorer-media" });
     const embedded = images[task.image];
@@ -290,8 +321,7 @@
         node("br"), sourceLink(url.href, "Open original"));
       if (entry.type === "image" || /\.(mp4|webm|ogv)$/i.test(url.pathname) || videoEmbedUrl(url)) {
         const button = action(entry.type === "image" ? "Load image" : "Load video", () => {
-          const visual = mediaElement(entry.type, url, label);
-          button.replaceWith(visual);
+          loadMedia(button, entry.type, url, label);
         });
         figure.append(button);
       }
@@ -352,6 +382,7 @@
     }
     updatePinButtons();
     renderComparison();
+    saveSearchState();
   }
 
   function renderResult({ task, matches }) {
@@ -461,9 +492,9 @@
     byId("comparison-grid").replaceChildren(scroll);
   }
 
-  function refresh() {
+  function refresh({ resetPage = true, updateAddress = true } = {}) {
     query = byId("search").value.trim();
-    page = 0;
+    if (resetPage) page = 0;
     const options = { mode: byId("search-mode").value, setting: byId("task-setting").value };
     const allMatches = TaskSearch.search(index, query, options);
     refreshFamilyCounts(allMatches);
@@ -479,6 +510,49 @@
       && (!suite || (suite.startsWith("split:") ? task.split === suite.slice(6) : task.suite === suite)));
     renderPage();
     renderComparison();
+    if (updateAddress) saveSearchState();
+  }
+
+  function saveSearchState() {
+    const url = new URL(window.location.href);
+    const values = {
+      q: query,
+      family,
+      benchmark: byId("benchmark").value,
+      suite: byId("suite").value,
+      setting: byId("task-setting").value,
+      mode: byId("search-mode").value === "related" ? "" : byId("search-mode").value,
+      page: page ? String(page + 1) : "",
+    };
+    for (const [key, value] of Object.entries(values)) {
+      if (value) url.searchParams.set(key, value);
+      else url.searchParams.delete(key);
+    }
+    url.searchParams.delete("pin");
+    for (const id of pins) url.searchParams.append("pin", id);
+    try {
+      window.history.replaceState(null, "", url);
+    } catch {
+      // Search continues to work if a local-file browser disallows URL changes.
+    }
+  }
+
+  function restoreSearchState() {
+    const params = new URLSearchParams(window.location.search);
+    family = families.includes(params.get("family")) ? params.get("family") : "";
+    byId("search").value = (params.get("q") || "").slice(0, 1000);
+    byId("suite").value = "";
+    updateVersionAndSuite(params.get("benchmark") || "");
+    for (const [id, key] of [["suite", "suite"], ["task-setting", "setting"], ["search-mode", "mode"]]) {
+      const select = byId(id);
+      const value = params.get(key) || (id === "search-mode" ? "related" : "");
+      select.value = [...select.options].some((option) => option.value === value) ? value : select.options[0].value;
+    }
+    pins.clear();
+    for (const id of params.getAll("pin").filter((value) => taskById.has(value)).slice(0, maxPins)) pins.add(id);
+    const requestedPage = Number(params.get("page") || 1);
+    page = Number.isSafeInteger(requestedPage) && requestedPage > 0 ? requestedPage - 1 : 0;
+    refresh({ resetPage: false, updateAddress: false });
   }
 
   function downloadJson(filename, value) {
@@ -491,6 +565,7 @@
   function movePage(direction) {
     page += direction;
     renderPage();
+    saveSearchState();
     byId("task-results-title").focus();
   }
 
@@ -518,9 +593,10 @@
     pins.clear();
     updatePinButtons();
     renderComparison();
+    saveSearchState();
     byId("task-results-title").focus({ preventScroll: true });
   });
-  byId("proposal-form").addEventListener("change", renderComparison);
+  byId("proposal-form").addEventListener("input", renderComparison);
   byId("proposal-form").addEventListener("reset", () => setTimeout(renderComparison, 0));
   byId("proposal-form").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -552,13 +628,23 @@
     button.addEventListener("click", () => {
       const url = httpsUrl(button.parentElement.dataset.video);
       if (!url) return;
-      const player = mediaElement("video", url, "Official benchmark demonstration");
-      if (player) button.replaceWith(player);
+      loadMedia(button, "video", url, "Official benchmark demonstration");
     });
   }
 
   setOptions(byId("task-setting"), [...new Set(catalog.map((task) => task.setting).filter(Boolean))].sort(), "All settings");
   renderCoverage();
-  updateVersionAndSuite();
-  refresh();
+  restoreSearchState();
+  byId("catalog").classList.add("explorer-ready");
+  window.addEventListener("popstate", restoreSearchState);
+
+  let closedPrintDetails = [];
+  window.addEventListener("beforeprint", () => {
+    closedPrintDetails = [...document.querySelectorAll("#task-comparison details:not([open])")];
+    for (const details of closedPrintDetails) details.open = true;
+  });
+  window.addEventListener("afterprint", () => {
+    for (const details of closedPrintDetails) details.open = false;
+    closedPrintDetails = [];
+  });
 })();

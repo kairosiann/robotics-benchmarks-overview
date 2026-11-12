@@ -19,12 +19,13 @@ def add(b,s,n,d='',g='',u='',*,details=None,**kw):
  enrich_task(task,**(details or {}))
  rows.append(task)
 lib=ast.literal_eval(read('libero.txt').split('=',1)[1])
+libero_revision=json.loads(read('libero_tree.json'))['sha']
 for suite,names in lib.items():
  for name in names:
   f=P/f'libddl_{suite}_{name}.raw';code=f.read_text() if f.exists() else ''
   scene_match=re.match(r'^(KITCHEN|STUDY|LIVING_ROOM)_SCENE(\d+)_',name)
   scene=f'{readable_name(scene_match[1].lower())} scene {scene_match[2]}.' if scene_match else ''
-  add('LIBERO',suite,name,re.sub(r'^(KITCHEN|STUDY|LIVING_ROOM)_SCENE\d+_','',name).replace('_',' '),goal(code),'https://github.com/Lifelong-Robot-Learning/LIBERO/blob/master/libero/libero/bddl_files/'+suite+'/'+name+'.bddl',details={'code':code,'scene':scene})
+  add('LIBERO',suite,name,re.sub(r'^(KITCHEN|STUDY|LIVING_ROOM)_SCENE\d+_','',name).replace('_',' '),goal(code),'https://github.com/Lifelong-Robot-Learning/LIBERO/blob/'+libero_revision+'/libero/libero/bddl_files/'+suite+'/'+name+'.bddl',details={'code':code,'scene':scene},source_revision=libero_revision)
 attrs=json.loads(read('casa_raw_attributes.raw'))['tasks']
 classes={}
 for f in P.glob('current_*.py'):
@@ -80,7 +81,13 @@ for n in envs:
  elif 'open_' in n:g='Target drawer joint reaches the open-state condition.'
  elif 'close_' in n:g='Target drawer joint reaches the closed-state condition.'
  elif 'stack' in n:g='Green block rests on the yellow block under the stacking checker.'
- else:g='Correct object placed on/in the specified target with the environment’s placement/release checks.'
+ else:g='The simulator checks source-object position relative to the target using its geometric placement test.'
+ if n in ('widowx_spoon_on_towel','widowx_carrot_on_plate','widowx_put_eggplant_in_basket'):
+  height='0.06 m' if n=='widowx_put_eggplant_in_basket' else '0.02 m'
+  g=f'The source center is above the target center. Their XY center distance is at most the norm of the target bounding-box half-size in XY plus 0.003 m; the vertical center offset minus both bounding-box half-heights is at most {height}. '
+  if n=='widowx_carrot_on_plate':g+='Contacts with actors other than the target and robot links must have summed impulse norm at most 1e-6. '
+  else:g+='This task disables the additional other-actor contact restriction. '
+  g+='The success flag does not require gripper release; grasp diagnostics are reported separately.'
  environment,parameters=env_map[n]
  setup=''
  if n.endswith('horizontal_coke_can'):setup='Coke-can grasping with the can in the horizontal configuration.'

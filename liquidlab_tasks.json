@@ -25,6 +25,6 @@
     "record_kind": "benchmark-overview",
     "reported_task_count": 16,
     "source_note": "Overview record only. The accepted abstract reports 16 tasks. Individual names, initial states, numerical rubrics, robot inputs and task media have not been retrieved. Author publication pages list the paper, and one says its link is available soon. OpenReview required browser verification during this review.",
-    "catalog_scope": "One searchable benchmark overview. This entry does not represent one of the sixteen physical tasks."
+    "catalog_scope": "One searchable benchmark overview. This entry does not represent one of the sixteen reported tasks."
   }
 ]

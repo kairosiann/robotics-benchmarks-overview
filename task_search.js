@@ -14,8 +14,17 @@ const TaskSearch = (() => {
     ["Catalog metadata", 2, ["id", "benchmark", "family", "suite", "activity", "setting", "split", "aliases", "record_kind"]],
   ];
 
+  function textValue(value) {
+    if (value === null || value === undefined) return "";
+    if (Array.isArray(value)) return value.map(textValue).join(" ");
+    if (typeof value === "object") {
+      return Object.entries(value).map(([key, item]) => `${key} ${textValue(item)}`).join(" ");
+    }
+    return String(value);
+  }
+
   function normalize(value) {
-    return String(value || "")
+    return textValue(value)
       .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2")
       .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
       .normalize("NFKD")
@@ -125,6 +134,7 @@ const TaskSearch = (() => {
   }
 
   function describeQuery(index, query = "", mode = "related") {
+    if (!["related", "all", "exact"].includes(mode)) throw new Error("Unknown search mode: " + mode);
     return queryTerms(index, query, mode).map(({term, kind, original}) => ({term, kind, original}));
   }
 

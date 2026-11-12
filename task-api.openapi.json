@@ -2,29 +2,205 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Robotics Benchmark Task API",
-    "version": "1.0.0",
-    "description": "Search a local snapshot of versioned robotics benchmark tasks and retrieve source-backed setup, robot observations, and grading evidence."
+    "version": "1.1.0",
+    "description": "Search a local snapshot of versioned robotics benchmark tasks and retrieve source-backed setup, robot observations, and grading evidence. This unauthenticated read-only development service binds to loopback by default; GitHub Pages does not run it. Search scores rank lexical/concept matches and are not equivalence probabilities."
   },
-  "servers": [{"url": "http://127.0.0.1:8766"}],
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8766"
+    }
+  ],
   "paths": {
     "/api/search": {
       "get": {
         "operationId": "searchBenchmarkTasks",
         "summary": "Find benchmark tasks related to a proposed task or keyword query",
-        "description": "Results are ordered by search relevance and include reasons for each match. Follow task_url for the full source goal, rubric, or initial conditions when present.",
+        "description": "Results are ordered by search relevance and include reasons for each match. Follow task_url for the full source goal, rubric, or initial conditions when present. Scores are deterministic ranking values for this query, not similarity percentages or proof of novelty. Query parameters must be supplied once; unknown parameters return 400. Quoted fragments require a literal normalized phrase.",
         "parameters": [
-          {"name": "q", "in": "query", "description": "Keywords or a proposed task. Omit to browse.", "schema": {"type": "string", "maxLength": 1000}, "example": "plug a cable into a port"},
-          {"name": "mode", "in": "query", "description": "Related ranks shared terms and concepts. All requires every meaningful term. Exact matches a contiguous normalized phrase.", "schema": {"type": "string", "enum": ["related", "all", "exact"], "default": "related"}},
-          {"name": "family", "in": "query", "description": "Family label from the catalog.", "schema": {"type": "string"}},
-          {"name": "benchmark", "in": "query", "description": "Version label from the catalog.", "schema": {"type": "string"}},
-          {"name": "suite", "in": "query", "description": "Suite label or split:<split label>.", "schema": {"type": "string"}},
-          {"name": "setting", "in": "query", "description": "Setting label from the catalog.", "schema": {"type": "string"}},
-          {"name": "limit", "in": "query", "schema": {"type": "integer", "minimum": 1, "maximum": 100, "default": 20}},
-          {"name": "offset", "in": "query", "schema": {"type": "integer", "minimum": 0, "default": 0}}
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Keywords or a proposed task. Omit to browse.",
+            "schema": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "example": "plug a cable into a port"
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "description": "Related ranks shared terms and concepts. All requires every meaningful term. Exact matches a contiguous normalized phrase.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "related",
+                "all",
+                "exact"
+              ],
+              "default": "related"
+            }
+          },
+          {
+            "name": "family",
+            "in": "query",
+            "description": "Family label from the catalog.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "benchmark",
+            "in": "query",
+            "description": "Version label from the catalog.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "suite",
+            "in": "query",
+            "description": "Suite label or split:<split label>.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "setting",
+            "in": "query",
+            "description": "Setting label from the catalog.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
         ],
         "responses": {
-          "200": {"description": "Page of matching tasks", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/SearchPage"}}}},
-          "400": {"$ref": "#/components/responses/BadRequest"}
+          "200": {
+            "description": "Page of matching tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          }
+        }
+      },
+      "head": {
+        "summary": "Return the GET response headers without a response body",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Keywords or a proposed task. Omit to browse.",
+            "schema": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "example": "plug a cable into a port"
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "description": "Related ranks shared terms and concepts. All requires every meaningful term. Exact matches a contiguous normalized phrase.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "related",
+                "all",
+                "exact"
+              ],
+              "default": "related"
+            }
+          },
+          {
+            "name": "family",
+            "in": "query",
+            "description": "Family label from the catalog.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "benchmark",
+            "in": "query",
+            "description": "Version label from the catalog.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "suite",
+            "in": "query",
+            "description": "Suite label or split:<split label>.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "setting",
+            "in": "query",
+            "description": "Setting label from the catalog.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Same status and headers as GET; no body"
+          },
+          "400": {
+            "description": "Invalid parameters; no body"
+          },
+          "404": {
+            "description": "Unknown resource; no body"
+          }
         }
       }
     },
@@ -32,10 +208,66 @@
       "get": {
         "operationId": "getBenchmarkTask",
         "summary": "Fetch the full source-backed record for one task",
-        "parameters": [{"name": "id", "in": "path", "required": true, "description": "Stable task ID returned by search.", "schema": {"type": "string"}}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Stable task ID returned by search.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {"description": "Task record", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/TaskDetail"}}}},
-          "404": {"description": "Unknown task ID", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}}
+          "200": {
+            "description": "Task record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown task ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          }
+        }
+      },
+      "head": {
+        "summary": "Return the GET response headers without a response body",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Stable task ID returned by search.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Same status and headers as GET; no body"
+          },
+          "400": {
+            "description": "Invalid parameters; no body"
+          },
+          "404": {
+            "description": "Unknown resource; no body"
+          }
         }
       }
     },
@@ -44,7 +276,34 @@
         "operationId": "listBenchmarkCatalog",
         "summary": "List benchmark labels and available filter values",
         "responses": {
-          "200": {"description": "Counts by family, version, setting, suite, and split", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Catalog"}}}}
+          "200": {
+            "description": "Counts by family, version, setting, suite, and split",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Catalog"
+                }
+              }
+            }
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          }
+        }
+      },
+      "head": {
+        "summary": "Return the GET response headers without a response body",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Same status and headers as GET; no body"
+          },
+          "400": {
+            "description": "Invalid parameters; no body"
+          },
+          "404": {
+            "description": "Unknown resource; no body"
+          }
         }
       }
     },
@@ -53,138 +312,533 @@
         "operationId": "getTaskApiHealth",
         "summary": "Check that the local catalog is loaded",
         "responses": {
-          "200": {"description": "Server status and number of loaded tasks", "content": {"application/json": {"schema": {"type": "object", "required": ["status", "tasks"], "properties": {"status": {"const": "ok"}, "tasks": {"type": "integer"}}}}}}
+          "200": {
+            "description": "Server status and number of loaded tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "tasks"
+                  ],
+                  "properties": {
+                    "status": {
+                      "const": "ok"
+                    },
+                    "tasks": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          }
+        }
+      },
+      "head": {
+        "summary": "Return the GET response headers without a response body",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Same status and headers as GET; no body"
+          },
+          "400": {
+            "description": "Invalid parameters; no body"
+          },
+          "404": {
+            "description": "Unknown resource; no body"
+          }
+        }
+      }
+    },
+    "/tasks.json": {
+      "get": {
+        "operationId": "downloadBenchmarkTasks",
+        "summary": "Download the entire loaded catalog snapshot",
+        "responses": {
+          "200": {
+            "description": "All catalog records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskDetail"
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          }
+        }
+      },
+      "head": {
+        "summary": "Return the GET response headers without a response body",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Same status and headers as GET; no body"
+          },
+          "400": {
+            "description": "Invalid parameters; no body"
+          },
+          "404": {
+            "description": "Unknown resource; no body"
+          }
+        }
+      }
+    },
+    "/api/openapi.json": {
+      "get": {
+        "operationId": "getTaskApiSpecification",
+        "summary": "Retrieve this OpenAPI description",
+        "responses": {
+          "200": {
+            "description": "OpenAPI 3.1 document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          }
+        }
+      },
+      "head": {
+        "summary": "Return the GET response headers without a response body",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Same status and headers as GET; no body"
+          },
+          "400": {
+            "description": "Invalid parameters; no body"
+          },
+          "404": {
+            "description": "Unknown resource; no body"
+          }
         }
       }
     }
   },
   "components": {
     "responses": {
-      "BadRequest": {"description": "Invalid query parameters", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}}
+      "BadRequest": {
+        "description": "Invalid query parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "MethodNotAllowed": {
+        "description": "Only GET and HEAD are supported. The Allow response header is GET, HEAD.",
+        "headers": {
+          "Allow": {
+            "schema": {
+              "type": "string",
+              "const": "GET, HEAD"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
     },
     "schemas": {
-      "Counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+      "Counts": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
       "Error": {
         "type": "object",
-        "required": ["error"],
-        "properties": {"error": {"type": "object", "required": ["status", "message"], "properties": {"status": {"type": "integer"}, "message": {"type": "string"}}}}
-      },
-      "Catalog": {
-        "type": "object",
-        "required": ["total", "families", "settings", "benchmarks"],
+        "required": [
+          "error"
+        ],
         "properties": {
-          "total": {"type": "integer"},
-          "families": {"$ref": "#/components/schemas/Counts"},
-          "settings": {"$ref": "#/components/schemas/Counts"},
-          "benchmarks": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["name", "family", "count", "suites", "splits"],
-              "properties": {
-                "name": {"type": "string"},
-                "family": {"type": "string"},
-                "count": {"type": "integer"},
-                "suites": {"$ref": "#/components/schemas/Counts"},
-                "splits": {"$ref": "#/components/schemas/Counts"}
+          "error": {
+            "type": "object",
+            "required": [
+              "status",
+              "message"
+            ],
+            "properties": {
+              "status": {
+                "type": "integer"
+              },
+              "message": {
+                "type": "string"
               }
             }
           }
         }
       },
+      "Catalog": {
+        "type": "object",
+        "required": [
+          "total",
+          "families",
+          "settings",
+          "benchmarks",
+          "record_kinds"
+        ],
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "families": {
+            "$ref": "#/components/schemas/Counts"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/Counts"
+          },
+          "benchmarks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "family",
+                "count",
+                "suites",
+                "splits"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "family": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer"
+                },
+                "suites": {
+                  "$ref": "#/components/schemas/Counts"
+                },
+                "splits": {
+                  "$ref": "#/components/schemas/Counts"
+                }
+              }
+            }
+          },
+          "record_kinds": {
+            "$ref": "#/components/schemas/Counts"
+          }
+        }
+      },
       "SearchPage": {
         "type": "object",
-        "required": ["query", "query_terms", "mode", "filters", "total", "counts_by_family", "offset", "limit", "next_offset", "results"],
+        "required": [
+          "query",
+          "query_terms",
+          "mode",
+          "filters",
+          "total",
+          "counts_by_family",
+          "offset",
+          "limit",
+          "next_offset",
+          "results"
+        ],
         "properties": {
-          "query": {"type": "string"},
+          "query": {
+            "type": "string"
+          },
           "query_terms": {
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["term", "kind", "original"],
-              "properties": {"term": {"type": "string"}, "kind": {"type": "string"}, "original": {"type": "string"}}
+              "required": [
+                "term",
+                "kind",
+                "original"
+              ],
+              "properties": {
+                "term": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "original": {
+                  "type": "string"
+                }
+              }
             }
           },
-          "mode": {"type": "string"},
-          "filters": {"type": "object", "additionalProperties": {"type": "string"}},
-          "total": {"type": "integer"},
-          "counts_by_family": {"$ref": "#/components/schemas/Counts"},
-          "offset": {"type": "integer"},
-          "limit": {"type": "integer"},
-          "next_offset": {"type": ["integer", "null"]},
-          "results": {"type": "array", "items": {"$ref": "#/components/schemas/SearchResult"}}
+          "mode": {
+            "type": "string",
+            "enum": [
+              "related",
+              "all",
+              "exact"
+            ]
+          },
+          "filters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "counts_by_family": {
+            "$ref": "#/components/schemas/Counts"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "next_offset": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchResult"
+            }
+          }
         }
       },
       "SearchResult": {
         "type": "object",
-        "required": ["task", "task_url", "score", "matches"],
+        "required": [
+          "task",
+          "task_url",
+          "score",
+          "matches"
+        ],
         "properties": {
-          "task": {"$ref": "#/components/schemas/TaskPreview"},
-          "task_url": {"type": "string", "format": "uri-reference"},
-          "score": {"type": "integer", "description": "Relevance score for this query."},
+          "task": {
+            "$ref": "#/components/schemas/TaskPreview"
+          },
+          "task_url": {
+            "type": "string",
+            "format": "uri-reference"
+          },
+          "score": {
+            "type": "integer",
+            "description": "Relevance score for this query."
+          },
           "matches": {
             "type": "array",
             "items": {
               "type": "object",
-              "properties": {"term": {"type": "string"}, "kind": {"type": "string"}, "field": {"type": "string"}, "matched": {"type": "string"}}
+              "properties": {
+                "term": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "field": {
+                  "type": "string"
+                },
+                "matched": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "term",
+                "kind",
+                "field",
+                "matched"
+              ]
             }
           }
         }
       },
       "TaskPreview": {
         "type": "object",
-        "required": ["id", "name", "benchmark", "suite", "family", "setting", "source"],
+        "required": [
+          "id",
+          "name",
+          "benchmark",
+          "suite",
+          "family",
+          "setting",
+          "source",
+          "title"
+        ],
         "properties": {
-          "id": {"type": "string"},
-          "record_kind": {"type": "string", "description": "benchmark-overview identifies a catalog-level summary with no retrieved individual task definition."},
-          "reported_task_count": {"type": "integer", "description": "Task count reported by a source, distinct from ingested record count."},
-          "name": {"type": "string", "description": "Original task identifier or name."},
-          "title": {"type": "string"},
-          "benchmark": {"type": "string"},
-          "suite": {"type": "string"},
-          "split": {"type": "string"},
-          "family": {"type": "string"},
-          "setting": {"type": "string"},
-          "description": {"type": "string"},
-          "instruction": {"type": "string"},
-          "setup_summary": {"type": "string"},
-          "setup_source": {"type": "string"},
-          "observation": {"type": "string"},
-          "observation_scope": {"type": "string"},
-          "observation_source": {"type": "string"},
-          "grading_summary": {"type": "string"},
-          "grading_scope": {"type": "string"},
-          "grading_evidence": {"type": "string"},
-          "evaluation_source": {"type": "string"},
-          "source": {"type": "string", "format": "uri"},
-          "video": {"type": "string"},
-          "image": {"type": "string"},
-          "media_source": {"type": "string"},
+          "id": {
+            "type": "string"
+          },
+          "record_kind": {
+            "type": "string",
+            "description": "benchmark-overview identifies a catalog-level summary with no retrieved individual task definition."
+          },
+          "reported_task_count": {
+            "type": "integer",
+            "description": "Task count reported by a source, distinct from ingested record count."
+          },
+          "name": {
+            "type": "string",
+            "description": "Original task identifier or name."
+          },
+          "title": {
+            "type": "string"
+          },
+          "benchmark": {
+            "type": "string"
+          },
+          "suite": {
+            "type": "string"
+          },
+          "split": {
+            "type": "string"
+          },
+          "family": {
+            "type": "string"
+          },
+          "setting": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "instruction": {
+            "type": "string"
+          },
+          "setup_summary": {
+            "type": "string"
+          },
+          "setup_source": {
+            "type": "string"
+          },
+          "observation": {
+            "type": "string"
+          },
+          "observation_scope": {
+            "type": "string"
+          },
+          "observation_source": {
+            "type": "string"
+          },
+          "grading_summary": {
+            "type": "string"
+          },
+          "grading_scope": {
+            "type": "string"
+          },
+          "grading_evidence": {
+            "type": "string"
+          },
+          "evaluation_source": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "format": "uri"
+          },
+          "video": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "media_source": {
+            "type": "string"
+          },
           "media": {
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["type", "url", "label", "scope"],
-              "properties": {"type": {"type": "string"}, "url": {"type": "string"}, "label": {"type": "string"}, "scope": {"type": "string"}}
+              "required": [
+                "type",
+                "url",
+                "label",
+                "scope"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "scope": {
+                  "type": "string"
+                }
+              }
             }
+          },
+          "source_note": {
+            "type": "string"
+          },
+          "catalog_scope": {
+            "type": "string"
+          },
+          "evaluation_protocol": {
+            "type": "string"
           }
         },
         "additionalProperties": true
       },
       "TaskDetail": {
         "allOf": [
-          {"$ref": "#/components/schemas/TaskPreview"},
+          {
+            "$ref": "#/components/schemas/TaskPreview"
+          },
           {
             "type": "object",
             "properties": {
-              "goal": {"type": "string"},
-              "initial_conditions": {"type": "string"},
+              "goal": {
+                "type": "string"
+              },
+              "initial_conditions": {
+                "type": "string"
+              },
               "grading_levels": {
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": ["score", "description"],
-                  "properties": {"score": {"type": "number"}, "description": {"type": "string"}}
+                  "required": [
+                    "score",
+                    "description"
+                  ],
+                  "properties": {
+                    "score": {
+                      "type": "number"
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }

@@ -1,6 +1,6 @@
 # Robotics benchmarks overview
 
-A sourced HTML guide and searchable task catalog for comparing proposed robotics benchmark tasks with published tasks. Includes the original six benchmark families, eight additional manipulation/assembly benchmarks, and three task catalogs selected from the CoRL 2026 accepted program.
+A sourced HTML guide and searchable task catalog for comparing proposed robotics benchmark tasks with published tasks. Covers 23 benchmark families, including manipulation, assembly, household activities, mobile manipulation, contact-rich interaction, and human-to-robot transfer.
 
 The November 11, 2026 snapshot contains 2,900 entries across 23 benchmark families. The expansion is described in [coverage.json](coverage.json), with task counts available through the guide and `/api/catalog`. Entries include source links, setup descriptions, available robot observations, grading summaries, exact task definitions or scoring checks, and official media where published. Some observations apply at benchmark or suite level. Each record labels that scope.
 
@@ -45,7 +45,23 @@ python3 build_report.py
 
 Versioned entries include older catalogs, aliases, and auxiliary material, so the total is not a count of unique physical skills. The guide documents version differences and missing evidence. Review original task goals and scoring checks when assessing whether a proposed task has a close precedent.
 
-Task definitions, source excerpts, figures, and media retain their respective authorship and applicable upstream terms. This repository does not grant additional rights to third-party materials. Source citations appear in the guide and individual task records.
+Task definitions, source excerpts, figures, and media retain their respective authorship and applicable upstream terms. This repository does not grant additional rights to third-party materials. Source citations appear in the guide and individual task records. [THIRD_PARTY.md](THIRD_PARTY.md) records retrieved licenses and unresolved reuse terms; the repository is not cleared for unrestricted redistribution of all mirrored material.
+
+## Quality checks
+
+The November 12 review checked research claims against retained primary sources, search and API behavior, static deployment records, keyboard access, narrow layouts, print behavior, and public repository contents. See [AUDIT.md](AUDIT.md) for findings, fixes, evidence, and limits. The inventory date remains November 11; the review does not imply that every upstream task has been refreshed or run on a robot.
+
+Run the repeatable checks from a clone of this repository:
+
+```sh
+python3 build_data.py
+python3 validate_catalog.py
+python3 build_report.py
+python3 build_site.py
+python3 validate_site.py
+```
+
+Python 3.10+ and Node.js are required for these checks. The **Validate guide and catalog** workflow runs them on pushes and pull requests. Website search and the Python API use the same controlled vocabulary; the checks compare their result order and match evidence. The static deployment check verifies every individual record and the embedded browser catalog.
 
 ## Expansion and CoRL review
 

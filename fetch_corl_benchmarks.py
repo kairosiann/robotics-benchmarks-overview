@@ -50,7 +50,7 @@ def build():
         task.update(setup_summary=setup, setup_source=imsource, goal=goal,
                     grading_summary=goal, grading_scope='task', embodiment=embodiment,
                     grading_evidence='The paper evaluates constraint understanding, plan correctness, and closed-loop execution separately. Policy success uses the task-specific physical goal.',
-                    observation='The paper records workspace and wrist RGB cameras and robot proprioception. The task table specifies the arm and end-effector configuration.',
+                    observation='The available benchmark interface includes synchronized 2–4 RGB views, robot proprioception, gripper state and wrist force/torque. The task table specifies the arm and end-effector configuration. Inputs consumed depend on the evaluated policy; this interface description does not imply that every baseline uses force feedback.',
                     observation_scope='benchmark', observation_source=imsource)
         image_name = {'T05':'pb-hobi-plate-shelf', 'T06':'pb-hetbi-plate-shelf'}.get(identity, name)
         image = next((path for path in re.findall(r'<img[^>]*src="([^"]+)"', imhtml) if '/tasks/' in path and image_name in path), '')

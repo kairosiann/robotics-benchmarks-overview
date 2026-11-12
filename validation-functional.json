@@ -1,0 +1,333 @@
+{
+  "validated_at": "2026-11-12T07:10:57.512633+00:00",
+  "status": "passed",
+  "catalog_sha256": "c9b8f2d79a0d6796905a60017f7ffccfc101b0fddbfc62a51bf223423e6f278a",
+  "catalog": {
+    "records": 2900,
+    "families": {
+      "ATOM-Bench": 54,
+      "Adroit": 8,
+      "BEHAVIOR": 1116,
+      "CALVIN": 34,
+      "ContactBench": 110,
+      "DataCenterBench": 10,
+      "FurnitureBench": 9,
+      "H2RBench": 4,
+      "HARP-Bench": 49,
+      "IMBench": 35,
+      "LIBERO": 130,
+      "LiquidLab": 1,
+      "MESA": 285,
+      "ManiSkill": 65,
+      "NIST Assembly": 96,
+      "RLBench": 106,
+      "RMMBench": 113,
+      "RoboCasa": 476,
+      "RoboChallenge": 60,
+      "RoboDojo": 61,
+      "RoboTwin 2.0": 50,
+      "SIMPLER": 25,
+      "WireCraft": 3
+    },
+    "record_kinds": {
+      "task-entry": 2863,
+      "benchmark-overview": 1,
+      "reference-task": 36
+    },
+    "media_items": 2148
+  },
+  "search": {
+    "parity_cases": 30,
+    "retrieval_cases": [
+      {
+        "query": "",
+        "options": {},
+        "total": 2900,
+        "top_ids": [
+          "libero--libero-spatial-pick-up-the-black-bowl-between-the-plate-and-the-ramekin-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-next-to-the-ramekin-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-from-table-center-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-on-the-cookie-box-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-in-the-top-drawer-of-the-wooden-cabinet-and-place-it-on-the-plate"
+        ]
+      },
+      {
+        "query": "plug a cable into a port and verify the connection",
+        "options": {},
+        "total": 166,
+        "top_ids": [
+          "wirecraft--insertion",
+          "contactbench-sim--plug-in-charger-block1",
+          "contactbench-sim--plug-in-charger-block2",
+          "contactbench-sim--plug-in-charger-block3",
+          "contactbench-sim--plug-in-charger-block4"
+        ]
+      },
+      {
+        "query": "tighten nut",
+        "options": {},
+        "total": 111,
+        "top_ids": [
+          "contactbench--reference-17",
+          "contactbench-sim--tighten-nut-with-wrench-from-hook",
+          "robodojo--sim-tasks-fasten-screws",
+          "contactbench--reference-13",
+          "contactbench--reference-15"
+        ]
+      },
+      {
+        "query": "human interruption",
+        "options": {},
+        "total": 62,
+        "top_ids": [
+          "harp-bench--categorize-objects-interruption",
+          "harp-bench--put-object-in-cabinet-interruption",
+          "harp-bench--stack-three-bowls-interruption",
+          "harp-bench--place-bread-in-basket-interruption",
+          "harp-bench--dump-bin-interruption"
+        ]
+      },
+      {
+        "query": "stack cups",
+        "options": {},
+        "total": 85,
+        "top_ids": [
+          "rlbench--stack-cups",
+          "contactbench--reference-25",
+          "contactbench-sim--stack-cups",
+          "robocasa-v0-2--sizesorting",
+          "robochallenge-table30--table30-arrange-paper-cups"
+        ]
+      },
+      {
+        "query": "thread nut onto screw",
+        "options": {},
+        "total": 73,
+        "top_ids": [
+          "contactbench--reference-21",
+          "contactbench-sim--thread-nut-onto-screw-from-table",
+          "contactbench-sim--screw-nut-onto-screw",
+          "nist-assembly-task-boards--atb-1-assembly-m4-nut",
+          "nist-assembly-task-boards--atb-1-assembly-m8-nut"
+        ]
+      },
+      {
+        "query": "open drawer",
+        "options": {},
+        "total": 951,
+        "top_ids": [
+          "robocasa365--opendrawer",
+          "robocasa365--arrangeutensilsbytype",
+          "robocasa365--organizemetallicutensils",
+          "robocasa365--countertopcleanup",
+          "robocasa365--utensilshuffle"
+        ]
+      },
+      {
+        "query": "pick up object",
+        "options": {},
+        "total": 2369,
+        "top_ids": [
+          "contactbench--reference-06",
+          "contactbench-sim--pick-up-object-on-platform",
+          "contactbench-sim--pick-up-object-on-platform-key",
+          "robodojo--sim-tasks-general-pickup",
+          "robodojo--sim-tasks-pack-objects-into-box"
+        ]
+      },
+      {
+        "query": "wipe spill",
+        "options": {},
+        "total": 410,
+        "top_ids": [
+          "robocasa365--wipetable",
+          "rlbench--wipe-desk",
+          "robochallenge-table30--table30-wipe-the-table",
+          "robochallenge-table30-v2--table30-v2-wipe-the-blackboard",
+          "robochallenge-table30-v2--table30-v2-wipe-the-table"
+        ]
+      },
+      {
+        "query": "force control",
+        "options": {},
+        "total": 163,
+        "top_ids": [
+          "contactbench--reference-13",
+          "contactbench--reference-14",
+          "contactbench--reference-15",
+          "contactbench--reference-16",
+          "contactbench--reference-17"
+        ]
+      },
+      {
+        "query": "collision with human",
+        "options": {},
+        "total": 99,
+        "top_ids": [
+          "harp-bench--take-from-human-easy",
+          "harp-bench--deliver-to-human",
+          "harp-bench--take-from-human-safety",
+          "harp-bench--feed-documents",
+          "harp-bench--pour-water"
+        ]
+      },
+      {
+        "query": "assemble chair",
+        "options": {},
+        "total": 35,
+        "top_ids": [
+          "furniturebench--full-assembly-chair",
+          "robocasa365--assemblecookingarray",
+          "robocasa-v0-2--assemblecookingarray",
+          "behavior-1k--clean-an-office-chair-0",
+          "behavior-1k--cleaning-high-chair-0"
+        ]
+      },
+      {
+        "query": "\"thread nut\" screw",
+        "options": {
+          "mode": "all"
+        },
+        "total": 4,
+        "top_ids": [
+          "contactbench--reference-21",
+          "contactbench-sim--thread-nut-onto-screw-from-table",
+          "contactbench-sim--screw-nut-onto-screw",
+          "nist-assembly-task-boards--atb-5-competencies-nut-alignment-and-threading"
+        ]
+      },
+      {
+        "query": "fully inserted",
+        "options": {
+          "mode": "exact"
+        },
+        "total": 29,
+        "top_ids": [
+          "datacenterbench--dc-plug",
+          "contactbench-sim--plug-in-charger",
+          "contactbench-sim--plug-in-charger-block1",
+          "contactbench-sim--plug-in-charger-block2",
+          "contactbench-sim--plug-in-charger-block3"
+        ]
+      },
+      {
+        "query": "USBConnector",
+        "options": {
+          "mode": "exact"
+        },
+        "total": 2,
+        "top_ids": [
+          "nist-assembly-task-boards--atb-1-assembly-usb-connector",
+          "nist-assembly-task-boards--atb-1-disassembly-usb-connector"
+        ]
+      },
+      {
+        "query": "TURN_ON stove",
+        "options": {},
+        "total": 317,
+        "top_ids": [
+          "robocasa365--turnonstove",
+          "robocasa-v0-2--turnonstove",
+          "libero--libero-goal-turn-on-the-stove",
+          "libero--libero-10-kitchen-scene3-turn-on-the-stove-and-put-the-moka-pot-on-it",
+          "libero--libero-90-kitchen-scene3-turn-on-the-stove"
+        ]
+      },
+      {
+        "query": "the and robot",
+        "options": {},
+        "total": 0,
+        "top_ids": []
+      },
+      {
+        "query": "☃ !!",
+        "options": {},
+        "total": 2900,
+        "top_ids": [
+          "libero--libero-spatial-pick-up-the-black-bowl-between-the-plate-and-the-ramekin-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-next-to-the-ramekin-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-from-table-center-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-on-the-cookie-box-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-in-the-top-drawer-of-the-wooden-cabinet-and-place-it-on-the-plate"
+        ]
+      },
+      {
+        "query": "\"unterminated phrase",
+        "options": {},
+        "total": 0,
+        "top_ids": []
+      },
+      {
+        "query": "Café — mélange",
+        "options": {},
+        "total": 1,
+        "top_ids": [
+          "behavior-1k--make-an-iced-espresso-0"
+        ]
+      },
+      {
+        "query": "xyzzynotarealtask",
+        "options": {
+          "mode": "all"
+        },
+        "total": 0,
+        "top_ids": []
+      },
+      {
+        "query": "",
+        "options": {
+          "family": "HARP-BENCH",
+          "suite": "split:Paper evaluation subset"
+        },
+        "total": 37,
+        "top_ids": [
+          "harp-bench--take-from-human-easy",
+          "harp-bench--deliver-to-human",
+          "harp-bench--take-from-human-safety",
+          "harp-bench--feed-documents",
+          "harp-bench--pour-water"
+        ]
+      },
+      {
+        "query": "plug",
+        "options": {
+          "family": "ContactBench",
+          "benchmark": "ContactBench simulation release"
+        },
+        "total": 38,
+        "top_ids": [
+          "contactbench-sim--plug-in-charger",
+          "contactbench-sim--plug-in-charger-block1",
+          "contactbench-sim--plug-in-charger-block2",
+          "contactbench-sim--plug-in-charger-block3",
+          "contactbench-sim--plug-in-charger-block4"
+        ]
+      },
+      {
+        "query": "",
+        "options": {
+          "setting": "Simulation"
+        },
+        "total": 2585,
+        "top_ids": [
+          "libero--libero-spatial-pick-up-the-black-bowl-between-the-plate-and-the-ramekin-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-next-to-the-ramekin-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-from-table-center-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-on-the-cookie-box-and-place-it-on-the-plate",
+          "libero--libero-spatial-pick-up-the-black-bowl-in-the-top-drawer-of-the-wooden-cabinet-and-place-it-on-the-plate"
+        ]
+      }
+    ]
+  },
+  "http": {
+    "requests": 98,
+    "bind_address": "127.0.0.1",
+    "sampled_task_details": 23,
+    "query_logging": "omitted"
+  },
+  "openapi": {
+    "paths": 6,
+    "references": "resolved"
+  },
+  "elapsed_seconds": 7.05
+}

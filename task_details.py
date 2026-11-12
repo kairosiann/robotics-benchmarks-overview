@@ -365,6 +365,9 @@ def enrich_task(task, *, code="", scene="", demo_page="", scoring_levels=None, m
         apply_protocol(task, f"The {task['suite']} setup uses {view}. SIMPLER recreates the real camera and workspace in simulation.", "suite", SIMPLER_PAPER, "The simulated rollout is scored by the registered environment. The paper also evaluates representative tasks on real hardware to compare policy outcomes.")
         task["grading_summary"] = task["goal"]
         task["grading_scope"] = "task"
+        if task["name"] in ("widowx_spoon_on_towel", "widowx_carrot_on_plate", "widowx_put_eggplant_in_basket"):
+            task["evaluation_source"] = "https://github.com/simpler-env/ManiSkill2_real2sim/blob/ef7a4d4fdf4b69f2c2154db5b15b9ac8dfe10682/mani_skill2_real2sim/envs/custom_scenes/put_on_in_scene.py#L43"
+            task["grading_evidence"] = "The environment sets success to src_on_target, computed from bounding-box-relative geometry and, for carrot placement, an additional contact test. Grasp, consecutive-grasp and moved-object fields are diagnostic; robot-link contacts are ignored by the contact restriction."
         if task["name"] in SIMPLER_VIDEOS:
             add_media(task, "video", SIMPLER_MEDIA + "static/videos/" + SIMPLER_VIDEOS[task["name"]], "Official example rollout", "variant")
     elif benchmark == "DataCenterBench":

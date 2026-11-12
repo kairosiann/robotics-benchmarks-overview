@@ -24,10 +24,21 @@ jobs:
     steps:
       - name: Check out catalog
         uses: actions/checkout@v6
-      - name: Build guide and static task records
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Set up Node for search validation
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Validate catalog and build website
         run: |
+          python3 build_data.py
+          python3 validate_catalog.py
           python3 build_report.py
           python3 build_site.py
+          python3 validate_site.py
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:

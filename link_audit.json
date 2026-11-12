@@ -1,0 +1,376 @@
+{
+  "checked_at": "2026-11-12T06:58:13.300805+00:00",
+  "scope": "Distinct guide hyperlinks and family coverage sources; not every task or media URL. HEAD with GET fallback for 403/405. Server errors and access limits require manual interpretation.",
+  "results": [
+    {
+      "url": "https://arxiv.org/abs/2306.03310",
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2306.03310"
+    },
+    {
+      "url": "https://arxiv.org/abs/2403.09227",
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2403.09227"
+    },
+    {
+      "url": "https://arxiv.org/abs/2405.05941",
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2405.05941"
+    },
+    {
+      "url": "https://arxiv.org/abs/2406.02523",
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2406.02523"
+    },
+    {
+      "url": "https://arxiv.org/abs/2603.04356",
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2603.04356"
+    },
+    {
+      "url": "https://arxiv.org/abs/2607.04434",
+      "status": 200,
+      "final_url": "https://arxiv.org/abs/2607.04434"
+    },
+    {
+      "url": "https://arxiv.org/html/2306.03310",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2306.03310"
+    },
+    {
+      "url": "https://arxiv.org/html/2306.03310v2",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2306.03310v2"
+    },
+    {
+      "url": "https://arxiv.org/html/2403.09227",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2403.09227"
+    },
+    {
+      "url": "https://arxiv.org/html/2403.09227v1",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2403.09227v1"
+    },
+    {
+      "url": "https://arxiv.org/html/2405.05941",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2405.05941"
+    },
+    {
+      "url": "https://arxiv.org/html/2406.02523",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2406.02523"
+    },
+    {
+      "url": "https://arxiv.org/html/2603.04356",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2603.04356"
+    },
+    {
+      "url": "https://arxiv.org/html/2603.04356v1",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2603.04356v1"
+    },
+    {
+      "url": "https://arxiv.org/html/2606.16826",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2606.16826"
+    },
+    {
+      "url": "https://arxiv.org/html/2607.04434",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2607.04434"
+    },
+    {
+      "url": "https://arxiv.org/html/2607.04434v3",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2607.04434v3"
+    },
+    {
+      "url": "https://arxiv.org/html/2607.15641",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2607.15641"
+    },
+    {
+      "url": "https://arxiv.org/html/2610.24512",
+      "status": 200,
+      "final_url": "https://arxiv.org/html/2610.24512"
+    },
+    {
+      "url": "https://behavior.stanford.edu/",
+      "status": 200,
+      "final_url": "https://behavior.stanford.edu/"
+    },
+    {
+      "url": "https://behavior.stanford.edu/behavior_components/behavior_tasks.html",
+      "status": 200,
+      "final_url": "https://behavior.stanford.edu/behavior_components/behavior_tasks.html"
+    },
+    {
+      "url": "https://behavior.stanford.edu/challenge/evaluation.html",
+      "status": 200,
+      "final_url": "https://behavior.stanford.edu/challenge/evaluation.html"
+    },
+    {
+      "url": "https://behavior.stanford.edu/challenge/tasks/index.html",
+      "status": 200,
+      "final_url": "https://behavior.stanford.edu/challenge/tasks/index.html"
+    },
+    {
+      "url": "https://behavior.stanford.edu/getting_started/important_concepts.html",
+      "status": 200,
+      "final_url": "https://behavior.stanford.edu/getting_started/important_concepts.html"
+    },
+    {
+      "url": "https://behavior.stanford.edu/knowledgebase/tasks/index.html",
+      "status": 200,
+      "final_url": "https://behavior.stanford.edu/knowledgebase/tasks/index.html"
+    },
+    {
+      "url": "https://chongyuzhu.github.io/wirecraft/",
+      "status": 200,
+      "final_url": "https://chongyuzhu.com/wirecraft/"
+    },
+    {
+      "url": "https://clvrai.github.io/furniture-bench/",
+      "status": 200,
+      "final_url": "https://clvrai.github.io/furniture-bench/"
+    },
+    {
+      "url": "https://davidz2851.github.io/h2rbench.github.io/",
+      "status": 200,
+      "final_url": "https://davidz2851.github.io/h2rbench.github.io/"
+    },
+    {
+      "url": "https://github.com/Lifelong-Robot-Learning/LIBERO",
+      "status": 200,
+      "final_url": "https://github.com/Lifelong-Robot-Learning/LIBERO"
+    },
+    {
+      "url": "https://github.com/Lifelong-Robot-Learning/LIBERO/blob/master/libero/libero/benchmark/libero_suite_task_map.py",
+      "status": 200,
+      "final_url": "https://github.com/Lifelong-Robot-Learning/LIBERO/blob/master/libero/libero/benchmark/libero_suite_task_map.py"
+    },
+    {
+      "url": "https://github.com/Lifelong-Robot-Learning/LIBERO/tree/master/libero/libero/bddl_files",
+      "status": 200,
+      "final_url": "https://github.com/Lifelong-Robot-Learning/LIBERO/tree/master/libero/libero/bddl_files"
+    },
+    {
+      "url": "https://github.com/Michaelwyx/contactbench-sim",
+      "status": 200,
+      "final_url": "https://github.com/Michaelwyx/contactbench-sim"
+    },
+    {
+      "url": "https://github.com/StanfordVL/BEHAVIOR-1K/tree/main/bddl3/bddl/activity_definitions",
+      "status": 200,
+      "final_url": "https://github.com/StanfordVL/BEHAVIOR-1K/tree/main/bddl3/bddl/activity_definitions"
+    },
+    {
+      "url": "https://github.com/UMass-Embodied-AGI/harp",
+      "status": 200,
+      "final_url": "https://github.com/UMass-Embodied-AGI/harp"
+    },
+    {
+      "url": "https://github.com/mees/calvin",
+      "status": 200,
+      "final_url": "https://github.com/mees/calvin"
+    },
+    {
+      "url": "https://github.com/robocasa/robocasa/blob/main/docs/composite_tasks/task_attributes.json",
+      "status": 200,
+      "final_url": "https://github.com/robocasa/robocasa/blob/main/docs/composite_tasks/task_attributes.json"
+    },
+    {
+      "url": "https://github.com/robocasa/robocasa/tree/main/docs/_versions/v0.2/tasks_scenes_assets",
+      "status": 200,
+      "final_url": "https://github.com/robocasa/robocasa/tree/main/docs/_versions/v0.2/tasks_scenes_assets"
+    },
+    {
+      "url": "https://github.com/robodojo-benchmark/RoboDojo",
+      "status": 200,
+      "final_url": "https://github.com/robodojo-benchmark/RoboDojo"
+    },
+    {
+      "url": "https://github.com/simpler-env/SimplerEnv",
+      "status": 200,
+      "final_url": "https://github.com/simpler-env/SimplerEnv"
+    },
+    {
+      "url": "https://github.com/simpler-env/SimplerEnv/blob/main/simpler_env/__init__.py",
+      "status": 200,
+      "final_url": "https://github.com/simpler-env/SimplerEnv/blob/main/simpler_env/__init__.py"
+    },
+    {
+      "url": "https://github.com/simpler-env/SimplerEnv/tree/main/scripts",
+      "status": 200,
+      "final_url": "https://github.com/simpler-env/SimplerEnv/tree/main/scripts"
+    },
+    {
+      "url": "https://github.com/stepjam/RLBench",
+      "status": 200,
+      "final_url": "https://github.com/stepjam/RLBench"
+    },
+    {
+      "url": "https://jingyi-xiang.github.io/contactbench/",
+      "status": 200,
+      "final_url": "https://jingyi-xiang.github.io/contactbench/"
+    },
+    {
+      "url": "https://jingyi-xiang.github.io/contactbench/config/tasks/26-plug-in-ethernet.js",
+      "status": 200,
+      "final_url": "https://jingyi-xiang.github.io/contactbench/config/tasks/26-plug-in-ethernet.js"
+    },
+    {
+      "url": "https://maniskill.readthedocs.io/en/latest/tasks/index.html",
+      "status": 200,
+      "final_url": "https://maniskill.readthedocs.io/en/latest/tasks/index.html"
+    },
+    {
+      "url": "https://mxxq-stack.github.io/rmmbench-project/",
+      "status": 200,
+      "final_url": "https://mxxq-stack.github.io/rmmbench-project/"
+    },
+    {
+      "url": "https://openreview.net/forum?id=SBGylS4zwM",
+      "status": 200,
+      "final_url": "https://openreview.net/challenge?redirect=%2Fforum%3Fid%3DSBGylS4zwM"
+    },
+    {
+      "url": "https://pairlab.github.io/MESA/",
+      "status": 200,
+      "final_url": "https://www.pair.toronto.edu/MESA/"
+    },
+    {
+      "url": "https://proceedings.mlr.press/v164/srivastava22a.html",
+      "status": 200,
+      "final_url": "https://proceedings.mlr.press/v164/srivastava22a.html"
+    },
+    {
+      "url": "https://robocasa.ai/",
+      "status": 200,
+      "final_url": "https://robocasa.ai/"
+    },
+    {
+      "url": "https://robocasa.ai/assets/videos/release.mp4",
+      "status": 200,
+      "final_url": "https://robocasa.ai/assets/videos/release.mp4"
+    },
+    {
+      "url": "https://robocasa.ai/docs/build/html/benchmarking/multitask_learning.html",
+      "status": 200,
+      "final_url": "https://robocasa.ai/docs/build/html/benchmarking/multitask_learning.html"
+    },
+    {
+      "url": "https://robocasa.ai/docs/build/html/introduction/overview.html",
+      "status": 200,
+      "final_url": "https://robocasa.ai/docs/build/html/introduction/overview.html"
+    },
+    {
+      "url": "https://robocasa.ai/docs/build/html/tasks/atomic_tasks.html",
+      "status": 200,
+      "final_url": "https://robocasa.ai/docs/build/html/tasks/atomic_tasks.html"
+    },
+    {
+      "url": "https://robocasa.ai/docs/build/html/tasks/composite_tasks.html",
+      "status": 200,
+      "final_url": "https://robocasa.ai/docs/build/html/tasks/composite_tasks.html"
+    },
+    {
+      "url": "https://robochallenge.ai/challenges",
+      "status": 200,
+      "final_url": "https://robochallenge.ai/challenges"
+    },
+    {
+      "url": "https://robocurve.org/all-runs/?leaderboard=datacenterbench",
+      "status": 200,
+      "final_url": "https://robocurve.org/all-runs/?leaderboard=datacenterbench"
+    },
+    {
+      "url": "https://robocurve.org/datacenterbench/",
+      "status": 200,
+      "final_url": "https://robocurve.org/datacenterbench/"
+    },
+    {
+      "url": "https://robocurve.org/datacenterbench/data/setups.json",
+      "status": 200,
+      "final_url": "https://robocurve.org/datacenterbench/data/setups.json"
+    },
+    {
+      "url": "https://robocurve.org/datacenterbench/methods.html",
+      "status": 200,
+      "final_url": "https://robocurve.org/datacenterbench/methods"
+    },
+    {
+      "url": "https://robocurve.org/datacenterbench/setups.html",
+      "status": 200,
+      "final_url": "https://robocurve.org/datacenterbench/setups"
+    },
+    {
+      "url": "https://robodojo-benchmark.com/doc/real-tasks/",
+      "status": 200,
+      "final_url": "https://robodojo-benchmark.com/doc/real-tasks/"
+    },
+    {
+      "url": "https://robodojo-benchmark.com/doc/real-tasks/insert-tubes/",
+      "status": 200,
+      "final_url": "https://robodojo-benchmark.com/doc/real-tasks/insert-tubes/"
+    },
+    {
+      "url": "https://robodojo-benchmark.com/doc/sim-tasks/",
+      "status": 200,
+      "final_url": "https://robodojo-benchmark.com/doc/sim-tasks/"
+    },
+    {
+      "url": "https://robodojo-benchmark.com/doc/sim-tasks/align-blocks/",
+      "status": 200,
+      "final_url": "https://robodojo-benchmark.com/doc/sim-tasks/align-blocks/"
+    },
+    {
+      "url": "https://robodojo-benchmark.com/doc/sim-tasks/insert-tubes/",
+      "status": 200,
+      "final_url": "https://robodojo-benchmark.com/doc/sim-tasks/insert-tubes/"
+    },
+    {
+      "url": "https://robodojo-benchmark.com/doc/usage/quick-evaluation/",
+      "status": 200,
+      "final_url": "https://robodojo-benchmark.com/doc/usage/quick-evaluation/"
+    },
+    {
+      "url": "https://robotics.farama.org/envs/adroit_hand/",
+      "status": 200,
+      "final_url": "https://robotics.farama.org/envs/adroit_hand/"
+    },
+    {
+      "url": "https://robotwin-platform.github.io/doc/tasks/",
+      "status": 200,
+      "final_url": "https://robotwin-platform.github.io/doc/tasks/"
+    },
+    {
+      "url": "https://simpler-env.github.io/",
+      "status": 200,
+      "final_url": "https://simpler-env.github.io/"
+    },
+    {
+      "url": "https://www.nist.gov/el/intelligent-systems-division-73500/robotic-grasping-and-manipulation-assembly/assembly",
+      "status": 200,
+      "final_url": "https://www.nist.gov/el/intelligent-systems-division-73500/robotic-grasping-and-manipulation-assembly/assembly"
+    }
+  ],
+  "final_reference_checks": {
+    "checked_at": "2026-11-12T07:10:26.250812+00:00",
+    "results": [
+      {
+        "url": "https://github.com/Lifelong-Robot-Learning/LIBERO/blob/8f1084e3132a39270c3a13ebe37270a43ece2a01/libero/libero/benchmark/libero_suite_task_map.py",
+        "status": 200,
+        "final_url": "https://github.com/Lifelong-Robot-Learning/LIBERO/blob/8f1084e3132a39270c3a13ebe37270a43ece2a01/libero/libero/benchmark/libero_suite_task_map.py"
+      },
+      {
+        "url": "https://github.com/Lifelong-Robot-Learning/LIBERO/tree/8f1084e3132a39270c3a13ebe37270a43ece2a01/libero/libero/bddl_files",
+        "status": 200,
+        "final_url": "https://github.com/Lifelong-Robot-Learning/LIBERO/tree/8f1084e3132a39270c3a13ebe37270a43ece2a01/libero/libero/bddl_files"
+      }
+    ]
+  }
+}

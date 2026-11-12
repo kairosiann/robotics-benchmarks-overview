@@ -1,0 +1,36 @@
+name: Validate guide and catalog
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out catalog
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Set up Node for browser search parity
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Rebuild catalog and validate API and search
+        run: |
+          python3 build_data.py
+          node --check task_search.js
+          node --check task_explorer.js
+          python3 validate_catalog.py
+      - name: Build and validate deployable website
+        run: |
+          python3 build_report.py
+          python3 build_site.py
+          python3 validate_site.py

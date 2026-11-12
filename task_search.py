@@ -22,9 +22,20 @@ FIELDS = (
 )
 
 
+def text_value(value):
+    """Flatten structured catalog fields identically in Python and JavaScript."""
+    if value is None:
+        return ""
+    if isinstance(value, dict):
+        return " ".join(f"{key} {text_value(item)}" for key, item in value.items())
+    if isinstance(value, (list, tuple)):
+        return " ".join(text_value(item) for item in value)
+    return str(value)
+
+
 def normalize(value):
     """Separate registry identifiers while preserving word and phrase boundaries."""
-    value = re.sub(r"([A-Z])([A-Z][a-z])", r"\1 \2", str(value or ""))
+    value = re.sub(r"([A-Z])([A-Z][a-z])", r"\1 \2", text_value(value))
     value = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", value)
     value = unicodedata.normalize("NFKD", value)
     value = "".join(char for char in value if unicodedata.category(char) != "Mn")
@@ -93,6 +104,8 @@ class SearchIndex:
         return terms or ([(phrase, "Keyword", (phrase,), phrase)] if phrase else [])
 
     def describe_query(self, query="", mode="related"):
+        if mode not in MODES:
+            raise ValueError(f"Unknown search mode: {mode}")
         return [
             {"term": term, "kind": kind, "original": original}
             for term, kind, _, original in self._terms(query, mode)
@@ -105,15 +118,15 @@ class SearchIndex:
         phrase = normalize(query)
         results = []
         for task, fields in zip(self.tasks, self.fields):
-            if family and task.get("family", "").casefold() != family.casefold():
+            if family and task.get("family", "").lower() != family.lower():
                 continue
-            if benchmark and task.get("benchmark", "").casefold() != benchmark.casefold():
+            if benchmark and task.get("benchmark", "").lower() != benchmark.lower():
                 continue
-            if setting and task.get("setting", "").casefold() != setting.casefold():
+            if setting and task.get("setting", "").lower() != setting.lower():
                 continue
             if suite:
                 key, expected = ("split", suite[6:]) if suite.startswith("split:") else ("suite", suite)
-                if task.get(key, "").casefold() != expected.casefold():
+                if task.get(key, "").lower() != expected.lower():
                     continue
             matches = []
             score = 0

@@ -1,0 +1,120 @@
+{
+  "scanned_at": "2026-11-12",
+  "tool": "gitleaks",
+  "redaction": "100%; no token values retained in this report",
+  "history": {
+    "commits_scanned": 6,
+    "baseline_head": "a660700",
+    "bytes_scanned": 199294732,
+    "findings": 13
+  },
+  "directory": {
+    "bytes_scanned": 236556125,
+    "findings": 13
+  },
+  "confirmed_user_secrets": 0,
+  "caveats": [
+    "Scanner results are not proof that no secret exists.",
+    "Findings are preserved public upstream frontend configuration and one false positive, not confirmed user secrets.",
+    "Original upstream browser keys were not tested against services or used to authenticate.",
+    "No source snapshots were removed and no Git history or repository visibility was changed."
+  ],
+  "other_public_metadata": [
+    "The existing commit author email is present in all six scanned commits.",
+    "Published upstream webpages contain their authors contact information.",
+    "No tracked credential/private-key/.env/.aws/.codex/.agents paths or tracked desktop/mobile screenshots were found in the scanned tree/history."
+  ],
+  "findings": [
+    {
+      "rule": "generic-api-key",
+      "path": "sources/contactbench/config/tasks/index.js",
+      "line": 25,
+      "introduced_in": "4fd303e9b8de4251d845ab6bfbfad275fb645b8d",
+      "classification": "False positive: adjacent published task-name strings containing allen-key."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/physical/nist_deformable.html",
+      "line": 32,
+      "introduced_in": "8d74ff125e5649392646dcf85dff1393756c334c",
+      "classification": "Public third-party browser configuration (reCAPTCHA site key, Mapbox public token or analytics token) in a NIST webpage snapshot."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/physical/nist_paper.html",
+      "line": 32,
+      "introduced_in": "8d74ff125e5649392646dcf85dff1393756c334c",
+      "classification": "Public third-party browser configuration (reCAPTCHA site key, Mapbox public token or analytics token) in a NIST webpage snapshot."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/physical/nist_video.html",
+      "line": 46,
+      "introduced_in": "8d74ff125e5649392646dcf85dff1393756c334c",
+      "classification": "Public third-party browser configuration (reCAPTCHA site key, Mapbox public token or analytics token) in a NIST webpage snapshot."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/physical/nist_video.html",
+      "line": 889,
+      "introduced_in": "8d74ff125e5649392646dcf85dff1393756c334c",
+      "classification": "Public third-party browser configuration (reCAPTCHA site key, Mapbox public token or analytics token) in a NIST webpage snapshot."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/physical/nist_home.html",
+      "line": 49,
+      "introduced_in": "8d74ff125e5649392646dcf85dff1393756c334c",
+      "classification": "Public third-party browser configuration (reCAPTCHA site key, Mapbox public token or analytics token) in a NIST webpage snapshot."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/physical/nist_home.html",
+      "line": 1016,
+      "introduced_in": "8d74ff125e5649392646dcf85dff1393756c334c",
+      "classification": "Public third-party browser configuration (reCAPTCHA site key, Mapbox public token or analytics token) in a NIST webpage snapshot."
+    },
+    {
+      "rule": "gcp-api-key",
+      "path": "sources/corl2026/official.html",
+      "line": 12,
+      "introduced_in": "8d74ff125e5649392646dcf85dff1393756c334c",
+      "classification": "Public third-party site frontend key captured in an official webpage snapshot; not a confirmed user credential."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/dc_methods.html",
+      "line": 138,
+      "introduced_in": "3c04301a981390201ebfdb599495c184332c9c59",
+      "classification": "Public Cloudflare analytics token embedded in a DataCenterBench webpage snapshot."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/dc_setups.html",
+      "line": 71,
+      "introduced_in": "3c04301a981390201ebfdb599495c184332c9c59",
+      "classification": "Public Cloudflare analytics token embedded in a DataCenterBench webpage snapshot."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/datacenter.html",
+      "line": 187,
+      "introduced_in": "3c04301a981390201ebfdb599495c184332c9c59",
+      "classification": "Public Cloudflare analytics token embedded in a DataCenterBench webpage snapshot."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/datacenter.txt",
+      "line": 187,
+      "introduced_in": "3c04301a981390201ebfdb599495c184332c9c59",
+      "classification": "Public Cloudflare analytics token embedded in a DataCenterBench webpage snapshot."
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "sources/physical/robochallenge_frontend.js",
+      "line": 61,
+      "introduced_in": "8d74ff125e5649392646dcf85dff1393756c334c",
+      "classification": "Public third-party frontend token literal captured in a published JavaScript bundle; not a confirmed user credential."
+    }
+  ]
+}

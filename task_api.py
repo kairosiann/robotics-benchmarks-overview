@@ -8,6 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 from urllib.parse import parse_qs, quote, unquote, urlsplit
 
@@ -29,6 +30,7 @@ STATIC_FILES = {
     "/": ("robotics-benchmark-guide.html", "text/html; charset=utf-8"),
     "/robotics-benchmark-guide.html": ("robotics-benchmark-guide.html", "text/html; charset=utf-8"),
     "/TASK_API.md": ("TASK_API.md", "text/markdown; charset=utf-8"),
+    "/THIRD_PARTY.md": ("THIRD_PARTY.md", "text/markdown; charset=utf-8"),
     "/api/openapi.json": ("task-api.openapi.json", "application/json; charset=utf-8"),
     "/task-api.openapi.json": ("task-api.openapi.json", "application/json; charset=utf-8"),
     "/coverage.json": ("coverage.json", "application/json; charset=utf-8"),
@@ -51,6 +53,14 @@ class TaskCatalog:
     """One in-memory snapshot shared by every request."""
 
     def __init__(self, tasks):
+        if not isinstance(tasks, list) or not tasks:
+            raise ValueError("The task catalog must be a nonempty JSON array.")
+        required = ("id", "name", "title", "family", "benchmark", "suite", "setting", "source")
+        for position, task in enumerate(tasks):
+            if not isinstance(task, dict) or any(not isinstance(task.get(key), str) or not task[key].strip() for key in required):
+                raise ValueError(f"Task at index {position} must contain nonempty strings for {', '.join(required)}.")
+            if not re.fullmatch(r"[a-z0-9][a-z0-9._-]*", task["id"]):
+                raise ValueError(f"Task at index {position} must have a URL-safe lowercase ID.")
         self.by_id = {task["id"]: task for task in tasks}
         if len(self.by_id) != len(tasks) or any(not task_id for task_id in self.by_id):
             raise ValueError("The task catalog must contain unique, nonempty IDs.")
@@ -81,10 +91,10 @@ class TaskCatalog:
             raise ValueError(f"Unknown search parameter: {', '.join(sorted(unknown))}.")
         if any(len(values) != 1 for values in params.values()):
             raise ValueError("Supply each search parameter once.")
+        if len(params.get("q", [""])[0]) > 1000:
+            raise ValueError("q must be 1,000 characters or fewer.")
         params = {name: values[0].strip() for name, values in params.items()}
         query = params.get("q", "")
-        if len(query) > 1000:
-            raise ValueError("q must be 1,000 characters or fewer.")
         mode = params.get("mode", "related")
         if mode not in MODES:
             raise ValueError("mode must be related, all, or exact.")
@@ -117,6 +127,9 @@ class TaskCatalog:
 
 
 class TaskHandler(BaseHTTPRequestHandler):
+    server_version = "RoboticsTaskAPI/1.1"
+    sys_version = ""
+
     def do_GET(self):
         try:
             self.route()
@@ -125,6 +138,11 @@ class TaskHandler(BaseHTTPRequestHandler):
             pass
 
     do_HEAD = do_GET
+
+    def method_not_allowed(self):
+        self.send_json({"error": {"status": 405, "message": "This API supports GET and HEAD only."}}, HTTPStatus.METHOD_NOT_ALLOWED)
+
+    do_POST = do_PUT = do_PATCH = do_DELETE = do_OPTIONS = method_not_allowed
 
     def route(self):
         try:
@@ -180,6 +198,9 @@ class TaskHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(length))
         self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        if status == HTTPStatus.METHOD_NOT_ALLOWED:
+            self.send_header("Allow", "GET, HEAD")
         self.end_headers()
 
     def error(self, status, message):

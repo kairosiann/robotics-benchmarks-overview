@@ -4,6 +4,33 @@
   --explorer-border: #becac1;
   --explorer-muted: #54645d;
 }
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 30;
+  transform: translateY(-160%);
+  padding: 10px 16px;
+  background: var(--paper);
+  color: var(--green);
+  font-weight: 650;
+}
+.skip-link:focus { transform: translateY(0); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+header .hero-search {
+  display: inline-block;
+  padding: 10px 15px;
+  background: var(--acid);
+  color: var(--green);
+  font-weight: 650;
+  text-decoration: none;
+}
+header .hero-search:hover { background: #e8f6b7; color: #163e35; }
+.hero-actions .print { margin: 0; }
+.task-explorer:not(.explorer-ready) :is(.catalog-coverage, .explorer-controls, .proposal-editor, .task-results) { display: none; }
+.task-explorer h2, .task-explorer h3, .task-explorer h4 { text-wrap: balance; }
+.task-explorer :is(button, a, input, select, textarea, summary) { touch-action: manipulation; }
+.task-explorer :is(h2, h3, h4, input, select, textarea, summary, button) { scroll-margin-top: 85px; }
 .task-explorer h2 { margin-bottom: 10px; }
 .task-explorer h3 { margin: 0 0 5px; }
 .task-explorer h4 { margin: 0 0 8px; font-size: 1.25rem; line-height: 1.25; }
@@ -171,6 +198,8 @@
 .explorer-media iframe { aspect-ratio: 16/9; }
 .explorer-media figcaption { font-size: .8rem; margin-top: 6px; }
 .explorer-media figcaption a { display: inline-block; margin-top: 4px; }
+.explorer-media-status { margin-top: 8px; font-size: .83rem; color: var(--ochre); }
+.explorer-loading-media { min-height: 100px; }
 .explorer-pagination {
   display: flex;
   flex-wrap: wrap;
@@ -241,4 +270,27 @@
 @media print {
   .explorer-controls, .proposal-editor, .explorer-actions, .explorer-pin,
   .explorer-pagination, .explorer-media button, .explorer-remove, .explorer-api { display: none; }
+  .skip-link, .hero-actions { display: none; }
+  .explorer-comparison-scroll, .explorer-coverage-scroll { overflow: visible; }
+  .explorer-comparison-table, .explorer-coverage-table {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    break-inside: auto;
+  }
+  .explorer-comparison-table th, .explorer-comparison-table td,
+  .explorer-comparison-table th[scope="row"], .explorer-comparison-table th:first-child,
+  .explorer-coverage-table th:first-child, .explorer-coverage-table td:last-child {
+    position: static;
+    min-width: 0;
+    max-width: none;
+    font-size: 8pt;
+    padding: 5pt;
+    white-space: normal;
+  }
+  .explorer-comparison-table tr { break-inside: avoid; }
+  .explorer-comparison-table thead { display: table-header-group; }
+  .task-explorer pre { font-size: 7pt; }
+  .explorer-media video, .explorer-media iframe { display: none; }
+  .explorer-comparison-table .explorer-text { white-space: pre-line; }
 }
